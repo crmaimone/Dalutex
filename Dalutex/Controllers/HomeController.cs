@@ -15,14 +15,14 @@ namespace Dalutex.Controllers
 
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
+            ViewBag.Message = "Sobre a Dalutex:";
 
             return View();
         }
 
         public ActionResult Contact()
         {
-            ViewBag.Message = "Your contact page.";
+            ViewBag.Message = "Entre com contato conosco:";
 
             return View();
         }

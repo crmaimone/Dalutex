@@ -15,7 +15,7 @@ namespace Dalutex.Controllers
 
         public ActionResult About()
         {
-            ViewBag.Message = "Sobre a Dalutex:";
+            ViewBag.Message = "Perfil corporativo";
 
             return View();
         }

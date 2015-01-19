@@ -171,6 +171,20 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\images\dalutex.png" />
+    <Content Include="Content\images\header-pattern-1.jpg" />
+    <Content Include="Content\images\header-pattern-2.jpg" />
+    <Content Include="Content\images\header-pattern-3.jpg" />
+    <Content Include="Content\images\header-pattern-4.jpg" />
+    <Content Include="Content\images\header-pattern-5.jpg" />
+    <Content Include="Content\images\header-pattern-6.jpg" />
+    <Content Include="Content\images\header-pattern-7.jpg" />
+    <Content Include="Content\images\header-pattern-8.jpg" />
+    <Content Include="Content\images\header-pattern-9.jpg" />
+    <Content Include="Content\images\header-pattern-10.jpg" />
+    <Content Include="Content\images\header-pattern-11.jpg" />
+    <Content Include="Content\images\header-pattern-12.jpg" />
+    <Content Include="Content\images\header-pattern-13.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -188,6 +202,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\prePageFunctions.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

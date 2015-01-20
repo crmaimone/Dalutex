@@ -23,8 +23,8 @@ namespace Dalutex
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/site").Include(
-            "~/Scripts/site.css"));
+            bundles.Add(new ScriptBundle("~/bundles/prePageFunctions").Include(
+            "~/Scripts/prePageFunctions.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",

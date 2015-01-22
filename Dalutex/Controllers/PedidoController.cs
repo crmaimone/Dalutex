@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Collections;
 using Dalutex.Models.DataModels;
 using Dalutex.Models;
+using System.Configuration;
 
 namespace Dalutex.Controllers
 {
@@ -35,6 +36,7 @@ namespace Dalutex.Controllers
                 model.Galeria = queryItens.ToList();
             }
 
+            model.UrlImagens = ConfigurationManager.AppSettings["PASTA_DESENHOS"];
             return View(model);
         }
     }

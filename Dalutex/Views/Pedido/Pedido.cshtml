@@ -32,7 +32,7 @@
                 {
                     <div class="col-sm-4 col-md-2">
                         <div class="thumbnail">
-                            <img src="/bootstrap/images/kittens.jpg" alt="Alternative">
+                            <img src="@Url.Content(Model.UrlImagens + item.Codigo.Substring(16, 4) + "_" + item.Codigo.Substring(20, 2) + ".jpg")">
                         </div>
                         <div class="caption">
                             <h3>@item.Codigo_Reduzido</h3>

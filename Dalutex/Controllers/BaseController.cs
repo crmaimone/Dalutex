@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Dalutex.Models.DataModels;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
@@ -45,16 +46,20 @@ namespace Dalutex.Controllers
 
         #region SessionAtributes
 
-        //protected List<string> Session_NOMEDOATRIBUTO
-        //{
-        //    get
-        //    {
-        //        if (Session["NOMEDOATRIBUTO"] == null)
-        //            return null;
-        //        else
-        //            return Session["NOMEDOATRIBUTO"] as List<string>;
-        //    }
-        //}
+        protected Usuario Session_Usuario
+        {
+            get
+            {
+                if (Session["SESSION_USUARIO"] == null)
+                    return null;
+                else
+                    return Session["SESSION_USUARIO"] as Usuario;
+            }
+            set
+            {
+                Session["SESSION_USUARIO"] = value;
+            }
+        }
 
         #endregion
 

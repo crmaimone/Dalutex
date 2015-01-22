@@ -8,15 +8,17 @@
 
     <ul class="nav navbar-nav navbar-right">
         <li>
-            <span>Olá @User.Identity.Name</span>
+            <p class="navbar-text">Olá @User.Identity.Name</p>
         </li>
-        <li><a href="javascript:document.getElementById('logoutForm').submit()">Sair</a></li>
+        <li><a href="javascript:document.getElementById('logoutForm').submit()"><span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp;Sair</a></li>
     </ul>
     }
 }
 else
 {
     <ul class="nav navbar-nav navbar-right">
-        <li>@Html.ActionLink("Entrar", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+        <li>
+            <a href="@Url.Action("Login", "Account")"><span class="glyphicon glyphicon-user"></span>&nbsp;Entrar</a>
+        </li>
     </ul>
 }

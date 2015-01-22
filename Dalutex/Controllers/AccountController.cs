@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using Dalutex.Models.DataModels;
+using System.Linq;
 
 namespace Dalutex.Controllers
 {
@@ -31,10 +33,18 @@ namespace Dalutex.Controllers
         {
             if (ModelState.IsValid)
             {
-                //TODO: your authentication logic if (username == "admin" && password == "password")
-                if(model.Password == "123")
+                Usuario objUsuario = null;
+
+                using(var ctx =new DalutexDataContext())
+                {
+                    objUsuario = ctx.Usuarios.Where(x => x.USU_LOGIN == model.Login && x.USU_PWD == model.Password).FirstOrDefault();
+                }
+
+                if (objUsuario != null)
                 {
                     FormsAuthentication.SetAuthCookie(model.Login, model.RememberMe);
+                    objUsuario.USU_PWD = null;
+                    base.Session_Usuario = objUsuario;
                     return RedirectToLocal(returnUrl);
                 }
                 else

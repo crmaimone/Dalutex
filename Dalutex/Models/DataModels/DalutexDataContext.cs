@@ -13,6 +13,8 @@ namespace Dalutex.Models.DataModels
         }
 
         public virtual DbSet<Usuario> Usuarios { get; set; }
+        public virtual DbSet<ConfigGeral> ConfigGerais { get; set; }
+        public virtual DbSet<ItensEstoque> ItensEstoque { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -22,6 +24,14 @@ namespace Dalutex.Models.DataModels
 
             modelBuilder.Entity<Usuario>()
                 .Property(e => e.USU_PWD)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<ItensEstoque>()
+                .Property(e => e.Codigo_Reduzido)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<ItensEstoque>()
+                .Property(e => e.Codigo)
                 .IsUnicode(false);
         }
     }

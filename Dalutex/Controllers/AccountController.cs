@@ -45,7 +45,10 @@ namespace Dalutex.Controllers
                     FormsAuthentication.SetAuthCookie(model.Login, model.RememberMe);
                     objUsuario.USU_PWD = null;
                     base.Session_Usuario = objUsuario;
-                    return RedirectToLocal(returnUrl);
+                    if (!string.IsNullOrWhiteSpace(returnUrl))
+                        return RedirectToLocal(returnUrl);
+                    else
+                        return RedirectToAction("Pedido", "Pedido");
                 }
                 else
                 {

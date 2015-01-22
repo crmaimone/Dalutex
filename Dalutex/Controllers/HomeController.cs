@@ -6,13 +6,15 @@ using System.Web.Mvc;
 
 namespace Dalutex.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
+        [AllowAnonymous]
         public ActionResult Index()
         {
             return View();
         }
 
+        [AllowAnonymous]
         public ActionResult About()
         {
             ViewBag.Message = "Perfil corporativo";
@@ -20,9 +22,17 @@ namespace Dalutex.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         public ActionResult Contact()
         {
             ViewBag.Message = "Entre com contato conosco:";
+
+            return View();
+        }
+
+        public ActionResult SecurePage()
+        {
+            ViewBag.Message = "Página segura";
 
             return View();
         }

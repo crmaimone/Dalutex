@@ -15,3 +15,26 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.base-tile{
+    transition: transform 0.5s ease;
+    transition: background-color 0.5s ease;
+    margin:10px;
+}
+.base-tile:hover{
+    background-color:rgb(0, 255, 255);
+    transform:scale(1.1);
+}
+
+footer{
+    background-color:gray;
+    color:white;
+}
+.footerElement{
+    border-right-style:solid;
+    border-left-color:gainsboro;
+    border-left-width:1pt;
+}
+    /*border-style:solid;
+    border-bottom-width:1px;
+    border-color:gainsboro;*/

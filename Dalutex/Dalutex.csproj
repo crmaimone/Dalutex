@@ -247,6 +247,9 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Home\SecurePage.cshtml" />
     <Content Include="Views\Pedido\Pedido.cshtml" />
+    <Content Include="Views\Pedido\Ampliacao.cshtml" />
+    <Content Include="Views\Home\Busca.cshtml" />
+    <Content Include="Views\Home\Mapa.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

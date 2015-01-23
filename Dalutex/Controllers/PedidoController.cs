@@ -13,6 +13,7 @@ namespace Dalutex.Controllers
     public class PedidoController : BaseController
     {
         // GET: Pedido
+        [AllowAnonymous]
         public ActionResult Pedido()
         {
             PedidoViewModel model = new PedidoViewModel();

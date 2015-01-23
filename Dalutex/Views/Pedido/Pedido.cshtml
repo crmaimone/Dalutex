@@ -38,17 +38,39 @@
     <div class="row">
         @foreach (ItensEstoque item in Model.Galeria)
         {
-            <div class="col-sm-4 col-md-2 base-tile" style="max-width: 150px; max-height: 150px">
-                <div class="thumbnail">
+            <div class="col-sm-4 col-md-2">
+                <div class="thumbnail" style="max-width: 200px; max-height: 100px">
                     <a href="@Url.Content(@"Ampliacao?&imagem=" + Model.UrlImagens + item.Codigo.Substring(16, 4) + "_" + item.Codigo.Substring(20, 2) + ".jpg")">
-                        <img src="@Url.Content(Model.UrlImagens + item.Codigo.Substring(16, 4) + "_" + item.Codigo.Substring(20, 2) + ".jpg")" class="img-responsive" />
+                        <img src="@Url.Content(Model.UrlImagens + item.Codigo.Substring(16, 4) + "_" + item.Codigo.Substring(20, 2) + ".jpg")" class="img-thumbnail equal-height" />
                     </a>
-                </div>
-                <div class="caption">
-                    <h3>@item.Codigo.Substring(16, 4)&nbsp;@item.Codigo.Substring(20, 2)</h3>
-                    <small>@item.Codigo_Reduzido</small>
+                    <div class="caption">
+                        <h5>@item.Codigo.Substring(16, 4)&nbsp;@item.Codigo.Substring(20, 2)<small>&nbsp;(@item.Codigo_Reduzido)</small></h5>
+                    </div>
                 </div>
             </div>
         }
     </div>
 </div>
+@section Scripts {
+    @Scripts.Render("~/bundles/equalheight")
+    <script>
+        $(document).ready(function () {
+            //API
+            scriptWrapper = (function () {
+
+                //API Attributes
+
+                //API Methods
+
+                // public API
+                return {
+                };
+            })();
+
+            //Init
+            (function Init() {
+                $('.equal-height').equalHeight();
+            })();
+        });
+    </script>
+}

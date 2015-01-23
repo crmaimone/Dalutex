@@ -23,6 +23,9 @@ namespace Dalutex
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/equalheight").Include(
+            "~/Scripts/jquery.equalheight.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/prePageFunctions").Include(
             "~/Scripts/prePageFunctions.js"));
 

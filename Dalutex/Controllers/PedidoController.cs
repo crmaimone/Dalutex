@@ -39,5 +39,12 @@ namespace Dalutex.Controllers
             model.UrlImagens = ConfigurationManager.AppSettings["PASTA_DESENHOS"];
             return View(model);
         }
+
+        // GET: Pedido
+        public ActionResult Ampliacao(string imagem)
+        {
+            ViewBag.ImgURL = imagem;
+            return View();
+        }
     }
 }

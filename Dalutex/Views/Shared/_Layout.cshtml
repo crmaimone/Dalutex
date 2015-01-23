@@ -8,7 +8,7 @@
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/prePageFunctions")
 </head>
-<body>
+<body class="background-dalutex">
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -31,12 +31,67 @@
     </div>
     <div class="container body-content">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Dalutex</p>
-        </footer>
     </div>
-
+    <hr />
+    <footer>
+        <nav class="navbar navbar-default navbar-bottom">
+            <div class="navbar-inner navbar-content-center">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-2 footerElement">
+                            <address>
+                                <strong>SHOWROOM SP:</strong>   <a href="mailto:vendas@dalutex.com.br">vendas@dalutex.com.br</a><br />
+                                Rua dos Italianos, 620<br />
+                                Bom Retiro - São Paulo - SP<br />
+                                CEP: 01131-000<br />
+                                <abbr title="Telefone">Fone:</abbr>
+                                +55 (11) 2102-9200
+                                <abbr title="Fax">Fax:</abbr>
+                                +55 (11) 2102-9222
+                            </address>
+                        </div>
+                        <div class="col-md-2 footerElement">
+                            <address>
+                                <strong>SHOWROOM RJ:</strong>   <a href="mailto:vendas@dalutex.com.br">vendas@dalutex.com.br</a><br />
+                                Botafogo - Humaitá - RJ<br />
+                                <abbr title="Telefone">Fone:</abbr>
+                                +55 (21) 3597-1400
+                            </address>
+                        </div>
+                        <div class="col-md-2 footerElement">
+                            <address>
+                                <strong>SHOWROOM RJ:</strong>   <a href="mailto:vendas@dalutex.com.br">vendas@dalutex.com.br</a><br />
+                                Botafogo - Humaitá - RJ<br />
+                                <abbr title="Telefone">Fone:</abbr>
+                                +55 (21) 3597-1400
+                            </address>
+                        </div>
+                        <div class="col-md-2 footerElement">
+                            <address>
+                                <strong>FÁBRICA:</strong>   <a href="mailto:vendas@dalutex.com.br">vendas@dalutex.com.br</a><br />
+                                Avenida Paraná, 250<br />
+                                Éden - Sorocaba - SP<br />
+                                CEP: 18105-000<br />
+                                <abbr title="Telefone">Fone:</abbr>
+                                +55 (15) 2102-1400
+                            </address>
+                        </div>
+                        <div class="col-md-4 footerElement">
+                            <h3>Procure em nosso site!</h3>
+                            @Html.TextBox("txtBusca")
+                            <br />
+                            @Html.ActionLink("> Mapa do site", "Mapa", "Home")
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p class="right">&copy; @DateTime.Now.Year - Dalutex. Todos os direitos reservados | Desenvolvido pela equipe de TI-Dalutex</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </footer>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)

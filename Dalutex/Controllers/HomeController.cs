@@ -30,6 +30,21 @@ namespace Dalutex.Controllers
             return View();
         }
 
+        [AllowAnonymous]
+        public ActionResult Busca(string value)
+        {
+            ViewBag.Message = "Busca:"+value;
+
+            return View();
+        }
+
+        [AllowAnonymous]
+        public ActionResult Mapa()
+        {
+            ViewBag.Message = "Mapa do site";
+
+            return View();
+        }
         public ActionResult SecurePage()
         {
             ViewBag.Message = "Página segura";

@@ -39,6 +39,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Oracle.ManagedDataAccess, Version=4.121.2.0, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -116,18 +123,6 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework">
-      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.Identity.Core">
-      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.0.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.Identity.Owin">
-      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.0.0\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
-      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.0.0\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -141,6 +136,24 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\DataModels\COLECOES.cs" />
+    <Compile Include="Models\DataModels\CONFIG_GERAL.cs" />
+    <Compile Include="Models\DataModels\CONTROLE_DESENV.cs" />
+    <Compile Include="Models\DataModels\CONTROLE_DESENV_CARAC_TEC.cs" />
+    <Compile Include="Models\DataModels\CONTROLE_DESENV_ITEM_STUDIO.cs" />
+    <Compile Include="Models\DataModels\CONTROLE_DESENV_LINK_CT.cs" />
+    <Compile Include="Models\DataModels\CONTROLE_DESENV_TECNOLOGIA.cs" />
+    <Compile Include="Models\DataModels\DalutexContext.cs" />
+    <Compile Include="Models\DataModels\ITENS_ESTOQUE.cs" />
+    <Compile Include="Models\DataModels\PECAS_PRODUTO.cs" />
+    <Compile Include="Models\DataModels\PED_ARTIGO_ATIVO.cs" />
+    <Compile Include="Models\DataModels\PED_ARTIGO_PROCESSO.cs" />
+    <Compile Include="Models\DataModels\PED_LINK_RESTRICAO_ARTIGO.cs" />
+    <Compile Include="Models\DataModels\PED_TECNOLOGIA.cs" />
+    <Compile Include="Models\DataModels\PRE_PEDIDO.cs" />
+    <Compile Include="Models\DataModels\PRE_PEDIDO_ITENS.cs" />
+    <Compile Include="Models\DataModels\TIDalutexContext.cs" />
+    <Compile Include="Models\DataModels\USUARIOS.cs" />
     <Compile Include="Models\PedidoViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -223,10 +236,9 @@
     <Content Include="Views\Pedido\Ampliacao.cshtml" />
     <Content Include="Views\Home\Busca.cshtml" />
     <Content Include="Views\Home\Mapa.cshtml" />
+    <Content Include="Views\Pedido\ArtigosDisponiveis.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\DataModels\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />

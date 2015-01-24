@@ -1,4 +1,5 @@
 ﻿using Dalutex.Models;
+using Dalutex.Models.DataModels;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -30,30 +31,30 @@ namespace Dalutex.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginViewModel model, string returnUrl)
         {
-            //if (ModelState.IsValid)
-            //{
-            //    Usuario objUsuario = null;
+            if (ModelState.IsValid)
+            {
+                USUARIOS objUsuario = null;
 
-            //    using(var ctx =new DalutexDataContext())
-            //    {
-            //        objUsuario = ctx.Usuarios.Where(x => x.USU_LOGIN == model.Login && x.USU_PWD == model.Password).FirstOrDefault();
-            //    }
+                using (var ctx = new TIDalutexContext())
+                {
+                    objUsuario = ctx.USUARIOS.Where(x => x.LOGIN_USU == model.Login && x.SENHA_USU == model.Password).FirstOrDefault();
+                }
 
-            //    if (objUsuario != null)
-            //    {
-            //        FormsAuthentication.SetAuthCookie(model.Login, model.RememberMe);
-            //        objUsuario.USU_PWD = null;
-            //        base.Session_Usuario = objUsuario;
-            //        if (!string.IsNullOrWhiteSpace(returnUrl))
-            //            return RedirectToLocal(returnUrl);
-            //        else
-            //            return RedirectToAction("Pedido", "Pedido");
-            //    }
-            //    else
-            //    {
-            //        ModelState.AddModelError("", "Usuário ou senha inválidos.");
-            //    }
-            //}
+                if (objUsuario != null)
+                {
+                    FormsAuthentication.SetAuthCookie(model.Login, model.RememberMe);
+                    objUsuario.SENHA_USU = null;
+                    base.Session_Usuario = objUsuario;
+                    if (!string.IsNullOrWhiteSpace(returnUrl))
+                        return RedirectToLocal(returnUrl);
+                    else
+                        return RedirectToAction("Pedido", "Pedido");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Usuário ou senha inválidos.");
+                }
+            }
 
             // If we got this far, something failed, redisplay form
             return View(model);

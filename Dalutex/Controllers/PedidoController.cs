@@ -18,22 +18,25 @@ namespace Dalutex.Controllers
         {
             PedidoViewModel model = new PedidoViewModel();
 
-            using (var ctxDx = new DalutexContext())
-            {
-                using (var ctxTI = new TIDalutexContext())
-                {
-                    //select ie.codigo_reduzido, 
-                    //       substr(codigo, 17, 4) desenho,
-                    //       substr(codigo, 21, 2) variante
-                    //  from dalutex.itens_estoque ie 
-                    // where ie.colecao = (select cf.parametro1 from CONFIG_GERAL cf where cf.id_config = 5)
+            //select ie.codigo_reduzido, 
+            //       substr(codigo, 17, 4) desenho,
+            //       substr(codigo, 21, 2) variante
+            //  from dalutex.itens_estoque ie 
+            // where ie.colecao = (select cf.parametro1 from CONFIG_GERAL cf where cf.id_config = 5)
 
+            using (var ctx = new TIDalutexContext())
+            {
+                var queryIDs = (
+                from cfg in ctx.CONFIG_GERAL
+                where cfg.ID_CONFIG == 5
+                select cfg
+                ).ToArray();
+
+                using (var ctxDx = new DalutexContext())
+                {
                     var queryItens =
                     from ie in ctxDx.ITENS_ESTOQUE
-                    join cf in ctxTI.CONFIG_GERAL on ie.COLECAO.ToString() equals cf.parametro1
-                    where (
-                        cf.id_config == 5
-                    )
+                    join cfg in queryIDs on ie.COLECAO.ToString() equals cfg.PARAMETRO1
                     select ie;
 
                     model.Galeria = queryItens.ToList();

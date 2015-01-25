@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using System.Linq;
+using System;
 
 namespace Dalutex.Controllers
 {
@@ -31,31 +32,38 @@ namespace Dalutex.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginViewModel model, string returnUrl)
         {
-            if (ModelState.IsValid)
+            try
             {
-                USUARIOS objUsuario = null;
-
-                using (var ctx = new TIDalutexContext())
+                if (ModelState.IsValid)
                 {
-                    objUsuario = ctx.USUARIOS.Where(x => x.LOGIN_USU == model.Login && x.SENHA_USU == model.Password).FirstOrDefault();
-                }
+                    USUARIOS objUsuario = null;
 
-                if (objUsuario != null)
-                {
-                    FormsAuthentication.SetAuthCookie(model.Login, model.RememberMe);
-                    objUsuario.SENHA_USU = null;
-                    base.Session_Usuario = objUsuario;
-                    if (!string.IsNullOrWhiteSpace(returnUrl))
-                        return RedirectToLocal(returnUrl);
+                    using (var ctx = new TIDalutexContext())
+                    {
+                        objUsuario = ctx.USUARIOS.Where(x => x.LOGIN_USU.ToUpper() == model.Login.ToUpper() && x.SENHA_USU == model.Password).FirstOrDefault();
+                    }
+
+                    if (objUsuario != null)
+                    {
+                        FormsAuthentication.SetAuthCookie(model.Login, model.RememberMe);
+                        objUsuario.SENHA_USU = null;
+                        base.Session_Usuario = objUsuario;
+                        if (!string.IsNullOrWhiteSpace(returnUrl))
+                            return RedirectToLocal(returnUrl);
+                        else
+                            return RedirectToAction("Pedido", "Pedido");
+                    }
                     else
-                        return RedirectToAction("Pedido", "Pedido");
+                    {
+                        ModelState.AddModelError("", "Usuário ou senha inválidos.");
+                    }
                 }
-                else
-                {
-                    ModelState.AddModelError("", "Usuário ou senha inválidos.");
-                }
-            }
 
+            }
+            catch(Exception ex)
+            {
+                base.Handle(ex);
+            }
             // If we got this far, something failed, redisplay form
             return View(model);
         }

@@ -15,31 +15,31 @@ namespace Dalutex.Models.DataModels
     public partial class CONFIG_GERAL
     {
         [Key]
-        public int id_config { get; set;}
-        public string rotina { get; set; }
-        public string ativo { get; set;}
-        public string boleano1 { get; set;}
-        public string boleano2 { get; set;}
-        public string boleano3 { get; set; }
-        public string boleano4 { get; set;}
-        public string boleano5{ get; set;}
-        public string boleano6{ get; set;}
-        public string boleano7{ get; set;}
-        public string boleano8{ get; set;}
-        public string boleano9{ get; set;}
-        public string boleano10{ get; set;}
-        public string parametro1{ get; set;}
-        public string parametro2{ get; set;}
-        public string parametro3{ get; set;}
-        public string parametro4{ get; set;}
-        public string parametro5{ get; set;}
-        public string parametro6{ get; set;}
-        public string parametro7{ get; set;}
-        public string parametro8{ get; set;}
-        public string parametro9{ get; set;}
-        public string parametro10{ get; set;}
-        public int? data1{ get; set;}
-        public int? data2{ get; set;}
-        public int? int1 { get; set; }
+        public int ID_CONFIG { get; set;}
+        public string ROTINA { get; set; }
+        public string ATIVO { get; set;}
+        public string BOLEANO1 { get; set;}
+        public string BOLEANO2 { get; set;}
+        public string BOLEANO3 { get; set; }
+        public string BOLEANO4 { get; set;}
+        public string BOLEANO5{ get; set;}
+        public string BOLEANO6{ get; set;}
+        public string BOLEANO7{ get; set;}
+        public string BOLEANO8{ get; set;}
+        public string BOLEANO9{ get; set;}
+        public string BOLEANO10{ get; set;}
+        public string PARAMETRO1{ get; set;}
+        public string PARAMETRO2{ get; set;}
+        public string PARAMETRO3{ get; set;}
+        public string PARAMETRO4{ get; set;}
+        public string PARAMETRO5{ get; set;}
+        public string PARAMETRO6{ get; set;}
+        public string PARAMETRO7{ get; set;}
+        public string PARAMETRO8{ get; set;}
+        public string PARAMETRO9{ get; set;}
+        public string PARAMETRO10{ get; set;}
+        public int? DATA1{ get; set;}
+        public int? DATA2{ get; set;}
+        public int? INT1 { get; set; }
     }
 }

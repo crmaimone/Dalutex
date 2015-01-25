@@ -28,6 +28,9 @@ namespace Dalutex.Models.DataModels
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<CONFIG_GERAL>()
+                .Property(e => e.ID_CONFIG);
+
             modelBuilder.Entity<CONTROLE_DESENV>()
                 .Property(e => e.ID_CONTROLE_DESENV)
                 .HasPrecision(38, 0);

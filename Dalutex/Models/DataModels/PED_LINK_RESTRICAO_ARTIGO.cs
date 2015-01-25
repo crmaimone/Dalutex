@@ -14,11 +14,15 @@ namespace Dalutex.Models.DataModels
     [Table("TI_DALUTEX.PED_LINK_RESTRICAO_ARTIGO")]
     public partial class PED_LINK_RESTRICAO_ARTIGO
     {
+        [Key]
+        [Column(Order = 1)]    
         public int? ID_CARAC_TEC { get; set; }
+
+        [Key]
+        [Column(Order = 2)]
+        public int? ID_TECNOLOGIA { get; set; }
 
         [StringLength(4)]
         public string ARTIGO { get; set; }
-
-        public int? ID_TECNOLOGIA { get; set; }
     }
 }

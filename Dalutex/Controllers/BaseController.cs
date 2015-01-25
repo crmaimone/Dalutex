@@ -25,6 +25,14 @@ namespace Dalutex.Controllers
 
         #region ErrorHandling
 
+        protected void Handle(Exception ex)
+        {
+            if (ex is DbEntityValidationException)
+                this.HandleDbEntityValidationException(ex as DbEntityValidationException);
+            else
+                throw new Exception(ex.Message + Environment.NewLine + GetInnerException(ex));
+        }
+
         protected string GetInnerException(Exception e, string strIn = "")
         {
             strIn = strIn + e.Message;
@@ -35,7 +43,7 @@ namespace Dalutex.Controllers
                 return strIn;
         }
 
-        protected void HandleDbEntityValidationException(DbEntityValidationException e, string strIn = "")
+        protected void HandleDbEntityValidationException(DbEntityValidationException e)
         {
             foreach (var vErr in e.EntityValidationErrors)
                 foreach (var err in vErr.ValidationErrors)

@@ -49,5 +49,11 @@ namespace Dalutex.Controllers
         {
             return View();
         }
+
+        // teste oda ---
+        public ActionResult MenuColecao()
+        {         
+            return View();
+        }
     }
 }

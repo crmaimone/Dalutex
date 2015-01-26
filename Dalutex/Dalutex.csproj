@@ -239,6 +239,7 @@
     <Content Include="Views\Home\Busca.cshtml" />
     <Content Include="Views\Home\Mapa.cshtml" />
     <Content Include="Views\Pedido\ArtigosDisponiveis.cshtml" />
+    <Content Include="Views\Pedido\MenuColecao.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

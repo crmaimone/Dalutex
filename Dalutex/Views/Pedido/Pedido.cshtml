@@ -6,7 +6,7 @@
 @{
     ViewBag.Title = "Pedido";
 }
-<div class="container-fluid">
+@*<div class="container-fluid">
     <div class="row">
         <div class="col btn-group btn-group-justified" role="group" aria-label="...">
             <div class="btn-group" role="group">
@@ -29,21 +29,21 @@
     <div class="row">
         <div class="col">
             <ul>
-                <li>Atual</li>
-                <li>Pocket</li>
+                <li>@Html.ActionLink("Coleção Atual", "Pedido", "Pedido")</li>
+                <li>@Html.ActionLink("Pocket", "Exclusivos", "Pedido")</li>
                 <li>Outros</li>
             </ul>
         </div>
-    </div>
+    </div>*@
     <div class="row">
         @foreach (VW_COLECAO_ATUAL item in Model.Galeria)
         {
             <div class="col-sm-4 col-md-2">
-                <div class="thumbnail" style="max-width: 200px; max-height: 100px">
+                <div class="thumbnail">
                     <a href="@Url.Content(@"Ampliacao?&imagem=" + Model.UrlImagens + item.DESENHO + "_" + item.VARIANTE + ".jpg")">
                         <img src="@Url.Content(Model.UrlImagens + item.DESENHO + "_" + item.VARIANTE + ".jpg")" class="img-thumbnail equal-height" />
                     </a>
-                    <div class="caption">
+                    <div class="caption">   
                         <h5>@item.DESENHO&nbsp;@item.VARIANTE<small>&nbsp;(@item.CODIGO_REDUZIDO)</small></h5>
                     </div>
                 </div>

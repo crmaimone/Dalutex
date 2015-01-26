@@ -38,9 +38,10 @@ namespace Dalutex.Controllers
         }
 
         // GET: Pedido
-        public ActionResult Ampliacao(string imagem)
+        public ActionResult Ampliacao(string imagem, string desenho)
         {
             ViewBag.ImgURL = imagem;
+            ViewBag.Desenho = desenho;
             return View();
         }
 

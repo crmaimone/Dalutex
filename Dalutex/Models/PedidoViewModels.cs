@@ -8,7 +8,7 @@ namespace Dalutex.Models
 {
     public class PedidoViewModel
     {
-        public List<ITENS_ESTOQUE> Galeria { get; set; }
+        public List<VW_COLECAO_ATUAL> Galeria { get; set; }
         public string UrlImagens { get; set; }
     }
 }

@@ -25,6 +25,8 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<PED_LINK_RESTRICAO_ARTIGO> PED_LINK_RESTRICAO_ARTIGO { get; set; }
         public virtual DbSet<CONTROLE_DESENV_LINK_CT> CONTROLE_DESENV_LINK_CT { get; set; }
         public virtual DbSet<CONFIG_GERAL> CONFIG_GERAL { get; set; }
+        //public virtual DbSet<VW_CARACT_DESENHOS> VW_CARACT_DESENHOS { get; set; }
+        public virtual DbSet<VW_COLECAO_ATUAL> VW_COLECAO_ATUAL { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

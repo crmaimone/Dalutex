@@ -36,15 +36,15 @@
         </div>
     </div>
     <div class="row">
-        @foreach (ItensEstoque item in Model.Galeria)
+        @foreach (VW_COLECAO_ATUAL item in Model.Galeria)
         {
             <div class="col-sm-4 col-md-2">
                 <div class="thumbnail" style="max-width: 200px; max-height: 100px">
-                    <a href="@Url.Content(@"Ampliacao?&imagem=" + Model.UrlImagens + item.Codigo.Substring(16, 4) + "_" + item.Codigo.Substring(20, 2) + ".jpg")">
-                        <img src="@Url.Content(Model.UrlImagens + item.Codigo.Substring(16, 4) + "_" + item.Codigo.Substring(20, 2) + ".jpg")" class="img-thumbnail equal-height" />
+                    <a href="@Url.Content(@"Ampliacao?&imagem=" + Model.UrlImagens + item.DESENHO + "_" + item.VARIANTE + ".jpg")">
+                        <img src="@Url.Content(Model.UrlImagens + item.DESENHO + "_" + item.VARIANTE + ".jpg")" class="img-thumbnail equal-height" />
                     </a>
                     <div class="caption">
-                        <h5>@item.Codigo.Substring(16, 4)&nbsp;@item.Codigo.Substring(20, 2)<small>&nbsp;(@item.Codigo_Reduzido)</small></h5>
+                        <h5>@item.DESENHO&nbsp;@item.VARIANTE<small>&nbsp;(@item.CODIGO_REDUZIDO)</small></h5>
                     </div>
                 </div>
             </div>

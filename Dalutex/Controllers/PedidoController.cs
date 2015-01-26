@@ -26,21 +26,11 @@ namespace Dalutex.Controllers
 
             using (var ctx = new TIDalutexContext())
             {
-                var queryIDs = (
-                from cfg in ctx.CONFIG_GERAL
-                where cfg.ID_CONFIG == 5
-                select cfg
-                ).ToArray();
+                var query =
+                from vw in ctx.VW_COLECAO_ATUAL
+                select vw;
 
-                using (var ctxDx = new DalutexContext())
-                {
-                    var queryItens =
-                    from ie in ctxDx.ITENS_ESTOQUE
-                    join cfg in queryIDs on ie.COLECAO.ToString() equals cfg.PARAMETRO1
-                    select ie;
-
-                    model.Galeria = queryItens.ToList();
-                }
+                model.Galeria = query.ToList();
             }
 
             model.UrlImagens = ConfigurationManager.AppSettings["PASTA_DESENHOS"];

@@ -136,6 +136,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\DataModels\VW_CARACT_DESENHOS.cs" />
     <Compile Include="Models\DataModels\COLECOES.cs" />
     <Compile Include="Models\DataModels\CONFIG_GERAL.cs" />
     <Compile Include="Models\DataModels\CONTROLE_DESENV.cs" />

@@ -31,6 +31,47 @@ namespace Dalutex.Models.DataModels
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<VW_ARTIGOS_DISPONIVEIS>()
+                .Property(e => e.ARTIGO)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_ARTIGOS_DISPONIVEIS>()
+                .Property(e => e.ID_TECNOLOGIA);
+
+            modelBuilder.Entity<VW_ARTIGOS_DISPONIVEIS>()
+                .Property(e => e.ID_CARAC_TEC);
+
+            modelBuilder.Entity<VW_ARTIGOS_DISPONIVEIS>()
+                .Property(e => e.TECNOLOGIA)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_CARACT_DESENHOS>()
+                .Property(e => e.DESENHO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_CARACT_DESENHOS>()
+                .Property(e => e.ID_CARAC_TEC);
+
+            modelBuilder.Entity<VW_CARACT_DESENHOS>()
+                .Property(e => e.CARACT_TECNICA)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_CARACT_DESENHOS>()
+                .Property(e => e.ID_TECNOLOGIA);
+
+            modelBuilder.Entity<VW_CARACT_DESENHOS>()
+                .Property(e => e.TECNOLOGIA)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_COLECAO_ATUAL>()
+                .Property(e => e.DESENHO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_COLECAO_ATUAL>()
+                .Property(e => e.VARIANTE)
+                .IsUnicode(false);
+
             modelBuilder.Entity<CONFIG_GERAL>()
                 .Property(e => e.ID_CONFIG);
 

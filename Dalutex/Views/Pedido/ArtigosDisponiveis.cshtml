@@ -1,7 +1,32 @@
-﻿
+﻿@using Dalutex.Models.DataModels;
+
 @{
-    ViewBag.Title = "ArtigosDisponiveis";
+    ViewBag.Title = "Artigos disponíveis";
 }
 
-<h2>ArtigosDisponiveis</h2>
-
+@if (@ViewBag.desenho == null)
+{
+    <h3>Desenho não informado</h3>
+}
+else
+{ 
+    <div>
+        <div class="panel panel-default">
+            <h2>Detalhe do desenho: @Url.Content(@ViewBag.desenho)</h2>
+            <img src="@Url.Content(ViewBag.ImgURL)" style="max-width:75px; max-height:75px;"/>
+        </div>
+    </div>
+    <div class="list-group">
+        @if (ViewBag.Artigos != null)
+        {
+            foreach (VW_ARTIGOS_DISPONIVEIS item in ViewBag.Artigos)
+            {
+                <a href="#" class="list-group-item">@item.ARTIGO &nbsp;@item.TECNOLOGIA</a>
+            }
+        }
+        else
+        {
+            <h3>Não foram encontrados artigos para este desenho.</h3>
+        }
+    </div>
+}

@@ -16,7 +16,7 @@ namespace Dalutex.Models.DataModels
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        [Column(Order = 1)]
+        [Column(Order = 2)]
         public int? ID_TECNOLOGIA { get; set; }
 
         [StringLength(4)]

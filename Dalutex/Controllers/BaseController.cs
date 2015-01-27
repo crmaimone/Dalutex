@@ -8,9 +8,9 @@ using System.Web.Mvc;
 
 namespace Dalutex.Controllers
 {
-    [Authorize]
     public class BaseController : Controller
     {
+        [Authorize]
         protected ActionResult RedirectToLocal(string returnUrl)
         {
             if (Url.IsLocalUrl(returnUrl))

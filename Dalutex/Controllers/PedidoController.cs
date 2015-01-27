@@ -7,6 +7,7 @@ using System.Collections;
 using Dalutex.Models;
 using System.Configuration;
 using Dalutex.Models.DataModels;
+using System.Data.Entity;
 
 namespace Dalutex.Controllers
 {
@@ -14,15 +15,9 @@ namespace Dalutex.Controllers
     {
         // GET: Pedido
         [AllowAnonymous]
-        public ActionResult Pedido()
+        public ActionResult DesenhosPorColecao()
         {
             PedidoViewModel model = new PedidoViewModel();
-
-            //select ie.codigo_reduzido, 
-            //       substr(codigo, 17, 4) desenho,
-            //       substr(codigo, 21, 2) variante
-            //  from dalutex.itens_estoque ie 
-            // where ie.colecao = (select cf.parametro1 from CONFIG_GERAL cf where cf.id_config = 5)
 
             using (var ctx = new TIDalutexContext())
             {
@@ -37,22 +32,63 @@ namespace Dalutex.Controllers
             return View(model);
         }
 
-        // GET: Pedido
-        public ActionResult Ampliacao(string imagem, string desenho)
+        public ActionResult ArtigosDisponiveis(string imagem, string desenho)
         {
             ViewBag.ImgURL = imagem;
             ViewBag.Desenho = desenho;
+
+            List<VW_CARACT_DESENHOS> lstQuery = null;
+
+            using(var ctx = new TIDalutexContext())
+            {
+                var query =
+                    from vw in ctx.VW_CARACT_DESENHOS
+                    where vw.DESENHO == desenho
+                    select vw;
+
+                lstQuery = query.ToList();
+            }
+
+            VW_CARACT_DESENHOS objPrimeiroCarac = lstQuery.FirstOrDefault();
+            int? iIDTecnologia;
+
+            if (objPrimeiroCarac != null)
+            {
+                iIDTecnologia = objPrimeiroCarac.ID_TECNOLOGIA;
+
+                List<int?> lstCaracteristicas = new List<int?>();
+
+                foreach (VW_CARACT_DESENHOS item in lstQuery)
+                {
+                    lstCaracteristicas.Add(item.ID_CARAC_TEC);
+                }
+
+                using (var ctx = new TIDalutexContext())
+                {
+                    //var query =
+                    //    from ar in ctx.VW_ARTIGOS_DISPONIVEIS
+                    //    where
+                    //        (ar.ID_TECNOLOGIA == null || ar.ID_TECNOLOGIA != iIDTecnologia)
+                    //        && (ar.ID_CARAC_TEC == null || !lstCaracteristicas.Contains(ar.ID_CARAC_TEC))
+                    //    select ar;
+
+
+                    ViewBag.Artigos = ctx.VW_ARTIGOS_DISPONIVEIS.Where(x => (
+                            x.ID_TECNOLOGIA == null || x.ID_TECNOLOGIA != iIDTecnologia
+                        )
+                        && (
+                            x.ID_CARAC_TEC == null || !lstCaracteristicas.Contains(x.ID_CARAC_TEC)
+                        )).ToList();
+
+                    //throw new Exception(query.ToString());
+                    //ViewBag.Artigos = query.ToList();
+
+                }
+            }
             return View();
         }
 
-
-        public ActionResult ArtigosDisponiveis(string desenho)
-        {
-            return View();
-        }
-
-        // teste oda ---
-        public ActionResult MenuColecao()
+        public ActionResult Pedido()
         {         
             return View();
         }

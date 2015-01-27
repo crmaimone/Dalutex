@@ -1,17 +1,16 @@
-﻿@model Dalutex.Models.PedidoViewModel
-
-@using Dalutex.Models;
-@using Dalutex.Models.DataModels;
-
+﻿
 @{
-    ViewBag.Title = "Pedido";
+    ViewBag.Title = "MenuColecao";
 }
-@*<div class="container-fluid">
+
+<h2>Pedidos::..</h2>
+
+<div class="container-fluid">
     <div class="row">
         <div class="col btn-group btn-group-justified" role="group" aria-label="...">
             <div class="btn-group" role="group">
                 <button type="button" class="btn btn-default">COLEÇÃO</button>
-            </div>            
+            </div>
             <div class="btn-group" role="group">
                 <button type="button" class="btn btn-default">EXCLUSIVOS</button>
             </div>
@@ -27,53 +26,10 @@
         </div>
     </div>
     <div class="row">
-        <div class="col">
-            <ul>
-                <li>@Html.ActionLink("Coleção Atual", "Pedido", "Pedido")</li>
-                <li>@Html.ActionLink("Pocket", "Exclusivos", "Pedido")</li>
-                <li>Outros</li>
-            </ul>
-        </div>
-    </div>*@
-    <div class="row">
-        @foreach (VW_COLECAO_ATUAL item in Model.Galeria)
-        {
-            <div class="col-sm-4 col-md-2">
-                <div class="thumbnail">
-                    <a href="@Url.Content(@"Ampliacao?&imagem=" + Model.UrlImagens + item.DESENHO + "_" + item.VARIANTE + ".jpg &&" +
-                                          @"Ampliacao?&desenho=" + item.DESENHO 
-                                        )">
-                        <img src="@Url.Content(Model.UrlImagens + item.DESENHO + "_" + item.VARIANTE + ".jpg")" class="img-thumbnail equal-height" />
-                    </a>
-                    <div class="caption">
-                        <h5>@item.DESENHO&nbsp;@item.VARIANTE<small>&nbsp;(@item.CODIGO_REDUZIDO)</small></h5>
-                    </div>
-                </div>
-            </div>
-        }
+        <ul class="nav-pills">
+            <li>@Html.ActionLink("Coleção Atual", "DesenhosPorColecao", "Pedido")</li>
+            <li>@Html.ActionLink("Pocket", "Exclusivos", "Pedido")</li>
+            <li>Outros</li>
+        </ul>
     </div>
-</div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/equalheight")
-    <script>
-        $(document).ready(function () {
-            //API
-            scriptWrapper = (function () {
-
-                //API Attributes
-
-                //API Methods
-
-                // public API
-                return {
-                };
-            })();
-
-            //Init
-            (function Init() {
-                $('.equal-height').equalHeight();
-            })();
-        });
-    </script>
-}
+    </div>

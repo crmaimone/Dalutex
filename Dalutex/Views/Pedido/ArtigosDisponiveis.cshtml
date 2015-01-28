@@ -16,17 +16,44 @@ else
             <img src="@Url.Content(ViewBag.ImgURL)" style="max-width:75px; max-height:75px;"/>
         </div>
     </div>
-    <div class="list-group">
+    <div class="list-group" >
         @if (ViewBag.Artigos != null)
         {
+            int i = 1;
+
             foreach (VW_ARTIGOS_DISPONIVEIS item in ViewBag.Artigos)
             {
-                <a href="#" class="list-group-item">@item.ARTIGO &nbsp;@item.TECNOLOGIA</a>
+                if (i == 1)
+                {
+                    <a href="#" class="list-group-item active">ARTIGOS E TECNOLOGIAS DISPONIVEIS</a>;
+                    i++;
+                }
+                else
+                {
+                    <a href="#" class="list-group-item"><strong>@item.ARTIGO</strong> &nbsp;&nbsp;@item.TECNOLOGIA</a>;
+                }
             }
         }
         else
         {
-            <h3>Não foram encontrados artigos para este desenho.</h3>
+            <h3>Não foi possivel carregar artigos disponiveis (msg:except caracteristiscas)</h3>//Não foram encontrados artigos para este desenho.
         }
     </div>
 }
+<table class="table table-striped">
+    <!-- On rows -->
+    <tr class="active">...</tr>
+    <tr class="success">...</tr>
+    <tr class="warning">...</tr>
+    <tr class="danger">...</tr>
+    <tr class="info">...</tr>
+
+    <!-- On cells (`td` or `th`) -->
+    <tr>
+        <td class="active">...</td>
+        <td class="success">...</td>
+        <td class="warning">...</td>
+        <td class="danger">...</td>
+        <td class="info">...</td>
+    </tr>
+</table>

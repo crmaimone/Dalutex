@@ -65,23 +65,25 @@ namespace Dalutex.Controllers
 
                 using (var ctx = new TIDalutexContext())
                 {
-                    //var query =
-                    //    from ar in ctx.VW_ARTIGOS_DISPONIVEIS
-                    //    where
-                    //        (ar.ID_TECNOLOGIA == null || ar.ID_TECNOLOGIA != iIDTecnologia)
-                    //        && (ar.ID_CARAC_TEC == null || !lstCaracteristicas.Contains(ar.ID_CARAC_TEC))
-                    //    select ar;
+                    var query =
+                        from ar in ctx.VW_ARTIGOS_DISPONIVEIS
+                        where
+                            (ar.ID_TECNOLOGIA == null || ar.ID_TECNOLOGIA != iIDTecnologia)
+                            && 
+                            (ar.ID_CARAC_TEC == null || !lstCaracteristicas.Contains(ar.ID_CARAC_TEC))
+                        select ar;
 
 
-                    ViewBag.Artigos = ctx.VW_ARTIGOS_DISPONIVEIS.Where(x => (
-                            x.ID_TECNOLOGIA == null || x.ID_TECNOLOGIA != iIDTecnologia
-                        )
-                        && (
-                            x.ID_CARAC_TEC == null || !lstCaracteristicas.Contains(x.ID_CARAC_TEC)
-                        )).ToList();
+                    //ViewBag.Artigos = ctx.VW_ARTIGOS_DISPONIVEIS.Where(x => (
+                    //        x.ID_TECNOLOGIA == null || x.ID_TECNOLOGIA != iIDTecnologia
+                    //    )
+                    //    && (
+                    //        x.ID_CARAC_TEC == null || !lstCaracteristicas.Contains(x.ID_CARAC_TEC)
+                    //    )).ToList();
 
                     //throw new Exception(query.ToString());
-                    //ViewBag.Artigos = query.ToList();
+                   
+                    ViewBag.Artigos = query.ToList();
 
                 }
             }

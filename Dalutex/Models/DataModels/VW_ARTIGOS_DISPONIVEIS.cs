@@ -18,14 +18,17 @@ namespace Dalutex.Models.DataModels
         [Column(Order=1)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int? ID_CARAC_TEC { get; set; }
+
         [Key]
         [Column(Order = 2)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int? ID_TECNOLOGIA { get; set; }
+
         [Key]
         [Column(Order = 3)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string ARTIGO { get; set; }
+
         public string TECNOLOGIA { get; set; }
 
         public override string ToString()

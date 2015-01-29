@@ -1,4 +1,5 @@
-﻿
+﻿@model Dalutex.Models.ArtigosDisponiveisViewModel
+
 @{
     ViewBag.Title = "MenuColecao";
 }
@@ -26,7 +27,7 @@
         </div>
     </div>
     <div class="row">
-        <ul class="nav-pills">
+        <ul>
             <li>@Html.ActionLink("Coleção Atual", "DesenhosPorColecao", "Pedido")</li>
             <li>@Html.ActionLink("Pocket", "Exclusivos", "Pedido")</li>
             <li>Outros</li>

@@ -13,8 +13,12 @@ namespace Dalutex.Controllers
 {
     public class PedidoController : BaseController
     {
-        // GET: Pedido
-        [AllowAnonymous]
+
+        public ActionResult Pedido()
+        {
+            return View();
+        }
+        
         public ActionResult DesenhosPorColecao()
         {
             PedidoViewModel model = new PedidoViewModel();
@@ -32,10 +36,12 @@ namespace Dalutex.Controllers
             return View(model);
         }
 
-        public ActionResult ArtigosDisponiveis(string imagem, string desenho)
+        public ActionResult ArtigosDisponiveis(string imagem, string desenho, string variante)
         {
-            ViewBag.ImgURL = imagem;
-            ViewBag.Desenho = desenho;
+            ArtigosDisponiveisViewModel model = new ArtigosDisponiveisViewModel();
+            model.Desenho = desenho;
+            model.Variante = variante;
+            model.Imagem = imagem;
 
             List<VW_CARACT_DESENHOS> lstQuery = null;
 
@@ -65,6 +71,7 @@ namespace Dalutex.Controllers
 
                 using (var ctx = new TIDalutexContext())
                 {
+                    //TODO:Verificar casos em que a key está nula e está omitindo do resultado.
                     var query =
                         from ar in ctx.VW_ARTIGOS_DISPONIVEIS
                         where
@@ -72,26 +79,52 @@ namespace Dalutex.Controllers
                             && 
                             (ar.ID_CARAC_TEC == null || !lstCaracteristicas.Contains(ar.ID_CARAC_TEC))
                         select ar;
-
-
-                    //ViewBag.Artigos = ctx.VW_ARTIGOS_DISPONIVEIS.Where(x => (
-                    //        x.ID_TECNOLOGIA == null || x.ID_TECNOLOGIA != iIDTecnologia
-                    //    )
-                    //    && (
-                    //        x.ID_CARAC_TEC == null || !lstCaracteristicas.Contains(x.ID_CARAC_TEC)
-                    //    )).ToList();
-
-                    //throw new Exception(query.ToString());
                    
-                    ViewBag.Artigos = query.ToList();
+                    model.Artigos = query.ToList();
 
                 }
             }
-            return View();
+
+            return View(model);
         }
 
-        public ActionResult Pedido()
-        {         
+        public ActionResult InserirNoCarrinho(string desenho, string variante, string artigo, string tecnologia)
+        {
+            InserirNoCarrinhoViewModel model = new InserirNoCarrinhoViewModel();
+            model.Desenho = desenho;
+            model.Variante = variante;
+            model.Artigo = artigo;
+            model.Tecnologia = tecnologia;
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult InserirNoCarrinho(InserirNoCarrinhoViewModel model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if (base.Session_Carrinho == null)
+                        base.Session_Carrinho = new List<InserirNoCarrinhoViewModel>();
+
+                    base.Session_Carrinho.Add(model);
+
+                }
+            }
+            catch(Exception ex)
+            {
+                base.Handle(ex);
+            }
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        public ActionResult Carrinho()
+        {
+            ViewBag.Carrinho = base.Session_Carrinho;
+
             return View();
         }
     }

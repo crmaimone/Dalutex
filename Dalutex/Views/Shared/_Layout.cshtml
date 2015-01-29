@@ -24,10 +24,18 @@
                     <li>@Html.ActionLink("Início", "Index", "Home")</li>
                     <li>@Html.ActionLink("Sobre", "About", "Home")</li>
                     <li>@Html.ActionLink("Contato", "Contact", "Home")</li>
-                    if(User.Identity.IsAuthenticated)
+                    @if(User.Identity.IsAuthenticated)
                     {
                         <li>@Html.ActionLink("Pedidos", "Pedido", "Pedido")</li>
                     }
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        @if(User.Identity.IsAuthenticated)
+                        {
+                            <a href="~/Pedido/Carrinho"><span class="glyphicon glyphicon-shopping-cart"></span></a>
+                        }
+                    </li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

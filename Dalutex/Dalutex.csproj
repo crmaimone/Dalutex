@@ -241,6 +241,8 @@
     <Content Include="Views\Home\Mapa.cshtml" />
     <Content Include="Views\Pedido\ArtigosDisponiveis.cshtml" />
     <Content Include="Views\Pedido\Pedido.cshtml" />
+    <Content Include="Views\Pedido\InserirNoCarrinho.cshtml" />
+    <Content Include="Views\Pedido\Carrinho.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

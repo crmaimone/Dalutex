@@ -1,0 +1,46 @@
+﻿@model Dalutex.Models.InserirNoCarrinhoViewModel
+
+@{
+    ViewBag.Title = "Inserir no carrinho";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="container">
+    <div class="row">
+        <h3>Desenho:&nbsp;@Model.Desenho</h3>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            @using (Html.BeginForm("InserirNoCarrinho", "Pedido", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary()
+
+                <fieldset>
+                    <legend>Dados do pedido</legend>
+                    <ul>
+                        <li>
+                            @Html.LabelFor(x => x.Pecas)
+                            @Html.TextBoxFor(x => x.Pecas)
+                        </li>
+                        <li>
+                            @Html.LabelFor(x => x.Quilos)
+                            @Html.TextBoxFor(x => x.Quilos)
+                        </li>
+                        <li>
+                            @Html.LabelFor(x => x.Preco)
+                            @Html.TextBoxFor(x => x.Preco)
+                        </li>
+                    </ul>
+                    @Html.HiddenFor(x => x.Desenho)
+                    @Html.HiddenFor(x => x.Variante)
+                    @Html.HiddenFor(x => x.Artigo)
+                    @Html.HiddenFor(x => x.Tecnologia)
+
+                    <input type="submit" value="Incluir"/>
+                </fieldset>
+            }
+        </div>
+    </div>
+</div>

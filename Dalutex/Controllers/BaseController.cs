@@ -1,4 +1,5 @@
-﻿using Dalutex.Models.DataModels;
+﻿using Dalutex.Models;
+using Dalutex.Models.DataModels;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
@@ -69,6 +70,20 @@ namespace Dalutex.Controllers
             }
         }
 
+        protected List<InserirNoCarrinhoViewModel> Session_Carrinho
+        {
+            get
+            {
+                if (Session["SESSION_CARRINHO"] == null)
+                    return null;
+                else
+                    return Session["SESSION_CARRINHO"] as List<InserirNoCarrinhoViewModel>;
+            }
+            set
+            {
+                Session["SESSION_CARRINHO"] = value;
+            }
+        }
         #endregion
 
     }

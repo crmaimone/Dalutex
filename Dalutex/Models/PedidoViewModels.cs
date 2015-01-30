@@ -41,4 +41,24 @@ namespace Dalutex.Models
         [Display(Name = "Preço")]
         public decimal Preco { get; set; }
     }
+
+    public class ConclusaoPedidoViewModel
+    {
+        [Display(Name="Tipo de pedido")]
+        public List<string> TipoPedido { get; set; }
+        [Display(Name = "Condição de pagto")]
+        public List<string> CondicaoPagto { get; set; }
+        [Display(Name = "Moeda")]
+        public List<string> Moeda { get; set; }
+        [Display(Name = "Via transporte")]
+        public List<string> ViaTransporte { get; set; }
+        [Display(Name = "Frete")]
+        public List<string> Frete { get; set; }
+        [Display(Name = "Local de vendas")]
+        public List<string> LocalVenda { get; set; }
+        [Display(Name = "Canal de vendas")]
+        public List<string> CanalVenda { get; set; }
+        [Display(Name = "Tipo de atendimento")]
+        public List<string> TipoAtendimento { get; set; }
+    }
 }

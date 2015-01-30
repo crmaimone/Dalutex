@@ -18,7 +18,7 @@ namespace Dalutex.Controllers
         {
             return View();
         }
-        
+
         public ActionResult DesenhosPorColecao()
         {
             PedidoViewModel model = new PedidoViewModel();
@@ -36,16 +36,16 @@ namespace Dalutex.Controllers
             return View(model);
         }
 
-        public ActionResult ArtigosDisponiveis(string imagem, string desenho, string variante)
+        public ActionResult ArtigosDisponiveis(string desenho, string variante)
         {
             ArtigosDisponiveisViewModel model = new ArtigosDisponiveisViewModel();
             model.Desenho = desenho;
             model.Variante = variante;
-            model.Imagem = imagem;
+            model.Imagem = ConfigurationManager.AppSettings["PASTA_DESENHOS"] + desenho + "_" + variante + ".jpg";
 
             List<VW_CARACT_DESENHOS> lstQuery = null;
 
-            using(var ctx = new TIDalutexContext())
+            using (var ctx = new TIDalutexContext())
             {
                 var query =
                     from vw in ctx.VW_CARACT_DESENHOS
@@ -76,10 +76,10 @@ namespace Dalutex.Controllers
                         from ar in ctx.VW_ARTIGOS_DISPONIVEIS
                         where
                             (ar.ID_TECNOLOGIA == null || ar.ID_TECNOLOGIA != iIDTecnologia)
-                            && 
+                            &&
                             (ar.ID_CARAC_TEC == null || !lstCaracteristicas.Contains(ar.ID_CARAC_TEC))
                         select ar;
-                   
+
                     model.Artigos = query.ToList();
 
                 }
@@ -111,9 +111,10 @@ namespace Dalutex.Controllers
 
                     base.Session_Carrinho.Add(model);
 
+                    return RedirectToAction("ArtigosDisponiveis", "Pedido", new { desenho = model.Desenho, variante = model.Variante, });
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 base.Handle(ex);
             }
@@ -125,6 +126,11 @@ namespace Dalutex.Controllers
         {
             ViewBag.Carrinho = base.Session_Carrinho;
 
+            return View();
+        }
+
+        public ActionResult ConclusaoPedido()
+        {
             return View();
         }
     }

@@ -243,6 +243,7 @@
     <Content Include="Views\Pedido\Pedido.cshtml" />
     <Content Include="Views\Pedido\InserirNoCarrinho.cshtml" />
     <Content Include="Views\Pedido\Carrinho.cshtml" />
+    <Content Include="Views\Pedido\ConclusaoPedido.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

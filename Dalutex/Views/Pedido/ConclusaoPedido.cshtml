@@ -1,0 +1,64 @@
+﻿@model Dalutex.Models.ConclusaoPedidoViewModel
+
+@{
+    ViewBag.Title = "Conclusão de pedido";
+}
+
+<div class="container">
+    <div class="row"><h2>@ViewBag.Title</h2></div>
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.TipoPedido)
+            <select style="width:200px"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.CondicaoPagto)
+            <select style="width:200px" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.Moeda)
+            <select style="width:200px" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.ViaTransporte)
+            <select style="width:200px" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.Frete)
+            <select style="width:200px" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.LocalVenda)
+            <select style="width:200px" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.CanalVenda)
+            <select style="width:200px" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(x => x.TipoAtendimento)
+            <select style="width:200px" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            @Html.ActionLink("Confirmar", "#", "Pedido", null, new { @class = "btn btn-default left" })
+            @Html.ActionLink("Cancelar", "#", "Pedido", null, new { @class = "btn btn-default btn-warning right" })
+        </div>
+    </div>
+</div>
+

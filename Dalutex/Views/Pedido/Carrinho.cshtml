@@ -14,7 +14,7 @@
                     { 
                         foreach (InserirNoCarrinhoViewModel item in ViewBag.Carrinho)
                         {
-                            <a href="#" class="list-group-item"><strong>@item.Desenho - @item.Variante - @item.Artigo - @item.Tecnologia</strong>Peças: @item.Pecas Preço:@item.Preco</a>
+                            <a href="#" class="list-group-item"><strong>@item.Desenho - @item.Variante - @item.Artigo - @item.Tecnologia</strong> Peças: @item.Pecas Preço:@item.Preco</a>
                         }
                     }
                     else
@@ -23,6 +23,9 @@
                     }
             </div>
         </div>
+    </div>
+    <div class="row">
+        @Html.ActionLink("Concluir pedido", "ConclusaoPedido", "Pedido", null, new { @class = "btn btn-default right" })
     </div>
 </div>
 

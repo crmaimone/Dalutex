@@ -136,6 +136,9 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\DataModels\PRE_PEDIDO_ATEND.cs" />
+    <Compile Include="Models\DataModels\PRE_PEDIDO_COND_PAG.cs" />
+    <Compile Include="Models\DataModels\TAMANHOPECA.cs" />
     <Compile Include="Models\DataModels\VW_ARTIGOS_DISPONIVEIS.cs" />
     <Compile Include="Models\DataModels\VW_COLECAO_ATUAL.cs" />
     <Compile Include="Models\DataModels\VW_CARACT_DESENHOS.cs" />
@@ -157,6 +160,13 @@
     <Compile Include="Models\DataModels\PRE_PEDIDO_ITENS.cs" />
     <Compile Include="Models\DataModels\TIDalutexContext.cs" />
     <Compile Include="Models\DataModels\USUARIOS.cs" />
+    <Compile Include="Models\DataModels\CANAIS_VENDA.cs" />
+    <Compile Include="Models\DataModels\COML_CONDICOESPAGAME.cs" />
+    <Compile Include="Models\DataModels\COML_GERENCIAS.cs" />
+    <Compile Include="Models\DataModels\COML_TIPOSFRETE.cs" />
+    <Compile Include="Models\DataModels\COML_VIASTRANSPORTE.cs" />
+    <Compile Include="Models\DataModels\LOCALVENDA.cs" />
+    <Compile Include="Models\DataModels\CADASTRO_MOEDAS.cs" />
     <Compile Include="Models\PedidoViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

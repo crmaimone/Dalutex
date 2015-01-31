@@ -15,6 +15,12 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<COLECOES> COLECOES { get; set; }
         public virtual DbSet<PECAS_PRODUTO> PECAS_PRODUTO { get; set; }
         public virtual DbSet<ITENS_ESTOQUE> ITENS_ESTOQUE { get; set; }
+        public virtual DbSet<COML_GERENCIAS> COML_GERENCIAS { get; set; }
+        public virtual DbSet<COML_TIPOSFRETE> COML_TIPOSFRETE { get; set; }
+        public virtual DbSet<COML_VIASTRANSPORTE> COML_VIASTRANSPORTE { get; set; }
+        public virtual DbSet<CANAIS_VENDA> CANAIS_VENDA { get; set; }
+        public virtual DbSet<COML_CONDICOESPAGAME> COML_CONDICOESPAGAME { get; set; }
+        public virtual DbSet<CADASTRO_MOEDAS> CADASTRO_MOEDAS { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

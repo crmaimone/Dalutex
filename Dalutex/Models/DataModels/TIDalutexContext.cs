@@ -28,9 +28,29 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<VW_CARACT_DESENHOS> VW_CARACT_DESENHOS { get; set; }
         public virtual DbSet<VW_COLECAO_ATUAL> VW_COLECAO_ATUAL { get; set; }
         public virtual DbSet<VW_ARTIGOS_DISPONIVEIS> VW_ARTIGOS_DISPONIVEIS { get; set; }
+        public virtual DbSet<LOCALVENDA> LOCALVENDA { get; set; }
+        public virtual DbSet<PRE_PEDIDO_ATEND> PRE_PEDIDO_ATEND { get; set; }
+        public virtual DbSet<PRE_PEDIDO_COND_PAG> PRE_PEDIDO_COND_PAG { get; set; }
+        public virtual DbSet<TAMANHOPECA> TAMANHOPECA { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<PRE_PEDIDO_ATEND>()
+                .Property(e => e.COD_ATEND)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<PRE_PEDIDO_ATEND>()
+                .Property(e => e.DESCRI_ATEND)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<TAMANHOPECA>()
+                .Property(e => e.CODIGO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<TAMANHOPECA>()
+                .Property(e => e.DESCRICAO)
+                .IsUnicode(false);
+
             modelBuilder.Entity<VW_ARTIGOS_DISPONIVEIS>()
                 .Property(e => e.ARTIGO)
                 .IsFixedLength()

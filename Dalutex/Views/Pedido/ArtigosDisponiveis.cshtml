@@ -15,7 +15,6 @@ else
     <div>
         <div class="panel panel-default">
             <h2>Detalhe do desenho: @Url.Content(Model.Desenho)</h2>
-            <img src="@Url.Content(Model.Imagem)" style="max-width:75px; max-height:75px;"/>
         </div>
     </div>
 
@@ -41,6 +40,9 @@ else
                 {
                     <h3>Não foi possivel carregar artigos disponiveis</h3>
                 }
+            </div>
+            <div class="col-sm-6">
+                <img src="@Url.Content(Model.Imagem)" style="max-width:100%"/>
             </div>
         </div>
     </div>

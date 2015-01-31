@@ -7,58 +7,81 @@
 <div class="container">
     <div class="row"><h2>@ViewBag.Title</h2></div>
     <div class="row">
-        <div class="col-md-6">
-            @Html.LabelFor(x => x.TipoPedido)
-            <select style="width:200px"/>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            @Html.LabelFor(x => x.CondicaoPagto)
-            <select style="width:200px" />
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            @Html.LabelFor(x => x.Moeda)
-            <select style="width:200px" />
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            @Html.LabelFor(x => x.ViaTransporte)
-            <select style="width:200px" />
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            @Html.LabelFor(x => x.Frete)
-            <select style="width:200px" />
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            @Html.LabelFor(x => x.LocalVenda)
-            <select style="width:200px" />
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            @Html.LabelFor(x => x.CanalVenda)
-            <select style="width:200px" />
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            @Html.LabelFor(x => x.TipoAtendimento)
-            <select style="width:200px" />
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            @Html.ActionLink("Confirmar", "#", "Pedido", null, new { @class = "btn btn-default left" })
-            @Html.ActionLink("Cancelar", "#", "Pedido", null, new { @class = "btn btn-default btn-warning right" })
+        <div class="col-md-8">
+            <section id="ConclusaoForm">
+                @using (Html.BeginForm("ConclusaoPedido", "Pedido", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <h4>Dados do pedido:</h4>
+                    <hr />
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.TipoPedido, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-10">
+                            @Html.DropDownList("lstTiposPedido", new SelectList(Model.TipoPedido, "VALUEFIELD", "LABELFIELD"), "Selecione")
+                            @Html.ValidationMessageFor(m => m.TipoPedido, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.CondicaoPagto, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-10">
+                            @Html.DropDownList("lstTiposPgto", new SelectList(Model.CondicaoPagto, "VALUEFIELD", "LABELFIELD"), "Selecione")
+                            @Html.ValidationMessageFor(m => m.CondicaoPagto, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Moeda, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-10">
+                            @Html.DropDownList("lstMoedas", new SelectList(Model.Moeda, "VALUEFIELD", "LABELFIELD"), "Selecione")
+                            @Html.ValidationMessageFor(m => m.Moeda, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.ViaTransporte, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-10">
+                            @Html.DropDownList("lstViasTransp", new SelectList(Model.ViaTransporte, "VALUEFIELD", "LABELFIELD"), "Selecione")
+                            @Html.ValidationMessageFor(m => m.ViaTransporte, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Frete, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-10">
+                            @Html.DropDownList("lstFretes", new SelectList(Model.Frete, "VALUEFIELD", "LABELFIELD"), "Selecione")
+                            @Html.ValidationMessageFor(m => m.Frete, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.LocalVenda, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-10">
+                            @Html.DropDownList("lstLocaisVenda", new SelectList(Model.LocalVenda, "VALUEFIELD", "LABELFIELD"), "Selecione")
+                            @Html.ValidationMessageFor(m => m.LocalVenda, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.CanalVenda, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-10">
+                            @Html.DropDownList("lstCanaisVenda", new SelectList(Model.CanalVenda, "VALUEFIELD", "LABELFIELD"), "Selecione")
+                            @Html.ValidationMessageFor(m => m.CanalVenda, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.TipoAtendimento, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-10">
+                            @Html.DropDownList("lstTiposAtendimento", new SelectList(Model.TipoAtendimento, "VALUEFIELD", "LABELFIELD"), "Selecione")
+                            @Html.ValidationMessageFor(m => m.TipoAtendimento, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            @Html.ActionLink("Cancelar", "#", "Pedido", null, new { @class = "btn btn-default btn-warning right" })
+                        </div>
+                        <div class="col-md-offset-2 col-md-10">
+                            @Html.ActionLink("Confirmar", "#", "Pedido", null, new { @class = "btn btn-default left" })
+                        </div>
+                    </div>
+                }
+            </section>
         </div>
     </div>
 </div>
-

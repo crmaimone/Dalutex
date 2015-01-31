@@ -44,21 +44,45 @@ namespace Dalutex.Models
 
     public class ConclusaoPedidoViewModel
     {
+        #region Combos
+
         [Display(Name="Tipo de pedido")]
-        public List<string> TipoPedido { get; set; }
+        public List<COML_TIPOSPEDIDOS> TiposPedido { get; set; }
+
         [Display(Name = "Condição de pagto")]
-        public List<string> CondicaoPagto { get; set; }
+        public List<VW_CONDICAO_PGTO> CondicoesPagto { get; set; }
+
         [Display(Name = "Moeda")]
-        public List<string> Moeda { get; set; }
+        public List<CADASTRO_MOEDAS> Moedas { get; set; }
+
         [Display(Name = "Via transporte")]
-        public List<string> ViaTransporte { get; set; }
+        public List<COML_VIASTRANSPORTE> ViasTransporte { get; set; }
+
         [Display(Name = "Frete")]
-        public List<string> Frete { get; set; }
+        public List<COML_TIPOSFRETE> Fretes { get; set; }
+
         [Display(Name = "Local de vendas")]
-        public List<string> LocalVenda { get; set; }
+        public List<LOCALVENDA> LocaisVenda { get; set; }
+
         [Display(Name = "Canal de vendas")]
-        public List<string> CanalVenda { get; set; }
+        public List<CANAIS_VENDA> CanaisVenda { get; set; }
+
+        [Display(Name = "Gerente de vendas")]
+        public List<COML_GERENCIAS> GerentesVenda { get; set; }
+
         [Display(Name = "Tipo de atendimento")]
-        public List<string> TipoAtendimento { get; set; }
+        public List<PRE_PEDIDO_ATEND> TiposAtendimento { get; set; }
+
+        #endregion
+
+        #region 
+
+        #endregion
+
+        #region Itens do carrinho
+
+        public List<InserirNoCarrinhoViewModel> Itens { get; set; }
+
+        #endregion
     }
 }

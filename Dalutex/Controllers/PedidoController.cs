@@ -107,9 +107,19 @@ namespace Dalutex.Controllers
                 if (ModelState.IsValid)
                 {
                     if (base.Session_Carrinho == null)
-                        base.Session_Carrinho = new List<InserirNoCarrinhoViewModel>();
+                    {
+                        base.Session_Carrinho = new ConclusaoPedidoViewModel();
+                        base.Session_Carrinho.Itens = new List<InserirNoCarrinhoViewModel>();
+                    }
+                    else
+                    {
+                        if (base.Session_Carrinho.Itens == null)
+                        {
+                            base.Session_Carrinho.Itens = new List<InserirNoCarrinhoViewModel>();
+                        }
+                    }
 
-                    base.Session_Carrinho.Add(model);
+                    base.Session_Carrinho.Itens.Add(model);
 
                     return RedirectToAction("ArtigosDisponiveis", "Pedido", new { desenho = model.Desenho, variante = model.Variante, });
                 }
@@ -131,7 +141,29 @@ namespace Dalutex.Controllers
 
         public ActionResult ConclusaoPedido()
         {
-            return View();
+            ConclusaoPedidoViewModel model = new ConclusaoPedidoViewModel();
+
+            using(DalutexContext ctxDalutex = new DalutexContext())
+            {
+                model.TiposPedido = ctxDalutex.COML_TIPOSPEDIDOS.ToList();
+                model.Moedas = ctxDalutex.CADASTRO_MOEDAS.ToList();
+                model.ViasTransporte = ctxDalutex.COML_VIASTRANSPORTE.ToList();
+                model.Fretes = ctxDalutex.COML_TIPOSFRETE.ToList();
+                model.CanaisVenda = ctxDalutex.CANAIS_VENDA.ToList();
+                model.GerentesVenda = ctxDalutex.COML_GERENCIAS.Where(x => x.CANALVENDA == (int)Enums.CanaisVenda.TELEVENDAS).ToList();
+            }
+
+            using (TIDalutexContext ctxTI = new TIDalutexContext())
+            {
+                model.LocaisVenda = ctxTI.LOCALVENDA.ToList();
+                model.TiposAtendimento = ctxTI.PRE_PEDIDO_ATEND.ToList();
+                model.CondicoesPagto = ctxTI.VW_CONDICAO_PGTO.ToList();
+            }
+
+            if (base.Session_Carrinho != null)
+                model.Itens = base.Session_Carrinho.Itens;
+
+            return View(model);
         }
     }
 }

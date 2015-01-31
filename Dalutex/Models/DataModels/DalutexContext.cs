@@ -21,9 +21,19 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<CANAIS_VENDA> CANAIS_VENDA { get; set; }
         public virtual DbSet<COML_CONDICOESPAGAME> COML_CONDICOESPAGAME { get; set; }
         public virtual DbSet<CADASTRO_MOEDAS> CADASTRO_MOEDAS { get; set; }
+        public virtual DbSet<COML_TIPOSPEDIDOS> COML_TIPOSPEDIDOS { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<COML_TIPOSPEDIDOS>()
+                .Property(e => e.DESCRICAO)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<COML_TIPOSPEDIDOS>()
+                .Property(e => e.STEXIGEREPRESENTANTE)
+                .IsUnicode(false);
+
             modelBuilder.Entity<COLECOES>()
                 .Property(e => e.ID_COLECAO)
                 .IsUnicode(false);

@@ -1,9 +1,10 @@
 ﻿@model Dalutex.Models.ConclusaoPedidoViewModel
+@using Dalutex.Models;
 
 @{
     ViewBag.Title = "Conclusão de pedido";
 }
-
+@Styles.Render("~/Content/dataTables")
 <div class="container">
     <div class="row"><h2>@ViewBag.Title</h2></div>
     <div class="row">
@@ -16,67 +17,74 @@
                     <hr />
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     <div class="form-group">
-                        @Html.LabelFor(x => x.TipoPedido, new { @class = "col-md-2 control-label" })
-                        <div class="col-md-10">
-                            @Html.DropDownList("lstTiposPedido", new SelectList(Model.TipoPedido, "VALUEFIELD", "LABELFIELD"), "Selecione")
-                            @Html.ValidationMessageFor(m => m.TipoPedido, "", new { @class = "text-danger" })
+                        @Html.LabelFor(x => x.TiposPedido, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-8">
+                            @Html.DropDownList("lstTiposPedido", new SelectList(Model.TiposPedido, "TIPOPEDIDO", "DESCRICAO"), "Selecione")
+                            @Html.ValidationMessageFor(m => m.TiposPedido, "", new { @class = "text-danger" })
                         </div>
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(x => x.CondicaoPagto, new { @class = "col-md-2 control-label" })
-                        <div class="col-md-10">
-                            @Html.DropDownList("lstTiposPgto", new SelectList(Model.CondicaoPagto, "VALUEFIELD", "LABELFIELD"), "Selecione")
-                            @Html.ValidationMessageFor(m => m.CondicaoPagto, "", new { @class = "text-danger" })
+                        @Html.LabelFor(x => x.CondicoesPagto, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-8">
+                            @Html.DropDownList("lstTiposPgto", new SelectList(Model.CondicoesPagto, "ID_COND", "DESCRI_COND"), "Selecione")
+                            @Html.ValidationMessageFor(m => m.CondicoesPagto, "", new { @class = "text-danger" })
                         </div>
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Moeda, new { @class = "col-md-2 control-label" })
-                        <div class="col-md-10">
-                            @Html.DropDownList("lstMoedas", new SelectList(Model.Moeda, "VALUEFIELD", "LABELFIELD"), "Selecione")
-                            @Html.ValidationMessageFor(m => m.Moeda, "", new { @class = "text-danger" })
+                        @Html.LabelFor(x => x.Moedas, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-8">
+                            @Html.DropDownList("lstMoedas", new SelectList(Model.Moedas, "CODIGOMOEDA", "NOMEMOEDA"), "Selecione")
+                            @Html.ValidationMessageFor(m => m.Moedas, "", new { @class = "text-danger" })
                         </div>
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(x => x.ViaTransporte, new { @class = "col-md-2 control-label" })
-                        <div class="col-md-10">
-                            @Html.DropDownList("lstViasTransp", new SelectList(Model.ViaTransporte, "VALUEFIELD", "LABELFIELD"), "Selecione")
-                            @Html.ValidationMessageFor(m => m.ViaTransporte, "", new { @class = "text-danger" })
+                        @Html.LabelFor(x => x.ViasTransporte, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-8">
+                            @Html.DropDownList("lstViasTransp", new SelectList(Model.ViasTransporte, "VIATRANSPORTE", "DESCRICAO"), "Selecione")
+                            @Html.ValidationMessageFor(m => m.ViasTransporte, "", new { @class = "text-danger" })
                         </div>
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Frete, new { @class = "col-md-2 control-label" })
-                        <div class="col-md-10">
-                            @Html.DropDownList("lstFretes", new SelectList(Model.Frete, "VALUEFIELD", "LABELFIELD"), "Selecione")
-                            @Html.ValidationMessageFor(m => m.Frete, "", new { @class = "text-danger" })
+                        @Html.LabelFor(x => x.Fretes, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-8">
+                            @Html.DropDownList("lstFretes", new SelectList(Model.Fretes, "TIPOFRETE", "DESCRICAO"), "Selecione")
+                            @Html.ValidationMessageFor(m => m.Fretes, "", new { @class = "text-danger" })
                         </div>
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(x => x.LocalVenda, new { @class = "col-md-2 control-label" })
-                        <div class="col-md-10">
-                            @Html.DropDownList("lstLocaisVenda", new SelectList(Model.LocalVenda, "VALUEFIELD", "LABELFIELD"), "Selecione")
-                            @Html.ValidationMessageFor(m => m.LocalVenda, "", new { @class = "text-danger" })
+                        @Html.LabelFor(x => x.LocaisVenda, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-8">
+                            @Html.DropDownList("lstLocaisVenda", new SelectList(Model.LocaisVenda, "CODIGO", "DESCRICAO"), "Selecione")
+                            @Html.ValidationMessageFor(m => m.LocaisVenda, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
                     <div class="form-group">
-                        @Html.LabelFor(x => x.CanalVenda, new { @class = "col-md-2 control-label" })
-                        <div class="col-md-10">
-                            @Html.DropDownList("lstCanaisVenda", new SelectList(Model.CanalVenda, "VALUEFIELD", "LABELFIELD"), "Selecione")
-                            @Html.ValidationMessageFor(m => m.CanalVenda, "", new { @class = "text-danger" })
+                        @Html.LabelFor(x => x.CanaisVenda, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-8">
+                            @Html.DropDownList("lstCanaisVenda", new SelectList(Model.CanaisVenda, "CANAL_VENDA", "DESCRICAO"), "Selecione")
+                            @Html.ValidationMessageFor(m => m.CanaisVenda, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group" id="elemGerentes">
+                        @Html.LabelFor(x => x.GerentesVenda, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-8">
+                            @Html.DropDownList("lstGerentes", new SelectList(Model.GerentesVenda, "GERENTE", "DESCRICAO"), "Selecione")
+                            @Html.ValidationMessageFor(m => m.GerentesVenda, "", new { @class = "text-danger" })
                         </div>
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(x => x.TipoAtendimento, new { @class = "col-md-2 control-label" })
-                        <div class="col-md-10">
-                            @Html.DropDownList("lstTiposAtendimento", new SelectList(Model.TipoAtendimento, "VALUEFIELD", "LABELFIELD"), "Selecione")
-                            @Html.ValidationMessageFor(m => m.TipoAtendimento, "", new { @class = "text-danger" })
+                        @Html.LabelFor(x => x.TiposAtendimento, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-8">
+                            @Html.DropDownList("lstTiposAtendimento", new SelectList(Model.TiposAtendimento, "COD_ATEND", "DESCRI_ATEND"), "Selecione")
+                            @Html.ValidationMessageFor(m => m.TiposAtendimento, "", new { @class = "text-danger" })
                         </div>
                     </div>
+                    <hr />
+                    
                     <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
+                        <div class="col-md-offset-2 col-md-4">
                             @Html.ActionLink("Cancelar", "#", "Pedido", null, new { @class = "btn btn-default btn-warning right" })
-                        </div>
-                        <div class="col-md-offset-2 col-md-10">
                             @Html.ActionLink("Confirmar", "#", "Pedido", null, new { @class = "btn btn-default left" })
                         </div>
                     </div>
@@ -84,4 +92,83 @@
             </section>
         </div>
     </div>
+    <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>Desenho</th>
+                <th>Variante</th>
+                <th>Artigo</th>
+                <th>Pçs</th>
+                <th>Qtde</th>
+                <th>Unit.</th>
+                <th>Sub total</th>
+            </tr>
+        </thead>
+
+        <tfoot>
+            <tr>
+                <th>Quantidade de itens</th>
+                <th>Valor total</th>
+            </tr>
+        </tfoot>
+
+        <tbody>
+            @foreach (InserirNoCarrinhoViewModel item in Model.Itens)
+            {
+                <tr>
+                    <th>@item.Desenho</th>
+                    <th>@item.Variante</th>
+                    <th>@item.Artigo</th>
+                    <th>@item.Pecas</th>
+                    <th>@item.Quilos</th>
+                    <th>@item.Preco</th>
+                    <th>(@item.Preco * @item.Quilos)</th>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
+@section Scripts {
+    @Scripts.Render("~/bundles/dataTables")
+    <script>
+        $(document).ready(function () {
+            //API
+            scriptWrapper = (function () {
+
+                //API Attributes
+
+                //API Methods
+                lstCanais_Change = function () {
+                    if ($("#lstCanaisVenda > option:selected").attr("value") == 4) {
+                        $('#elemGerentes').show();
+                    }
+                    else {
+                        $('#elemGerentes').hide();
+                    }
+                }
+
+                // public API
+                return {
+                    lstCanais_Change: lstCanais_Change
+                };
+            })();
+
+            //Init
+            (function Init() {
+                $('#lstTiposPedido').selectpicker();
+                $('#lstTiposPgto').selectpicker();
+                $('#lstMoedas').selectpicker();
+                $('#lstFretes').selectpicker();
+                $('#lstLocaisVenda').selectpicker();
+                $('#lstCanaisVenda').selectpicker();
+                $('#lstCanaisVenda').change(lstCanais_Change);
+                $('#lstGerentes').selectpicker();
+                $('#lstTiposAtendimento').selectpicker();
+                $('#lstViasTransp').selectpicker();
+                $('#elemGerentes').hide();
+
+                $('#example').dataTable();
+            })();
+        });
+    </script>
+}

@@ -32,9 +32,14 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<PRE_PEDIDO_ATEND> PRE_PEDIDO_ATEND { get; set; }
         public virtual DbSet<PRE_PEDIDO_COND_PAG> PRE_PEDIDO_COND_PAG { get; set; }
         public virtual DbSet<TAMANHOPECA> TAMANHOPECA { get; set; }
+        public virtual DbSet<VW_CONDICAO_PGTO> VW_CONDICAO_PGTO { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<VW_CONDICAO_PGTO>()
+                .Property(e => e.DESCRI_COND)
+                .IsUnicode(false);
+
             modelBuilder.Entity<PRE_PEDIDO_ATEND>()
                 .Property(e => e.COD_ATEND)
                 .HasPrecision(38, 0);

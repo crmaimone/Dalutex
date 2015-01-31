@@ -10,9 +10,9 @@
         <div class="col-sm-6">
             <div class="list-group">
                 <a href="#" class="list-group-item active">Itens do carrinho</a>
-                    @if (ViewBag.Carrinho != null)
+                    @if (ViewBag.Carrinho != null && ViewBag.Carrinho.Itens != null)
                     { 
-                        foreach (InserirNoCarrinhoViewModel item in ViewBag.Carrinho)
+                        foreach (InserirNoCarrinhoViewModel item in ViewBag.Carrinho.Itens)
                         {
                             <a href="#" class="list-group-item"><strong>@item.Desenho - @item.Variante - @item.Artigo - @item.Tecnologia</strong> Peças: @item.Pecas Preço:@item.Preco</a>
                         }

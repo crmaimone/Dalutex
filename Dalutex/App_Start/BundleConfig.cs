@@ -21,6 +21,7 @@ namespace Dalutex
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
+                      "~/Scripts/bootstrap-select.js",
                       "~/Scripts/respond.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/equalheight").Include(
@@ -29,9 +30,20 @@ namespace Dalutex
             bundles.Add(new ScriptBundle("~/bundles/prePageFunctions").Include(
             "~/Scripts/prePageFunctions.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/prePageFunctions").Include(
+            "~/Scripts/prePageFunctions.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/dataTables").Include(
+                    "~/Scripts/jquery.dataTables.min.js",
+                    "~/Scripts/dataTables.bootstrap.js"));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
+                      "~/Content/bootstrap-select.css",
                       "~/Content/site.css"));
+
+            bundles.Add(new StyleBundle("~/Content/dataTables").Include(
+                      "~/Content/dataTables.bootstrap.css"));
 
             // Set EnableOptimizations to false for debugging. For more information,
             // visit http://go.microsoft.com/fwlink/?LinkId=301862

@@ -71,14 +71,14 @@ namespace Dalutex.Controllers
             }
         }
 
-        protected List<InserirNoCarrinhoViewModel> Session_Carrinho
+        protected ConclusaoPedidoViewModel Session_Carrinho
         {
             get
             {
                 if (Session["SESSION_CARRINHO"] == null)
                     return null;
                 else
-                    return Session["SESSION_CARRINHO"] as List<InserirNoCarrinhoViewModel>;
+                    return Session["SESSION_CARRINHO"] as ConclusaoPedidoViewModel;
             }
             set
             {

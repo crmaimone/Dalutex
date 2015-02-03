@@ -27,14 +27,15 @@ namespace Dalutex.Models
         public string Variante { get; set; }
         public string Artigo { get; set; }
         public string Tecnologia { get; set; }
+        public string UnidadeMedida { get; set; }
+        public decimal ValorPadrao { get; set; }
 
         [Required]
         [Display(Name="Peças")]
         public int Pecas { get; set; }
 
         [DataType(DataType.Currency)]
-        [Display(Name = "Quilos")]
-        public decimal Quilos { get; set; }
+        public decimal Quantidade { get; set; }
 
         [Required]
         [DataType(DataType.Currency)]

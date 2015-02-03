@@ -33,9 +33,33 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<PRE_PEDIDO_COND_PAG> PRE_PEDIDO_COND_PAG { get; set; }
         public virtual DbSet<TAMANHOPECA> TAMANHOPECA { get; set; }
         public virtual DbSet<VW_CONDICAO_PGTO> VW_CONDICAO_PGTO { get; set; }
+        public virtual DbSet<ARTIGO_PESO_PADRAO> ARTIGO_PESO_PADRAO { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<ARTIGO_PESO_PADRAO>()
+                .Property(e => e.ARTIGO)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<ARTIGO_PESO_PADRAO>()
+                .Property(e => e.TECNOLOGIA)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<ARTIGO_PESO_PADRAO>()
+                .Property(e => e.UM)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<ARTIGO_PESO_PADRAO>()
+                .Property(e => e.VALOR)
+                .HasPrecision(6, 2);
+
+            modelBuilder.Entity<ARTIGO_PESO_PADRAO>()
+                .Property(e => e.USUARIO)
+                .IsUnicode(false);
+
             modelBuilder.Entity<VW_CONDICAO_PGTO>()
                 .Property(e => e.DESCRI_COND)
                 .IsUnicode(false);

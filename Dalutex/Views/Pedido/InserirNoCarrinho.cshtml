@@ -19,15 +19,15 @@
                     <div class="form-group">
                         @Html.LabelFor(x => x.Pecas, new { @class = "col-md-2 control-label" })
                         <div class="col-md-10">
-                            @Html.TextBoxFor(x => x.Pecas)
+                            @Html.TextBoxFor(x => x.Pecas, new { id = "txtPecas" })
                             @Html.ValidationMessageFor(m => m.Pecas, "", new { @class = "text-danger" })
                         </div>
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Quilos, new { @class = "col-md-2 control-label" })
+                        @Html.LabelFor(x => x.Quantidade, new { @class = "col-md-2 control-label", id="lblQuantidade" })
                         <div class="col-md-10">
-                            @Html.TextBoxFor(x => x.Quilos)
-                            @Html.ValidationMessageFor(m => m.Quilos, "", new { @class = "text-danger" })
+                            @Html.TextBoxFor(x => x.Quantidade, new { id = "txtQuantidade", disabled = "disabled" })
+                            @Html.ValidationMessageFor(m => m.Quantidade, "", new { @class = "text-danger" })
                         </div>
                     </div>
                     <div class="form-group">
@@ -41,6 +41,8 @@
                     @Html.HiddenFor(x => x.Variante)
                     @Html.HiddenFor(x => x.Artigo)
                     @Html.HiddenFor(x => x.Tecnologia)
+                    @Html.HiddenFor(x => x.UnidadeMedida, new { id = "hidUM"})
+                    @Html.HiddenFor(x => x.ValorPadrao, new { id = "hidValPadrao" })
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-10">
                             <input type="submit" value="Incluir" class="btn btn-default" />
@@ -55,4 +57,31 @@
             </section>
         </div>
     </div>
-</div>
+</div>@section Scripts {
+    <script>
+        $(document).ready(function () {
+            //API
+            scriptWrapper = (function () {
+
+                //API Attributes
+                txtPecas_Blur = function()
+                {
+                    $("#txtQuantidade").val($("#txtPecas").val() * $("#hidValPadrao").val());
+                }
+
+                //API Methods
+
+                // public API
+                return {
+                    txtPecas_Blur : txtPecas_Blur
+                };
+            })();
+
+            //Init
+            (function Init() {
+                $("#lblQuantidade").val($("#hidUM").val());
+                $("#txtPecas").blur(this.txtPecas_Blur);
+            })();
+        });
+    </script>
+}

@@ -136,6 +136,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\DataModels\ARTIGO_PESO_PADRAO.cs" />
     <Compile Include="Models\DataModels\COML_TIPOSPEDIDOS.cs" />
     <Compile Include="Models\DataModels\PRE_PEDIDO_ATEND.cs" />
     <Compile Include="Models\DataModels\PRE_PEDIDO_COND_PAG.cs" />

@@ -8,6 +8,7 @@ using Dalutex.Models;
 using System.Configuration;
 using Dalutex.Models.DataModels;
 using System.Data.Entity;
+using System.Web.Helpers;
 
 namespace Dalutex.Controllers
 {
@@ -95,6 +96,23 @@ namespace Dalutex.Controllers
             model.Variante = variante;
             model.Artigo = artigo;
             model.Tecnologia = tecnologia;
+
+            using(var ctxTI = new TIDalutexContext())
+            {
+                var query =
+                    from app in ctxTI.ARTIGO_PESO_PADRAO
+                    where
+                        (
+                            app.ATIVO == true
+                            && app.ARTIGO == artigo
+                            && app.TECNOLOGIA == tecnologia.Substring(0,1)
+                        )
+                    select app;
+
+                ARTIGO_PESO_PADRAO objValorPadrao = query.First();
+                model.UnidadeMedida = objValorPadrao.UM;
+                model.ValorPadrao = objValorPadrao.VALOR;
+            }
 
             return View(model);
         }

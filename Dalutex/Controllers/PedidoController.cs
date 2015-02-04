@@ -163,7 +163,7 @@ namespace Dalutex.Controllers
 
             using(DalutexContext ctxDalutex = new DalutexContext())
             {
-                model.TiposPedido = ctxDalutex.COML_TIPOSPEDIDOS.ToList();
+                model.TiposPedido = ctxDalutex.COML_TIPOSPEDIDOS.ToList();//TODO: filtrar tipos: "where p.tipopedido in (0,6,7,9,15,16,2,21,3)
                 model.Moedas = ctxDalutex.CADASTRO_MOEDAS.ToList();
                 model.ViasTransporte = ctxDalutex.COML_VIASTRANSPORTE.ToList();
                 model.Fretes = ctxDalutex.COML_TIPOSFRETE.ToList();

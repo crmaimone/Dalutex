@@ -24,9 +24,23 @@
                     <li>@Html.ActionLink("Início", "Index", "Home")</li>
                     <li>@Html.ActionLink("Sobre", "About", "Home")</li>
                     <li>@Html.ActionLink("Contato", "Contact", "Home")</li>
-                    @if(User.Identity.IsAuthenticated)
+                    @if (User.Identity.IsAuthenticated)
                     {
-                        <li>@Html.ActionLink("Pedidos", "Pedido", "Pedido")</li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                            NEGOCIOS
+                            <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li>@Html.ActionLink("COLEÇÃO", "Pedido", "Pedido")</li>                                                                    
+                                <li>@Html.ActionLink("EXCLUSIVOS", "Pedido", "Pedido")</li>
+                                <li>@Html.ActionLink("PRONTA ENTREGA", "Pedido", "Pedido")</li>     
+                                <li>@Html.ActionLink("RECOLORAÇÃO/ACERVO", "Pedido", "Pedido")</li>
+                                <li class="divider"></li>
+                                <li>@Html.ActionLink("OUTROS", "Pedido", "Pedido")</li>
+                            </ul>
+                        </li>
+                        
+                        @*<li>@Html.ActionLink("NEGOCIOS", "Pedido", "Pedido")</li>*@
                     }
                 </ul>
                 <ul class="nav navbar-nav navbar-right">

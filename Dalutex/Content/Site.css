@@ -16,6 +16,20 @@ textarea {
     max-width: 280px;
 }
 
+.jumbotron
+{
+    background-repeat:round;
+}
+.jumbotron p
+{
+    color:#00facc;
+    text-shadow:10px 6px 2px white
+}
+.jumbotron h2
+{
+    color:gainsboro;
+    text-shadow:10px 6px 2px aquamarine;
+}
 .thumbnail{
     transition: transform 0.5s ease;
     transition: background-color 0.5s ease;

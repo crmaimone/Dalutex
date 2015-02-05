@@ -51,7 +51,7 @@ namespace Dalutex.Controllers
                         if (!string.IsNullOrWhiteSpace(returnUrl))
                             return RedirectToLocal(returnUrl);
                         else
-                            return RedirectToAction("Pedido", "Pedido");
+                            return RedirectToAction("Index", "Home");
                     }
                     else
                     {

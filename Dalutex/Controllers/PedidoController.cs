@@ -15,7 +15,7 @@ namespace Dalutex.Controllers
     public class PedidoController : BaseController
     {
 
-        public ActionResult Pedido()
+        public ActionResult MenuColecoes()
         {
             return View();
         }

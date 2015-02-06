@@ -82,7 +82,6 @@ namespace Dalutex.Controllers
                         select ar;
 
                     model.Artigos = query.ToList();
-
                 }
             }
 

@@ -4,14 +4,15 @@
 {
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
     {
-    @Html.AntiForgeryToken()
+        @Html.AntiForgeryToken()
 
-    <ul class="nav navbar-nav navbar-right">
-        <li>
-            <p class="navbar-text">Olá @User.Identity.Name</p>
-        </li>
-        <li><a href="javascript:document.getElementById('logoutForm').submit()"><span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp;Sair</a></li>
-    </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <p class="navbar-text">Olá&nbsp;@User.Identity.Name!&nbsp;</p>
+            </li>
+            <li><a href="~/Pedido/Carrinho"><span class="glyphicon glyphicon-shopping-cart"></span>&nbsp;Carrinho</a></li>
+            <li><a href="javascript:document.getElementById('logoutForm').submit()"><span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp;Sair</a></li>
+        </ul>
     }
 }
 else

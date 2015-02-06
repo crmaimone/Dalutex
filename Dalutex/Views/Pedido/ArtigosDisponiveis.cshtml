@@ -6,16 +6,15 @@
     ViewBag.Title = "Artigos disponíveis";
 }
 
+<h2>@ViewBag.Title</h2>
 @if (Model.Desenho == null)
 {
     <h3>Desenho não informado</h3>
 }
 else
 { 
-    <div>
-        <div class="panel panel-default">
-            <h2>Detalhe do desenho: @Url.Content(Model.Desenho)</h2>
-        </div>
+    <div class="panel panel-default">
+        <h2>Detalhe do desenho: @Url.Content(Model.Desenho)</h2>
     </div>
 
     <div class="container-fluid">
@@ -42,7 +41,7 @@ else
                 }
             </div>
             <div class="col-sm-6">
-                <img src="@Url.Content(Model.Imagem)" style="max-width:100%"/>
+                <img src="@Url.Content(Model.Imagem)" class="img-rounded" style="max-width:100%" />
             </div>
         </div>
     </div>

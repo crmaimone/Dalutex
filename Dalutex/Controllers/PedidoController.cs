@@ -109,9 +109,16 @@ namespace Dalutex.Controllers
                         )
                     select app;
 
-                ARTIGO_PESO_PADRAO objValorPadrao = query.First();
-                model.UnidadeMedida = objValorPadrao.UM;
-                model.ValorPadrao = objValorPadrao.VALOR;
+                ARTIGO_PESO_PADRAO objValorPadrao = query.FirstOrDefault();
+                if(objValorPadrao != null)
+                { 
+                    model.UnidadeMedida = objValorPadrao.UM;
+                    model.ValorPadrao = objValorPadrao.VALOR;
+                }
+                else
+                {
+                    ModelState.AddModelError("","Valor padrão não encontrado.");
+                }
             }
 
             return View(model);

@@ -12,10 +12,6 @@ namespace Dalutex.Controllers
     [Authorize]
     public class AccountController : BaseController
     {
-        public AccountController()
-        {
-        }
-
         //
         // GET: /Account/Login
         [AllowAnonymous]
@@ -45,7 +41,7 @@ namespace Dalutex.Controllers
 
                     if (objUsuario != null)
                     {
-                        FormsAuthentication.SetAuthCookie(model.Login, model.RememberMe);
+                        FormsAuthentication.SetAuthCookie(objUsuario.NOME_USU, model.RememberMe);
                         objUsuario.SENHA_USU = null;
                         base.Session_Usuario = objUsuario;
                         if (!string.IsNullOrWhiteSpace(returnUrl))

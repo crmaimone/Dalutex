@@ -186,6 +186,7 @@
     <Content Include="Content\dataTables.bootstrap.css" />
     <Content Include="Content\images\dalutex-bg.png" />
     <Content Include="Content\images\dalutex.png" />
+    <Content Include="Content\images\glyphicons-289-scissors.png" />
     <Content Include="Content\images\header-pattern-1.jpg" />
     <Content Include="Content\images\header-pattern-2.jpg" />
     <Content Include="Content\images\header-pattern-3.jpg" />

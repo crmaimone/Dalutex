@@ -28,10 +28,12 @@
                     {
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            NEGÓCIOS
-                            <span class="caret"></span></a>
+                                <span class="glyphicon-scissors"></span>&nbsp;
+                                NEGÓCIOS
+                                <span class="caret"></span>
+                            </a>
                             <ul class="dropdown-menu" role="menu">
-                                <li>@Html.ActionLink("COLEÇÃO", "Pedido", "Pedido")</li>                                                                    
+                                <li>@Html.ActionLink("COLEÇÃO", "MenuColecoes", "Pedido")</li>                                                                    
                                 <li>@Html.ActionLink("EXCLUSIVOS", "Pedido", "Pedido")</li>
                                 <li>@Html.ActionLink("PRONTA ENTREGA", "Pedido", "Pedido")</li>     
                                 <li>@Html.ActionLink("RECOLORAÇÃO/ACERVO", "Pedido", "Pedido")</li>
@@ -39,17 +41,7 @@
                                 <li>@Html.ActionLink("OUTROS", "Pedido", "Pedido")</li>
                             </ul>
                         </li>
-                        
-                        @*<li>@Html.ActionLink("NEGOCIOS", "Pedido", "Pedido")</li>*@
                     }
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        @if(User.Identity.IsAuthenticated)
-                        {
-                            <a href="~/Pedido/Carrinho"><span class="glyphicon glyphicon-shopping-cart"></span></a>
-                        }
-                    </li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
@@ -59,65 +51,11 @@
         @RenderBody()
     </div>
     <hr />
+    @* site em construção da dalutex: http://104.131.168.151/*@
     <footer>
-       @* site em construção da dalutex: http://104.131.168.151/*@
-
-        <iframe src="//www.facebook.com/plugins/like.php?href=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;width&amp;layout=standard&amp;action=like&amp;show_faces=true&amp;share=true&amp;height=80" scrolling="no" frameborder="0" style="border:none; overflow:hidden; height:80px;" allowtransparency="true">
-        </iframe>
-
-        <nav class="navbar navbar-default navbar-bottom">
-            <div class="navbar-inner navbar-content-center">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-2 footerElement">
-                            <address>
-                                <strong>SHOWROOM SP:</strong>   <a href="mailto:vendas@dalutex.com.br">vendas@dalutex.com.br</a><br />
-                                Rua dos Italianos, 620<br />
-                                Bom Retiro - São Paulo - SP<br />
-                                CEP: 01131-000<br />
-                                <abbr title="Telefone">Fone:</abbr>
-                                +55 (11) 2102-9200
-                                <abbr title="Fax">Fax:</abbr>
-                                +55 (11) 2102-9222
-                            </address>
-                        </div>
-                        <div class="col-md-2 footerElement">
-                            <address>
-                                <strong></strong>   
-                                <br /><br /><br /><br />                                                                                   
-                            </address>
-                        </div>
-                        <div class="col-md-2 footerElement">
-                            <address>
-                                <br /><br /><br />  <br />                                 
-                            </address>
-                        </div>
-                        <div class="col-md-2 footerElement">
-                            <address>
-                                <strong>FÁBRICA:</strong>   <a href="mailto:vendas@dalutex.com.br">vendas@dalutex.com.br</a><br />
-                                Avenida Paraná, 250<br />
-                                Éden - Sorocaba - SP<br />
-                                CEP: 18105-000<br />
-                                <abbr title="Telefone">Fone:</abbr>
-                                +55 (15) 2102-1400
-                            </address>
-                        </div>
-                        <div class="col-md-4 footerElement">
-                            <h3>Procure em nosso site!</h3>
-                            @Html.TextBox("txtBusca")
-                            <br />
-                            @Html.ActionLink("> Mapa do site", "Mapa", "Home")
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <p class="text-center">&copy; @DateTime.Now.Year - Dalutex. Todos os direitos reservados | Desenvolvido pela equipe de TI-Dalutex</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </nav>
+        <p><em>&copy; @DateTime.Now.Year - Dalutex. Todos os direitos reservados | Desenvolvido por TI - Dalutex</em></p>
     </footer>
+
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)

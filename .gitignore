@@ -6,3 +6,5 @@ Dalutex\obj
 Desenhos
 *.suo
 *.tmp
+*.user
+Dalutex.v12.suo

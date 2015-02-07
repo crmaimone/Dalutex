@@ -9,6 +9,7 @@ using System.Configuration;
 using Dalutex.Models.DataModels;
 using System.Data.Entity;
 using System.Web.Helpers;
+using System.IO;
 
 namespace Dalutex.Controllers
 {
@@ -20,6 +21,7 @@ namespace Dalutex.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         public ActionResult DesenhosPorColecao()
         {
             PedidoViewModel model = new PedidoViewModel();
@@ -96,7 +98,7 @@ namespace Dalutex.Controllers
             model.Artigo = artigo;
             model.Tecnologia = tecnologia;
 
-            using(var ctxTI = new TIDalutexContext())
+            using (var ctxTI = new TIDalutexContext())
             {
                 var query =
                     from app in ctxTI.ARTIGO_PESO_PADRAO
@@ -104,19 +106,19 @@ namespace Dalutex.Controllers
                         (
                             app.ATIVO == true
                             && app.ARTIGO == artigo
-                            && app.TECNOLOGIA == tecnologia.Substring(0,1)
+                            && app.TECNOLOGIA == tecnologia.Substring(0, 1)
                         )
                     select app;
 
                 ARTIGO_PESO_PADRAO objValorPadrao = query.FirstOrDefault();
-                if(objValorPadrao != null)
-                { 
+                if (objValorPadrao != null)
+                {
                     model.UnidadeMedida = objValorPadrao.UM;
                     model.ValorPadrao = objValorPadrao.VALOR;
                 }
                 else
                 {
-                    ModelState.AddModelError("","Valor padrão não encontrado.");
+                    ModelState.AddModelError("", "Valor padrão não encontrado.");
                 }
             }
 
@@ -167,7 +169,7 @@ namespace Dalutex.Controllers
         {
             ConclusaoPedidoViewModel model = new ConclusaoPedidoViewModel();
 
-            using(DalutexContext ctxDalutex = new DalutexContext())
+            using (DalutexContext ctxDalutex = new DalutexContext())
             {
                 model.TiposPedido = ctxDalutex.COML_TIPOSPEDIDOS.ToList();//TODO: filtrar tipos: "where p.tipopedido in (0,6,7,9,15,16,2,21,3)
                 model.Moedas = ctxDalutex.CADASTRO_MOEDAS.ToList();
@@ -188,6 +190,26 @@ namespace Dalutex.Controllers
                 model.Itens = base.Session_Carrinho.Itens;
 
             return View(model);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public JsonResult ObterDesenho(string desenho, string variante)
+        {
+            string path = ConfigurationManager.AppSettings["PASTA_DESENHOS"] + desenho + "_" + variante + ".jpg";
+            if(System.IO.File.Exists(path))
+            {
+                FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
+                byte[] buffer = new byte[fileStream.Length];
+                fileStream.Read(buffer, 0, (int)fileStream.Length);
+                fileStream.Close();
+                string str = System.Convert.ToBase64String(buffer, 0, buffer.Length);
+                return Json(new { Image = str, JsonRequestBehavior.AllowGet });
+            }
+            else
+            {
+                return Json(new { Image = "", JsonRequestBehavior.AllowGet });
+            }
         }
     }
 }

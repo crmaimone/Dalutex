@@ -184,6 +184,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\dataTables.bootstrap.css" />
+    <Content Include="Content\images\ajax-loader.gif" />
     <Content Include="Content\images\dalutex-bg.png" />
     <Content Include="Content\images\dalutex.png" />
     <Content Include="Content\images\glyphicons-289-scissors.png" />
@@ -200,18 +201,6 @@
     <Content Include="Content\images\header-pattern-11.jpg" />
     <Content Include="Content\images\header-pattern-12.jpg" />
     <Content Include="Content\images\header-pattern-13.jpg" />
-    <Content Include="Desenhos\0000_00.JPG" />
-    <Content Include="Desenhos\7070_DJ.JPG" />
-    <Content Include="Desenhos\9510_CB.JPG" />
-    <Content Include="Desenhos\A131_CA.JPG" />
-    <Content Include="Desenhos\A178_CA.JPG" />
-    <Content Include="Desenhos\A226_01.JPG" />
-    <Content Include="Desenhos\B035_CA.JPG" />
-    <Content Include="Desenhos\B035_CB.JPG" />
-    <Content Include="Desenhos\B078_01.JPG" />
-    <Content Include="Desenhos\B078_02G.JPG" />
-    <Content Include="Desenhos\B201_01.JPG" />
-    <Content Include="Desenhos\B201_02.JPG" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -268,6 +257,7 @@
     <Content Include="Views\Pedido\InserirNoCarrinho.cshtml" />
     <Content Include="Views\Pedido\Carrinho.cshtml" />
     <Content Include="Views\Pedido\ConclusaoPedido.cshtml" />
+    <Content Include="Views\Shared\_Thumb.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

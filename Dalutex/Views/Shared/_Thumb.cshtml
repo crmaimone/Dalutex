@@ -1,0 +1,14 @@
+﻿@model Dalutex.Models.TumbViewModel
+
+<div class="thumbnail">
+    <a href="@Url.Content(@"ArtigosDisponiveis?" +
+                                            "&imagem=" + Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg" +
+                                            "&desenho=" + @Model.Desenho +
+                                            "&variante=" + @Model.Variante
+                                        )">
+        <img src="~/Content/images/ajax-loader.gif" class="img-thumbnail equal-height" data-assigned-id="@String.Concat(Model.Desenho,"_",Model.Variante)"> 
+    </a>
+    <div class="caption">
+        <h5>@Model.Desenho&nbsp;@Model.Variante<small>&nbsp;(@Model.Reduzido.ToString())</small></h5>
+    </div>
+</div>

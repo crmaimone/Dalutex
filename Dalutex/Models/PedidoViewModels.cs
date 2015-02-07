@@ -7,6 +7,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Dalutex.Models
 {
+    public class TumbViewModel
+    {
+        public string UrlImagens { get; set; }
+        public string Desenho { get; set; }
+        public string Variante { get; set; }
+        public int Reduzido { get; set; }
+    }
+
     public class PedidoViewModel
     {
         public List<VW_COLECAO_ATUAL> Galeria { get; set; }

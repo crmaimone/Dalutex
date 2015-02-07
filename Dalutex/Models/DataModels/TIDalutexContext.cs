@@ -34,6 +34,7 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<TAMANHOPECA> TAMANHOPECA { get; set; }
         public virtual DbSet<VW_CONDICAO_PGTO> VW_CONDICAO_PGTO { get; set; }
         public virtual DbSet<ARTIGO_PESO_PADRAO> ARTIGO_PESO_PADRAO { get; set; }
+        public virtual DbSet<VW_CLIENTE_TRANSP> VW_CLIENTE_TRANSP { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

@@ -8,7 +8,7 @@
 <h2>@ViewBag.Title</h2>
 <div class="container">
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-12">
             <section id="ConclusaoForm">
                 @using (Html.BeginForm("ConclusaoPedido", "Pedido", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                 {
@@ -17,73 +17,75 @@
                     <hr />
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     <div class="form-group">
-                        @Html.LabelFor(x => x.TiposPedido, new { @class = "col-md-2 control-label" })
-                        <div class="col-md-8">
-                            @Html.DropDownList("lstTiposPedido", new SelectList(Model.TiposPedido, "TIPOPEDIDO", "DESCRICAO"), "Selecione")
-                            @Html.ValidationMessageFor(m => m.TiposPedido, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(x => x.CondicoesPagto, new { @class = "col-md-2 control-label" })
-                        <div class="col-md-8">
+                        @Html.LabelFor(x => x.CondicoesPagto, new { @class = "col-md-3 control-label" })
+                        <div class="col-md-9">
                             @Html.DropDownList("lstTiposPgto", new SelectList(Model.CondicoesPagto, "ID_COND", "DESCRI_COND"), "Selecione")
                             @Html.ValidationMessageFor(m => m.CondicoesPagto, "", new { @class = "text-danger" })
                         </div>
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Moedas, new { @class = "col-md-2 control-label" })
-                        <div class="col-md-8">
+                        @Html.LabelFor(x => x.Moedas, new { @class = "col-md-3 control-label" })
+                        <div class="col-md-9">
                             @Html.DropDownList("lstMoedas", new SelectList(Model.Moedas, "CODIGOMOEDA", "NOMEMOEDA"), "Selecione")
                             @Html.ValidationMessageFor(m => m.Moedas, "", new { @class = "text-danger" })
                         </div>
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(x => x.ViasTransporte, new { @class = "col-md-2 control-label" })
-                        <div class="col-md-8">
+                        @Html.LabelFor(x => x.ViasTransporte, new { @class = "col-md-3 control-label" })
+                        <div class="col-md-9">
                             @Html.DropDownList("lstViasTransp", new SelectList(Model.ViasTransporte, "VIATRANSPORTE", "DESCRICAO"), "Selecione")
                             @Html.ValidationMessageFor(m => m.ViasTransporte, "", new { @class = "text-danger" })
                         </div>
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Fretes, new { @class = "col-md-2 control-label" })
-                        <div class="col-md-8">
+                        @Html.LabelFor(x => x.Fretes, new { @class = "col-md-3 control-label" })
+                        <div class="col-md-9">
                             @Html.DropDownList("lstFretes", new SelectList(Model.Fretes, "TIPOFRETE", "DESCRICAO"), "Selecione")
                             @Html.ValidationMessageFor(m => m.Fretes, "", new { @class = "text-danger" })
                         </div>
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(x => x.LocaisVenda, new { @class = "col-md-2 control-label" })
-                        <div class="col-md-8">
+                        @Html.LabelFor(x => x.LocaisVenda, new { @class = "col-md-3 control-label" })
+                        <div class="col-md-9">
                             @Html.DropDownList("lstLocaisVenda", new SelectList(Model.LocaisVenda, "CODIGO", "DESCRICAO"), "Selecione")
                             @Html.ValidationMessageFor(m => m.LocaisVenda, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
                     <div class="form-group">
-                        @Html.LabelFor(x => x.CanaisVenda, new { @class = "col-md-2 control-label" })
-                        <div class="col-md-8">
+                        @Html.LabelFor(x => x.CanaisVenda, new { @class = "col-md-3 control-label" })
+                        <div class="col-md-9">
                             @Html.DropDownList("lstCanaisVenda", new SelectList(Model.CanaisVenda, "CANAL_VENDA", "DESCRICAO"), "Selecione")
                             @Html.ValidationMessageFor(m => m.CanaisVenda, "", new { @class = "text-danger" })
                         </div>
                     </div>
                     <div class="form-group" id="elemGerentes">
-                        @Html.LabelFor(x => x.GerentesVenda, new { @class = "col-md-2 control-label" })
-                        <div class="col-md-8">
+                        @Html.LabelFor(x => x.GerentesVenda, new { @class = "col-md-3 control-label" })
+                        <div class="col-md-9">
                             @Html.DropDownList("lstGerentes", new SelectList(Model.GerentesVenda, "GERENTE", "DESCRICAO"), "Selecione")
                             @Html.ValidationMessageFor(m => m.GerentesVenda, "", new { @class = "text-danger" })
                         </div>
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(x => x.TiposAtendimento, new { @class = "col-md-2 control-label" })
-                        <div class="col-md-8">
+                        @Html.LabelFor(x => x.TiposAtendimento, new { @class = "col-md-3 control-label" })
+                        <div class="col-md-9">
                             @Html.DropDownList("lstTiposAtendimento", new SelectList(Model.TiposAtendimento, "COD_ATEND", "DESCRI_ATEND"), "Selecione")
                             @Html.ValidationMessageFor(m => m.TiposAtendimento, "", new { @class = "text-danger" })
                         </div>
                     </div>
                     <hr />
+                    <div class="row">
+                        <div class="col-xs-12" style="width:100%">
+                            @Html.Partial(
+                                    "_BuscaRepresentante",
+                                    Model.BuscaRepresentante
+                                )
+                        </div>
+                    </div>
                     
+                    <hr />
                     <div class="form-group">
-                        <div class="col-md-offset-2 col-md-4">
+                        <div class="col-md-12">
                             @Html.ActionLink("Cancelar", "#", "Pedido", null, new { @class = "btn btn-default btn-warning right" })
                             @Html.ActionLink("Confirmar", "#", "Pedido", null, new { @class = "btn btn-default left" })
                         </div>
@@ -92,7 +94,8 @@
             </section>
         </div>
     </div>
-    <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+    <hr />
+    <table id="example" class="table table-striped table-bordered" cellspacing="0" style="width:100%;">
         <thead>
             <tr>
                 <th>Desenho</th>
@@ -113,17 +116,20 @@
         </tfoot>
 
         <tbody>
-            @foreach (InserirNoCarrinhoViewModel item in Model.Itens)
+            @if (Model.Itens != null)
             {
-                <tr>
-                    <th>@item.Desenho</th>
-                    <th>@item.Variante</th>
-                    <th>@item.Artigo</th>
-                    <th>@item.Pecas</th>
-                    <th>@item.Quantidade</th>
-                    <th>@item.Preco</th>
-                    <th>(@item.Preco * @item.Quantidade)</th>
-                </tr>
+                foreach (InserirNoCarrinhoViewModel item in Model.Itens)
+                {
+                    <tr>
+                        <th>@item.Desenho</th>
+                        <th>@item.Variante</th>
+                        <th>@item.Artigo</th>
+                        <th>@item.Pecas</th>
+                        <th>@item.Quantidade</th>
+                        <th>@item.Preco</th>
+                        <th>(@item.Preco * @item.Quantidade)</th>
+                    </tr>
+                }
             }
         </tbody>
     </table>
@@ -155,7 +161,6 @@
 
             //Init
             (function Init() {
-                $('#lstTiposPedido').selectpicker();
                 $('#lstTiposPgto').selectpicker();
                 $('#lstMoedas').selectpicker();
                 $('#lstFretes').selectpicker();

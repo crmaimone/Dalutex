@@ -22,9 +22,30 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<COML_CONDICOESPAGAME> COML_CONDICOESPAGAME { get; set; }
         public virtual DbSet<CADASTRO_MOEDAS> CADASTRO_MOEDAS { get; set; }
         public virtual DbSet<COML_TIPOSPEDIDOS> COML_TIPOSPEDIDOS { get; set; }
+        public virtual DbSet<REPRESENTANTES> REPRESENTANTES { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<REPRESENTANTES>()
+                .Property(e => e.NOME)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<REPRESENTANTES>()
+                .Property(e => e.COMISSAONAAREA)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<REPRESENTANTES>()
+                .Property(e => e.COMISSAOFORAAREA)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<REPRESENTANTES>()
+                .Property(e => e.PERCCOMISSAOFATURA)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<REPRESENTANTES>()
+                .Property(e => e.PERCCOMISSAOBAIXA)
+                .HasPrecision(38, 0);
+
             modelBuilder.Entity<COML_TIPOSPEDIDOS>()
                 .Property(e => e.DESCRICAO)
                 .IsFixedLength()

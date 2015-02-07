@@ -41,8 +41,57 @@ else
                 }
             </div>
             <div class="col-sm-6">
-                <img src="@Url.Content(Model.Imagem)" class="img-rounded" style="max-width:100%" />
+                <img src="~/Content/images/ajax-loader.gif" class="img-rounded" id="imgDesenho" style="max-width:100%" data-assigned-id="@String.Concat(Model.Desenho,"_",Model.Variante)" />
             </div>
         </div>
     </div>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/equalheight")
+    <script>
+        $(document).ready(function () {
+            //API
+            scriptWrapper = (function () {
+
+                //API Attributes
+
+                //API Methods
+                loadImages = function () {
+                    
+                    var $img = $("#imgDesenho");
+                    var data = $img.data("assigned-id").split("_");
+                    var desenho = data[0];
+                    var variante = data[1];
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("ObterDesenho", "Pedido")',
+                        data: 'desenho=' + desenho + '&variante=' + variante,
+                        async: false,
+                        success: function (Image) {
+                            if (Image != '') {
+                                $img.attr('src', 'data:image/jpg;base64,' + Image.Image);
+                            }
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            $img.attr('src', 'data:image/jpg;base64,');
+                        }
+                    })
+
+
+                    $('.equal-height').equalHeight();
+                }
+
+                // public API
+                return {
+                    loadImages: loadImages
+                };
+            })();
+
+            //Init
+            (function Init() {
+                scriptWrapper.loadImages();
+            })();
+        });
+    </script>
 }

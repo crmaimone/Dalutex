@@ -7,14 +7,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Dalutex.Models
 {
-    public class TumbViewModel
-    {
-        public string UrlImagens { get; set; }
-        public string Desenho { get; set; }
-        public string Variante { get; set; }
-        public int Reduzido { get; set; }
-    }
-
     public class PedidoViewModel
     {
         public List<VW_COLECAO_ATUAL> Galeria { get; set; }
@@ -37,6 +29,12 @@ namespace Dalutex.Models
         public string Tecnologia { get; set; }
         public string UnidadeMedida { get; set; }
         public decimal ValorPadrao { get; set; }
+        public bool ObterTipoPedido { get; set; }
+
+        [Required]
+        [Display(Name = "Tipo de pedido")]
+        public int IDTipoPedido { get; set; }
+        public List<COML_TIPOSPEDIDOS> TiposPedido { get; set; }
 
         [Required]
         [Display(Name="Peças")]
@@ -53,10 +51,12 @@ namespace Dalutex.Models
 
     public class ConclusaoPedidoViewModel
     {
-        #region Combos
+        public ConclusaoPedidoViewModel()
+        {
+            TipoPedido = -1;
+        }
 
-        [Display(Name="Tipo de pedido")]
-        public List<COML_TIPOSPEDIDOS> TiposPedido { get; set; }
+        #region Combos
 
         [Display(Name = "Condição de pagto")]
         public List<VW_CONDICAO_PGTO> CondicoesPagto { get; set; }
@@ -84,7 +84,15 @@ namespace Dalutex.Models
 
         #endregion
 
-        #region 
+        #region Buscas
+
+        public BuscaRepresentanteViewModel BuscaRepresentante { get; set; }
+
+        #endregion
+
+        #region ValoresSelecionados
+
+        public int TipoPedido { get; set; }
 
         #endregion
 

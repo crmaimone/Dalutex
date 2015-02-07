@@ -122,6 +122,15 @@ namespace Dalutex.Controllers
                 }
             }
 
+            using (DalutexContext ctxDalutex = new DalutexContext())
+            {
+                int[] tiposPedidos = new int[] { 0, 6, 7, 9, 15, 16, 2, 21, 3 };
+
+                model.TiposPedido = ctxDalutex.COML_TIPOSPEDIDOS.Where(x => tiposPedidos.Any(tipo => x.TIPOPEDIDO.Equals(tipo))).ToList();
+            }
+
+            model.ObterTipoPedido = base.Session_Carrinho == null || base.Session_Carrinho.TipoPedido < 0;
+
             return View(model);
         }
 
@@ -145,6 +154,9 @@ namespace Dalutex.Controllers
                         }
                     }
 
+                    if (model.IDTipoPedido >= 0)
+                        base.Session_Carrinho.TipoPedido = model.IDTipoPedido;
+
                     base.Session_Carrinho.Itens.Add(model);
 
                     return RedirectToAction("ArtigosDisponiveis", "Pedido", new { desenho = model.Desenho, variante = model.Variante, });
@@ -165,13 +177,13 @@ namespace Dalutex.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         public ActionResult ConclusaoPedido()
         {
             ConclusaoPedidoViewModel model = new ConclusaoPedidoViewModel();
 
             using (DalutexContext ctxDalutex = new DalutexContext())
             {
-                model.TiposPedido = ctxDalutex.COML_TIPOSPEDIDOS.ToList();//TODO: filtrar tipos: "where p.tipopedido in (0,6,7,9,15,16,2,21,3)
                 model.Moedas = ctxDalutex.CADASTRO_MOEDAS.ToList();
                 model.ViasTransporte = ctxDalutex.COML_VIASTRANSPORTE.ToList();
                 model.Fretes = ctxDalutex.COML_TIPOSFRETE.ToList();
@@ -188,6 +200,13 @@ namespace Dalutex.Controllers
 
             if (base.Session_Carrinho != null)
                 model.Itens = base.Session_Carrinho.Itens;
+
+            model.BuscaRepresentante = new BuscaRepresentanteViewModel();
+            if(base.Session_Usuario != null)
+            {
+                model.BuscaRepresentante.IDRepresentante = base.Session_Usuario.ID_REPRES;
+                model.BuscaRepresentante.Nome = base.Session_Usuario.NOME_USU;
+            }
 
             return View(model);
         }

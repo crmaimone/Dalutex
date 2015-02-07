@@ -20,6 +20,7 @@ textarea {
 {
     background-repeat:round;
 }
+
 .jumbotron p
 {
     color:White;
@@ -27,15 +28,18 @@ textarea {
     background-color:rgba(0, 0, 0, 0.4);
     letter-spacing:0.8px;
 }
+
 .body-content>h2:first-of-type
 {
     color: black;
 }
+
 .jumbotron h1
 {
     color:black;
     text-shadow:2px 3px 1px floralWhite;
 }
+
 .thumbnail{
     transition: transform 0.5s ease;
     transition: background-color 0.5s ease;
@@ -43,13 +47,19 @@ textarea {
     max-width: 250px; 
     max-height: 250px;
 }
+
 .thumbnail:hover{
     background-color: gray;
     transform:scale(1.1);
 }
 
-.navbar-bottom
+.img-thumbnail
 {
+    min-height:80px;
+    min-width:145px;
+}
+
+.navbar-bottom{
     background-color:rgb(31, 30, 30);
     color:white;
 }
@@ -59,18 +69,6 @@ textarea {
     border-left-color:gainsboro;
     border-left-width:1pt;
 }
-
-footer {
-    text-align:center; 
-    background-color: black;
-    width: 100%;
-    bottom: 0;
-    position: fixed;
-}​
-
-footer #p #em {
-   padding: 2pt;
-}​
 
 .background-dalutex{
     background-image:url("/Content/images/dalutex-bg.png");
@@ -82,3 +80,15 @@ footer #p #em {
     background-repeat:no-repeat;
     background-size:initial;
 }
+
+/*footer{
+    text-align:center; 
+    background-color:black;
+    width:100%;
+    bottom:0;
+    position:fixed;
+}​*/
+
+.busca-container{
+
+ }

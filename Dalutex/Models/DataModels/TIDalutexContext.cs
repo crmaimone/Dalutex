@@ -496,10 +496,6 @@ namespace Dalutex.Models.DataModels
                 .HasPrecision(38, 0);
 
             modelBuilder.Entity<USUARIOS>()
-                .Property(e => e.ID_REPRES)
-                .HasPrecision(38, 0);
-
-            modelBuilder.Entity<USUARIOS>()
                 .Property(e => e.SETOR)
                 .IsUnicode(false);
 

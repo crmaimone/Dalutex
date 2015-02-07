@@ -1,0 +1,23 @@
+﻿@model Dalutex.Models.BuscaRepresentanteViewModel
+
+<div class="busca-container">
+    <div class="row">
+        <div class="col-md-2 col-xs-12" style="padding-right:0px">
+            @Html.LabelFor(x => x.IDRepresentante, new { @class = "col-md-4 control-label"})
+        </div>
+        <div class="col-md-1  col-xs-3" style="padding-left:1px; padding-right:0px">
+            <button type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+            </button>
+        </div>
+        <div class="col-md-6 col-xs-9" style="padding-left:1px">
+            @Html.TextBox("txtNome", @Model.Nome, new { disabled = "disabled", style = "padding:0px", @class = "form-control" })
+        </div>
+        <div class="col-md-2 col-xs-12" style="padding-right:0px">
+            @Html.LabelFor(x => x.Email, new { @class = "col-md-4 control-label" })
+        </div>
+        <div class="col-md-1 col-xs-12" style="padding-left:1px">
+            @Html.TextBox("txtEmail", @Model.Email, new {style = "width:100%", @class = "form-control" })
+        </div>
+    </div>
+</div>

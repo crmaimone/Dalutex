@@ -137,7 +137,9 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\CadastroViewModel.cs" />
     <Compile Include="Models\DataModels\ARTIGO_PESO_PADRAO.cs" />
+    <Compile Include="Models\DataModels\COML_CONTATOS.cs" />
     <Compile Include="Models\DataModels\COML_TIPOSPEDIDOS.cs" />
     <Compile Include="Models\DataModels\PRE_PEDIDO_ATEND.cs" />
     <Compile Include="Models\DataModels\PRE_PEDIDO_COND_PAG.cs" />
@@ -265,6 +267,7 @@
     <Content Include="Views\Shared\_Thumb.cshtml" />
     <Content Include="Views\Shared\_BuscaRepresentante.cshtml" />
     <Content Include="Views\Cadastro\Representantes.cshtml" />
+    <Content Include="Views\Cadastro\ClientesFatura.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

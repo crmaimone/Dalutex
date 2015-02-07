@@ -45,5 +45,8 @@ namespace Dalutex.Models.DataModels
         public decimal? PERCCOMISSAOBAIXA { get; set; }
 
         public int? CODREDUSUARIO { get; set; }
+
+        [NotMapped]
+        public COML_CONTATOS CONTATO { get; set; }
     }
 }

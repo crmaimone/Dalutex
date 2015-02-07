@@ -6,9 +6,9 @@
             @Html.LabelFor(x => x.IDRepresentante, new { @class = "col-md-4 control-label"})
         </div>
         <div class="col-md-1  col-xs-3" style="padding-left:1px; padding-right:0px">
-            <button type="button" class="btn btn-default">
+            <a href="@Url.Action("Representantes", "Cadastro")" class="btn btn-default">
                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-            </button>
+            </a>
         </div>
         <div class="col-md-6 col-xs-9" style="padding-left:1px">
             @Html.TextBox("txtNome", @Model.Nome, new { disabled = "disabled", style = "padding:0px", @class = "form-control" })

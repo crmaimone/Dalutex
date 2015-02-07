@@ -53,7 +53,7 @@ namespace Dalutex.Models
     {
         public ConclusaoPedidoViewModel()
         {
-            TipoPedido = -1;
+            IDTipoPedido = -1;
         }
 
         #region Combos
@@ -92,7 +92,8 @@ namespace Dalutex.Models
 
         #region ValoresSelecionados
 
-        public int TipoPedido { get; set; }
+        public int IDTipoPedido { get; set; }
+        public int IDRepresentante { get; set; }
 
         #endregion
 

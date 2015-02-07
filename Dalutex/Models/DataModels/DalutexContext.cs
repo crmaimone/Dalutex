@@ -23,6 +23,7 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<CADASTRO_MOEDAS> CADASTRO_MOEDAS { get; set; }
         public virtual DbSet<COML_TIPOSPEDIDOS> COML_TIPOSPEDIDOS { get; set; }
         public virtual DbSet<REPRESENTANTES> REPRESENTANTES { get; set; }
+        public virtual DbSet<COML_CONTATOS> COML_CONTATOS { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -522,6 +523,30 @@ namespace Dalutex.Models.DataModels
 
             modelBuilder.Entity<ITENS_ESTOQUE>()
                 .Property(e => e.EMPRESA_ITENS)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<COML_CONTATOS>()
+                .Property(e => e.CONTATO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<COML_CONTATOS>()
+                .Property(e => e.CARGO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<COML_CONTATOS>()
+                .Property(e => e.TELEFONE)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<COML_CONTATOS>()
+                .Property(e => e.RAMAL)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<COML_CONTATOS>()
+                .Property(e => e.EMAIL)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<COML_CONTATOS>()
+                .Property(e => e.CELULAR)
                 .IsUnicode(false);
         }
     }

@@ -129,7 +129,7 @@ namespace Dalutex.Controllers
                 model.TiposPedido = ctxDalutex.COML_TIPOSPEDIDOS.Where(x => tiposPedidos.Any(tipo => x.TIPOPEDIDO.Equals(tipo))).ToList();
             }
 
-            model.ObterTipoPedido = base.Session_Carrinho == null || base.Session_Carrinho.TipoPedido < 0;
+            model.ObterTipoPedido = base.Session_Carrinho == null || base.Session_Carrinho.IDTipoPedido < 0;
 
             return View(model);
         }
@@ -155,7 +155,7 @@ namespace Dalutex.Controllers
                     }
 
                     if (model.IDTipoPedido >= 0)
-                        base.Session_Carrinho.TipoPedido = model.IDTipoPedido;
+                        base.Session_Carrinho.IDTipoPedido = model.IDTipoPedido;
 
                     base.Session_Carrinho.Itens.Add(model);
 
@@ -177,7 +177,6 @@ namespace Dalutex.Controllers
             return View();
         }
 
-        [AllowAnonymous]
         public ActionResult ConclusaoPedido()
         {
             ConclusaoPedidoViewModel model = new ConclusaoPedidoViewModel();

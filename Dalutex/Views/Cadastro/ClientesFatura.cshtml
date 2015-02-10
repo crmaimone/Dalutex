@@ -1,7 +1,50 @@
-﻿
+﻿@using Dalutex.Models.DataModels
+
+@model Dalutex.Models.PesquisaClientesFaturaViewModel
+
 @{
-    ViewBag.Title = "ClientesFatura";
+    ViewBag.Title = "Pesquisa de clientes";
 }
 
-<h2>ClientesFatura</h2>
-
+<h2>@ViewBag.Title</h2>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <section id="PesquisaClientesFatura">
+                @using (Html.BeginForm("ClientesFatura", "Cadastro", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Filtro, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.Filtro, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Filtro, "", new { @class = "text-danger" })
+                        </div>
+                        <input type="submit" value="Pesquisar" class="btn btn-default" />
+                    </div>
+                }
+            </section>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <section id="ResultadoClienttes">
+                <div class="list-group" id="lstClientes">
+                    <a href="#" class="list-group-item active">Clientes</a>
+                    @if (@Model != null && @Model.ClientesFatura != null)
+                    {
+                        foreach (VW_CLIENTE_TRANSP item in Model.ClientesFatura)
+                        {
+                            <a href="@Url.Action("ClientesEntrega", "Cadastro", new { IDClienteFatura = item.ID_CLIENTE })" class="list-group-item"><strong>@item.ID_CLIENTE</strong> @item.NOME</a>
+                        }
+                    }
+                    else
+                    {
+                        <p class="list-group-item"><em>Utilize o filtro para buscar o cliente</em></p>
+                    }
+                </div>
+            </section>
+        </div>
+    </div>
+</div>

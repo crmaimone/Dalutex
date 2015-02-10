@@ -10,4 +10,10 @@ namespace Dalutex.Models
         public string Filtro { get; set; }
         public List<REPRESENTANTES> Representantes { get; set; }
     }
+
+    public class PesquisaClientesFaturaViewModel
+    {
+        public string Filtro { get; set; }
+        public List<VW_CLIENTE_TRANSP> ClientesFatura { get; set; }
+    }
 }

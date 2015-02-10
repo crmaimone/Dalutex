@@ -210,24 +210,24 @@ namespace Dalutex.Controllers
             return View(model);
         }
 
-        [AllowAnonymous]
-        [HttpPost]
-        public JsonResult ObterDesenho(string desenho, string variante)
-        {
-            string path = ConfigurationManager.AppSettings["PASTA_DESENHOS"] + desenho + "_" + variante + ".jpg";
-            if(System.IO.File.Exists(path))
-            {
-                FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
-                byte[] buffer = new byte[fileStream.Length];
-                fileStream.Read(buffer, 0, (int)fileStream.Length);
-                fileStream.Close();
-                string str = System.Convert.ToBase64String(buffer, 0, buffer.Length);
-                return Json(new { Image = str, JsonRequestBehavior.AllowGet });
-            }
-            else
-            {
-                return Json(new { Image = "", JsonRequestBehavior.AllowGet });
-            }
-        }
+        //[AllowAnonymous]
+        //[HttpPost]
+        //public JsonResult ObterDesenho(string desenho, string variante)
+        //{
+        //    string path = ConfigurationManager.AppSettings["PASTA_DESENHOS"] + desenho + "_" + variante + ".jpg";
+        //    if(System.IO.File.Exists(path))
+        //    {
+        //        FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
+        //        byte[] buffer = new byte[fileStream.Length];
+        //        fileStream.Read(buffer, 0, (int)fileStream.Length);
+        //        fileStream.Close();
+        //        string str = System.Convert.ToBase64String(buffer, 0, buffer.Length);
+        //        return Json(new { Image = str, JsonRequestBehavior.AllowGet });
+        //    }
+        //    else
+        //    {
+        //        return Json(new { Image = "", JsonRequestBehavior.AllowGet });
+        //    }
+        //}
     }
 }

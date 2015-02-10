@@ -175,7 +175,7 @@
     <Compile Include="Models\DataModels\LOCALVENDA.cs" />
     <Compile Include="Models\DataModels\CADASTRO_MOEDAS.cs" />
     <Compile Include="Models\DataModels\VW_CONDICAO_PGTO.cs" />
-    <Compile Include="Models\Enums.cs" />
+    <Compile Include="Models\Utils\Enums.cs" />
     <Compile Include="Models\PedidoViewModels.cs" />
     <Compile Include="Models\SharedViewModels.cs" />
     <Compile Include="Models\Utils\Attributes.cs" />

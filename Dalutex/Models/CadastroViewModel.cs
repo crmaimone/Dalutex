@@ -26,6 +26,7 @@ namespace Dalutex.Models
     public class PesquisaTransportadoraViewModel
     {
         public string Filtro { get; set; }
-        public List<TRANSPORTADORA> ClientesEntrega { get; set; }
+        public List<TRANSPORTADORAS> Transportadoras { get; set; }
     }
+
 }

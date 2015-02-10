@@ -105,8 +105,6 @@ namespace Dalutex.Controllers
             {
                 using (var ctx = new TIDalutexContext())
                 {
-                    //VW_CLIENTE_TRANSP objCliente = ctx.VW_CLIENTE_TRANSP.Where(x => x.ID_CLIENTE == iIDClienteFatura && x.ID_REP == idRepresentante).First();
-
                     VW_CLIENTE_TRANSP _ClienteEntrega = ctx.VW_CLIENTE_TRANSP.Where(x => x.ID_CLIENTE == iIDClienteEntrega).First();
 
                     model.ClientesEntrega = new List<VW_CLIENTE_TRANSP>();
@@ -135,10 +133,47 @@ namespace Dalutex.Controllers
         }
 
 
-        public ActionResult Transportadora()
+        [HttpGet]
+        public ActionResult Transportadora(string IDTransportadora)
         {
-            return View();
+            PesquisaTransportadoraViewModel model = new PesquisaTransportadoraViewModel();
+
+            int iIDTransportadora;
+
+            if (int.TryParse(IDTransportadora, out iIDTransportadora))
+            {
+                using (var ctx = new DalutexContext())
+                {
+                    TRANSPORTADORAS _transportadora = ctx.TRANSPORTADORAS.Find(iIDTransportadora);
+
+                    model.Transportadoras = new List<TRANSPORTADORAS>();
+                    model.Transportadoras.Add(_transportadora);
+
+                    model.Filtro = _transportadora.NOME;
+                }
+            }
+
+            Session_Carrinho.IDTransportadora = int.Parse(IDTransportadora);
+
+            return View(model);
         }
+
+        [HttpPost]
+        public ActionResult Transportadora(PesquisaTransportadoraViewModel model)
+        {
+            using (var ctx = new DalutexContext())
+            {
+               // TRANSPORTADORAS ctx = new TRANSPORTADORAS();
+    
+                int idTransportadora = base.Session_Carrinho.IDTransportadora;
+                model.Transportadoras = ctx.TRANSPORTADORAS.Where(x => x.IDTRANSPORTADORA == idTransportadora).ToList();               
+               
+            }
+
+            return View(model);
+        }
+
 
     }
 }
+                

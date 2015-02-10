@@ -270,6 +270,7 @@
     <Content Include="Views\Cadastro\Representantes.cshtml" />
     <Content Include="Views\Cadastro\ClientesFatura.cshtml" />
     <Content Include="Views\Cadastro\ClientesEntrega.cshtml" />
+    <Content Include="Views\Cadastro\Transportadora.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

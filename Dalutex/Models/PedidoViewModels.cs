@@ -95,6 +95,9 @@ namespace Dalutex.Models
         public int IDTipoPedido { get; set; }
         public int IDRepresentante { get; set; }
         public int IDClienteFatura { get; set; }
+        public int IDClienteEntrega { get; set; }
+        public int IDTransportadora { get; set; }
+
 
         #endregion
 

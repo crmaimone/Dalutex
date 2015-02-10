@@ -145,6 +145,7 @@
     <Compile Include="Models\DataModels\PRE_PEDIDO_COND_PAG.cs" />
     <Compile Include="Models\DataModels\REPRESENTANTES.cs" />
     <Compile Include="Models\DataModels\TAMANHOPECA.cs" />
+    <Compile Include="Models\DataModels\TRANSPORTADORAS.cs" />
     <Compile Include="Models\DataModels\VW_ARTIGOS_DISPONIVEIS.cs" />
     <Compile Include="Models\DataModels\VW_CLIENTE_TRANSP.cs" />
     <Compile Include="Models\DataModels\VW_COLECAO_ATUAL.cs" />
@@ -268,6 +269,7 @@
     <Content Include="Views\Shared\_BuscaRepresentante.cshtml" />
     <Content Include="Views\Cadastro\Representantes.cshtml" />
     <Content Include="Views\Cadastro\ClientesFatura.cshtml" />
+    <Content Include="Views\Cadastro\ClientesEntrega.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

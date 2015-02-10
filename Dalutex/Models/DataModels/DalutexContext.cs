@@ -24,9 +24,22 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<COML_TIPOSPEDIDOS> COML_TIPOSPEDIDOS { get; set; }
         public virtual DbSet<REPRESENTANTES> REPRESENTANTES { get; set; }
         public virtual DbSet<COML_CONTATOS> COML_CONTATOS { get; set; }
+        public virtual DbSet<TRANSPORTADORAS> TRANSPORTADORAS { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<TRANSPORTADORAS>()
+                .Property(e => e.NOME)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<TRANSPORTADORAS>()
+                .Property(e => e.CIDADE)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<TRANSPORTADORAS>()
+                .Property(e => e.STEXIGRETEICMSTRAN)
+                .IsUnicode(false);
+
             modelBuilder.Entity<REPRESENTANTES>()
                 .Property(e => e.NOME)
                 .IsUnicode(false);

@@ -16,4 +16,16 @@ namespace Dalutex.Models
         public string Filtro { get; set; }
         public List<VW_CLIENTE_TRANSP> ClientesFatura { get; set; }
     }
+
+    public class PesquisaClientesEntregaViewModel
+    {
+        public string Filtro { get; set; }
+        public List<VW_CLIENTE_TRANSP> ClientesEntrega { get; set; }
+    }
+
+    public class PesquisaTransportadoraViewModel
+    {
+        public string Filtro { get; set; }
+        public List<TRANSPORTADORA> ClientesEntrega { get; set; }
+    }
 }

@@ -58,6 +58,7 @@ namespace Dalutex.Controllers
             return View(model);
         }
 
+
         public ActionResult ClientesFatura(string IDRepresentante, string IDClienteFatura)
         {
             PesquisaClientesFaturaViewModel model = new PesquisaClientesFaturaViewModel();
@@ -94,26 +95,50 @@ namespace Dalutex.Controllers
         }
 
 
-        public ActionResult ClientesEntrega(string IDClienteFatura)
+        public ActionResult ClientesEntrega(string IDClienteEntrega)
         {
-            //PesquisaClientesFaturaViewModel model = new PesquisaClientesFaturaViewModel();
+            PesquisaClientesEntregaViewModel model = new PesquisaClientesEntregaViewModel();
 
-            //int iIDClienteFatura;
+            int iIDClienteEntrega;
 
-            //if (int.TryParse(IDClienteFatura, out iIDClienteFatura))
-            //{
-            //    using (var ctx = new TIDalutexContext())
-            //    {
-            //        VW_CLIENTE_TRANSP objCliente = ctx.VW_CLIENTE_TRANSP.Find(iIDClienteFatura);
-            //        model.ClientesFatura = new List<VW_CLIENTE_TRANSP>();
-            //        model.ClientesFatura.Add(objCliente);
-            //        model.Filtro = objCliente.NOME;
-            //    }
-            //}
+            if (int.TryParse(IDClienteEntrega, out iIDClienteEntrega))
+            {
+                using (var ctx = new TIDalutexContext())
+                {
+                    //VW_CLIENTE_TRANSP objCliente = ctx.VW_CLIENTE_TRANSP.Where(x => x.ID_CLIENTE == iIDClienteFatura && x.ID_REP == idRepresentante).First();
 
-            Session_Carrinho.IDClienteFatura = int.Parse(IDClienteFatura);
+                    VW_CLIENTE_TRANSP _ClienteEntrega = ctx.VW_CLIENTE_TRANSP.Where(x => x.ID_CLIENTE == iIDClienteEntrega).First();
 
+                    model.ClientesEntrega = new List<VW_CLIENTE_TRANSP>();
+
+                    model.ClientesEntrega.Add(_ClienteEntrega);
+
+                    model.Filtro = _ClienteEntrega.NOME;
+                }
+            }
+
+            Session_Carrinho.IDClienteEntrega = int.Parse(IDClienteEntrega);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult ClientesEntrega(PesquisaClientesEntregaViewModel model)
+        {
+            using (var ctx = new TIDalutexContext())
+            {
+                int idRepresentante = base.Session_Carrinho.IDRepresentante;
+                model.ClientesEntrega = ctx.VW_CLIENTE_TRANSP.Where(x => x.NOME.Contains(model.Filtro.ToUpper()) && x.ID_REP == idRepresentante).ToList();
+            }
+
+            return View(model);
+        }
+
+
+        public ActionResult Transportadora()
+        {
             return View();
         }
+
     }
 }

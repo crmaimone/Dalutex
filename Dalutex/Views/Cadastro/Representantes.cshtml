@@ -21,7 +21,10 @@
                             @Html.TextBoxFor(m => m.Filtro, new { @class = "form-control" })
                             @Html.ValidationMessageFor(m => m.Filtro, "", new { @class = "text-danger" })
                         </div>
-                        <input type="submit" value="Pesquisar" class="btn btn-default"/>
+
+                        @*<input type="submit" id="btnRepres" value="Pesquisar" class="btn btn-default"/>*@
+                        <input type="submit" id="btnRepres" value="Pesquisar" class="btn btn-default" style="position: absolute; left: 425px;" />  
+                        
                     </div>
                 }
             </section>

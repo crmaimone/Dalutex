@@ -162,14 +162,10 @@ namespace Dalutex.Controllers
         public ActionResult Transportadora(PesquisaTransportadoraViewModel model)
         {
             using (var ctx = new DalutexContext())
-            {
-               // TRANSPORTADORAS ctx = new TRANSPORTADORAS();
-    
+            {                   
                 int idTransportadora = base.Session_Carrinho.IDTransportadora;
-                model.Transportadoras = ctx.TRANSPORTADORAS.Where(x => x.IDTRANSPORTADORA == idTransportadora).ToList();               
-               
+                model.Transportadoras = ctx.TRANSPORTADORAS.Where(x => x.IDTRANSPORTADORA == idTransportadora).ToList();                              
             }
-
             return View(model);
         }
 

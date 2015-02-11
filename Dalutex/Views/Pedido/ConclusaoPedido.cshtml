@@ -74,7 +74,8 @@
                         </div>
                     </div>
                     <hr />
-                    <div class="row">
+                    
+                    @*<div class="row">
                         <div class="col-xs-12" style="width:100%">
                             @Html.Partial(
                                     "_BuscaRepresentante",
@@ -82,8 +83,8 @@
                                 )
                         </div>
                     </div>
-                    
-                    <hr />
+                    <hr />*@
+
                     <div class="form-group">
                         <div class="col-md-12">
                             @Html.ActionLink("Cancelar", "#", "Pedido", null, new { @class = "btn btn-default btn-warning right" })
@@ -118,8 +119,16 @@
         <tbody>
             @if (Model.Itens != null)
             {
+                decimal _Total = 0;
+                decimal _qtde;
+                decimal _valor;
+                 
                 foreach (InserirNoCarrinhoViewModel item in Model.Itens)
                 {
+                    _qtde = item.Quantidade;
+                    _valor = item.Preco;
+
+                    _Total = (_qtde * _valor);
                     <tr>
                         <th>@item.Desenho</th>
                         <th>@item.Variante</th>
@@ -127,7 +136,7 @@
                         <th>@item.Pecas</th>
                         <th>@item.Quantidade</th>
                         <th>@item.Preco</th>
-                        <th>(@item.Preco * @item.Quantidade)</th>
+                        <th>(@item.Preco * @item.Quantidade) System.Convert.ToString(decimalVal)</th>
                     </tr>
                 }
             }

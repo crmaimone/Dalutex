@@ -228,32 +228,34 @@ namespace Dalutex.Controllers
                 }
                
 
-                if (ModelState.IsValid)
-                {
-                    PRE_PEDIDO objPrePedido = new PRE_PEDIDO()
-                    {
-                        ATENDIMENTO = model.IDTiposAtendimento,
-                        //CANAL_VENDAS = model.IDCanaisVenda,
-                        COD_COND_PGTO = model.IDCondicoesPagto,
-                        //COD_MOEDA = model.IDMoedas,
-                        DATA_EMISSAO = DateTime.Now,
-                        DATA_INICIO = DateTime.Now,
-                        DATA_FINAL = DateTime.Now,
-                        GERENTE = model.IDGerentesVenda,
-                        ID_CLIENTE = base.Session_Carrinho.IDClienteFatura,
-                        ID_CLIENTE_ENTREGA = base.Session_Carrinho.IDClienteEntrega,
-                        ID_LOCAL = model.IDLocaisVenda,
-                        ID_REPRESENTANTE = base.Session_Carrinho.IDRepresentante,
-                        ID_TRANSPORTADORA = base.Session_Carrinho.IDTransportadora,
-                        
-
-                    }
-
-
-                    using (var ctx = new TIDalutexContext())
-                    {
-                    }
-                }
+                //if (ModelState.IsValid)
+                //{
+                //    PRE_PEDIDO objPrePedido = new PRE_PEDIDO()
+                //    {                                                
+                //        NUMERO_PEDIDO_BLOCO = iNUMERO_PEDIDO_BLOCO,
+                //        TIPO_PEDIDO = base.Session_Carrinho.IDTipoPedido,                        
+                //        ID_REPRESENTANTE = base.Session_Carrinho.IDRepresentante,
+                //        ID_CLIENTE = base.Session_Carrinho.IDClienteFatura,
+                //        //QUALIDADE_COM = //me esqueci deste campo (valores fixos A, B, C).
+                //        COD_COND_PGTO = model.IDCondicoesPagto,
+                //        OBSERVACOES = model.Observacoes,
+                //        //DATA_ENTREGA = //maior data dentre os itens
+                //        ID_CLIENTE_ENTREGA = base.Session_Carrinho.IDClienteEntrega,
+                //        ID_TRANSPORTADORA = base.Session_Carrinho.IDTransportadora,
+                //        USUARIO_INICIO = base.Session_Usuario.NOME_USU,                                                
+                //        DATA_INICIO = DateTime.Now,
+                //        DATA_FINAL = DateTime.Now,
+                //        ID_LOCAL = model.IDLocaisVenda, 
+                //        //COD_MOEDA = model.IDMoedas,
+                //        //CANAL_VENDAS = model.IDCanaisVenda,
+                //        ATENDIMENTO = model.IDTiposAtendimento,                                                                                                                        
+                //        //TIPOFRETE = model.IDFretes,                        
+                //        //GERENTE = model.IDGerentesVenda,// não é necessario gravar neste campo para pedidos <> de PE
+                //        //VIATRANSPORTE = model.IDViasTransporte                        
+                //        COMISSAO = Session_Carrinho.Cimissao,// ver com cassiano
+                //        ORIGEM = "PW"; // APENAS PRA INFORMAR QUE ESTE PEDIDO VEIO DO PEDIDO WEB NOVO.                                                                                                                                                                                                                                                                                                                                              
+                //    }
+                //}
             }
             catch (Exception ex)
             {
@@ -261,6 +263,7 @@ namespace Dalutex.Controllers
             }
             // If we got this far, something failed, redisplay form
             return View(model);
+          
         }
 
         //[AllowAnonymous]

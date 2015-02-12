@@ -30,6 +30,9 @@ namespace Dalutex.Models
         public string UnidadeMedida { get; set; }
         public decimal ValorPadrao { get; set; }
         public bool ObterTipoPedido { get; set; }
+        public int Reduzido { get; set; }
+
+        public int Comissao {get; set; } //ver com cassiano onde criar este field e como mapear a regra para comissão (vide coleção);
 
         [Required]
         [Display(Name = "Tipo de pedido")]
@@ -55,6 +58,8 @@ namespace Dalutex.Models
         {
             IDTipoPedido = -1;
         }
+
+        public int Cimissao = 0;
 
         #region Combos
 
@@ -93,6 +98,8 @@ namespace Dalutex.Models
         [StringLength(1000)]
         [Display(Name="Observações")]
         public string Observacoes { get; set; }
+
+
 
         #endregion
 

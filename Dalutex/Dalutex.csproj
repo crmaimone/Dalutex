@@ -141,6 +141,7 @@
     <Compile Include="Models\DataModels\ARTIGO_PESO_PADRAO.cs" />
     <Compile Include="Models\DataModels\COML_CONTATOS.cs" />
     <Compile Include="Models\DataModels\COML_TIPOSPEDIDOS.cs" />
+    <Compile Include="Models\DataModels\CRIACAO_REDUZIDOS.cs" />
     <Compile Include="Models\DataModels\PRE_PEDIDO_ATEND.cs" />
     <Compile Include="Models\DataModels\PRE_PEDIDO_COND_PAG.cs" />
     <Compile Include="Models\DataModels\REPRESENTANTES.cs" />

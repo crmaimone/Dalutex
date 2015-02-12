@@ -22,5 +22,12 @@ namespace Dalutex.Models
             AMOSTRAS_MALHARIA = 16,
             DESENVOLVIMENTO = 17
         }
+
+        public enum QualidadeComercial
+        {
+            A = 0,
+            B = 1,
+            C = 2
+        }
     }
 }

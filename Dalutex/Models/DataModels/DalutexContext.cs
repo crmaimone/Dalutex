@@ -25,9 +25,36 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<REPRESENTANTES> REPRESENTANTES { get; set; }
         public virtual DbSet<COML_CONTATOS> COML_CONTATOS { get; set; }
         public virtual DbSet<TRANSPORTADORAS> TRANSPORTADORAS { get; set; }
+        public virtual DbSet<CRIACAO_REDUZIDOS> CRIACAO_REDUZIDOS { get; set; }
+
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<CRIACAO_REDUZIDOS>()
+                .Property(e => e.ID_CRIACAO_REDUZIDOS)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<CRIACAO_REDUZIDOS>()
+                .Property(e => e.ARTIGO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<CRIACAO_REDUZIDOS>()
+                .Property(e => e.DESENHO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<CRIACAO_REDUZIDOS>()
+                .Property(e => e.VARIANTE)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<CRIACAO_REDUZIDOS>()
+                .Property(e => e.MAQUINA)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<CRIACAO_REDUZIDOS>()
+                .Property(e => e.REDUZIDO_CRIADO)
+                .HasPrecision(38, 0);
+
             modelBuilder.Entity<TRANSPORTADORAS>()
                 .Property(e => e.NOME)
                 .IsUnicode(false);

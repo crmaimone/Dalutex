@@ -51,7 +51,18 @@
                     @Html.HiddenFor(x => x.Artigo)
                     @Html.HiddenFor(x => x.Tecnologia)
                     @Html.HiddenFor(x => x.UnidadeMedida, new { id = "hidUM"})
-                    @Html.HiddenFor(x => x.ValorPadrao, new { id = "hidValPadrao" })
+                    @Html.HiddenFor(x => x.ValorPadrao, new { id = "hidValPadrao" })  
+                    
+                    
+                    // ver com cassiano... criar busca de reduzidos................
+                    //SELECT V.CODIGO_REDUZIDO
+                    //  FROM DALUTEX.VMASCARAPRODUTOACABADO V 
+                    // WHERE V.ARTIGO   = ''
+                    //   AND V.DESENHO  = ''
+                    //   AND V.VARIANTE = ''
+                    //   AND V.MAQUINA  = ''
+                    
+                                      
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-10">
                             <input type="submit" value="Incluir" class="btn btn-default" />

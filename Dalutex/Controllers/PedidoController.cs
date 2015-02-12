@@ -157,6 +157,8 @@ namespace Dalutex.Controllers
                     if (model.IDTipoPedido >= 0)
                         base.Session_Carrinho.IDTipoPedido = model.IDTipoPedido;
 
+                    model.Quantidade = model.Pecas * model.ValorPadrao;
+
                     base.Session_Carrinho.Itens.Add(model);
 
                     return RedirectToAction("ArtigosDisponiveis", "Pedido", new { desenho = model.Desenho, variante = model.Variante, });
@@ -200,13 +202,64 @@ namespace Dalutex.Controllers
             if (base.Session_Carrinho != null)
                 model.Itens = base.Session_Carrinho.Itens;
 
-            model.BuscaRepresentante = new BuscaRepresentanteViewModel();
-            if(base.Session_Usuario != null)
-            {
-                model.BuscaRepresentante.IDRepresentante = base.Session_Usuario.ID_REPRES;
-                model.BuscaRepresentante.Nome = base.Session_Usuario.NOME_USU;
-            }
+            //model.BuscaRepresentante = new BuscaRepresentanteViewModel();
+            //if(base.Session_Usuario != null)
+            //{
+            //    model.BuscaRepresentante.IDRepresentante = base.Session_Usuario.ID_REPRES;
+            //    model.BuscaRepresentante.Nome = base.Session_Usuario.NOME_USU;
+            //}
 
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult ConclusaoPedido(ConclusaoPedidoViewModel model)
+        {            
+            try
+            {
+                int iNUMERO_PEDIDO_BLOCO = default(int);
+
+                while(iNUMERO_PEDIDO_BLOCO == default(int))
+                {
+                    //using(var ctx = new DalutexContext())
+                    //{
+                    //    iNUMERO_PEDIDO_BLOCO = 
+                    //}
+                }
+               
+
+                if (ModelState.IsValid)
+                {
+                    PRE_PEDIDO objPrePedido = new PRE_PEDIDO()
+                    {
+                        ATENDIMENTO = model.IDTiposAtendimento,
+                        //CANAL_VENDAS = model.IDCanaisVenda,
+                        COD_COND_PGTO = model.IDCondicoesPagto,
+                        //COD_MOEDA = model.IDMoedas,
+                        DATA_EMISSAO = DateTime.Now,
+                        DATA_INICIO = DateTime.Now,
+                        DATA_FINAL = DateTime.Now,
+                        GERENTE = model.IDGerentesVenda,
+                        ID_CLIENTE = base.Session_Carrinho.IDClienteFatura,
+                        ID_CLIENTE_ENTREGA = base.Session_Carrinho.IDClienteEntrega,
+                        ID_LOCAL = model.IDLocaisVenda,
+                        ID_REPRESENTANTE = base.Session_Carrinho.IDRepresentante,
+                        ID_TRANSPORTADORA = base.Session_Carrinho.IDTransportadora,
+                        
+
+                    }
+
+
+                    using (var ctx = new TIDalutexContext())
+                    {
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                base.Handle(ex);
+            }
+            // If we got this far, something failed, redisplay form
             return View(model);
         }
 

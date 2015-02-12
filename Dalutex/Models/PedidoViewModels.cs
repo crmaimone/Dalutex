@@ -60,35 +60,47 @@ namespace Dalutex.Models
 
         [Display(Name = "Condição de pagto")]
         public List<VW_CONDICAO_PGTO> CondicoesPagto { get; set; }
+        public int IDCondicoesPagto { get; set; }
 
         [Display(Name = "Moeda")]
         public List<CADASTRO_MOEDAS> Moedas { get; set; }
+        public int IDMoedas { get; set; }
 
         [Display(Name = "Via transporte")]
         public List<COML_VIASTRANSPORTE> ViasTransporte { get; set; }
+        public int IDViasTransporte { get; set; }
 
         [Display(Name = "Frete")]
         public List<COML_TIPOSFRETE> Fretes { get; set; }
+        public int IDFretes { get; set; }
 
         [Display(Name = "Local de vendas")]
         public List<LOCALVENDA> LocaisVenda { get; set; }
+        public int IDLocaisVenda { get; set; }
 
         [Display(Name = "Canal de vendas")]
         public List<CANAIS_VENDA> CanaisVenda { get; set; }
+        public int IDCanaisVenda { get; set; }
 
         [Display(Name = "Gerente de vendas")]
         public List<COML_GERENCIAS> GerentesVenda { get; set; }
+        public int IDGerentesVenda { get; set; }
 
         [Display(Name = "Tipo de atendimento")]
         public List<PRE_PEDIDO_ATEND> TiposAtendimento { get; set; }
+        public int IDTiposAtendimento { get; set; }
+
+        [StringLength(1000)]
+        [Display(Name="Observações")]
+        public string Observacoes { get; set; }
 
         #endregion
 
-        #region Buscas
+        //#region Buscas
 
-        public BuscaRepresentanteViewModel BuscaRepresentante { get; set; }
+        //public BuscaRepresentanteViewModel BuscaRepresentante { get; set; }
 
-        #endregion
+        //#endregion
 
         #region ValoresSelecionados
 
@@ -97,7 +109,6 @@ namespace Dalutex.Models
         public int IDClienteFatura { get; set; }
         public int IDClienteEntrega { get; set; }
         public int IDTransportadora { get; set; }
-
 
         #endregion
 

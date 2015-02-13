@@ -142,8 +142,10 @@
     <Compile Include="Models\DataModels\COML_CONTATOS.cs" />
     <Compile Include="Models\DataModels\COML_TIPOSPEDIDOS.cs" />
     <Compile Include="Models\DataModels\CRIACAO_REDUZIDOS.cs" />
+    <Compile Include="Models\DataModels\DISPONIBILIDADE_MALHA.cs" />
     <Compile Include="Models\DataModels\PRE_PEDIDO_ATEND.cs" />
     <Compile Include="Models\DataModels\PRE_PEDIDO_COND_PAG.cs" />
+    <Compile Include="Models\DataModels\PROXIMO_NUMERO_PEDIDO.cs" />
     <Compile Include="Models\DataModels\REPRESENTANTES.cs" />
     <Compile Include="Models\DataModels\TAMANHOPECA.cs" />
     <Compile Include="Models\DataModels\TRANSPORTADORAS.cs" />

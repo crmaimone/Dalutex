@@ -159,6 +159,27 @@ namespace Dalutex.Controllers
 
                     model.Quantidade = model.Pecas * model.ValorPadrao;
 
+                    using(var ctx = new TIDalutexContext())
+                    {
+                        int iID_DISP = ctx.DISPONIBILIDADE_MALHA
+                                                .OrderByDescending(x => x.ID_DISP)
+                                                .First()
+                                                .ID_DISP;
+                                             
+                        model.DataEntregaItem = ctx.DISPONIBILIDADE_MALHA
+                                                .Where(x => x.ARTIGO == model.Artigo && x.MAQUINA == model.Tecnologia && x.ID_DISP == iID_DISP)
+                                                .First()
+                                                .DISPONIBILIDADE_PCP
+                                                .GetValueOrDefault();
+
+
+                        if (model.DataEntregaItem == default(DateTime))
+                            model.DataEntregaItem = DateTime.Today.AddYears(1);
+
+                        if (base.Session_Carrinho.DataEntrega < model.DataEntregaItem)
+                            base.Session_Carrinho.DataEntrega = model.DataEntregaItem;
+                    }
+
                     base.Session_Carrinho.Itens.Add(model);
 
                     return RedirectToAction("ArtigosDisponiveis", "Pedido", new { desenho = model.Desenho, variante = model.Variante, });
@@ -182,7 +203,11 @@ namespace Dalutex.Controllers
         public ActionResult ConclusaoPedido()
         {
             ConclusaoPedidoViewModel model = new ConclusaoPedidoViewModel();
-
+            model.QualidadeComercial = new List<KeyValuePair<string, string>>();
+            model.QualidadeComercial.Add(new KeyValuePair<string, string>(Enums.QualidadeComercial.A.ToString(), Enums.QualidadeComercial.A.ToString()));
+            model.QualidadeComercial.Add(new KeyValuePair<string, string>(Enums.QualidadeComercial.B.ToString(), Enums.QualidadeComercial.B.ToString()));
+            model.QualidadeComercial.Add(new KeyValuePair<string, string>(Enums.QualidadeComercial.C.ToString(), Enums.QualidadeComercial.C.ToString()));
+            
             using (DalutexContext ctxDalutex = new DalutexContext())
             {
                 model.Moedas = ctxDalutex.CADASTRO_MOEDAS.ToList();
@@ -202,13 +227,6 @@ namespace Dalutex.Controllers
             if (base.Session_Carrinho != null)
                 model.Itens = base.Session_Carrinho.Itens;
 
-            //model.BuscaRepresentante = new BuscaRepresentanteViewModel();
-            //if(base.Session_Usuario != null)
-            //{
-            //    model.BuscaRepresentante.IDRepresentante = base.Session_Usuario.ID_REPRES;
-            //    model.BuscaRepresentante.Nome = base.Session_Usuario.NOME_USU;
-            //}
-
             return View(model);
         }
 
@@ -221,41 +239,55 @@ namespace Dalutex.Controllers
 
                 while(iNUMERO_PEDIDO_BLOCO == default(int))
                 {
-                    //using(var ctx = new DalutexContext())
-                    //{
-                    //    iNUMERO_PEDIDO_BLOCO = 
-                    //}
+                    using(var ctx = new TIDalutexContext())
+                    {
+                        PROXIMO_NUMERO_PEDIDO reservar = ctx.PROXIMO_NUMERO_PEDIDO.Where(x => x.DISPONIVEL == 0).OrderBy(x => x.NUMERO_PEDIDO).First();
+                        iNUMERO_PEDIDO_BLOCO = reservar.NUMERO_PEDIDO;
+                        reservar.DISPONIVEL = 1;
+                        ctx.SaveChanges();
+                    }
                 }
                
 
-                //if (ModelState.IsValid)
-                //{
-                //    PRE_PEDIDO objPrePedido = new PRE_PEDIDO()
-                //    {                                                
-                //        NUMERO_PEDIDO_BLOCO = iNUMERO_PEDIDO_BLOCO,
-                //        TIPO_PEDIDO = base.Session_Carrinho.IDTipoPedido,                        
-                //        ID_REPRESENTANTE = base.Session_Carrinho.IDRepresentante,
-                //        ID_CLIENTE = base.Session_Carrinho.IDClienteFatura,
-                //        //QUALIDADE_COM = //me esqueci deste campo (valores fixos A, B, C).
-                //        COD_COND_PGTO = model.IDCondicoesPagto,
-                //        OBSERVACOES = model.Observacoes,
-                //        //DATA_ENTREGA = //maior data dentre os itens
-                //        ID_CLIENTE_ENTREGA = base.Session_Carrinho.IDClienteEntrega,
-                //        ID_TRANSPORTADORA = base.Session_Carrinho.IDTransportadora,
-                //        USUARIO_INICIO = base.Session_Usuario.NOME_USU,                                                
-                //        DATA_INICIO = DateTime.Now,
-                //        DATA_FINAL = DateTime.Now,
-                //        ID_LOCAL = model.IDLocaisVenda, 
-                //        //COD_MOEDA = model.IDMoedas,
-                //        //CANAL_VENDAS = model.IDCanaisVenda,
-                //        ATENDIMENTO = model.IDTiposAtendimento,                                                                                                                        
-                //        //TIPOFRETE = model.IDFretes,                        
-                //        //GERENTE = model.IDGerentesVenda,// não é necessario gravar neste campo para pedidos <> de PE
-                //        //VIATRANSPORTE = model.IDViasTransporte                        
-                //        COMISSAO = Session_Carrinho.Cimissao,// ver com cassiano
-                //        ORIGEM = "PW"; // APENAS PRA INFORMAR QUE ESTE PEDIDO VEIO DO PEDIDO WEB NOVO.                                                                                                                                                                                                                                                                                                                                              
-                //    }
-                //}
+                if (ModelState.IsValid)
+                {
+                    PRE_PEDIDO objPrePedido = new PRE_PEDIDO()
+                    {
+                        NUMERO_PEDIDO_BLOCO = iNUMERO_PEDIDO_BLOCO,
+                        TIPO_PEDIDO = base.Session_Carrinho.IDTipoPedido,
+                        ID_REPRESENTANTE = base.Session_Carrinho.IDRepresentante,
+                        ID_CLIENTE = base.Session_Carrinho.IDClienteFatura,
+                        QUALIDADE_COM = model.IDQualidadeComercial,
+                        COD_COND_PGTO = model.IDCondicoesPagto,
+                        OBSERVACOES = model.Observacoes,
+                        DATA_ENTREGA = base.Session_Carrinho.DataEntrega,
+                        ID_CLIENTE_ENTREGA = base.Session_Carrinho.IDClienteEntrega,
+                        ID_TRANSPORTADORA = base.Session_Carrinho.IDTransportadora,
+                        USUARIO_INICIO = base.Session_Usuario.NOME_USU,
+                        DATA_INICIO = DateTime.Now,
+                        DATA_FINAL = DateTime.Now,
+                        ID_LOCAL = model.IDLocaisVenda,
+                        COD_MOEDA = model.IDMoedas,
+                        CANAL_VENDAS = model.IDCanaisVenda,
+                        ATENDIMENTO = model.IDTiposAtendimento,
+                        TIPOFRETE = model.IDFretes,
+                        //GERENTE = model.IDGerentesVenda,// não é necessario gravar neste campo para pedidos <> de PE
+                        VIATRANSPORTE = model.IDViasTransporte,
+                        COMISSAO = Session_Carrinho.PorcentagemComissao,// ver com cassiano
+                        ORIGEM = "PW" // APENAS PRA INFORMAR QUE ESTE PEDIDO VEIO DO PEDIDO WEB NOVO.                                                                                                                                                                                                                                                                                                                                              
+                    };
+
+                    List<PRE_PEDIDO_ITENS> lstItens = new List<PRE_PEDIDO_ITENS>();
+
+                    foreach(InserirNoCarrinhoViewModel item in base.Session_Carrinho.Itens)
+                    {
+                        PRE_PEDIDO_ITENS objItem = new PRE_PEDIDO_ITENS(){
+
+                        };
+
+                        //lstItens.Add
+                    }
+                }
             }
             catch (Exception ex)
             {

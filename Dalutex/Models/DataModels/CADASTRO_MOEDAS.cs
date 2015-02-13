@@ -10,7 +10,7 @@ namespace Dalutex.Models.DataModels
     public partial class CADASTRO_MOEDAS
     {
         [Key]
-        public byte CODIGOMOEDA { get; set; }
+        public int CODIGOMOEDA { get; set; }
 
         [StringLength(20)]
         public string NOMEMOEDA { get; set; }

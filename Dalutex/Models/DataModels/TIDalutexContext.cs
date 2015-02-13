@@ -35,9 +35,65 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<VW_CONDICAO_PGTO> VW_CONDICAO_PGTO { get; set; }
         public virtual DbSet<ARTIGO_PESO_PADRAO> ARTIGO_PESO_PADRAO { get; set; }
         public virtual DbSet<VW_CLIENTE_TRANSP> VW_CLIENTE_TRANSP { get; set; }
+        public virtual DbSet<PROXIMO_NUMERO_PEDIDO> PROXIMO_NUMERO_PEDIDO { get; set; }
+        public virtual DbSet<CRIACAO_REDUZIDOS> CRIACAO_REDUZIDOS { get; set; }
+        public virtual DbSet<DISPONIBILIDADE_MALHA> DISPONIBILIDADE_MALHA { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<DISPONIBILIDADE_MALHA>()
+                .Property(e => e.ARTIGO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<DISPONIBILIDADE_MALHA>()
+                .Property(e => e.LISO_EST)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<DISPONIBILIDADE_MALHA>()
+                .Property(e => e.MAQUINA)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<DISPONIBILIDADE_MALHA>()
+                .Property(e => e.ID_DISP);
+
+            modelBuilder.Entity<DISPONIBILIDADE_MALHA>()
+                .Property(e => e.USUARIO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<DISPONIBILIDADE_MALHA>()
+                .Property(e => e.SEMANA)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<CRIACAO_REDUZIDOS>()
+                .Property(e => e.ID_CRIACAO_REDUZIDOS)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<CRIACAO_REDUZIDOS>()
+                .Property(e => e.ARTIGO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<CRIACAO_REDUZIDOS>()
+                .Property(e => e.DESENHO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<CRIACAO_REDUZIDOS>()
+                .Property(e => e.VARIANTE)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<CRIACAO_REDUZIDOS>()
+                .Property(e => e.MAQUINA)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<CRIACAO_REDUZIDOS>()
+                .Property(e => e.REDUZIDO_CRIADO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<PROXIMO_NUMERO_PEDIDO>()
+                .Property(e => e.NUMERO_PEDIDO);
+
             modelBuilder.Entity<ARTIGO_PESO_PADRAO>()
                 .Property(e => e.ARTIGO)
                 .IsFixedLength()

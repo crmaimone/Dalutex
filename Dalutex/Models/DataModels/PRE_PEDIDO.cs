@@ -82,17 +82,17 @@ namespace Dalutex.Models.DataModels
         [StringLength(20)]
         public string CNPJ_ENTREGA { get; set; }
 
-        public byte? COD_MOEDA { get; set; }
+        public int COD_MOEDA { get; set; }
 
-        public short? CANAL_VENDAS { get; set; }
+        public int CANAL_VENDAS { get; set; }
 
         public decimal? GERENTE { get; set; }
 
         public decimal? ATENDIMENTO { get; set; }
 
-        public short? VIATRANSPORTE { get; set; }
+        public int VIATRANSPORTE { get; set; }
 
-        public short? TIPOFRETE { get; set; }
+        public int TIPOFRETE { get; set; }
 
         public decimal? NUMERO_CARTAO { get; set; }
 

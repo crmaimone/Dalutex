@@ -17,9 +17,14 @@
                     <hr />
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                    //aki, colocar qualidade comercial -------------------
-                    
-                    //valor padrão: "real"
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.QualidadeComercial, new { @class = "col-md-3 control-label" })
+                        <div class="col-md-9">
+                            @Html.DropDownListFor(m => m.IDQualidadeComercial, new SelectList(Model.QualidadeComercial, "key", "Value"), "Selecione", new { @id = "lstMoedas" })
+                            @Html.ValidationMessageFor(m => m.IDQualidadeComercial, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         @Html.LabelFor(x => x.Moedas, new { @class = "col-md-3 control-label" })
                         <div class="col-md-9">
@@ -36,7 +41,6 @@
                         </div>
                     </div>
                     
-                    //valor padrão: "mercado interno"
                     <div class="form-group">
                         @Html.LabelFor(x => x.CanaisVenda, new { @class = "col-md-3 control-label" })
                         <div class="col-md-9">
@@ -45,7 +49,6 @@
                         </div>
                     </div> 
                     
-                    //valor padrão: "rodoviaria"                  
                     <div class="form-group">
                         @Html.LabelFor(x => x.ViasTransporte, new { @class = "col-md-3 control-label" })
                         <div class="col-md-9">
@@ -54,7 +57,6 @@
                         </div>
                     </div>
                     
-                    //valor padrão: "fob"
                     <div class="form-group">
                         @Html.LabelFor(x => x.Fretes, new { @class = "col-md-3 control-label" })
                         <div class="col-md-9">

@@ -31,6 +31,7 @@ namespace Dalutex.Models
         public decimal ValorPadrao { get; set; }
         public bool ObterTipoPedido { get; set; }
         public int Reduzido { get; set; }
+        public DateTime DataEntregaItem { get; set; }
 
         public int Comissao {get; set; } //ver com cassiano onde criar este field e como mapear a regra para comissão (vide coleção);
 
@@ -57,9 +58,11 @@ namespace Dalutex.Models
         public ConclusaoPedidoViewModel()
         {
             IDTipoPedido = -1;
+            IDCanaisVenda = 1; //MERCADO INTERNO
+            IDViasTransporte = 1; //RODOVIARIA
+            IDFretes = 2; //FOB
+            PorcentagemComissao = 4; //ALTERAR CONFORME O TIPO DE COLEÇÂO
         }
-
-        public int Cimissao = 0;
 
         #region Combos
 
@@ -95,19 +98,15 @@ namespace Dalutex.Models
         public List<PRE_PEDIDO_ATEND> TiposAtendimento { get; set; }
         public int IDTiposAtendimento { get; set; }
 
+        [Display(Name = "Qualidade comercial")]
+        public List<KeyValuePair<string, string>> QualidadeComercial { get; set; }
+        public string IDQualidadeComercial { get; set; }
+
         [StringLength(1000)]
         [Display(Name="Observações")]
         public string Observacoes { get; set; }
 
-
-
         #endregion
-
-        //#region Buscas
-
-        //public BuscaRepresentanteViewModel BuscaRepresentante { get; set; }
-
-        //#endregion
 
         #region ValoresSelecionados
 
@@ -116,6 +115,8 @@ namespace Dalutex.Models
         public int IDClienteFatura { get; set; }
         public int IDClienteEntrega { get; set; }
         public int IDTransportadora { get; set; }
+        public decimal PorcentagemComissao { get; set; }
+        public DateTime DataEntrega { get; set; }
 
         #endregion
 

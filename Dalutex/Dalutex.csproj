@@ -152,7 +152,8 @@
     <Compile Include="Models\DataModels\VMASCARAPRODUTOACABADO.cs" />
     <Compile Include="Models\DataModels\VW_ARTIGOS_DISPONIVEIS.cs" />
     <Compile Include="Models\DataModels\VW_CLIENTE_TRANSP.cs" />
-    <Compile Include="Models\DataModels\VW_COLECAO_ATUAL.cs" />
+    <Compile Include="Models\DataModels\VW_COLECAO.cs" />
+    <Compile Include="Models\DataModels\VW_DESENHOS_POR_COLECAO.cs" />
     <Compile Include="Models\DataModels\VW_CARACT_DESENHOS.cs" />
     <Compile Include="Models\DataModels\COLECOES.cs" />
     <Compile Include="Models\DataModels\CONFIG_GERAL.cs" />

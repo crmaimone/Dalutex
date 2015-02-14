@@ -26,7 +26,7 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<CONTROLE_DESENV_LINK_CT> CONTROLE_DESENV_LINK_CT { get; set; }
         public virtual DbSet<CONFIG_GERAL> CONFIG_GERAL { get; set; }
         public virtual DbSet<VW_CARACT_DESENHOS> VW_CARACT_DESENHOS { get; set; }
-        public virtual DbSet<VW_COLECAO_ATUAL> VW_COLECAO_ATUAL { get; set; }
+        public virtual DbSet<VW_DESENHOS_POR_COLECAO> VW_DESENHOS_POR_COLECAO { get; set; }
         public virtual DbSet<VW_ARTIGOS_DISPONIVEIS> VW_ARTIGOS_DISPONIVEIS { get; set; }
         public virtual DbSet<LOCALVENDA> LOCALVENDA { get; set; }
         public virtual DbSet<PRE_PEDIDO_ATEND> PRE_PEDIDO_ATEND { get; set; }
@@ -38,9 +38,14 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<PROXIMO_NUMERO_PEDIDO> PROXIMO_NUMERO_PEDIDO { get; set; }
         public virtual DbSet<CRIACAO_REDUZIDOS> CRIACAO_REDUZIDOS { get; set; }
         public virtual DbSet<DISPONIBILIDADE_MALHA> DISPONIBILIDADE_MALHA { get; set; }
+        public virtual DbSet<VW_COLECAO> VW_COLECAO { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<VW_COLECAO>()
+                .Property(e => e.NOME_COLECAO)
+                .IsUnicode(false);
+
             modelBuilder.Entity<DISPONIBILIDADE_MALHA>()
                 .Property(e => e.ARTIGO)
                 .IsUnicode(false);
@@ -170,11 +175,15 @@ namespace Dalutex.Models.DataModels
                 .Property(e => e.TECNOLOGIA)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<VW_COLECAO_ATUAL>()
+            modelBuilder.Entity<VW_DESENHOS_POR_COLECAO>()
+                .Property(e => e.COLECAO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_DESENHOS_POR_COLECAO>()
                 .Property(e => e.DESENHO)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<VW_COLECAO_ATUAL>()
+            modelBuilder.Entity<VW_DESENHOS_POR_COLECAO>()
                 .Property(e => e.VARIANTE)
                 .IsUnicode(false);
 

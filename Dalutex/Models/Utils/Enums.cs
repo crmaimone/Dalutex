@@ -29,5 +29,11 @@ namespace Dalutex.Models
             B = 1,
             C = 2
         }
+
+        public enum TipoColecaoEspecial
+        {
+            Atual = 5,
+            Pocket = 12
+        }
     }
 }

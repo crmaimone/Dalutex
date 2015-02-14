@@ -7,10 +7,22 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Dalutex.Models
 {
+    public class DesenhoVariante
+    {
+        public string Desenho { get; set; }
+        public string Variante { get; set; }
+    }
+
     public class PedidoViewModel
     {
-        public List<VW_COLECAO_ATUAL> Galeria { get; set; }
+        public List<DesenhoVariante> Galeria { get; set; }
         public string UrlImagens { get; set; }
+    }
+
+    public class MenuColecoesViewModel
+    {
+        public string Filtro { get; set; }
+        public List<VW_COLECAO> Colecoes { get; set; }
     }
 
     public class ArtigosDisponiveisViewModel

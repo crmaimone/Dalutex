@@ -1,4 +1,5 @@
-﻿@model Dalutex.Models.ArtigosDisponiveisViewModel
+﻿@model Dalutex.Models.MenuColecoesViewModel
+@using Dalutex.Models.DataModels
 
 @{
     ViewBag.Title = "Menu de coleções";
@@ -8,51 +9,48 @@
     <div class="row">
         <nav class="navbar navbar-default">
             <div class="container-fluid">
-                <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                         <span class="sr-only">Toggle navigation</span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
-
                     </button>
-                   <a class="navbar-brand" href="#">Brand</a>
-                                                          
+                   <a class="navbar-brand" href="@Url.Action("DesenhosPorColecao", "Pedido", new { IDColecao = "ATUAL" })">Coleção Atual</a>
                 </div>
-
-                <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
-                        <li>@Html.ActionLink("Coleção Atual", "DesenhosPorColecao", "Pedido")</li>
-                        <li>@Html.ActionLink("Pocket", "DesenhosPorColecao", "Pedido")</li>                        
+                        <li>@Html.ActionLink("Pocket", "DesenhosPorColecao", "Pedido", new { IDColecao = "POCKET" })</li>                        
                     </ul>
-                    <form class="navbar-form navbar-left" role="search">
+                    @using (Html.BeginForm("MenuColecoes", "Pedido", null, FormMethod.Post, new { @class = "navbar-form navbar-left", role = "search" }))
+                    {
                         <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Pesquisa Coleção">
+                            @Html.TextBoxFor(x => x.Filtro, new { @class = "form-control", placeholder="Pesquisa coleção" })
                         </div>
                         <button type="submit" class="btn btn-default">Localizar</button>
-                    </form>
-                </div><!-- /.navbar-collapse -->
-            </div><!-- /.container-fluid -->
+                    }
+                </div>
+            </div>
         </nav>
-
-        @*<br />
-    @Html.ActionLink("Coleção Atual", "DesenhosPorColecao", "Pedido")
-    @Html.ActionLink("Pocket", "Exclusivos", "Pedido")
-    @Html.ActionLink("Outras Coleções", "Exclusivos", "Pedido")
-
-        <div class="col btn-group btn-group-justified" role="group" aria-label="...">
-            <div class="btn-group" role="group">
-               @Html.ActionLink("Coleção Atual", "DesenhosPorColecao", "Pedido",null, new {@class="btn btn-default", @style="width:100%"})
-            </div>
-            <div class="btn-group" role="group">
-                <button type="button" class="btn btn-default" style="width:100%">@Html.ActionLink("Pocket", "Exclusivos", "Pedido")</button>
-            </div>
-            <div class="btn-group" role="group">
-                <button type="button" class="btn btn-default" style="width:100%">@Html.ActionLink("Outras Coleções", "Exclusivos", "Pedido")</button>
-            </div>            
-    </div>*@
-
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <section id="ResultadoColecoes">
+                <div class="list-group">
+                    <a href="#" class="list-group-item active">Coleções</a>
+                    @if (@Model != null && @Model.Colecoes != null)
+                    {
+                        foreach (VW_COLECAO item in Model.Colecoes)
+                        {
+                            <a href="@Url.Action("DesenhosPorColecao", "Pedido", new { IDColecao = item.ID_COLECAO })" class="list-group-item"><strong>@item.ID_COLECAO</strong> @item.NOME_COLECAO</a>
+                        }
+                    }
+                    else
+                    {
+                        <p class="list-group-item"><em>Utilize o filtro para buscar as coleções</em></p>
+                    }
+                </div>
+            </section>
+        </div>
     </div>
 </div>

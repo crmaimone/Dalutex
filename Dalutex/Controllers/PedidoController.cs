@@ -15,21 +15,69 @@ namespace Dalutex.Controllers
 {
     public class PedidoController : BaseController
     {
-
-        public ActionResult MenuColecoes()
+        public ActionResult MenuColecoes(string IDColecao)
         {
-            return View();
+            MenuColecoesViewModel model = new MenuColecoesViewModel();
+
+            int iIDColecao;
+
+            if (int.TryParse(IDColecao, out iIDColecao))
+            {
+                using (var ctx = new TIDalutexContext())
+                {
+                    VW_COLECAO objColecao = ctx.VW_COLECAO.Where(x => x.ID_COLECAO == iIDColecao).First();
+                    model.Colecoes = new List<VW_COLECAO>();
+                    model.Colecoes.Add(objColecao);
+                    model.Filtro = objColecao.NOME_COLECAO;
+                }
+            }
+
+            return View(model);
         }
 
-        public ActionResult DesenhosPorColecao()
+        [HttpPost]
+        public ActionResult MenuColecoes(MenuColecoesViewModel model)
+        {
+            using (var ctx = new TIDalutexContext())
+            {
+                model.Colecoes = ctx.VW_COLECAO.Where(x => x.NOME_COLECAO.ToUpper().Contains(model.Filtro.ToUpper())).ToList();
+            }
+
+            return View(model);
+        }
+
+        public ActionResult DesenhosPorColecao(string IDColecao)
         {
             PedidoViewModel model = new PedidoViewModel();
+            decimal dIDColecao = 0;
 
             using (var ctx = new TIDalutexContext())
             {
+                if( IDColecao == "ATUAL")
+                {
+                    dIDColecao = decimal.Parse(ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Atual).PARAMETRO1);
+                }
+                else if( IDColecao == "POCKET")
+                {
+                    dIDColecao = decimal.Parse(ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Pocket).INT1.ToString());
+                }
+
                 var query =
-                from vw in ctx.VW_COLECAO_ATUAL
-                select vw;
+                    from dc in ctx.VW_DESENHOS_POR_COLECAO
+                    where
+                        dc.COLECAO == dIDColecao
+                    group dc by
+                        new
+                        {
+                            dc.DESENHO,
+                            dc.VARIANTE
+                        }
+                        into dv
+                        select new DesenhoVariante
+                        {
+                            Desenho = dv.Key.DESENHO,
+                            Variante = dv.Key.VARIANTE
+                        };
 
                 model.Galeria = query.ToList();
             }
@@ -214,7 +262,6 @@ namespace Dalutex.Controllers
             return View();
         }
 
-        [AllowAnonymous]
         public ActionResult ConclusaoPedido()
         {
             ConclusaoPedidoViewModel model = new ConclusaoPedidoViewModel();

@@ -1,8 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
 namespace Dalutex.Models.DataModels
 {
     using System;
@@ -11,13 +6,18 @@ namespace Dalutex.Models.DataModels
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("TI_DALUTEX.VW_COLECAO_ATUAL")]
-    public partial class VW_COLECAO_ATUAL
+    [Table("TI_DALUTEX.VW_COLECAO")]
+    public partial class VW_COLECAO
     {
+        public DateTime? LANCAMENTO { get; set; }
+
+        public DateTime? VIGENCIA { get; set; }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int CODIGO_REDUZIDO { get; set; }
-        public string DESENHO { get; set; }
-        public string VARIANTE { get; set; }
+        public int ID_COLECAO { get; set; }
+
+        [StringLength(30)]
+        public string NOME_COLECAO { get; set; }
     }
 }

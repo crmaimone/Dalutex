@@ -149,6 +149,7 @@
     <Compile Include="Models\DataModels\REPRESENTANTES.cs" />
     <Compile Include="Models\DataModels\TAMANHOPECA.cs" />
     <Compile Include="Models\DataModels\TRANSPORTADORAS.cs" />
+    <Compile Include="Models\DataModels\VMASCARAPRODUTOACABADO.cs" />
     <Compile Include="Models\DataModels\VW_ARTIGOS_DISPONIVEIS.cs" />
     <Compile Include="Models\DataModels\VW_CLIENTE_TRANSP.cs" />
     <Compile Include="Models\DataModels\VW_COLECAO_ATUAL.cs" />
@@ -274,6 +275,8 @@
     <Content Include="Views\Cadastro\ClientesFatura.cshtml" />
     <Content Include="Views\Cadastro\ClientesEntrega.cshtml" />
     <Content Include="Views\Cadastro\Transportadora.cshtml" />
+    <Content Include="Views\Pedido\EspelhoPedido.cshtml" />
+    <Content Include="Views\Pedido\ConfirmacaoPedido.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

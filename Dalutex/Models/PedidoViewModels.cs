@@ -26,7 +26,8 @@ namespace Dalutex.Models
         public string Desenho { get; set; }
         public string Variante { get; set; }
         public string Artigo { get; set; }
-        public string Tecnologia { get; set; }
+        public string TecnologiaPorExtenso { get; set; }
+        public string Tecnologia { get { return this.TecnologiaPorExtenso != null ? this.TecnologiaPorExtenso.Substring(0, 1) : null; } }
         public string UnidadeMedida { get; set; }
         public decimal ValorPadrao { get; set; }
         public bool ObterTipoPedido { get; set; }

@@ -20,7 +20,7 @@
                     <div class="form-group">
                         @Html.LabelFor(x => x.QualidadeComercial, new { @class = "col-md-3 control-label" })
                         <div class="col-md-9">
-                            @Html.DropDownListFor(m => m.IDQualidadeComercial, new SelectList(Model.QualidadeComercial, "key", "Value"), "Selecione", new { @id = "lstMoedas" })
+                            @Html.DropDownListFor(m => m.IDQualidadeComercial, new SelectList(Model.QualidadeComercial, "key", "Value"), "Selecione", new { @id = "lstQualidades" })
                             @Html.ValidationMessageFor(m => m.IDQualidadeComercial, "", new { @class = "text-danger" })
                         </div>
                     </div>
@@ -92,7 +92,7 @@
                     <div class="form-group">
                         @Html.LabelFor(x => x.Observacoes, new { @class = "col-md-3 control-label" })
                         <div class="col-md-9">
-                            @Html.TextAreaFor(x => x.Observacoes)
+                            @Html.TextAreaFor(x => x.Observacoes, 0, 0, new { @style = "width:100%" })
                             @Html.ValidationMessageFor(m => m.Observacoes, "", new { @class = "text-danger" })
                         </div>
                     </div>
@@ -182,6 +182,7 @@
 
             //Init
             (function Init() {
+                $('#lstQualidades').selectpicker();
                 $('#lstTiposPgto').selectpicker();
                 $('#lstMoedas').selectpicker();
                 $('#lstFretes').selectpicker();

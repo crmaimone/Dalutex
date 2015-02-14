@@ -1,0 +1,13 @@
+﻿
+@{
+    ViewBag.Title = "Confirmação de pedido";
+}
+<h2>@ViewBag.Title</h2>
+<br />
+<h5>Pedido gerado com sucesso. Número: @ViewBag.NumeroPedido</h5>
+<br />
+@Html.ActionLink("Voltar ao início", "Index", "Home", null, new { @class = "btn btn-default right" })
+@Html.ActionLink("Imprimir espelho", "EspelhoPedido", "Pedido", null, new { @class = "btn btn-default right" })
+
+
+

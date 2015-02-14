@@ -565,8 +565,7 @@ namespace Dalutex.Models.DataModels
                 .HasPrecision(38, 0);
 
             modelBuilder.Entity<PRE_PEDIDO_ITENS>()
-                .Property(e => e.NUMERO_PEDIDO_BLOCO)
-                .HasPrecision(38, 0);
+                .Property(e => e.NUMERO_PEDIDO_BLOCO);
 
             modelBuilder.Entity<PRE_PEDIDO_ITENS>()
                 .Property(e => e.REDUZIDO_ITEM)
@@ -634,8 +633,7 @@ namespace Dalutex.Models.DataModels
                 .IsUnicode(false);
 
             modelBuilder.Entity<PRE_PEDIDO_ITENS>()
-                .Property(e => e.ITEM)
-                .HasPrecision(38, 0);
+                .Property(e => e.ITEM);
 
             modelBuilder.Entity<PRE_PEDIDO_ITENS>()
                 .Property(e => e.SIT_ITEM)

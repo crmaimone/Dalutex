@@ -21,7 +21,6 @@ namespace Dalutex.Controllers
             return View();
         }
 
-        [AllowAnonymous]
         public ActionResult DesenhosPorColecao()
         {
             PedidoViewModel model = new PedidoViewModel();
@@ -96,7 +95,7 @@ namespace Dalutex.Controllers
             model.Desenho = desenho;
             model.Variante = variante;
             model.Artigo = artigo;
-            model.Tecnologia = tecnologia;
+            model.TecnologiaPorExtenso = tecnologia;
 
             using (var ctxTI = new TIDalutexContext())
             {
@@ -159,23 +158,38 @@ namespace Dalutex.Controllers
 
                     model.Quantidade = model.Pecas * model.ValorPadrao;
 
-                    using(var ctx = new TIDalutexContext())
+                    using(var ctx = new DalutexContext())
+                    {
+                        VMASCARAPRODUTOACABADO objReduzido = ctx.VMASCARAPRODUTOACABADO.Where(
+                                x => 
+                                    x.ARTIGO == model.Artigo 
+                                    && x.DESENHO == model.Desenho 
+                                    && x.VARIANTE == model.Variante 
+                                    && x.MAQUINA == model.Tecnologia
+                                ).FirstOrDefault();
+
+                        if(objReduzido != null && objReduzido.CODIGO_REDUZIDO > default(int))
+                        {
+                            model.Reduzido = objReduzido.CODIGO_REDUZIDO;
+                        }
+                    }
+
+                    using (var ctx = new TIDalutexContext())
                     {
                         int iID_DISP = ctx.DISPONIBILIDADE_MALHA
                                                 .OrderByDescending(x => x.ID_DISP)
                                                 .First()
                                                 .ID_DISP;
-                                             
-                        model.DataEntregaItem = ctx.DISPONIBILIDADE_MALHA
+
+                        DISPONIBILIDADE_MALHA objDisponibilidade = ctx.DISPONIBILIDADE_MALHA
                                                 .Where(x => x.ARTIGO == model.Artigo && x.MAQUINA == model.Tecnologia && x.ID_DISP == iID_DISP)
-                                                .First()
-                                                .DISPONIBILIDADE_PCP
-                                                .GetValueOrDefault();
+                                                .FirstOrDefault();
 
-
-                        if (model.DataEntregaItem == default(DateTime))
+                        if (objDisponibilidade != null && objDisponibilidade.DISPONIBILIDADE_PCP != null)
+                            model.DataEntregaItem = (DateTime)objDisponibilidade.DISPONIBILIDADE_PCP;
+                        else
                             model.DataEntregaItem = DateTime.Today.AddYears(1);
-
+                        
                         if (base.Session_Carrinho.DataEntrega < model.DataEntregaItem)
                             base.Session_Carrinho.DataEntrega = model.DataEntregaItem;
                     }
@@ -200,6 +214,7 @@ namespace Dalutex.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         public ActionResult ConclusaoPedido()
         {
             ConclusaoPedidoViewModel model = new ConclusaoPedidoViewModel();
@@ -273,20 +288,53 @@ namespace Dalutex.Controllers
                         TIPOFRETE = model.IDFretes,
                         //GERENTE = model.IDGerentesVenda,// não é necessario gravar neste campo para pedidos <> de PE
                         VIATRANSPORTE = model.IDViasTransporte,
-                        COMISSAO = Session_Carrinho.PorcentagemComissao,// ver com cassiano
+                        COMISSAO = Session_Carrinho.PorcentagemComissao,
                         ORIGEM = "PW" // APENAS PRA INFORMAR QUE ESTE PEDIDO VEIO DO PEDIDO WEB NOVO.                                                                                                                                                                                                                                                                                                                                              
                     };
 
                     List<PRE_PEDIDO_ITENS> lstItens = new List<PRE_PEDIDO_ITENS>();
 
+                    int i = 0;
                     foreach(InserirNoCarrinhoViewModel item in base.Session_Carrinho.Itens)
                     {
-                        PRE_PEDIDO_ITENS objItem = new PRE_PEDIDO_ITENS(){
+                        i++;
 
+                        PRE_PEDIDO_ITENS objItem = new PRE_PEDIDO_ITENS(){
+                            ARTIGO = item.Artigo,
+                            //COR = TODO,
+                            DATA_ENTREGA = item.DataEntregaItem,
+                            DESENHO = item.Desenho,
+                            ITEM = i,
+                            LISO_ESTAMP = item.Tecnologia,
+                            NUMERO_PEDIDO_BLOCO = iNUMERO_PEDIDO_BLOCO,
+                            //COLECAO = Discutir com a Etiane
+                            PE = "N",
+                            PRECO_UNIT = item.Preco,
+                            //PRECOLISTA = Buscar qdo tivermos o preço da tabela
+                            QTDEPC = item.Pecas,
+                            QUANTIDADE = item.Quantidade,
+                            REDUZIDO_ITEM = item.Reduzido > default(int)? item.Reduzido : -2,
+                            UM = item.UnidadeMedida,
+                            VALOR_TOTAL = item.Preco * item.Quantidade,
+                            VARIANTE = item.Variante
                         };
 
-                        //lstItens.Add
+                        lstItens.Add(objItem);
                     }
+
+                    using(var ctx = new TIDalutexContext())
+                    {
+                        ctx.PRE_PEDIDO.Add(objPrePedido);
+
+                        foreach (PRE_PEDIDO_ITENS item in lstItens)
+                        {
+                            ctx.PRE_PEDIDO_ITENS.Add(item);
+                        }
+
+                        ctx.SaveChanges();
+                    }
+
+                    return RedirectToAction("ConfirmacaoPedido", "Pedido", new { NumeroPedido = iNUMERO_PEDIDO_BLOCO.ToString() });
                 }
             }
             catch (Exception ex)
@@ -296,6 +344,17 @@ namespace Dalutex.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
           
+        }
+
+        public ActionResult ConfirmacaoPedido(string NumeroPedido)
+        {
+            ViewBag.NumeroPedido = NumeroPedido;
+            return View();
+        }
+
+        public ActionResult EspelhoPedido()
+        {
+            return View();
         }
 
         //[AllowAnonymous]

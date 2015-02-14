@@ -25,9 +25,86 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<REPRESENTANTES> REPRESENTANTES { get; set; }
         public virtual DbSet<COML_CONTATOS> COML_CONTATOS { get; set; }
         public virtual DbSet<TRANSPORTADORAS> TRANSPORTADORAS { get; set; }
+        public virtual DbSet<VMASCARAPRODUTOACABADO> VMASCARAPRODUTOACABADO { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<VMASCARAPRODUTOACABADO>()
+                .Property(e => e.COD_COMERCIAL)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VMASCARAPRODUTOACABADO>()
+                .Property(e => e.TIPO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VMASCARAPRODUTOACABADO>()
+                .Property(e => e.NEGOCIO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VMASCARAPRODUTOACABADO>()
+                .Property(e => e.PROCESSO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VMASCARAPRODUTOACABADO>()
+                .Property(e => e.TIPO_ARTIGO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VMASCARAPRODUTOACABADO>()
+                .Property(e => e.CLASSIF_COR)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VMASCARAPRODUTOACABADO>()
+                .Property(e => e.MAQUINA)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VMASCARAPRODUTOACABADO>()
+                .Property(e => e.ARTIGO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VMASCARAPRODUTOACABADO>()
+                .Property(e => e.COR)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VMASCARAPRODUTOACABADO>()
+                .Property(e => e.EXCL)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VMASCARAPRODUTOACABADO>()
+                .Property(e => e.DESENHO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VMASCARAPRODUTOACABADO>()
+                .Property(e => e.VARIANTE)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VMASCARAPRODUTOACABADO>()
+                .Property(e => e.ARTIGO_DESENHO_VAR)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VMASCARAPRODUTOACABADO>()
+                .Property(e => e.ARTIGO_DESENHO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VMASCARAPRODUTOACABADO>()
+                .Property(e => e.DESENHO_VAR)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VMASCARAPRODUTOACABADO>()
+                .Property(e => e.UM)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VMASCARAPRODUTOACABADO>()
+                .Property(e => e.CILIND_QUADRO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VMASCARAPRODUTOACABADO>()
+                .Property(e => e.DESCRICAO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VMASCARAPRODUTOACABADO>()
+                .Property(e => e.QUADR_OVER)
+                .IsUnicode(false);
+
             modelBuilder.Entity<TRANSPORTADORAS>()
                 .Property(e => e.NOME)
                 .IsUnicode(false);

@@ -9,10 +9,15 @@ namespace Dalutex.Models.DataModels
     [Table("TI_DALUTEX.PRE_PEDIDO_ITENS")]
     public partial class PRE_PEDIDO_ITENS
     {
-        [Key]
         public decimal NUMERO_PRE_PEDIDO { get; set; }
 
-        public decimal? NUMERO_PEDIDO_BLOCO { get; set; }
+        [Key]
+        [Column(Order = 0)]
+        public int NUMERO_PEDIDO_BLOCO { get; set; }
+
+        [Key]
+        [Column(Order = 1)]
+        public int ITEM { get; set; }
 
         public decimal? REDUZIDO_ITEM { get; set; }
 
@@ -52,8 +57,6 @@ namespace Dalutex.Models.DataModels
 
         [StringLength(1)]
         public string PE { get; set; }
-
-        public decimal? ITEM { get; set; }
 
         public decimal? SIT_ITEM { get; set; }
 

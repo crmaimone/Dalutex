@@ -41,7 +41,9 @@ else
                 }
             </div>
             <div class="col-sm-6">
-                <img src="@Url.Content(Model.Imagem)" class="img-rounded" style="max-width:100%" />
+                <a href="@Url.Action("Ampliacao", "Pedido", new { desenho = Model.Desenho, variante = Model.Variante })">
+                    <img src="@Url.Content(Model.Imagem)" class="img-rounded" style="max-width:100%"/>
+                </a>
             </div>
         </div>
     </div>

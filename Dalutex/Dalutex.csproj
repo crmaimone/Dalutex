@@ -278,6 +278,7 @@
     <Content Include="Views\Cadastro\Transportadora.cshtml" />
     <Content Include="Views\Pedido\EspelhoPedido.cshtml" />
     <Content Include="Views\Pedido\ConfirmacaoPedido.cshtml" />
+    <Content Include="Views\Pedido\Ampliacao.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -149,6 +149,18 @@ namespace Dalutex.Controllers
             return View(model);
         }
 
+        public ActionResult Ampliacao(string desenho, string variante)
+        {
+            AmpliacaoViewModel model = new AmpliacaoViewModel()
+            {
+                Desenho = desenho,
+                Variante = variante,
+                Imagem = ConfigurationManager.AppSettings["PASTA_DESENHOS"] + desenho + "_" + variante + ".jpg",
+            };
+
+            return View(model);
+        }
+
         public ActionResult InserirNoCarrinho(string desenho, string variante, string artigo, string tecnologia)
         {
             InserirNoCarrinhoViewModel model = new InserirNoCarrinhoViewModel();

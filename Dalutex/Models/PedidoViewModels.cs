@@ -69,6 +69,13 @@ namespace Dalutex.Models
         public decimal Preco { get; set; }
     }
 
+    public class AmpliacaoViewModel
+    {
+        public string Desenho { get; set; }
+        public string Variante { get; set; }
+        public string Imagem { get; set; }
+    }
+
     public class ConclusaoPedidoViewModel
     {
         public ConclusaoPedidoViewModel()

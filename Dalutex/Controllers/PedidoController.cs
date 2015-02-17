@@ -40,32 +40,44 @@ namespace Dalutex.Controllers
         {
             using (var ctx = new TIDalutexContext())
             {
-                model.Colecoes = ctx.VW_COLECAO.Where(x => x.NOME_COLECAO.ToUpper().Contains(model.Filtro.ToUpper())).ToList();
+                model.Colecoes = ctx.VW_COLECAO.Where(x => x.NOME_COLECAO.ToUpper().Contains(model.Filtro.ToUpper())).OrderBy(x => x.NOME_COLECAO).ToList();
             }
 
             return View(model);
         }
 
-        public ActionResult DesenhosPorColecao(string IDColecao)
+        public ActionResult DesenhosPorColecao(string IDColecao, string pagina)
         {
-            PedidoViewModel model = new PedidoViewModel();
-            decimal dIDColecao = 0;
+            DesenhosPorColecaoViewModel model = new DesenhosPorColecaoViewModel();
+            if (string.IsNullOrWhiteSpace(pagina))
+                model.Pagina = 1;
+            else
+                model.Pagina = int.Parse(pagina);
 
             using (var ctx = new TIDalutexContext())
             {
                 if( IDColecao == "ATUAL")
                 {
-                    dIDColecao = decimal.Parse(ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Atual).PARAMETRO1);
+                    model.IDColecao = int.Parse(ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Atual).PARAMETRO1);
                 }
                 else if( IDColecao == "POCKET")
                 {
-                    dIDColecao = decimal.Parse(ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Pocket).INT1.ToString());
+                    model.IDColecao = int.Parse(ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Pocket).INT1.ToString());
+                }
+                else if(IDColecao == null)
+                {
+                    ModelState.AddModelError("", "Coleção não informada.");
+                    return View(model);
+                }
+                else
+                {
+                    model.IDColecao = int.Parse(IDColecao);
                 }
 
                 var query =
                     from dc in ctx.VW_DESENHOS_POR_COLECAO
                     where
-                        dc.COLECAO == dIDColecao
+                        dc.COLECAO == model.IDColecao
                     group dc by
                         new
                         {
@@ -79,7 +91,7 @@ namespace Dalutex.Controllers
                             Variante = dv.Key.VARIANTE
                         };
 
-                model.Galeria = query.ToList();
+                model.Galeria = query.OrderBy(x => x.Desenho).ThenBy(x => x.Variante).Skip((model.Pagina - 1) * 24).Take(24).ToList();
             }
 
             model.UrlImagens = ConfigurationManager.AppSettings["PASTA_DESENHOS"];

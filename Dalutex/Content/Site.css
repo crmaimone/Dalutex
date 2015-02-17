@@ -55,8 +55,7 @@ textarea {
 
 .img-thumbnail
 {
-    /*min-height:80px;
-    min-width:145px;*/
+    height:100px;
 }
 
 .navbar-bottom{

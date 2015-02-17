@@ -13,8 +13,11 @@ namespace Dalutex.Models
         public string Variante { get; set; }
     }
 
-    public class PedidoViewModel
+    public class DesenhosPorColecaoViewModel
     {
+        public int IDColecao { get; set; }
+        public int Pagina { get; set; }
+        public int TotalPaginas { get; set; }
         public List<DesenhoVariante> Galeria { get; set; }
         public string UrlImagens { get; set; }
     }

@@ -42,7 +42,7 @@
                     {
                         foreach (VW_COLECAO item in Model.Colecoes)
                         {
-                            <a href="@Url.Action("DesenhosPorColecao", "Pedido", new { IDColecao = item.ID_COLECAO })" class="list-group-item"><strong>@item.ID_COLECAO</strong> @item.NOME_COLECAO</a>
+                            <a href="@Url.Action("DesenhosPorColecao", "Pedido", new { IDColecao = item.ID_COLECAO })" class="list-group-item"><strong>@item.NOME_COLECAO.Trim()</strong> - L:@item.LANCAMENTO.Value.ToString("dd/MM/yy") - V:@item.VIGENCIA.Value.ToString("dd/MM/yy") </a>
                         }
                     }
                     else

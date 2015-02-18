@@ -95,3 +95,9 @@ input#btnRepres{
 .busca-container{
 
  }
+
+h1 .viewTitle{
+    font-size: 10pt;
+    text-shadow: 20px 12px 2px #333;
+    color:aquamarine;
+}

@@ -3,10 +3,10 @@
 @model Dalutex.Models.PesquisaClientesFaturaViewModel
 
 @{
-    ViewBag.Title = "CLIENTE DA FATURA::";
+    ViewBag.Title = "Cliente da fatura";
 }
 
-<h2>@ViewBag.Title</h2>
+<h1 class="viewTitle">@ViewBag.Title</h1>
 <div class="container">
     <div class="row">
         <div class="col-md-8">
@@ -36,7 +36,7 @@
                     {
                         foreach (VW_CLIENTE_TRANSP item in Model.ClientesFatura)
                         {
-                            <a href="@Url.Action("ClientesEntrega", "Cadastro", new { IDClienteEntrega = item.ID_CLIENTE })" class="list-group-item"><strong>@item.ID_CLIENTE</strong> @item.NOME @item.CNPJ @item.ENDERECO</a>
+                            <a href="@Url.Action("ClientesEntrega", "Cadastro", new { IDClienteEntrega = item.ID_CLIENTE })" class="list-group-item"><strong>@item.CNPJ.Trim()</strong> @item.NOME.Trim() - End.: @item.ENDERECO</a>
                         }
                     }
                     else

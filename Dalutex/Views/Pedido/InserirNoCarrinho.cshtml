@@ -3,9 +3,11 @@
 @{
     ViewBag.Title = "Inserir no carrinho";
 }
-<h2>@ViewBag.Title</h2>
+<h1 class="viewTitle">@ViewBag.Title</h1>
+<div class="panel panel-default">
+    <h5>D:@Model.Desenho V:@Model.Variante A:@Model.Artigo T:@Model.TecnologiaPorExtenso</h5>
+</div>
 <div class="container">
-    <div class="row"><h5>Desenho:@Model.Desenho</h5></div>
     <div class="row">
         <div class="col-md-8">
             <section id="InserirCarrinhoForm">
@@ -16,7 +18,7 @@
                     <hr />
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     if (Model.ObterTipoPedido)
-                    { 
+                    {
                         <div class="form-group">
                             @Html.LabelFor(x => x.IDTipoPedido, new { @class = "col-md-4 control-label" })
                             <div class="col-md-8">
@@ -28,21 +30,21 @@
                     <div class="form-group">
                         @Html.LabelFor(x => x.Pecas, new { @class = "col-md-4 control-label" })
                         <div class="col-md-8">
-                            @Html.TextBoxFor(x => x.Pecas, new { id = "txtPecas", @class = "form-control" })
+                            @Html.TextBoxFor(x => x.Pecas, new { id = "txtPecas", @class = "form-control", @placeholder = "" })
                             @Html.ValidationMessageFor(m => m.Pecas, "", new { @class = "text-danger" })
                         </div>
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Quantidade, new { @class = "col-md-4 control-label", id="lblQuantidade" })
+                        @Html.LabelFor(x => x.Quantidade, new { @class = "col-md-4 control-label", id = "lblQuantidade" })
                         <div class="col-md-8">
                             @Html.TextBoxFor(x => x.Quantidade, new { id = "txtQuantidade", disabled = "disabled", @class = "form-control" })
                             @Html.ValidationMessageFor(m => m.Quantidade, "", new { @class = "text-danger" })
                         </div>
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Preco, new { @class = "col-md-4 control-label" })
+                        @Html.LabelFor(x => x.Preco, new { @class = "col-md-4 control-label", @placeholder = "" })
                         <div class="col-md-8">
-                            @Html.TextBoxFor(x => x.Preco, new { @class = "form-control" })
+                            @Html.TextBoxFor(x => x.Preco, new { id = "txtPreco", @class = "form-control" })
                             @Html.ValidationMessageFor(m => m.Preco, "", new { @class = "text-danger" })
                         </div>
                     </div>
@@ -50,16 +52,16 @@
                     @Html.HiddenFor(x => x.Variante)
                     @Html.HiddenFor(x => x.Artigo)
                     @Html.HiddenFor(x => x.TecnologiaPorExtenso)
-                    @Html.HiddenFor(x => x.UnidadeMedida, new { id = "hidUM"})
-                    @Html.HiddenFor(x => x.ValorPadrao, new { id = "hidValPadrao" })  
-                                      
+                    @Html.HiddenFor(x => x.UnidadeMedida, new { id = "hidUM" })
+                    @Html.HiddenFor(x => x.ValorPadrao, new { id = "hidValPadrao" })
+
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-10">
                             <input type="submit" value="Incluir" class="btn btn-default" />
-                            @Html.ActionLink("Voltar", "#", "Pedido", null, new { @class = "btn btn-default left" })
+                            <a class="btn btn-default right" href="javascript:history.back()">Voltar</a>
                         </div>
                     </div>
-            }
+                }
             </section>
         </div>
     </div>
@@ -72,7 +74,21 @@
                 //API Attributes
                 txtPecas_Blur = function()
                 {
-                    $("#txtQuantidade").val($("#txtPecas").val() * $("#hidValPadrao").val());
+                    var $txtPecas = $("#txtPecas");
+                    var $txtQuantidade = $("#txtQuantidade");
+                    var $hidPadrao = $("#hidValPadrao");
+
+                    if (isNaN($txtPecas.val())) {
+                        $txtQuantidade.val(0);
+                        return;
+                    }
+
+                    if (isNaN($hidPadrao.val())) {
+                        $txtQuantidade.val(0);
+                        return;
+                    }
+
+                    $txtQuantidade.val($txtPecas.val() * $hidPadrao.val());
                 }
 
                 //API Methods
@@ -88,6 +104,13 @@
                 $('#lstTiposPedido').selectpicker();
                 $("#lblQuantidade").text($("#hidUM").val());
                 $("#txtPecas").blur(this.txtPecas_Blur);
+
+                $("#txtPecas").focus(function () {
+                    this.select();
+                });
+                $("#txtPreco").focus(function () {
+                    this.select();
+                });
             })();
         });
     </script>

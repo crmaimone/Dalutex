@@ -189,7 +189,32 @@ namespace Dalutex.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Valor padrão não encontrado.");
+                    VMASCARAPRODUTOACABADO objValorPadraoView = null;
+
+                    using (var ctx = new DalutexContext())
+                    {
+                        objValorPadraoView = ctx.VMASCARAPRODUTOACABADO.Where(x => x.ARTIGO == model.Artigo).FirstOrDefault();
+                        if(objValorPadraoView != null)
+                        {
+                            model.UnidadeMedida = objValorPadraoView.UM;
+                            if (model.UnidadeMedida.ToUpper() == "KG")
+                            {
+                                model.ValorPadrao = (decimal) Enums.ValorPadraoUnidade.Quilo;
+                            }
+                            else if (model.UnidadeMedida.ToUpper() == "MT")
+                            {
+                                model.ValorPadrao = (decimal) Enums.ValorPadraoUnidade.Metro;
+                            }
+                            else
+                            {
+                                ModelState.AddModelError("", "Unidade de medida inválida.");
+                            }
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("", "Unidade de medida não encontrada.");
+                        }
+                    }
                 }
             }
 
@@ -208,10 +233,32 @@ namespace Dalutex.Controllers
         [HttpPost]
         public ActionResult InserirNoCarrinho(InserirNoCarrinhoViewModel model)
         {
+            bool hasErrors = false;
             try
             {
                 if (ModelState.IsValid)
                 {
+                    if (model.ValorPadrao <= 0)
+                    {
+                        ModelState.AddModelError("", "Não é permitido salvar sem valor padrão definido.");
+                        hasErrors = true;
+                    }
+                    if (model.Pecas <= 0)
+                    {
+                        ModelState.AddModelError("", "Campo \"Peças\" não pode ser menor ou igual a zero.");
+                        hasErrors = true;
+                    }
+                    if(model.Preco <= 0)
+                    {
+                        ModelState.AddModelError("", "Campo \"Preço\" não pode ser menor ou igual a zero.");
+                        hasErrors = true;
+                    }
+
+                    if(hasErrors)
+                    {
+                        return View(model);
+                    }
+
                     if (base.Session_Carrinho == null)
                     {
                         base.Session_Carrinho = new ConclusaoPedidoViewModel();

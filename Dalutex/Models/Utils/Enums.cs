@@ -35,5 +35,11 @@ namespace Dalutex.Models
             Atual = 5,
             Pocket = 12
         }
+
+        public enum ValorPadraoUnidade
+        {
+            Quilo = 18,
+            Metro = 100
+        }
     }
 }

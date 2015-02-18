@@ -33,6 +33,7 @@ namespace Dalutex.Models
         public string Desenho { get; set; }
         public string Variante { get; set; }
         public string Imagem { get; set; }
+        public int IDColecao { get; set; }
         public List<VW_ARTIGOS_DISPONIVEIS> Artigos { get; set; }
     }
 

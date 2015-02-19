@@ -39,9 +39,54 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<CRIACAO_REDUZIDOS> CRIACAO_REDUZIDOS { get; set; }
         public virtual DbSet<DISPONIBILIDADE_MALHA> DISPONIBILIDADE_MALHA { get; set; }
         public virtual DbSet<VW_COLECAO> VW_COLECAO { get; set; }
+        public virtual DbSet<PRE_PEDIDO_CRITICA> PRE_PEDIDO_CRITICA { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<PRE_PEDIDO_CRITICA>()
+                .Property(e => e.NUMERO_PRE_PEDIDO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<PRE_PEDIDO_CRITICA>()
+                .Property(e => e.COD_CRITICA)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<PRE_PEDIDO_CRITICA>()
+                .Property(e => e.FLG_STATUS)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<PRE_PEDIDO_CRITICA>()
+                .Property(e => e.COD_USU_JUSTIF)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<PRE_PEDIDO_CRITICA>()
+                .Property(e => e.DES_JUSTIFICATIVA)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<PRE_PEDIDO_CRITICA>()
+                .Property(e => e.ENVIA_EMAIL)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<PRE_PEDIDO_CRITICA>()
+                .Property(e => e.OBSERVACAO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<PRE_PEDIDO_CRITICA>()
+                .Property(e => e.VALOR_TAB)
+                .HasPrecision(8, 2);
+
+            modelBuilder.Entity<PRE_PEDIDO_CRITICA>()
+                .Property(e => e.VALOR_ITEM)
+                .HasPrecision(8, 2);
+
+            modelBuilder.Entity<PRE_PEDIDO_CRITICA>()
+                .Property(e => e.USUARIO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<PRE_PEDIDO_CRITICA>()
+                .Property(e => e.ID_CRITICA)
+                .HasPrecision(38, 0);
+
             modelBuilder.Entity<VW_COLECAO>()
                 .Property(e => e.NOME_COLECAO)
                 .IsUnicode(false);

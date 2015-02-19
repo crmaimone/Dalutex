@@ -276,6 +276,7 @@ namespace Dalutex.Controllers
                         base.Session_Carrinho.IDTipoPedido = model.IDTipoPedido;
 
                     model.Quantidade = model.Pecas * model.ValorPadrao;
+                    model.ValorTotalItem = model.Quantidade * model.Preco;
 
                     using(var ctx = new DalutexContext())
                     {
@@ -360,6 +361,11 @@ namespace Dalutex.Controllers
             if (base.Session_Carrinho != null)
                 model.Itens = base.Session_Carrinho.Itens;
 
+            foreach(InserirNoCarrinhoViewModel item in model.Itens)
+            {
+                model.TotalPedido += item.ValorTotalItem;
+            }
+
             return View(model);
         }
 
@@ -384,6 +390,32 @@ namespace Dalutex.Controllers
 
                 if (ModelState.IsValid)
                 {
+                    if(model.IDTiposAtendimento.Equals((int)Enums.TiposAtendimento.PedidoCompleto))
+                    {
+                        int numParcelas = model.CondicoesPagto.Where(x => x.ID_COND == model.IDCondicoesPagto).First().PARCELAS;
+                        int fatorMultiplicacao = 0;
+                        decimal valorMinimoParcelas = decimal.Parse(ConfigurationManager.AppSettings["VALOR_PARCELA_MINIMA"]);
+                        
+                        if(model.IDQualidadeComercial == Enums.QualidadeComercial.A.ToString())
+                        {
+                            fatorMultiplicacao = (int)Enums.FatorMultiplicacaoQualidadeComercial.A;
+                        }
+                        else if(model.IDQualidadeComercial == Enums.QualidadeComercial.B.ToString())
+                        {
+                            fatorMultiplicacao = (int)Enums.FatorMultiplicacaoQualidadeComercial.B;
+                        }
+                        else if(model.IDQualidadeComercial == Enums.QualidadeComercial.C.ToString())
+                        {
+                            fatorMultiplicacao = (int)Enums.FatorMultiplicacaoQualidadeComercial.C;
+                        }
+
+                        if (((model.TotalPedido * fatorMultiplicacao ) / numParcelas) < valorMinimoParcelas)
+                        {
+                            ModelState.AddModelError("", "Valor mínimo das parcelas é inferior a " + valorMinimoParcelas.ToString("C"));
+                            return View(model);
+                        }
+                    }
+
                     PRE_PEDIDO objPrePedido = new PRE_PEDIDO()
                     {
                         NUMERO_PEDIDO_BLOCO = iNUMERO_PEDIDO_BLOCO,
@@ -444,10 +476,35 @@ namespace Dalutex.Controllers
                     {
                         ctx.PRE_PEDIDO.Add(objPrePedido);
 
+                        ctx.PRE_PEDIDO_CRITICA.Add(new PRE_PEDIDO_CRITICA()
+                        {
+                            NUMERO_PRE_PEDIDO = objPrePedido.NUMERO_PEDIDO_BLOCO,
+                            COD_CRITICA = (decimal)Enums.TiposCritica.LiberacaoFinanceira,
+                            FLG_STATUS = "C"
+                        });
+
+                        bool hasItemSemReduzido = false;
+
                         foreach (PRE_PEDIDO_ITENS item in lstItens)
                         {
+                            if(!hasItemSemReduzido && item.REDUZIDO_ITEM.GetValueOrDefault() == -2)
+                            {
+                                hasItemSemReduzido = true;
+                            }
+
                             ctx.PRE_PEDIDO_ITENS.Add(item);
                         }
+
+                        if (hasItemSemReduzido)
+                        {
+                            ctx.PRE_PEDIDO_CRITICA.Add(new PRE_PEDIDO_CRITICA()
+                            {
+                                NUMERO_PRE_PEDIDO = objPrePedido.NUMERO_PEDIDO_BLOCO,
+                                COD_CRITICA = (decimal)Enums.TiposCritica.SemReduzido,
+                                FLG_STATUS = "C"
+                            });
+                        }
+
 
                         ctx.SaveChanges();
                     }

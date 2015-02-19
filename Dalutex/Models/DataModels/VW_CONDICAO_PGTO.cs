@@ -14,5 +14,7 @@ namespace Dalutex.Models.DataModels
 
         [StringLength(40)]
         public string DESCRI_COND { get; set; }
+
+        public int PARCELAS { get; set; }
     }
 }

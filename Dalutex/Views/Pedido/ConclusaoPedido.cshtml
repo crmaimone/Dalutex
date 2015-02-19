@@ -140,7 +140,7 @@
                         <th>@item.Pecas</th>
                         <th>@item.Quantidade</th>
                         <th>@item.Preco.ToString("c")</th>
-                        <th>@((item.Preco * item.Quantidade).ToString("c"))</th>
+                        <th>@item.ValorTotalItem.ToString("c")</th>
                     </tr>
                 }
             }
@@ -148,21 +148,11 @@
 
         <tfoot>
             <tr>
-                @{
-                    decimal total = 0;
-                    int itens = 0;
-
-                    foreach (InserirNoCarrinhoViewModel item in Model.Itens)
-                    {
-                        total += item.Preco * item.Quantidade;
-                        itens++;
-                    }
-                }
                 <th>Quantidade de itens</th>
-                <th>@itens</th>
+                <th>@Model.Itens.Count.ToString()</th>
                 <th colspan="3"></th>
                 <th><strong>Total:</strong></th>
-                <th>@total.ToString("c")</th>
+                <th>@Model.TotalPedido.ToString("c")</th>
             </tr>
         </tfoot>
     </table>

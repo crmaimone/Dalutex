@@ -30,6 +30,13 @@ namespace Dalutex.Models
             C = 2
         }
 
+        public enum FatorMultiplicacaoQualidadeComercial
+        {
+            A = 1,
+            B = 2,
+            C = 4
+        }
+
         public enum TipoColecaoEspecial
         {
             Atual = 5,
@@ -38,8 +45,27 @@ namespace Dalutex.Models
 
         public enum ValorPadraoUnidade
         {
-            Quilo = 18,
+            Quilo = 19,
             Metro = 100
+        }
+
+        public enum TiposCritica
+        {
+            LiberacaoFinanceira = 7,
+            SemReduzido = 17,
+            PrecoDiferente = 2
+        }
+
+        public enum TiposAtendimento
+        {
+            EstampaCompleta = 1,
+
+            //(VlTotalPedido * QualidadeCml)/numero parcelas | >=500 Ok
+            //Se for a vista? verificar com Odair
+            PedidoCompleto = 2,
+            ArtigoCompose = 3,
+            CompletoPorArtigo = 4,
+            PedidoIncompleto = 5
         }
     }
 }

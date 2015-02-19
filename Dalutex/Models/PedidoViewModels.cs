@@ -46,6 +46,7 @@ namespace Dalutex.Models
         public string Tecnologia { get { return this.TecnologiaPorExtenso != null ? this.TecnologiaPorExtenso.Substring(0, 1) : null; } }
         public string UnidadeMedida { get; set; }
         public decimal ValorPadrao { get; set; }
+        public decimal ValorTotalItem { get; set; }
         public bool ObterTipoPedido { get; set; }
         public int Reduzido { get; set; }
         public DateTime DataEntregaItem { get; set; }
@@ -141,6 +142,7 @@ namespace Dalutex.Models
         public int IDTransportadora { get; set; }
         public decimal PorcentagemComissao { get; set; }
         public DateTime DataEntrega { get; set; }
+        public decimal TotalPedido { get; set; }
 
         #endregion
 

@@ -23,6 +23,24 @@ namespace Dalutex.Models
             DESENVOLVIMENTO = 17
         }
 
+        public enum CondicoesPagamento
+        {
+            CORTESIA = 432
+        }
+
+        public enum TiposPedido
+        {
+            VENDA = 0,
+            BNFPROPRIO = 2,
+            BNFTERCEIROS = 3,
+            AMOSTRA = 6,
+            PILOTAGEM = 7,
+            REPOSICÃO = 9,
+            BANCADO = 15,
+            ESPECIAL = 16,
+            RESERVA = 21
+        }
+
         public enum QualidadeComercial
         {
             A = 0,
@@ -58,11 +76,8 @@ namespace Dalutex.Models
 
         public enum TiposAtendimento
         {
-            EstampaCompleta = 1,
-
-            //(VlTotalPedido * QualidadeCml)/numero parcelas | >=500 Ok
-            //Se for a vista? verificar com Odair
-            PedidoCompleto = 2,
+            EstampaCompleta = 1, 
+            PedidoCompleto = 2, //OK
             ArtigoCompose = 3,
             CompletoPorArtigo = 4,
             PedidoIncompleto = 5

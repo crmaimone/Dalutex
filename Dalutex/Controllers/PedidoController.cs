@@ -334,14 +334,14 @@ namespace Dalutex.Controllers
             return View();
         }
 
-        public ActionResult ConclusaoPedido()
+
+        private ConclusaoPedidoViewModel ConclusaoPedidoCarregarListas(ConclusaoPedidoViewModel model)
         {
-            ConclusaoPedidoViewModel model = new ConclusaoPedidoViewModel();
             model.QualidadeComercial = new List<KeyValuePair<string, string>>();
             model.QualidadeComercial.Add(new KeyValuePair<string, string>(Enums.QualidadeComercial.A.ToString(), Enums.QualidadeComercial.A.ToString()));
             model.QualidadeComercial.Add(new KeyValuePair<string, string>(Enums.QualidadeComercial.B.ToString(), Enums.QualidadeComercial.B.ToString()));
             model.QualidadeComercial.Add(new KeyValuePair<string, string>(Enums.QualidadeComercial.C.ToString(), Enums.QualidadeComercial.C.ToString()));
-            
+
             using (DalutexContext ctxDalutex = new DalutexContext())
             {
                 model.Moedas = ctxDalutex.CADASTRO_MOEDAS.ToList();
@@ -361,10 +361,19 @@ namespace Dalutex.Controllers
             if (base.Session_Carrinho != null)
                 model.Itens = base.Session_Carrinho.Itens;
 
-            foreach(InserirNoCarrinhoViewModel item in model.Itens)
+            foreach (InserirNoCarrinhoViewModel item in model.Itens)
             {
                 model.TotalPedido += item.ValorTotalItem;
             }
+            return model;
+        }
+
+        public ActionResult ConclusaoPedido(string IDTransportadora)
+        {
+            Session_Carrinho.IDTransportadora = int.Parse(IDTransportadora);
+
+            ConclusaoPedidoViewModel model = new ConclusaoPedidoViewModel();
+            ConclusaoPedidoCarregarListas(model);
 
             return View(model);
         }
@@ -390,29 +399,81 @@ namespace Dalutex.Controllers
 
                 if (ModelState.IsValid)
                 {
-                    if(model.IDTiposAtendimento.Equals((int)Enums.TiposAtendimento.PedidoCompleto))
+                    //-- VALIDAÇÃO VALOR PARCELAS ---------------
+                    //TIPO DE ATENDIMENTO DETERMINA O TOTAL A DIVIDIR PELO NUMERO DE PARCELAS:
+                    //TOTAL * QUALIDADE COMERCIAL / PARCELAS
+
+                    //VALIDAR APENAS COM AS CONDIÇÕES:
+                    //{  
+                    //  "TIPO DE PEDIDO"         = 0   (VENDA) 
+                    //    E 
+                    //  "CANAL DE VENDAS"       <> 4   (TELEVENDAS)
+                    //    E
+                    //  "CONDIÇÃO DE PAGAMENTO" <> 432 (CORTECIA)
+                    //}
+                    //SE NÃO DER 500 NÃO VENDE!
+                    if(
+                        base.Session_Carrinho.IDTipoPedido.Equals((int) Enums.TiposPedido.VENDA)
+                        && !model.IDCanaisVenda.Equals((int) Enums.CanaisVenda.TELEVENDAS)
+                        && !model.IDCondicoesPagto.Equals((int) Enums.CondicoesPagamento.CORTESIA)
+                    )
                     {
-                        int numParcelas = model.CondicoesPagto.Where(x => x.ID_COND == model.IDCondicoesPagto).First().PARCELAS;
+                        
+                        int numParcelas = 0;
+                        using(var ctx = new TIDalutexContext() )
+                        {
+                            numParcelas = ctx.VW_CONDICAO_PGTO.Find(model.IDCondicoesPagto).PARCELAS;
+                        }
+                        
                         int fatorMultiplicacao = 0;
                         decimal valorMinimoParcelas = decimal.Parse(ConfigurationManager.AppSettings["VALOR_PARCELA_MINIMA"]);
-                        
-                        if(model.IDQualidadeComercial == Enums.QualidadeComercial.A.ToString())
+
+                        if (model.IDQualidadeComercial == Enums.QualidadeComercial.A.ToString())
                         {
                             fatorMultiplicacao = (int)Enums.FatorMultiplicacaoQualidadeComercial.A;
                         }
-                        else if(model.IDQualidadeComercial == Enums.QualidadeComercial.B.ToString())
+                        else if (model.IDQualidadeComercial == Enums.QualidadeComercial.B.ToString())
                         {
                             fatorMultiplicacao = (int)Enums.FatorMultiplicacaoQualidadeComercial.B;
                         }
-                        else if(model.IDQualidadeComercial == Enums.QualidadeComercial.C.ToString())
+                        else if (model.IDQualidadeComercial == Enums.QualidadeComercial.C.ToString())
                         {
                             fatorMultiplicacao = (int)Enums.FatorMultiplicacaoQualidadeComercial.C;
                         }
 
-                        if (((model.TotalPedido * fatorMultiplicacao ) / numParcelas) < valorMinimoParcelas)
+                        if (model.IDTiposAtendimento.Equals((int)Enums.TiposAtendimento.EstampaCompleta))
                         {
-                            ModelState.AddModelError("", "Valor mínimo das parcelas é inferior a " + valorMinimoParcelas.ToString("C"));
-                            return View(model);
+
+                            List<KeyValuePair<string,decimal>> lstConsolidada = base.Session_Carrinho.Itens
+                                .GroupBy(g => g.Desenho)
+                                .Select(consolidado => new KeyValuePair<string, decimal>(consolidado.First().Desenho, consolidado.Sum(s => s.ValorTotalItem)))
+                                .ToList();
+
+                            bool isValid = true;
+
+                            foreach(KeyValuePair<string,decimal> item in lstConsolidada)
+                            {
+                                if (((item.Value * fatorMultiplicacao ) / numParcelas) < valorMinimoParcelas)
+                                {
+                                    ModelState.AddModelError("", "Valor mínimo das parcelas é inferior a " + valorMinimoParcelas.ToString("C") + " para o desenho: " + item.Key);
+                                    isValid = false;
+                                }
+                            }
+
+                            if(!isValid)
+                            {
+                                this.ConclusaoPedidoCarregarListas(model);
+                                return View(model);
+                            }
+                        }
+                        else if(model.IDTiposAtendimento.Equals((int)Enums.TiposAtendimento.PedidoCompleto))
+                        {
+                            if (((model.TotalPedido * fatorMultiplicacao ) / numParcelas) < valorMinimoParcelas)
+                            {
+                                ModelState.AddModelError("", "Valor mínimo das parcelas é inferior a " + valorMinimoParcelas.ToString("C"));
+                                this.ConclusaoPedidoCarregarListas(model);
+                                return View(model);
+                            }
                         }
                     }
 
@@ -517,8 +578,9 @@ namespace Dalutex.Controllers
                 base.Handle(ex);
             }
             // If we got this far, something failed, redisplay form
+            
+            this.ConclusaoPedidoCarregarListas(model);
             return View(model);
-          
         }
 
         public ActionResult ConfirmacaoPedido(string NumeroPedido)

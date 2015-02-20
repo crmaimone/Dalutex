@@ -95,7 +95,7 @@ namespace Dalutex.Controllers
         }
 
 
-        public ActionResult ClientesEntrega(string IDClienteEntrega)
+        public ActionResult ClientesEntrega(string IDClienteFatura, string IDClienteEntrega)
         {
             PesquisaClientesEntregaViewModel model = new PesquisaClientesEntregaViewModel();
 
@@ -115,7 +115,7 @@ namespace Dalutex.Controllers
                 }
             }
 
-            Session_Carrinho.IDClienteEntrega = int.Parse(IDClienteEntrega);
+            Session_Carrinho.IDClienteFatura = int.Parse(IDClienteFatura);
 
             return View(model);
         }
@@ -134,7 +134,7 @@ namespace Dalutex.Controllers
 
 
         [HttpGet]
-        public ActionResult Transportadora(string IDTransportadora)
+        public ActionResult Transportadora(string IDClienteEntrega, string IDTransportadora)
         {
             PesquisaTransportadoraViewModel model = new PesquisaTransportadoraViewModel();
 
@@ -153,7 +153,7 @@ namespace Dalutex.Controllers
                 }
             }
 
-            Session_Carrinho.IDTransportadora = int.Parse(IDTransportadora);
+            Session_Carrinho.IDClienteEntrega = int.Parse(IDClienteEntrega);
 
             return View(model);
         }
@@ -162,14 +162,11 @@ namespace Dalutex.Controllers
         public ActionResult Transportadora(PesquisaTransportadoraViewModel model)
         {
             using (var ctx = new DalutexContext())
-            {                   
-                int idTransportadora = base.Session_Carrinho.IDTransportadora;
-                model.Transportadoras = ctx.TRANSPORTADORAS.Where(x => x.IDTRANSPORTADORA == idTransportadora).ToList();                              
+            {
+                model.Transportadoras = ctx.TRANSPORTADORAS.Where(x => x.NOME == model.Filtro).ToList();                              
             }
             return View(model);
         }
-
-
     }
 }
                 

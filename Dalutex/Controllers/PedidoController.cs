@@ -193,6 +193,21 @@ namespace Dalutex.Controllers
 
                     using (var ctx = new DalutexContext())
                     {
+                        VMASCARAPRODUTOACABADO objReduzido = ctx.VMASCARAPRODUTOACABADO.Where(
+                                x =>
+                                    x.ARTIGO == model.Artigo
+                                    && x.DESENHO == model.Desenho
+                                    && x.VARIANTE == model.Variante
+                                    && x.MAQUINA == model.Tecnologia
+                                ).FirstOrDefault();
+
+                        if (objReduzido != null && objReduzido.CODIGO_REDUZIDO > default(int))
+                            model.Reduzido = objReduzido.CODIGO_REDUZIDO;
+                        else
+                            model.Reduzido = -2; //Deixar o JOB buscar mais tarde ou criar o reduzido?
+
+
+
                         objValorPadraoView = ctx.VMASCARAPRODUTOACABADO.Where(x => x.ARTIGO == model.Artigo).FirstOrDefault();
                         if(objValorPadraoView != null)
                         {
@@ -278,22 +293,6 @@ namespace Dalutex.Controllers
                     model.Quantidade = model.Pecas * model.ValorPadrao;
                     model.ValorTotalItem = model.Quantidade * model.Preco;
 
-                    using(var ctx = new DalutexContext())
-                    {
-                        VMASCARAPRODUTOACABADO objReduzido = ctx.VMASCARAPRODUTOACABADO.Where(
-                                x => 
-                                    x.ARTIGO == model.Artigo 
-                                    && x.DESENHO == model.Desenho 
-                                    && x.VARIANTE == model.Variante 
-                                    && x.MAQUINA == model.Tecnologia
-                                ).FirstOrDefault();
-
-                        if(objReduzido != null && objReduzido.CODIGO_REDUZIDO > default(int))
-                        {
-                            model.Reduzido = objReduzido.CODIGO_REDUZIDO;
-                        }
-                    }
-
                     using (var ctx = new TIDalutexContext())
                     {
                         int iID_DISP = ctx.DISPONIBILIDADE_MALHA
@@ -333,7 +332,6 @@ namespace Dalutex.Controllers
 
             return View();
         }
-
 
         private ConclusaoPedidoViewModel ConclusaoPedidoCarregarListas(ConclusaoPedidoViewModel model)
         {
@@ -399,6 +397,7 @@ namespace Dalutex.Controllers
 
                 if (ModelState.IsValid)
                 {
+                    #region Validações
                     //-- VALIDAÇÃO VALOR PARCELAS ---------------
                     //TIPO DE ATENDIMENTO DETERMINA O TOTAL A DIVIDIR PELO NUMERO DE PARCELAS:
                     //TOTAL * QUALIDADE COMERCIAL / PARCELAS
@@ -443,7 +442,6 @@ namespace Dalutex.Controllers
 
                         if (model.IDTiposAtendimento.Equals((int)Enums.TiposAtendimento.EstampaCompleta))
                         {
-
                             List<KeyValuePair<string,decimal>> lstConsolidada = base.Session_Carrinho.Itens
                                 .GroupBy(g => g.Desenho)
                                 .Select(consolidado => new KeyValuePair<string, decimal>(consolidado.First().Desenho, consolidado.Sum(s => s.ValorTotalItem)))
@@ -475,7 +473,52 @@ namespace Dalutex.Controllers
                                 return View(model);
                             }
                         }
+                        else if(model.IDTiposAtendimento.Equals((int)Enums.TiposAtendimento.CompletoPorArtigo))
+                        {
+                            List<KeyValuePair<string, decimal>> lstConsolidada = base.Session_Carrinho.Itens
+                                .GroupBy(g => g.Artigo)
+                                .Select(consolidado => new KeyValuePair<string, decimal>(consolidado.First().Artigo, consolidado.Sum(s => s.ValorTotalItem)))
+                                .ToList();
+
+                            bool isValid = true;
+
+                            foreach (KeyValuePair<string, decimal> item in lstConsolidada)
+                            {
+                                if (((item.Value * fatorMultiplicacao) / numParcelas) < valorMinimoParcelas)
+                                {
+                                    ModelState.AddModelError("", "Valor mínimo das parcelas é inferior a " + valorMinimoParcelas.ToString("C") + " para o artigo: " + item.Key);
+                                    isValid = false;
+                                }
+                            }
+
+                            if (!isValid)
+                            {
+                                this.ConclusaoPedidoCarregarListas(model);
+                                return View(model);
+                            }
+                        }
+                        else if (model.IDTiposAtendimento.Equals((int)Enums.TiposAtendimento.PedidoIncompleto))
+                        {
+                            bool isValid = true;
+
+                            foreach (InserirNoCarrinhoViewModel item in base.Session_Carrinho.Itens)
+                            {
+                                if (((item.ValorTotalItem * fatorMultiplicacao) / numParcelas) < valorMinimoParcelas)
+                                {
+                                    ModelState.AddModelError("", "Valor mínimo das parcelas é inferior a " + valorMinimoParcelas.ToString("C") + " para o item: Desenho=" + item.Desenho + " Variante=" + item.Variante);
+                                    isValid = false;
+                                }
+                            }
+
+                            if (!isValid)
+                            {
+                                this.ConclusaoPedidoCarregarListas(model);
+                                return View(model);
+                            }
+                        }
                     }
+
+                    #endregion
 
                     PRE_PEDIDO objPrePedido = new PRE_PEDIDO()
                     {
@@ -524,7 +567,7 @@ namespace Dalutex.Controllers
                             //PRECOLISTA = Buscar qdo tivermos o preço da tabela
                             QTDEPC = item.Pecas,
                             QUANTIDADE = item.Quantidade,
-                            REDUZIDO_ITEM = item.Reduzido > default(int)? item.Reduzido : -2,
+                            REDUZIDO_ITEM = item.Reduzido,
                             UM = item.UnidadeMedida,
                             VALOR_TOTAL = item.Preco * item.Quantidade,
                             VARIANTE = item.Variante
@@ -537,12 +580,20 @@ namespace Dalutex.Controllers
                     {
                         ctx.PRE_PEDIDO.Add(objPrePedido);
 
+                        #region Criticas
+
+                        #region Liberação financeira
+
                         ctx.PRE_PEDIDO_CRITICA.Add(new PRE_PEDIDO_CRITICA()
                         {
                             NUMERO_PRE_PEDIDO = objPrePedido.NUMERO_PEDIDO_BLOCO,
                             COD_CRITICA = (decimal)Enums.TiposCritica.LiberacaoFinanceira,
                             FLG_STATUS = "C"
                         });
+
+                        #endregion
+
+                        #region Item sem reduzido
 
                         bool hasItemSemReduzido = false;
 
@@ -566,6 +617,67 @@ namespace Dalutex.Controllers
                             });
                         }
 
+                        #endregion
+
+                        #region Preço divergente
+
+
+                        foreach (PRE_PEDIDO_ITENS item in lstItens)
+                        {
+                            if(item.REDUZIDO_ITEM != -2)//TEM REDUZIDO
+                            {
+                                decimal dReduzido = item.REDUZIDO_ITEM.GetValueOrDefault();
+                                using (var ctxDlx = new DalutexContext())
+                                {
+                                    var queryParametros = from vw in ctxDlx.VMASCARAPRODUTOACABADO
+                                                join co in ctxDlx.COLECOES on vw.COLECAO equals co.COLECAO
+                                                where vw.CODIGO_REDUZIDO == dReduzido
+                                                select new ParametrosPreco{
+                                                    E_Exclusivo = vw.EXCL == "E" ? true : false,
+                                                    Comissao = co.ID_COLECAO == "POCK" ? 3 : 4,
+                                                    IDColecao = vw.COLECAO
+                                                };
+
+                                    ParametrosPreco objParametro = queryParametros.First();
+
+                                    TABELAPRECOITEM objPreco = ctx.TABELAPRECOITEM.Where(x =>
+                                            x.COLECAO == (objParametro.E_Exclusivo ?
+                                                            objParametro.IDColecao :
+                                                            int.Parse(ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Atual).PARAMETRO1))
+                                            && x.QUALIDADECOMERCIAL == model.IDQualidadeComercial
+                                            && x.COD_COND_PAGTO == 6//TODO: BUSCAR NA FUNÇÃO DO ORACLE
+                                            && x.EST_LISO == "E"
+                                            && x.COMISSAO == objParametro.Comissao
+                                            && x.ARTIGO == item.ARTIGO
+                                        ).FirstOrDefault();
+
+                                    //Se não tem preço, crítica. Se tem preço e ele é diferente do informado pelo representante, crítica.
+                                    if(objPreco == null || decimal.Round(objPreco.VALOR.GetValueOrDefault(), 2, MidpointRounding.ToEven) != item.PRECO_UNIT.GetValueOrDefault())
+                                    {
+                                        ctx.PRE_PEDIDO_CRITICA.Add(new PRE_PEDIDO_CRITICA()
+                                        {
+                                            NUMERO_PRE_PEDIDO = objPrePedido.NUMERO_PEDIDO_BLOCO,
+                                            COD_CRITICA = (decimal)Enums.TiposCritica.PrecoDiferente,
+                                            FLG_STATUS = "C",
+                                            ITEM_PEDIDO = item.ITEM,
+                                            VALOR_TAB = decimal.Round(objPreco.VALOR.GetValueOrDefault(), 2, MidpointRounding.ToEven),
+                                            VALOR_ITEM = item.PRECO_UNIT
+                                        });
+                                    }
+                                }
+                            }
+                        }
+
+                        foreach (PRE_PEDIDO_ITENS item in lstItens)
+                        {
+
+
+                            ctx.PRE_PEDIDO_ITENS.Add(item);
+                        }
+
+                        #endregion
+
+                        #endregion
 
                         ctx.SaveChanges();
                     }

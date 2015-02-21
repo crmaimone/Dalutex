@@ -29,7 +29,7 @@ namespace Dalutex.Models.DataModels
         [StringLength(255)]
         public string OBSERVACAO { get; set; }
 
-        public byte? ITEM_PEDIDO { get; set; }
+        public int? ITEM_PEDIDO { get; set; }
 
         public decimal? VALOR_TAB { get; set; }
 

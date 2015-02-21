@@ -22,6 +22,13 @@ namespace Dalutex.Models
         public string UrlImagens { get; set; }
     }
 
+    public class ParametrosPreco
+    {
+        public bool E_Exclusivo { get; set; }
+        public decimal Comissao  { get; set; }
+        public int? IDColecao { get; set; }
+    }
+
     public class MenuColecoesViewModel
     {
         public string Filtro { get; set; }

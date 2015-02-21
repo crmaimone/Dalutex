@@ -148,6 +148,8 @@
     <Compile Include="Models\DataModels\PRE_PEDIDO_CRITICA.cs" />
     <Compile Include="Models\DataModels\PROXIMO_NUMERO_PEDIDO.cs" />
     <Compile Include="Models\DataModels\REPRESENTANTES.cs" />
+    <Compile Include="Models\DataModels\TABELAPRECO.cs" />
+    <Compile Include="Models\DataModels\TABELAPRECOITEM.cs" />
     <Compile Include="Models\DataModels\TAMANHOPECA.cs" />
     <Compile Include="Models\DataModels\TRANSPORTADORAS.cs" />
     <Compile Include="Models\DataModels\VMASCARAPRODUTOACABADO.cs" />

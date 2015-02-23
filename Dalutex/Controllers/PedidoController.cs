@@ -9,7 +9,6 @@ using System.Configuration;
 using Dalutex.Models.DataModels;
 using System.Data.Entity;
 using System.Web.Helpers;
-using System.IO;
 
 namespace Dalutex.Controllers
 {
@@ -567,7 +566,7 @@ namespace Dalutex.Controllers
                             //PRECOLISTA = Buscar qdo tivermos o preço da tabela
                             QTDEPC = item.Pecas,
                             QUANTIDADE = item.Quantidade,
-                            REDUZIDO_ITEM = item.Reduzido,
+                            REDUZIDO_ITEM = item.Reduzido, // REDUZIDO_0 -- VER COM CASSIANO;
                             UM = item.UnidadeMedida,
                             VALOR_TOTAL = item.Preco * item.Quantidade,
                             VARIANTE = item.Variante
@@ -639,6 +638,14 @@ namespace Dalutex.Controllers
                                                 };
 
                                     ParametrosPreco objParametro = queryParametros.First();
+
+
+                                    #region Call Function Oracle
+
+                                    //var result = ctx.Database.SqlQuery<int>("select ti_dalutex.pega_consicao_pgto(:p0) from dual", 1).FirstOrDefault();
+                                        
+                                    #endregion
+
 
                                     TABELAPRECOITEM objPreco = ctx.TABELAPRECOITEM.Where(x =>
                                             x.COLECAO == (objParametro.E_Exclusivo ?

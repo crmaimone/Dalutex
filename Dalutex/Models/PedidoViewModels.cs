@@ -100,38 +100,52 @@ namespace Dalutex.Models
 
         [Display(Name = "Condição de pagto")]
         public List<VW_CONDICAO_PGTO> CondicoesPagto { get; set; }
+        [Required]
+        [Display(Name = "Condição de pagto")]
         public int IDCondicoesPagto { get; set; }
 
         [Display(Name = "Moeda")]
         public List<CADASTRO_MOEDAS> Moedas { get; set; }
+        [Required]
+        [Display(Name = "Moeda")]
         public int IDMoedas { get; set; }
 
         [Display(Name = "Via transporte")]
         public List<COML_VIASTRANSPORTE> ViasTransporte { get; set; }
+        [Required]
+        [Display(Name = "Via transporte")]
         public int IDViasTransporte { get; set; }
 
         [Display(Name = "Frete")]
         public List<COML_TIPOSFRETE> Fretes { get; set; }
+        [Required]
+        [Display(Name = "Frete")]
         public int IDFretes { get; set; }
 
         [Display(Name = "Local de vendas")]
         public List<LOCALVENDA> LocaisVenda { get; set; }
+        [Display(Name = "Local de vendas")]
         public int IDLocaisVenda { get; set; }
 
         [Display(Name = "Canal de vendas")]
         public List<CANAIS_VENDA> CanaisVenda { get; set; }
+        [Required]
+        [Display(Name = "Canal de vendas")]
         public int IDCanaisVenda { get; set; }
 
         [Display(Name = "Gerente de vendas")]
         public List<COML_GERENCIAS> GerentesVenda { get; set; }
+        [Display(Name = "Gerente de vendas")]
         public int IDGerentesVenda { get; set; }
 
         [Display(Name = "Tipo de atendimento")]
         public List<PRE_PEDIDO_ATEND> TiposAtendimento { get; set; }
+        [Required]
         public int IDTiposAtendimento { get; set; }
 
         [Display(Name = "Qualidade comercial")]
         public List<KeyValuePair<string, string>> QualidadeComercial { get; set; }
+        [Required]
         public string IDQualidadeComercial { get; set; }
 
         [StringLength(1000)]

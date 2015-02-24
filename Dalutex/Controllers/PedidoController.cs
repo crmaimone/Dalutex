@@ -45,6 +45,12 @@ namespace Dalutex.Controllers
             return View(model);
         }
 
+        public ActionResult EmConstrucao()
+        {
+            return View();
+        }
+
+
         public ActionResult DesenhosPorColecao(string IDColecao, string pagina)
         {
             DesenhosPorColecaoViewModel model = new DesenhosPorColecaoViewModel();
@@ -170,6 +176,22 @@ namespace Dalutex.Controllers
 
             using (var ctxTI = new TIDalutexContext())
             {
+                using (var ctx = new DalutexContext())
+                {
+                    VMASCARAPRODUTOACABADO objReduzido = ctx.VMASCARAPRODUTOACABADO.Where(
+                            x =>
+                                x.ARTIGO == model.Artigo
+                                && x.DESENHO == model.Desenho
+                                && x.VARIANTE == model.Variante
+                                && x.MAQUINA == model.Tecnologia
+                            ).FirstOrDefault();
+
+                    if (objReduzido != null && objReduzido.CODIGO_REDUZIDO > default(int))
+                        model.Reduzido = objReduzido.CODIGO_REDUZIDO;
+                    else
+                        model.Reduzido = -2; //Deixar o JOB buscar mais tarde ou criar o reduzido?
+                }
+
                 var query =
                     from app in ctxTI.ARTIGO_PESO_PADRAO
                     where
@@ -192,21 +214,6 @@ namespace Dalutex.Controllers
 
                     using (var ctx = new DalutexContext())
                     {
-                        VMASCARAPRODUTOACABADO objReduzido = ctx.VMASCARAPRODUTOACABADO.Where(
-                                x =>
-                                    x.ARTIGO == model.Artigo
-                                    && x.DESENHO == model.Desenho
-                                    && x.VARIANTE == model.Variante
-                                    && x.MAQUINA == model.Tecnologia
-                                ).FirstOrDefault();
-
-                        if (objReduzido != null && objReduzido.CODIGO_REDUZIDO > default(int))
-                            model.Reduzido = objReduzido.CODIGO_REDUZIDO;
-                        else
-                            model.Reduzido = -2; //Deixar o JOB buscar mais tarde ou criar o reduzido?
-
-
-
                         objValorPadraoView = ctx.VMASCARAPRODUTOACABADO.Where(x => x.ARTIGO == model.Artigo).FirstOrDefault();
                         if(objValorPadraoView != null)
                         {
@@ -380,23 +387,34 @@ namespace Dalutex.Controllers
         {            
             try
             {
-                int iNUMERO_PEDIDO_BLOCO = default(int);
-
-                while(iNUMERO_PEDIDO_BLOCO == default(int))
-                {
-                    using(var ctx = new TIDalutexContext())
-                    {
-                        PROXIMO_NUMERO_PEDIDO reservar = ctx.PROXIMO_NUMERO_PEDIDO.Where(x => x.DISPONIVEL == 0).OrderBy(x => x.NUMERO_PEDIDO).First();
-                        iNUMERO_PEDIDO_BLOCO = reservar.NUMERO_PEDIDO;
-                        reservar.DISPONIVEL = 1;
-                        ctx.SaveChanges();
-                    }
-                }
-               
-
                 if (ModelState.IsValid)
                 {
+                    if (Session_Carrinho.Itens == null || Session_Carrinho.Itens.Count == 0)
+                    {
+                        ModelState.AddModelError("", "Não é permitido concluir o pedido sem itens.");
+                        this.ConclusaoPedidoCarregarListas(model);
+                        return View(model);
+                    }
+
+                    foreach (InserirNoCarrinhoViewModel item in Session_Carrinho.Itens)
+                    {
+                        model.TotalPedido += item.ValorTotalItem;
+                    }
+
                     #region Validações
+
+                    int iNUMERO_PEDIDO_BLOCO = default(int);
+
+                    while (iNUMERO_PEDIDO_BLOCO == default(int))
+                    {
+                        using (var ctx = new TIDalutexContext())
+                        {
+                            PROXIMO_NUMERO_PEDIDO reservar = ctx.PROXIMO_NUMERO_PEDIDO.Where(x => x.DISPONIVEL == 0).OrderBy(x => x.NUMERO_PEDIDO).First();
+                            iNUMERO_PEDIDO_BLOCO = reservar.NUMERO_PEDIDO;
+                            reservar.DISPONIVEL = 1;
+                            ctx.SaveChanges();
+                        }
+                    }
                     //-- VALIDAÇÃO VALOR PARCELAS ---------------
                     //TIPO DE ATENDIMENTO DETERMINA O TOTAL A DIVIDIR PELO NUMERO DE PARCELAS:
                     //TOTAL * QUALIDADE COMERCIAL / PARCELAS
@@ -642,17 +660,17 @@ namespace Dalutex.Controllers
 
                                     #region Call Function Oracle
 
-                                    //var result = ctx.Database.SqlQuery<int>("select ti_dalutex.pega_consicao_pgto(:p0) from dual", 1).FirstOrDefault();
+                                    int iCodCondPgto = 0;//TODO: BUSCAR NA FUNÇÃO DO ORACLE
+                                    iCodCondPgto = ctx.Database.SqlQuery<int>("select ti_dalutex.pega_consicao_pgto(:p0) from dual", 1).FirstOrDefault();
                                         
                                     #endregion
 
+                                    int? iColecaoAtual = int.Parse(ctx.CONFIG_GERAL.Where(y => y.ID_CONFIG == (int)Enums.TipoColecaoEspecial.Atual).First().PARAMETRO1);
 
                                     TABELAPRECOITEM objPreco = ctx.TABELAPRECOITEM.Where(x =>
-                                            x.COLECAO == (objParametro.E_Exclusivo ?
-                                                            objParametro.IDColecao :
-                                                            int.Parse(ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Atual).PARAMETRO1))
+                                            x.COLECAO == ( objParametro.E_Exclusivo ? objParametro.IDColecao : iColecaoAtual )
                                             && x.QUALIDADECOMERCIAL == model.IDQualidadeComercial
-                                            && x.COD_COND_PAGTO == 6//TODO: BUSCAR NA FUNÇÃO DO ORACLE
+                                            && x.COD_COND_PAGTO == iCodCondPgto
                                             && x.EST_LISO == "E"
                                             && x.COMISSAO == objParametro.Comissao
                                             && x.ARTIGO == item.ARTIGO
@@ -667,7 +685,7 @@ namespace Dalutex.Controllers
                                             COD_CRITICA = (decimal)Enums.TiposCritica.PrecoDiferente,
                                             FLG_STATUS = "C",
                                             ITEM_PEDIDO = item.ITEM,
-                                            VALOR_TAB = decimal.Round(objPreco.VALOR.GetValueOrDefault(), 2, MidpointRounding.ToEven),
+                                            VALOR_TAB = decimal.Round(objPreco != null ? objPreco.VALOR.GetValueOrDefault() : 0, 2, MidpointRounding.ToEven),
                                             VALOR_ITEM = item.PRECO_UNIT
                                         });
                                     }
@@ -677,8 +695,6 @@ namespace Dalutex.Controllers
 
                         foreach (PRE_PEDIDO_ITENS item in lstItens)
                         {
-
-
                             ctx.PRE_PEDIDO_ITENS.Add(item);
                         }
 
@@ -713,6 +729,7 @@ namespace Dalutex.Controllers
             return View();
         }
 
+        
         //[AllowAnonymous]
         //[HttpPost]
         //public JsonResult ObterDesenho(string desenho, string variante)

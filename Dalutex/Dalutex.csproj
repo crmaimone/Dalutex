@@ -132,7 +132,6 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CadastroController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\Oracle.cs" />
     <Compile Include="Controllers\PedidoController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -218,6 +217,7 @@
     <Content Include="Content\images\header-pattern-11.jpg" />
     <Content Include="Content\images\header-pattern-12.jpg" />
     <Content Include="Content\images\header-pattern-13.jpg" />
+    <Content Include="Content\images\UnderConstruction.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -283,6 +283,7 @@
     <Content Include="Views\Pedido\EspelhoPedido.cshtml" />
     <Content Include="Views\Pedido\ConfirmacaoPedido.cshtml" />
     <Content Include="Views\Pedido\Ampliacao.cshtml" />
+    <Content Include="Views\Pedido\EmConstrucao.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

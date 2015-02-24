@@ -21,7 +21,7 @@
                         @Html.LabelFor(x => x.QualidadeComercial, new { @class = "col-md-3 control-label" })
                         <div class="col-md-9">
                             @Html.DropDownListFor(m => m.IDQualidadeComercial, new SelectList(Model.QualidadeComercial, "key", "Value"), "Selecione", new { @id = "lstQualidades" })
-                            @Html.ValidationMessageFor(m => m.IDQualidadeComercial, "", new { @class = "text-danger" })
+                            @Html.ValidationMessageFor(m => m.QualidadeComercial, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
@@ -29,7 +29,7 @@
                         @Html.LabelFor(x => x.Moedas, new { @class = "col-md-3 control-label" })
                         <div class="col-md-9">
                             @Html.DropDownListFor(m => m.IDMoedas, new SelectList(Model.Moedas, "CODIGOMOEDA", "NOMEMOEDA"), "Selecione", new { @id = "lstMoedas" })
-                            @Html.ValidationMessageFor(m => m.IDMoedas, "", new { @class = "text-danger" })
+                            @Html.ValidationMessageFor(m => m.Moedas, "", new { @class = "text-danger" })
                         </div>
                     </div>
                                         
@@ -37,7 +37,7 @@
                         @Html.LabelFor(x => x.CondicoesPagto, new { @class = "col-md-3 control-label" })
                         <div class="col-md-9">
                             @Html.DropDownListFor(m => m.IDCondicoesPagto, new SelectList(Model.CondicoesPagto, "ID_COND", "DESCRI_COND"), "Selecione", new { @id = "lstTiposPgto" })
-                            @Html.ValidationMessageFor(m => m.IDCondicoesPagto, "", new { @class = "text-danger" })
+                            @Html.ValidationMessageFor(m => m.CondicoesPagto, "", new { @class = "text-danger" })
                         </div>
                     </div>
                     
@@ -45,7 +45,7 @@
                         @Html.LabelFor(x => x.CanaisVenda, new { @class = "col-md-3 control-label" })
                         <div class="col-md-9">
                             @Html.DropDownListFor(m => m.IDCanaisVenda, new SelectList(Model.CanaisVenda, "CANAL_VENDA", "DESCRICAO"), "Selecione", new { @id = "lstCanaisVenda" })
-                            @Html.ValidationMessageFor(m => m.IDCanaisVenda, "", new { @class = "text-danger" })
+                            @Html.ValidationMessageFor(m => m.CanaisVenda, "", new { @class = "text-danger" })
                         </div>
                     </div> 
                     
@@ -53,7 +53,7 @@
                         @Html.LabelFor(x => x.ViasTransporte, new { @class = "col-md-3 control-label" })
                         <div class="col-md-9">
                             @Html.DropDownListFor(m => m.IDViasTransporte, new SelectList(Model.ViasTransporte, "VIATRANSPORTE", "DESCRICAO"), "Selecione", new { @id = "lstViasTransp" })
-                            @Html.ValidationMessageFor(m => m.IDViasTransporte, "", new { @class = "text-danger" })
+                            @Html.ValidationMessageFor(m => m.ViasTransporte, "", new { @class = "text-danger" })
                         </div>
                     </div>
                     
@@ -61,7 +61,7 @@
                         @Html.LabelFor(x => x.Fretes, new { @class = "col-md-3 control-label" })
                         <div class="col-md-9">
                             @Html.DropDownListFor(m => m.IDFretes, new SelectList(Model.Fretes, "TIPOFRETE", "DESCRICAO"), "Selecione", new { @id = "lstFretes" })
-                            @Html.ValidationMessageFor(m => m.IDFretes, "", new { @class = "text-danger" })
+                            @Html.ValidationMessageFor(m => m.Fretes, "", new { @class = "text-danger" })
                         </div>
                     </div>
                     
@@ -85,14 +85,14 @@
                         @Html.LabelFor(x => x.TiposAtendimento, new { @class = "col-md-3 control-label" })
                         <div class="col-md-9">
                             @Html.DropDownListFor(m => m.IDTiposAtendimento, new SelectList(Model.TiposAtendimento, "COD_ATEND", "DESCRI_ATEND"), "Selecione", new { @id = "lstTiposAtendimento" })
-                            @Html.ValidationMessageFor(m => m.IDTiposAtendimento, "", new { @class = "text-danger" })
+                            @Html.ValidationMessageFor(m => m.TiposAtendimento, "", new { @class = "text-danger" })
                         </div>
                     </div>
                                        
                     <div class="form-group">
                         @Html.LabelFor(x => x.Observacoes, new { @class = "col-md-3 control-label" })
                         <div class="col-md-9">
-                            @Html.TextAreaFor(x => x.Observacoes, 0, 0, new { @style = "width:100%" })
+                            @Html.TextAreaFor(x => x.Observacoes, 0, 0, new { @style = "width:100%; Height:90px;" })
                             @Html.ValidationMessageFor(m => m.Observacoes, "", new { @class = "text-danger" })
                         </div>
                     </div>

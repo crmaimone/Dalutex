@@ -39,6 +39,7 @@ namespace Dalutex.Models.DataModels
         public string USUARIO { get; set; }
 
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public decimal ID_CRITICA { get; set; }
     }
 }

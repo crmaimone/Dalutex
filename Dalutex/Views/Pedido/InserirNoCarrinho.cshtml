@@ -11,7 +11,7 @@
 
 
 <div class="panel panel-default">
-    <h5>ARTIGO: @Model.Artigo | TÉCNOLOGIA: @Model.TecnologiaPorExtenso | DESENHO: @Model.Desenho | VARIANTE: @Model.Variante</h5>
+    <h5>ARTIGO: @Model.Artigo | TECNOLOGIA: @Model.TecnologiaPorExtenso | DESENHO: @Model.Desenho | VARIANTE: @Model.Variante</h5>
 </div>
 
 <hr/>
@@ -23,10 +23,8 @@
                 @using (Html.BeginForm("InserirNoCarrinho", "Pedido", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                 {
                     @Html.AntiForgeryToken()
-                    
-                    @*<h4>Dados da venda:</h4>*@
-                                        
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    
                     if (Model.ObterTipoPedido)
                     {
                         <div class="form-group">
@@ -38,7 +36,6 @@
                         </div>
                     }
                     <hr />
-                    
                     <div class="form-group">
                         @Html.LabelFor(x => x.Pecas, new { @class = "col-md-4 control-label" })
                         <div class="col-md-8">
@@ -65,14 +62,15 @@
                     @Html.HiddenFor(x => x.Artigo)
                     @Html.HiddenFor(x => x.TecnologiaPorExtenso)
                     @Html.HiddenFor(x => x.Reduzido)
+                    @Html.HiddenFor(x => x.Modo);
                     @Html.HiddenFor(x => x.UnidadeMedida, new { id = "hidUM" })
                     @Html.HiddenFor(x => x.ValorPadrao, new { id = "hidValPadrao" })
 
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-10">
-                            <input type="submit" value="ADICIONAR" class="btn btn-default" />
+                            <input type="submit" value="SALVAR" class="btn btn-default" />
 
-                            <a class="btn btn-default right" href="javascript:history.back()">VOLTAR</a>
+                            @Html.ActionLink("VOLTAR", "ArtigosDisponiveis", "Pedido", new { desenho = Model.Desenho, variante = Model.Variante }, new { @class = "btn btn-default right" })
                         </div>
                     </div>
                 }

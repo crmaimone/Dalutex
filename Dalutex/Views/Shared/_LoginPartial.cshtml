@@ -7,9 +7,7 @@
         @Html.AntiForgeryToken()
 
         <ul class="nav navbar-nav navbar-right">
-            <li>
-                <p class="navbar-text">Olá&nbsp;@User.Identity.Name!&nbsp;</p>
-            </li>
+            <li><a href="#" style="cursor:default">Olá&nbsp;@User.Identity.Name!</a></li>
             <li><a href="~/Pedido/Carrinho"><span class="glyphicon glyphicon-shopping-cart"></span>&nbsp;CARRINHO</a></li>
             <li><a href="javascript:document.getElementById('logoutForm').submit()"><span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp;LOG OFF</a></li>
         </ul>

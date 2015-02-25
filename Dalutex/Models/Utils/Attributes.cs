@@ -134,4 +134,19 @@ namespace Dalutex.Models.Utils
             }
         }
     }
+
+    public class StringRequired : ValidationAttribute
+    {
+        public override bool IsValid(object value)
+        {
+            if (value == null || value == "")
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+    }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using Dalutex.Models.DataModels;
 using System.ComponentModel.DataAnnotations;
+using Dalutex.Models.Utils;
 
 namespace Dalutex.Models
 {
@@ -13,9 +14,16 @@ namespace Dalutex.Models
         public string Variante { get; set; }
     }
 
+    public class ArtigoTecnologia
+    {
+        public string Artigo { get; set; }
+        public string Tecnologia { get; set; }
+    }
+
     public class DesenhosPorColecaoViewModel
     {
         public int IDColecao { get; set; }
+        public string NMColeao { get; set; }
         public int Pagina { get; set; }
         public int TotalPaginas { get; set; }
         public List<DesenhoVariante> Galeria { get; set; }
@@ -41,7 +49,7 @@ namespace Dalutex.Models
         public string Variante { get; set; }
         public string Imagem { get; set; }
         public int IDColecao { get; set; }
-        public List<VW_ARTIGOS_DISPONIVEIS> Artigos { get; set; }
+        public List<ArtigoTecnologia> Artigos { get; set; }
     }
 
     public class InserirNoCarrinhoViewModel
@@ -57,6 +65,7 @@ namespace Dalutex.Models
         public bool ObterTipoPedido { get; set; }
         public int Reduzido { get; set; }
         public DateTime DataEntregaItem { get; set; }
+        public string Modo { get; set; } //I= Inclusão A=Alteração
 
         public int Comissao {get; set; } //ver com cassiano onde criar este field e como mapear a regra para comissão (vide coleção);
 
@@ -76,6 +85,25 @@ namespace Dalutex.Models
         [DataType(DataType.Currency)]
         [Display(Name = "PREÇO:")]
         public decimal Preco { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            if(obj is InserirNoCarrinhoViewModel)
+            {
+                return this.Artigo == (obj as InserirNoCarrinhoViewModel).Artigo
+                        && this.Desenho == (obj as InserirNoCarrinhoViewModel).Desenho
+                        && this.Variante == (obj as InserirNoCarrinhoViewModel).Variante; 
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 
     public class AmpliacaoViewModel
@@ -100,25 +128,21 @@ namespace Dalutex.Models
 
         [Display(Name = "Condição de pagto")]
         public List<VW_CONDICAO_PGTO> CondicoesPagto { get; set; }
-        [Required]
         [Display(Name = "Condição de pagto")]
         public int IDCondicoesPagto { get; set; }
 
         [Display(Name = "Moeda")]
         public List<CADASTRO_MOEDAS> Moedas { get; set; }
-        [Required]
         [Display(Name = "Moeda")]
         public int IDMoedas { get; set; }
 
         [Display(Name = "Via transporte")]
         public List<COML_VIASTRANSPORTE> ViasTransporte { get; set; }
-        [Required]
         [Display(Name = "Via transporte")]
         public int IDViasTransporte { get; set; }
 
         [Display(Name = "Frete")]
         public List<COML_TIPOSFRETE> Fretes { get; set; }
-        [Required]
         [Display(Name = "Frete")]
         public int IDFretes { get; set; }
 
@@ -129,7 +153,6 @@ namespace Dalutex.Models
 
         [Display(Name = "Canal de vendas")]
         public List<CANAIS_VENDA> CanaisVenda { get; set; }
-        [Required]
         [Display(Name = "Canal de vendas")]
         public int IDCanaisVenda { get; set; }
 
@@ -140,12 +163,11 @@ namespace Dalutex.Models
 
         [Display(Name = "Tipo de atendimento")]
         public List<PRE_PEDIDO_ATEND> TiposAtendimento { get; set; }
-        [Required]
         public int IDTiposAtendimento { get; set; }
 
         [Display(Name = "Qualidade comercial")]
         public List<KeyValuePair<string, string>> QualidadeComercial { get; set; }
-        [Required]
+        [StringRequired(ErrorMessage="O campo qualidade comercial é obrigatório.")]
         public string IDQualidadeComercial { get; set; }
 
         [StringLength(1000)]

@@ -3,10 +3,8 @@
 @using Dalutex.Models.DataModels;
 
 @{
-    ViewBag.Title = "ARTIGOS E TÉCNOLOGIAS DISPONÍVEIS";
+    ViewBag.Title = "ARTIGOS E TECNOLOGIAS DISPONÍVEIS";
 }
-@*<h1 class="viewTitle">@ViewBag.Title</h1>*@
-
 <div class="panel panel-default">
     <h3>@ViewBag.Title</h3>
 </div>
@@ -28,15 +26,17 @@ else
                 @if (Model.Artigos != null)
                 {
                     <div class="list-group">
-                        <a href="#" class="list-group-item active">ARTIGOS E TECNOLOGIAS DISPONIVEIS</a>
-                        @foreach (VW_ARTIGOS_DISPONIVEIS item in Model.Artigos)
+                        <a href="#" class="list-group-item active">ARTIGOS E TECNOLOGIAS DISPONÍVEIS</a>
+                        @foreach (Dalutex.Models.ArtigoTecnologia item in Model.Artigos)
                         {
                             <a href="@Url.Content("~/Pedido/InserirNoCarrinho?"+
                                                         "&desenho=" + Model.Desenho +
                                                         "&variante=" + Model.Variante +
-                                                        "&artigo=" + item.ARTIGO +
-                                                        "&tecnologia=" + item.TECNOLOGIA)"
-                                        class="list-group-item"><strong>@item.ARTIGO</strong>&nbsp;|&nbsp;@item.TECNOLOGIA</a>
+                                                        "&artigo=" + item.Artigo +
+                                                        "&tecnologia=" + item.Tecnologia +
+                                                        "&modo=I"
+                                                        )"
+                                        class="list-group-item"><strong>@item.Artigo</strong>&nbsp;|&nbsp;@item.Tecnologia</a>
                         }
                     </div>
                 }

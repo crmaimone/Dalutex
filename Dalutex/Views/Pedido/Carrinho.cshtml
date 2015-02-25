@@ -10,28 +10,38 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-sm-6">
-            <div class="list-group">
-                <a href="#" class="list-group-item active">ITENS DO CARRINHO</a>
-                    @if (ViewBag.Carrinho != null && ViewBag.Carrinho.Itens != null)
-                    { 
-                        foreach (InserirNoCarrinhoViewModel item in ViewBag.Carrinho.Itens)
-                        {
-                            <a href="#" class="list-group-item">
-                                <strong>@item.Artigo | @item.Desenho | @item.Variante | @item.Tecnologia |   
-                                </strong>PÇS: @item.Pecas | QTD: @item.Quantidade | UN:@item.Preco.ToString("C") | @item.ValorTotalItem.ToString("c") | @item.DataEntregaItem.ToString("d") 
-                            </a>
-                        }
-                    }
-                    else
-                    {
-                        <p class="list-group-item"><em>CARRINHO VAZIO</em></p>
-                    }
-            </div>
+        <div class="col-xs-12">
+            @if (ViewBag.Carrinho != null && ViewBag.Carrinho.Itens != null)
+            { 
+                foreach (InserirNoCarrinhoViewModel item in ViewBag.Carrinho.Itens)
+                {
+                    ViewDataDictionary partialViewData = new ViewDataDictionary();
+                    partialViewData.Add(new KeyValuePair<string,object>("URLIMAGENS", ViewBag.UrlImagens));
+
+                    @Html.Partial(
+                        "_ItemCarrinho",
+                        item,
+                        partialViewData
+                    )
+                    <hr />
+                }
+            }
+            else
+            {
+                <p><em>CARRINHO VAZIO</em></p>
+            }
         </div>
     </div>
     <div class="row">
-        @Html.ActionLink("CONCLUIR PEDIDO", "Representantes", "Cadastro", null, new { @class = "btn btn-default right" })
+        <div class="col-xs-6">
+            <a class="btn btn-default right" href="javascript:history.back()">VOLTAR</a>
+        </div>
+        <div class="col-xs-6">
+            @if (ViewBag.Carrinho != null && ViewBag.Carrinho.Itens != null)
+            {
+                @Html.ActionLink("CONCLUIR", "Representantes", "Cadastro", null, new { @class = "btn btn-default" })
+            }
+        </div>
     </div>
 </div>
 

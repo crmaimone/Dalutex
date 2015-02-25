@@ -27,6 +27,14 @@ namespace Dalutex.Controllers
 
         #region ErrorHandling
 
+        [Authorize]
+        public ActionResult ErrorMessage(string message, string title)
+        {
+            ViewBag.Title = title;
+            ViewBag.Message = message;
+            return View();
+        }
+
         protected void Handle(Exception ex)
         {
             if (ex is DbEntityValidationException)
@@ -61,9 +69,24 @@ namespace Dalutex.Controllers
             get
             {
                 if (Session["SESSION_USUARIO"] == null)
-                    return null;
+                {
+                    if (User.Identity.IsAuthenticated)
+                    {
+                        using (var ctx = new TIDalutexContext())
+                        {
+                            Session["SESSION_USUARIO"] = ctx.USUARIOS.Where(x => x.NOME_USU.ToUpper() == User.Identity.Name.ToUpper()).FirstOrDefault();
+                            return Session["SESSION_USUARIO"] as USUARIOS;
+                        }
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
                 else
+                {
                     return Session["SESSION_USUARIO"] as USUARIOS;
+                }
             }
             set
             {
@@ -86,6 +109,5 @@ namespace Dalutex.Controllers
             }
         }
         #endregion
-
     }
 }

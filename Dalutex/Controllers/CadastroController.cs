@@ -48,6 +48,7 @@ namespace Dalutex.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Representantes(PesquisaRepresentantesViewModel model)
         {
             using(var ctx = new DalutexContext())
@@ -83,6 +84,7 @@ namespace Dalutex.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult ClientesFatura(PesquisaClientesFaturaViewModel model)
         {
             using (var ctx = new TIDalutexContext())
@@ -121,6 +123,7 @@ namespace Dalutex.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult ClientesEntrega(PesquisaClientesEntregaViewModel model)
         {
             using (var ctx = new TIDalutexContext())
@@ -132,8 +135,6 @@ namespace Dalutex.Controllers
             return View(model);
         }
 
-
-        [HttpGet]
         public ActionResult Transportadora(string IDClienteEntrega, string IDTransportadora)
         {
             PesquisaTransportadoraViewModel model = new PesquisaTransportadoraViewModel();
@@ -159,6 +160,7 @@ namespace Dalutex.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Transportadora(PesquisaTransportadoraViewModel model)
         {
             using (var ctx = new DalutexContext())

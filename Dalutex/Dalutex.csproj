@@ -46,6 +46,9 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="itextsharp">
+      <HintPath>..\ExternalReferences\itextsharp.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Oracle.ManagedDataAccess, Version=4.121.2.0, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -184,10 +187,14 @@
     <Compile Include="Models\DataModels\LOCALVENDA.cs" />
     <Compile Include="Models\DataModels\CADASTRO_MOEDAS.cs" />
     <Compile Include="Models\DataModels\VW_CONDICAO_PGTO.cs" />
+    <Compile Include="Models\Relatorios.cs" />
+    <Compile Include="Models\Utils\HtmlToPdfBuilder.cs" />
+    <Compile Include="Models\Utils\PdfResult.cs" />
     <Compile Include="Models\Utils\Enums.cs" />
     <Compile Include="Models\PedidoViewModels.cs" />
     <Compile Include="Models\SharedViewModels.cs" />
     <Compile Include="Models\Utils\Attributes.cs" />
+    <Compile Include="Models\Utils\Utilitarios.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -218,6 +225,7 @@
     <Content Include="Content\images\header-pattern-12.jpg" />
     <Content Include="Content\images\header-pattern-13.jpg" />
     <Content Include="Content\images\UnderConstruction.png" />
+    <Content Include="Content\templates\TemplatePrePedido.htm" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -284,6 +292,8 @@
     <Content Include="Views\Pedido\ConfirmacaoPedido.cshtml" />
     <Content Include="Views\Pedido\Ampliacao.cshtml" />
     <Content Include="Views\Pedido\EmConstrucao.cshtml" />
+    <Content Include="Views\Shared\_ItemCarrinho.cshtml" />
+    <Content Include="Views\Base\ErrorMessage.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

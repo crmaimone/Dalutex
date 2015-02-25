@@ -21,17 +21,12 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    @*<li>@Html.ActionLink("INÍCIO", "Index", "Home")</li>*@
                     <li>@Html.ActionLink("SOBRE", "About", "Home")</li>
                     <li>@Html.ActionLink("CONTATO", "Contact", "Home")</li>
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                <span class="glyphicon-scissors"></span>&nbsp;
-                                NEGÓCIOS
-                                <span class="caret"></span>
-                            </a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">NEGÓCIOS<span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
                                 <li>@Html.ActionLink("COLEÇÃO", "MenuColecoes", "Pedido")</li>
                                 <li>@Html.ActionLink("EXCLUSIVOS", "EmConstrucao", "Pedido")</li>

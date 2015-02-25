@@ -82,24 +82,12 @@ textarea {
 
 footer{
     text-align:center; 
-    background-color:black;
     width:100%;
     bottom:0;
-    position:fixed;
 }​
 
 input#btnRepres{
     margin-top: 0px;
-}
-
-.busca-container{
-
- }
-
-h1 .viewTitle{    
-    font-size: 10pt;
-    text-shadow: 20px 12px 2px #333;
-    color:aquamarine;
 }
 
 h3 {

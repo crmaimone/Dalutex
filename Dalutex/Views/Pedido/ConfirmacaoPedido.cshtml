@@ -1,13 +1,22 @@
 ﻿
 @{
-    ViewBag.Title = "Confirmação de pedido";
+    ViewBag.Title = "CONFIRMAÇÃO DE PEDIDO";
 }
-<h1 class="viewTitle">@ViewBag.Title</h1>
+<div class="panel panel-default">
+    <h3>@ViewBag.Title</h3>
+</div>
+
+<hr/>
+<h5>SEU PEDIDO FOI CONCLUIDO COM SUCESSO!</h5> 
+<h5>UMA CÓPIA DO PEDIDO FOI ENCAMINHADA EM SEU E-MAIL!</h5>
+<hr />
+<h2><strong>PEDIDO NÚMERO: @ViewBag.NumeroPedido </strong></h2>
+<hr />
 <br />
-<h5>Pedido gerado com sucesso. Número: @ViewBag.NumeroPedido</h5>
-<br />
-@Html.ActionLink("Voltar ao início", "Index", "Home", null, new { @class = "btn btn-default right" })
-@Html.ActionLink("Imprimir espelho", "EspelhoPedido", "Pedido", null, new { @class = "btn btn-default right" })
+
+
+@Html.ActionLink("VOLTAR AO INÍCIO", "Index", "Home", null, new { @class = "btn btn-default right" })
+@Html.ActionLink("IMPRIMIR PEDIDO", "EspelhoPedido", "Pedido", null, new { @class = "btn btn-default right" })
 
 
 

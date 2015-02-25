@@ -3,10 +3,13 @@
 @model Dalutex.Models.PesquisaTransportadoraViewModel
 
 @{
-    ViewBag.Title = "Transportadora";
+    ViewBag.Title = "TRANSPORTADORA";
 }
 
-<h1 class="viewTitle">@ViewBag.Title</h1>
+<div class="panel panel-default">
+    <h3>@ViewBag.Title</h3>
+</div>
+
 <div class="container">
     <div class="row">
         <div class="col-md-8">
@@ -21,7 +24,7 @@
                             @Html.TextBoxFor(m => m.Filtro, new { @class = "form-control" })
                             @Html.ValidationMessageFor(m => m.Filtro, "", new { @class = "text-danger" })
                         </div>
-                        <input type="submit" value="Pesquisar" class="btn btn-default" />
+                        <input type="submit" value="PESQUISAR" class="btn btn-default" />
                     </div>
                 }
             </section>
@@ -36,12 +39,12 @@
                     {
                         foreach (TRANSPORTADORAS item in Model.Transportadoras)
                         {
-                            <a href="@Url.Action("ConclusaoPedido", "Pedido", new { IDTransportadora = item.IDTRANSPORTADORA })" class="list-group-item"><strong>@item.IDTRANSPORTADORA</strong> @item.NOME</a>   
+                            <a href="@Url.Action("ConclusaoPedido", "Pedido", new { IDTransportadora = item.IDTRANSPORTADORA })" class="list-group-item"><strong>@item.IDTRANSPORTADORA</strong> | @item.NOME</a>   
                         }
                     }
                     else
                     {
-                        <p class="list-group-item"><em>Utilize o filtro para buscar transportadoras</em></p>
+                        <p class="list-group-item"><em>UTILIZE O FILTRO PARA BUSCAR TRANSPORTADORAS</em></p>
                     }
                 </div>
             </section>

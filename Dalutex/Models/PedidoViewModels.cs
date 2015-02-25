@@ -61,12 +61,12 @@ namespace Dalutex.Models
         public int Comissao {get; set; } //ver com cassiano onde criar este field e como mapear a regra para comissão (vide coleção);
 
         [Required]
-        [Display(Name = "Tipo de pedido")]
+        [Display(Name = "TIPO DE PEDIDO:")]
         public int IDTipoPedido { get; set; }
         public List<COML_TIPOSPEDIDOS> TiposPedido { get; set; }
 
         [Required]
-        [Display(Name="Peças")]
+        [Display(Name="PEÇAS:")]
         public int Pecas { get; set; }
 
         [DataType(DataType.Currency)]
@@ -74,7 +74,7 @@ namespace Dalutex.Models
 
         [Required]
         [DataType(DataType.Currency)]
-        [Display(Name = "Preço")]
+        [Display(Name = "PREÇO:")]
         public decimal Preco { get; set; }
     }
 

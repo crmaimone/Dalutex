@@ -80,13 +80,13 @@ textarea {
     background-size:initial;
 }
 
-/*footer{
+footer{
     text-align:center; 
     background-color:black;
     width:100%;
     bottom:0;
     position:fixed;
-}​*/
+}​
 
 input#btnRepres{
     margin-top: 0px;
@@ -96,8 +96,21 @@ input#btnRepres{
 
  }
 
-h1 .viewTitle{
+h1 .viewTitle{    
     font-size: 10pt;
     text-shadow: 20px 12px 2px #333;
     color:aquamarine;
+}
+
+h3 {
+    font-family: Verdana;
+    font-size: 12pt;
+    font-weight: bold; 
+    text-shadow: 1px 0px 3px #333;  
+    color:rgb(31, 30, 30);
+    padding:  0px 0px 0px 5px;
+}
+
+h5 {
+    padding:  0px 0px 0px 5px;
 }

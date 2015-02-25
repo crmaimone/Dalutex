@@ -4,9 +4,13 @@
 @using Dalutex.Models.DataModels;
 
 @{
-    ViewBag.Title = "Desenhos da coleção";
+    ViewBag.Title = "ITENS DA COLEÇÃO: ";
 }
-<h1 class="viewTitle">@ViewBag.Title</h1>
+
+@*<h1 class="viewTitle">@ViewBag.Title</h1>*@
+
+<div class="panel panel-default"> <h3>@ViewBag.Title</h3> </div>
+
 <div class="container-fluid">
     <div class="row">
         @if (Model.Galeria != null)
@@ -35,13 +39,15 @@
                 {
                     if(Model.Pagina > 1)
                     { 
-                        <li class="previous"><a href="@Url.Action("DesenhosPorColecao", "Pedido", new { IDColecao = Model.IDColecao, pagina = Model.Pagina - 1 })"><span aria-hidden="true">&larr;</span> Anterior</a></li>
+                        <li class="previous"><a href="@Url.Action("DesenhosPorColecao", "Pedido", new { IDColecao = Model.IDColecao, pagina = Model.Pagina - 1 })"><span aria-hidden="true">&larr;</span>P&aacute;gina Anterior</a></li>
                     }
-                    <li class="next"><a href="@Url.Action("DesenhosPorColecao", "Pedido", new { IDColecao = Model.IDColecao, pagina = Model.Pagina + 1 })">Pr&oacute;xima <span aria-hidden="true">&rarr;</span></a></li>
+                    <li class="next"><a href="@Url.Action("DesenhosPorColecao", "Pedido", new { IDColecao = Model.IDColecao, pagina = Model.Pagina + 1 })">Pr&oacute;xima P&aacute;gina <span aria-hidden="true">&rarr;</span></a></li>
                 }
             </ul>
         </nav>
     </div>
+    <hr>
+    <a class="btn btn-default right" href="javascript:history.back()">VOLTAR</a>
 </div>
 
 @section Scripts {

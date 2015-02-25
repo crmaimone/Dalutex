@@ -3,10 +3,14 @@
 @model Dalutex.Models.PesquisaRepresentantesViewModel
 
 @{
-    ViewBag.Title = "Representantes";
+    ViewBag.Title = "REPRESENTANTES";
 }
 
-<h1 class="viewTitle">@ViewBag.Title</h1>
+<div class="panel panel-default">
+    <h3>@ViewBag.Title</h3>
+</div>
+
+
 <div class="container">
     <div class="row">
         <div class="col-md-8">
@@ -22,9 +26,7 @@
                             @Html.TextBoxFor(m => m.Filtro, new { @class = "form-control" })
                             @Html.ValidationMessageFor(m => m.Filtro, "", new { @class = "text-danger" })
                             <input type="submit" id="btnRepres" value="Pesquisar" class="btn btn-default"/> 
-                        </div>
-
-                        @*<input type="submit" id="btnRepres" value="Pesquisar" class="btn btn-default"/>*@                                                
+                        </div>                                                                     
                     </div>
                 }
             </section>
@@ -39,12 +41,12 @@
                     {
                         foreach (REPRESENTANTES item in Model.Representantes)
                         {
-                            <a href="@Url.Action("ClientesFatura", "Cadastro", new { IDRepresentante = item.IDREPRESENTANTE })" class="list-group-item"><strong>@item.IDREPRESENTANTE</strong> @item.NOME</a>
+                            <a href="@Url.Action("ClientesFatura", "Cadastro", new { IDRepresentante = item.IDREPRESENTANTE })" class="list-group-item"><strong>@item.IDREPRESENTANTE</strong> | @item.NOME</a>
                         }
                     }
                     else
                     {
-                        <p class="list-group-item"><em>Utilize o filtro para buscar o reprensentante</em></p>
+                        <p class="list-group-item"><em>UTILIZE O FILTRO PARA BUSCAR O REPRENSENTANTE</em></p>
                     }
                 </div>
             </section>

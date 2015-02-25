@@ -3,10 +3,13 @@
 @model Dalutex.Models.PesquisaClientesEntregaViewModel
 
 @{
-    ViewBag.Title = "Cliente da entrega";
+    ViewBag.Title = "CLIENTE DA ENTREGA";
 }
 
-<h1 class="viewTitle">@ViewBag.Title</h1>
+<div class="panel panel-default">
+    <h3>@ViewBag.Title</h3>
+</div>
+
 <div class="container">
     <div class="row">
         <div class="col-md-8">
@@ -21,7 +24,7 @@
                             @Html.TextBoxFor(m => m.Filtro, new { @class = "form-control" })
                             @Html.ValidationMessageFor(m => m.Filtro, "", new { @class = "text-danger" })
                         </div>
-                        <input type="submit" value="Pesquisar" class="btn btn-default" />
+                        <input type="submit" value="PESQUISAR" class="btn btn-default" />
                     </div>
                 }
             </section>
@@ -36,12 +39,12 @@
                     {
                         foreach (VW_CLIENTE_TRANSP item in Model.ClientesEntrega)
                         {
-                            <a href="@Url.Action("Transportadora", "Cadastro", new { IDClienteEntrega = item.ID_CLIENTE, IDTransportadora = item.ID_TRANSP })" class="list-group-item"><strong>@item.CNPJ.Trim()</strong> @item.NOME.Trim() - End.: @item.ENDERECO</a>
+                            <a href="@Url.Action("Transportadora", "Cadastro", new { IDClienteEntrega = item.ID_CLIENTE, IDTransportadora = item.ID_TRANSP })" class="list-group-item"><strong>@item.CNPJ.Trim()</strong> | @item.NOME.Trim() | @item.ENDERECO</a>
                         }
                     }
                     else
                     {
-                        <p class="list-group-item"><em>Utilize o filtro para buscar o cliente entrega</em></p>
+                        <p class="list-group-item"><em>UTILIZE O FILTRO PARA BUSCAR O CLIENTE ENTREGA</em></p>
                     }
                 </div>
             </section>

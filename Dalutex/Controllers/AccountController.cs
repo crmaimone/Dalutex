@@ -51,7 +51,7 @@ namespace Dalutex.Controllers
                     }
                     else
                     {
-                        ModelState.AddModelError("", "Usuário ou senha inválidos.");
+                        ModelState.AddModelError("", "USUÁRIO OU SENHA INVÁLIDOS.");
                     }
                 }
 

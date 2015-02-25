@@ -5,15 +5,15 @@ namespace Dalutex.Models
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "Login")]
+        [Display(Name = "LOGIN")]
         public string Login { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Senha")]
+        [Display(Name = "SENHA")]
         public string Password { get; set; }
 
-        [Display(Name = "Lembre-se de mim!")]
+        [Display(Name = "LEMBRAR SENHA")]
         public bool RememberMe { get; set; }
     }
 

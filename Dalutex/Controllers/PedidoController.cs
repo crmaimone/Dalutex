@@ -228,12 +228,12 @@ namespace Dalutex.Controllers
                             }
                             else
                             {
-                                ModelState.AddModelError("", "Unidade de medida inválida.");
+                                ModelState.AddModelError("", "UNIDADE DE MEDIDA INVÁLIDA.");
                             }
                         }
                         else
                         {
-                            ModelState.AddModelError("", "Unidade de medida não encontrada.");
+                            ModelState.AddModelError("", "UNIDADE DE MEDIDA NÃO ENCONTRADA.");
                         }
                     }
                 }
@@ -261,17 +261,17 @@ namespace Dalutex.Controllers
                 {
                     if (model.ValorPadrao <= 0)
                     {
-                        ModelState.AddModelError("", "Não é permitido salvar sem valor padrão definido.");
+                        ModelState.AddModelError("", "NÃO É PERMITIDO SALVAR SEM VALOR PADRÃO DEFINIDO.");
                         hasErrors = true;
                     }
                     if (model.Pecas <= 0)
                     {
-                        ModelState.AddModelError("", "Campo \"Peças\" não pode ser menor ou igual a zero.");
+                        ModelState.AddModelError("", "Campo \"PEÇAS:\" NÃO PODE SER MENOR OU IGUAL A ZERO.");
                         hasErrors = true;
                     }
                     if(model.Preco <= 0)
                     {
-                        ModelState.AddModelError("", "Campo \"Preço\" não pode ser menor ou igual a zero.");
+                        ModelState.AddModelError("", "Campo \"PREÇO:\" NÃO PODE SER MENOR OU IGUAL A ZERO.");
                         hasErrors = true;
                     }
 

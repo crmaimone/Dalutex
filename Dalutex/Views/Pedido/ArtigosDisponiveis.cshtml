@@ -3,17 +3,23 @@
 @using Dalutex.Models.DataModels;
 
 @{
-    ViewBag.Title = "Artigos disponíveis";
+    ViewBag.Title = "ARTIGOS E TÉCNOLOGIAS DISPONÍVEIS";
 }
-<h1 class="viewTitle">@ViewBag.Title</h1>
+@*<h1 class="viewTitle">@ViewBag.Title</h1>*@
+
+<div class="panel panel-default">
+    <h3>@ViewBag.Title</h3>
+</div>
+
+
 @if (Model.Desenho == null)
 {
-    <h3>Desenho não informado</h3>
+    <h3>DESENHO NÃO INFORMADO</h3>
 }
 else
 { 
     <div class="panel panel-default">
-        <h5>Desenho: @Model.Desenho Variante: @Model.Variante</h5>
+        <h5>DESENHO: @Model.Desenho | VARIANTE: @Model.Variante</h5>
     </div>
 
     <div class="container-fluid">
@@ -30,16 +36,16 @@ else
                                                         "&variante=" + Model.Variante +
                                                         "&artigo=" + item.ARTIGO +
                                                         "&tecnologia=" + item.TECNOLOGIA)"
-                                        class="list-group-item"><strong>@item.ARTIGO</strong>&nbsp;-&nbsp;@item.TECNOLOGIA</a>
+                                        class="list-group-item"><strong>@item.ARTIGO</strong>&nbsp;|&nbsp;@item.TECNOLOGIA</a>
                         }
                     </div>
                 }
                 else
                 {
-                    <h3>Este Desenho não possui características técnicas cadastradas</h3>
+                    <h3>ESTE DESENHO NÃO POSSUI CARACTERÍSTICAS TÉCNICAS CADASTRADAS. POR FAVOR VERIFICAR COM DESENVOLVIMENTO</h3>
                 }
                 <br />
-                <a class="btn btn-default right" href="javascript:history.back()">Voltar</a>
+                <a class="btn btn-default right" href="javascript:history.back()">VOLTAR</a>
             </div>
             <div class="col-sm-6">
                 <a href="@Url.Action("Ampliacao", "Pedido", new { desenho = Model.Desenho, variante = Model.Variante })">

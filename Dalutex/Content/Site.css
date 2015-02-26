@@ -58,6 +58,12 @@ textarea {
     height:100px;
 }
 
+.liso-thumbnail
+{
+    height:100px;
+    width:150px;
+}
+
 .navbar-bottom{
     background-color:rgb(31, 30, 30);
     color:white;

@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using Dalutex.Models.DataModels;
+using System.Drawing;
 
 namespace Dalutex.Models
 {
@@ -12,7 +13,13 @@ namespace Dalutex.Models
         public string UrlImagens { get; set; }
         public string Desenho { get; set; }
         public string Variante { get; set; }
+        public string Cor { get; set; }
+        public string RGB { get; set; }
+        public string Artigo { get; set; }
         public int Reduzido { get; set; }
+        public int IDColecao { get; set; }
+        public string NMColecao { get; set; }
+        public int Pagina { get; set; }
     }
 
     public class BuscaRepresentanteViewModel

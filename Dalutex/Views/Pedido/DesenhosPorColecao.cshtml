@@ -7,9 +7,16 @@
     ViewBag.Title = "ITENS DA COLEÇÃO: " + Model.NMColeao;
 }
 
-<div class="panel panel-default"> <h3>@ViewBag.Title</h3> </div>
+<div class="panel panel-default"><h3>@ViewBag.Title</h3></div>
 
 <div class="container-fluid">
+    <ul class="nav nav-tabs">
+        <li role="presentation" class="active"><a href="#">ESTAMPADOS</a></li>
+        <li role="presentation"><a href="@Url.Content(@"LisosPorColecao?" +
+                    "&IDColecao=" + @Model.IDColecao +
+                    "&NMColecao=" + @Model.NMColeao +
+                    "&pagina=" + @Model.Pagina)">LISOS</a></li>
+    </ul>
     <div class="row">
         @if (Model.Galeria != null)
         {
@@ -23,7 +30,13 @@
                         {
                             Desenho = item.Desenho,
                             Variante = item.Variante,
-                            UrlImagens = Model.UrlImagens
+                            UrlImagens = Model.UrlImagens,
+                            Reduzido = 0,
+                            Cor = null,
+                            RGB = null,
+                            IDColecao = Model.IDColecao,
+                            NMColecao = Model.NMColeao,
+                            Pagina = Model.Pagina
                         })
 
                 </div>

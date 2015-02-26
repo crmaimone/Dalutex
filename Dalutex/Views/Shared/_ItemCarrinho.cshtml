@@ -4,7 +4,14 @@
     <div class="row">
         <div class="col-xs-2">
             <a href="@Url.Action("Ampliacao", "Pedido", new { desenho = Model.Desenho, variante = Model.Variante })">
-                <img src="@Url.Content(ViewData["URLIMAGENS"] + @Model.Desenho + "_" + @Model.Variante + ".jpg")" class="img-rounded" style="width:100%; height:100%;">
+                @if (string.IsNullOrWhiteSpace(Model.Cor))
+                {
+                    <img src="@Url.Content(ViewData["URLIMAGENS"] + @Model.Desenho + "_" + @Model.Variante + ".jpg")" class="img-rounded" style="width:100%; height:100%;">
+                }
+                else
+                {
+                    <img style="background-color:@Model.RGB; width:100%; height:80px;" class="img-rounded">
+                }
             </a>
         </div>
         <div class="col-xs-10">
@@ -22,18 +29,31 @@
                             </strong>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <strong>
-                                DES.: @Model.Desenho
-                            </strong>
+                    @if (Model.Desenho != null)
+                    {
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <strong>
+                                    DES.: @Model.Desenho
+                                </strong>
+                            </div>
+                            <div class="col-xs-6">
+                                <strong>
+                                    VAR.: @Model.Variante
+                                </strong>
+                            </div>
                         </div>
-                        <div class="col-xs-6">
-                            <strong>
-                                VAR.: @Model.Variante
-                            </strong>
+                    }
+                    else
+                    {
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <strong>
+                                    COR.: @Model.Cor
+                                </strong>
+                            </div>
                         </div>
-                    </div>
+                    }
                 </div>
             </div>
             <div class="row">
@@ -58,7 +78,7 @@
         </div>
     </div>
     <div class="row">
-        <div class=" col-xs-6">
+        <div class=" col-xs-12">
             @using (Html.BeginForm("ExcluirItemCarrinho", "Pedido", null, FormMethod.Post))
             {
                 @Html.HiddenFor(x => x.Artigo)

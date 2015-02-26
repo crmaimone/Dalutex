@@ -5,6 +5,7 @@ using System.Web;
 using Dalutex.Models.DataModels;
 using System.ComponentModel.DataAnnotations;
 using Dalutex.Models.Utils;
+using System.Drawing;
 
 namespace Dalutex.Models
 {
@@ -20,6 +21,14 @@ namespace Dalutex.Models
         public string Tecnologia { get; set; }
     }
 
+    public class Liso
+    {
+        public string Artigo { get; set; }
+        public string Cor { get; set; }
+        public string RGB { get; set; }
+        public int Reduzido { get; set; }
+    }
+
     public class DesenhosPorColecaoViewModel
     {
         public int IDColecao { get; set; }
@@ -28,6 +37,15 @@ namespace Dalutex.Models
         public int TotalPaginas { get; set; }
         public List<DesenhoVariante> Galeria { get; set; }
         public string UrlImagens { get; set; }
+    }
+
+    public class LisosPorColecaoViewModel
+    {
+        public int IDColecao { get; set; }
+        public string NMColeao { get; set; }
+        public int Pagina { get; set; }
+        public int TotalPaginas { get; set; }
+        public List<Liso> Galeria { get; set; }
     }
 
     public class ParametrosPreco
@@ -66,6 +84,12 @@ namespace Dalutex.Models
         public int Reduzido { get; set; }
         public DateTime DataEntregaItem { get; set; }
         public string Modo { get; set; } //I= Inclusão A=Alteração
+
+        public string IDColecao { get; set; }
+        public string NMColecao { get; set; }
+        public int Pagina { get; set; }
+        public string Cor { get; set; }
+        public string RGB { get; set; }
 
         public int Comissao {get; set; } //ver com cassiano onde criar este field e como mapear a regra para comissão (vide coleção);
 

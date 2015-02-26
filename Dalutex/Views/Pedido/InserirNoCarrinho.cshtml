@@ -7,11 +7,15 @@
     <h3>@ViewBag.Title</h3>
 </div>
 
-@*<h1 class="viewTitle">@ViewBag.Title</h1>*@
-
-
 <div class="panel panel-default">
-    <h5>ARTIGO: @Model.Artigo | TECNOLOGIA: @Model.TecnologiaPorExtenso | DESENHO: @Model.Desenho | VARIANTE: @Model.Variante</h5>
+    @if (string.IsNullOrWhiteSpace(Model.Cor))
+    {
+        <h5>ARTIGO: @Model.Artigo | TECNOLOGIA: @Model.TecnologiaPorExtenso | DESENHO: @Model.Desenho | VARIANTE: @Model.Variante</h5>
+    }
+    else
+    {
+        <h5>ARTIGO: @Model.Artigo | TECNOLOGIA: @Model.TecnologiaPorExtenso | COR: @Model.Cor</h5>
+    }
 </div>
 
 <hr/>
@@ -63,6 +67,11 @@
                     @Html.HiddenFor(x => x.TecnologiaPorExtenso)
                     @Html.HiddenFor(x => x.Reduzido)
                     @Html.HiddenFor(x => x.Modo);
+                    @Html.HiddenFor(x => x.IDColecao);
+                    @Html.HiddenFor(x => x.NMColecao);
+                    @Html.HiddenFor(x => x.Pagina);
+                    @Html.HiddenFor(x => x.Cor);
+                    @Html.HiddenFor(x => x.RGB);
                     @Html.HiddenFor(x => x.UnidadeMedida, new { id = "hidUM" })
                     @Html.HiddenFor(x => x.ValorPadrao, new { id = "hidValPadrao" })
 

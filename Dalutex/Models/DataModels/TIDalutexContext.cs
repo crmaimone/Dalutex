@@ -43,9 +43,18 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<TABELAPRECO> TABELAPRECO { get; set; }
         public virtual DbSet<TABELAPRECOITEM> TABELAPRECOITEM { get; set; }
         public virtual DbSet<VW_TROCA_TEC> VW_TROCA_TEC { get; set; }
+        public virtual DbSet<VW_LISOS_POR_COLECAO> VW_LISOS_POR_COLECAO { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<VW_LISOS_POR_COLECAO>()
+                .Property(e => e.COR)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_LISOS_POR_COLECAO>()
+                .Property(e => e.CAMINHO)
+                .IsUnicode(false);
+
             modelBuilder.Entity<VW_CLIENTE_TRANSP>()
                 .Property(e => e.ID_TRANSP)
                 .IsOptional();

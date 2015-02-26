@@ -12,6 +12,7 @@ using System.Web.Helpers;
 using System.IO;
 using Dalutex.Models.Utils;
 using System.Net.Mail;
+using System.Drawing;
 
 namespace Dalutex.Controllers
 {
@@ -105,6 +106,60 @@ namespace Dalutex.Controllers
             }
 
             model.UrlImagens = ConfigurationManager.AppSettings["PASTA_DESENHOS"];
+            return View(model);
+        }
+
+        public ActionResult LisosPorColecao(string IDColecao, string NMColecao, string pagina)
+        {
+            LisosPorColecaoViewModel model = new LisosPorColecaoViewModel();
+            model.NMColeao = NMColecao;
+
+            if (string.IsNullOrWhiteSpace(pagina))
+                model.Pagina = 1;
+            else
+                model.Pagina = int.Parse(pagina);
+
+            using (var ctx = new TIDalutexContext())
+            {
+                if (IDColecao == "ATUAL")
+                {
+                    model.IDColecao = int.Parse(ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Atual).PARAMETRO1);
+                }
+                else if (IDColecao == "POCKET")
+                {
+                    model.IDColecao = int.Parse(ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Pocket).INT1.ToString());
+                }
+                else if (IDColecao == null)
+                {
+                    ModelState.AddModelError("", "Coleção não informada.");
+                    return View(model);
+                }
+                else
+                {
+                    model.IDColecao = int.Parse(IDColecao);
+                }
+
+                Utilitarios utils = new Utilitarios();
+
+                var query =
+                    from dc in ctx.VW_LISOS_POR_COLECAO
+                    where
+                        dc.COLECAO == model.IDColecao
+                    select new Liso
+                    {
+                        Reduzido = dc.CODIGO_REDUZIDO,
+                        Artigo = dc.ARTIGO,
+                        Cor = dc.COR,
+                        RGB = dc.CAMINHO
+                    };
+
+                model.Galeria = query.OrderBy(x => x.Cor).ThenBy(x => x.Artigo).Skip((model.Pagina - 1) * 24).Take(24).ToList();
+                model.Galeria.ForEach(delegate(Liso item)
+                {
+                    item.RGB = utils.RGBConverter(ColorTranslator.FromWin32(int.Parse(item.RGB)));
+                });
+            }
+
             return View(model);
         }
 
@@ -205,13 +260,30 @@ namespace Dalutex.Controllers
             }
         }
 
-        public ActionResult InserirNoCarrinho(string desenho, string variante, string artigo, string tecnologia, string modo)
+        public ActionResult InserirNoCarrinho(
+            string IDColecao
+            , string NMColecao
+            , string pagina
+            , string desenho
+            , string variante
+            , string artigo
+            , string tecnologia
+            , string cor
+            , string modo
+            , string rgb)
         {
             InserirNoCarrinhoViewModel model = new InserirNoCarrinhoViewModel();
             model.Desenho = desenho;
             model.Variante = variante;
             model.Artigo = artigo;
             model.TecnologiaPorExtenso = tecnologia;
+            model.IDColecao = IDColecao;
+            model.NMColecao = NMColecao;
+            model.Cor = cor;
+            model.RGB = rgb;
+
+            if(pagina != null)
+                model.Pagina = int.Parse(pagina);
 
             if (modo == "A")//Alterando item
             {
@@ -381,7 +453,11 @@ namespace Dalutex.Controllers
                         }
 
                         base.Session_Carrinho.Itens.Add(model);
-                        return RedirectToAction("ArtigosDisponiveis", "Pedido", new { desenho = model.Desenho, variante = model.Variante, });
+
+                        if(!string.IsNullOrWhiteSpace(model.Cor))
+                            return RedirectToAction("LisosPorColecao", "Pedido", new { IDColecao = model.IDColecao, NMColecao = model.NMColecao, pagina = model.Pagina});
+                        else
+                            return RedirectToAction("ArtigosDisponiveis", "Pedido", new { desenho = model.Desenho, variante = model.Variante, });
                     }
                     else
                     {

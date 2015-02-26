@@ -38,5 +38,9 @@ namespace Dalutex.Models.Utils
             }
         }
 
+        public string RGBConverter(System.Drawing.Color c)
+        {
+            return "rgb(" +c.R.ToString() + "," + c.G.ToString() + "," + c.B.ToString() + ")";
+        }
     }
 }

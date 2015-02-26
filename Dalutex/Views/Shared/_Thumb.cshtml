@@ -1,14 +1,38 @@
 ﻿@model Dalutex.Models.ThumbViewModel
 
 <div class="thumbnail">
-    <a href="@Url.Content(@"ArtigosDisponiveis?" +
+    @if (Model.Cor == null)
+    {
+        <a href="@Url.Content(@"ArtigosDisponiveis?" +
                                             "&imagem=" + Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg" +
                                             "&desenho=" + @Model.Desenho +
                                             "&variante=" + @Model.Variante
                                         )">
-        <img src="@Url.Content(Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg")" class="img-thumbnail equal-height"> 
-    </a>
-    <div class="caption">
-        <h5>@Model.Desenho&nbsp;@Model.Variante</h5>
-    </div>
+            <img src="@Url.Content(Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg")" class="img-thumbnail equal-height">
+        </a>
+        <div class="caption">
+            <h5>@Model.Desenho&nbsp;@Model.Variante</h5>
+        </div>
+    }
+    else
+    {
+        <a href="@Url.Content("InserirNoCarrinho?"+
+                                "&desenho=" + Model.Desenho +
+                                "&variante=" + Model.Variante +
+                                "&artigo=" + Model.Artigo +
+                                "&tecnologia=L" +
+                                "&IDColecao=" + Model.IDColecao +
+                                "&NMColecao=" + Model.NMColecao +
+                                "&pagina=" + Model.Pagina +
+                                "&cor=" + Model.Cor +
+                                "&rgb=" + Model.RGB +
+                                "&modo=I")">
+            <img style="background-color:@Model.RGB;" class="liso-thumbnail">        
+        </a>
+        <div class="caption">
+            <h5>Cor: @Model.Cor</h5>
+            <p>Artigo: @Model.Artigo</p>
+            <p>Reduzido: @Model.Reduzido</p>
+        </div>
+    }
 </div>

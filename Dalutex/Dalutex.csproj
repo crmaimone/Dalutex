@@ -187,6 +187,7 @@
     <Compile Include="Models\DataModels\LOCALVENDA.cs" />
     <Compile Include="Models\DataModels\CADASTRO_MOEDAS.cs" />
     <Compile Include="Models\DataModels\VW_CONDICAO_PGTO.cs" />
+    <Compile Include="Models\DataModels\VW_TROCA_TEC.cs" />
     <Compile Include="Models\Relatorios.cs" />
     <Compile Include="Models\Utils\HtmlToPdfBuilder.cs" />
     <Compile Include="Models\Utils\PdfResult.cs" />
@@ -294,6 +295,7 @@
     <Content Include="Views\Pedido\EmConstrucao.cshtml" />
     <Content Include="Views\Shared\_ItemCarrinho.cshtml" />
     <Content Include="Views\Base\ErrorMessage.cshtml" />
+    <Content Include="Views\Home\Teste.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

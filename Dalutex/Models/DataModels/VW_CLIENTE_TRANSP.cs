@@ -13,13 +13,11 @@
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Column(Order = 1)]
         public int ID_CLIENTE { get; set; }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Column(Order = 2)]
         public int ID_REP { get; set; }
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        [Column(Order = 3)]
         public int ID_TRANSP { get; set; }
         public string NOME { get; set; }      
         public string CNPJ { get; set; }

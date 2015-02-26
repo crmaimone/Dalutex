@@ -1,6 +1,10 @@
-﻿using System;
+﻿using Dalutex.Models;
+using Dalutex.Models.Utils;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 
@@ -48,6 +52,16 @@ namespace Dalutex.Controllers
         public ActionResult SecurePage()
         {
             ViewBag.Message = "Página segura";
+
+            return View();
+        }
+
+        public ActionResult Teste()
+        {
+            MemoryStream ms = new MemoryStream(new Relatorios().GerarEspelhoPedido());
+            Attachment anexo = new Attachment(ms, "Pedido_" + 1.ToString() + ".pdf", "application/pdf");
+            Utilitarios util = new Utilitarios();
+            util.EnviaEmail("crmaimone@gmail.com", "Novo pedido", "Segue novo pedido", anexo);
 
             return View();
         }

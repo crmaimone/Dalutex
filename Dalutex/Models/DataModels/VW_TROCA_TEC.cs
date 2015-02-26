@@ -11,26 +11,17 @@ namespace Dalutex.Models.DataModels
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("TI_DALUTEX.VW_ARTIGOS_DISPONIVEIS")]
-    public partial class VW_ARTIGOS_DISPONIVEIS
+    [Table("TI_DALUTEX.VW_TROCA_TEC")]
+    public partial class VW_TROCA_TEC
     {
-        public int? ID_CARAC_TEC { get; set; }
-
         [Key]
-        [Column(Order = 1)]
+        [Column(Order=1)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int? ID_TECNOLOGIA { get; set; }
+        public int? ID_TEC_NOVA { get; set; }
 
         [Key]
         [Column(Order = 2)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public string ARTIGO { get; set; }
-
-        public string TECNOLOGIA { get; set; }
-
-        public override string ToString()
-        {
-            return this.ARTIGO + " " + this.TECNOLOGIA;
-        }
+        public int? ID_TEC_ORIGINAL { get; set; }
     }
 }

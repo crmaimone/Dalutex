@@ -11,7 +11,7 @@ namespace Dalutex.Models
         public byte[] GerarEspelhoPedido()
         {
 
-            HtmlToPdfBuilder builder = new HtmlToPdfBuilder(PageSize.LETTER);
+            HtmlToPdfBuilder builder = new HtmlToPdfBuilder(PageSize.A4_LANDSCAPE);
             HtmlPdfPage page1 = builder.AddPage();
             string line;
 

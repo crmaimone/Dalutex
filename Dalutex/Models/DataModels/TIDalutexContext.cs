@@ -42,9 +42,14 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<PRE_PEDIDO_CRITICA> PRE_PEDIDO_CRITICA { get; set; }
         public virtual DbSet<TABELAPRECO> TABELAPRECO { get; set; }
         public virtual DbSet<TABELAPRECOITEM> TABELAPRECOITEM { get; set; }
+        public virtual DbSet<VW_TROCA_TEC> VW_TROCA_TEC { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<VW_CLIENTE_TRANSP>()
+                .Property(e => e.ID_TRANSP)
+                .IsOptional();
+
             modelBuilder.Entity<TABELAPRECO>()
                 .Property(e => e.NOME)
                 .IsUnicode(false);
@@ -243,7 +248,8 @@ namespace Dalutex.Models.DataModels
                 .Property(e => e.ID_TECNOLOGIA);
 
             modelBuilder.Entity<VW_ARTIGOS_DISPONIVEIS>()
-                .Property(e => e.ID_CARAC_TEC);
+                .Property(e => e.ID_CARAC_TEC)
+                .IsOptional();
 
             modelBuilder.Entity<VW_ARTIGOS_DISPONIVEIS>()
                 .Property(e => e.TECNOLOGIA)

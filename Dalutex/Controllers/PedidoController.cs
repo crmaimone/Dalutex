@@ -143,13 +143,21 @@ namespace Dalutex.Controllers
 
                 using (var ctx = new TIDalutexContext())
                 {
-                    //TODO:Verificar casos em que a key está nula e está omitindo do resultado.
+                    List<VW_TROCA_TEC> lstTrocas = ctx.VW_TROCA_TEC.Where(x => x.ID_TEC_ORIGINAL == iIDTecnologia).ToList();
+
+                    List<int?> lstTecnologias = new List<int?>();
+                    lstTecnologias.Add(iIDTecnologia);
+
+                    foreach (VW_TROCA_TEC item in lstTrocas)
+                    {
+                        lstTecnologias.Add(item.ID_TEC_NOVA);
+                    }
+
                     var query =
                         from ar in ctx.VW_ARTIGOS_DISPONIVEIS
                         where
-                            (ar.ID_TECNOLOGIA == null || ar.ID_TECNOLOGIA != iIDTecnologia)
-                            &&
-                            (ar.ID_CARAC_TEC == null || !lstCaracteristicas.Contains(ar.ID_CARAC_TEC))
+                            (lstTecnologias.Contains(ar.ID_TECNOLOGIA))
+                            && (ar.ID_CARAC_TEC.Equals(null) || !lstCaracteristicas.Contains(ar.ID_CARAC_TEC))
                         group ar by
                             new
                             {
@@ -576,7 +584,7 @@ namespace Dalutex.Controllers
 
                             foreach(KeyValuePair<string,decimal> item in lstConsolidada)
                             {
-                                if (((item.Value * fatorMultiplicacao ) / numParcelas) < valorMinimoParcelas)
+                                if (((item.Value / fatorMultiplicacao ) / numParcelas) < valorMinimoParcelas)
                                 {
                                     ModelState.AddModelError("", "Valor mínimo das parcelas é inferior a " + valorMinimoParcelas.ToString("C") + " para o desenho: " + item.Key);
                                     isValid = false;
@@ -590,7 +598,7 @@ namespace Dalutex.Controllers
                         }
                         else if(model.IDTiposAtendimento.Equals((int)Enums.TiposAtendimento.PedidoCompleto))
                         {
-                            if (((model.TotalPedido * fatorMultiplicacao ) / numParcelas) < valorMinimoParcelas)
+                            if (((model.TotalPedido / fatorMultiplicacao ) / numParcelas) < valorMinimoParcelas)
                             {
                                 ModelState.AddModelError("", "Valor mínimo das parcelas é inferior a " + valorMinimoParcelas.ToString("C"));
                                 hasErrors = true;
@@ -607,7 +615,7 @@ namespace Dalutex.Controllers
 
                             foreach (KeyValuePair<string, decimal> item in lstConsolidada)
                             {
-                                if (((item.Value * fatorMultiplicacao) / numParcelas) < valorMinimoParcelas)
+                                if (((item.Value / fatorMultiplicacao) / numParcelas) < valorMinimoParcelas)
                                 {
                                     ModelState.AddModelError("", "Valor mínimo das parcelas é inferior a " + valorMinimoParcelas.ToString("C") + " para o artigo: " + item.Key);
                                     isValid = false;
@@ -625,7 +633,7 @@ namespace Dalutex.Controllers
 
                             foreach (InserirNoCarrinhoViewModel item in base.Session_Carrinho.Itens)
                             {
-                                if (((item.ValorTotalItem * fatorMultiplicacao) / numParcelas) < valorMinimoParcelas)
+                                if (((item.ValorTotalItem / fatorMultiplicacao) / numParcelas) < valorMinimoParcelas)
                                 {
                                     ModelState.AddModelError("", "Valor mínimo das parcelas é inferior a " + valorMinimoParcelas.ToString("C") + " para o item: Desenho=" + item.Desenho + " Variante=" + item.Variante);
                                     isValid = false;
@@ -830,10 +838,10 @@ namespace Dalutex.Controllers
 
                     #region EnviarPDF
 
-                    MemoryStream ms = new MemoryStream(new Relatorios().GerarEspelhoPedido());
-                    Attachment anexo = new Attachment(ms, "Pedido_" + iNUMERO_PEDIDO_BLOCO.ToString() + ".pdf", "application/pdf");
-                    Utilitarios util = new Utilitarios();
-                    util.EnviaEmail("crmaimone@gmail.com", "Novo pedido", "Segue novo pedido", anexo);
+                    //MemoryStream ms = new MemoryStream(new Relatorios().GerarEspelhoPedido());
+                    //Attachment anexo = new Attachment(ms, "Pedido_" + iNUMERO_PEDIDO_BLOCO.ToString() + ".pdf", "application/pdf");
+                    //Utilitarios util = new Utilitarios();
+                    //util.EnviaEmail("crmaimone@gmail.com", "Novo pedido", "Segue novo pedido", anexo);
 
                     #endregion
 

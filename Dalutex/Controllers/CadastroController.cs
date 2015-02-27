@@ -53,7 +53,7 @@ namespace Dalutex.Controllers
         {
             using(var ctx = new DalutexContext())
             {
-                model.Representantes = ctx.REPRESENTANTES.Where(x => x.NOME.Contains(model.Filtro)).ToList();
+                model.Representantes = ctx.REPRESENTANTES.Where(x => x.NOME.Contains(model.Filtro.ToUpper())).OrderBy(x => x.NOME).ToList();
             }
 
             return View(model);
@@ -90,7 +90,7 @@ namespace Dalutex.Controllers
             using (var ctx = new TIDalutexContext())
             {
                 int idRepresentante = base.Session_Carrinho.IDRepresentante;
-                model.ClientesFatura = ctx.VW_CLIENTE_TRANSP.Where(x => x.NOME.Contains(model.Filtro.ToUpper()) && x.ID_REP == idRepresentante).ToList();
+                model.ClientesFatura = ctx.VW_CLIENTE_TRANSP.Where(x => x.NOME.Contains(model.Filtro.ToUpper()) && x.ID_REP == idRepresentante).OrderBy(x => x.NOME).ToList();
             }
 
             return View(model);
@@ -129,7 +129,7 @@ namespace Dalutex.Controllers
             using (var ctx = new TIDalutexContext())
             {
                 int idRepresentante = base.Session_Carrinho.IDRepresentante;
-                model.ClientesEntrega = ctx.VW_CLIENTE_TRANSP.Where(x => x.NOME.Contains(model.Filtro.ToUpper()) && x.ID_REP == idRepresentante).ToList();
+                model.ClientesEntrega = ctx.VW_CLIENTE_TRANSP.Where(x => x.NOME.Contains(model.Filtro.ToUpper()) && x.ID_REP == idRepresentante).OrderBy(x => x.NOME).ToList();
             }
 
             return View(model);

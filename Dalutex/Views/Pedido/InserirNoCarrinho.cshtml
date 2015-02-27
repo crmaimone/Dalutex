@@ -112,6 +112,18 @@
                     $txtQuantidade.val($txtPecas.val() * $hidPadrao.val());
                 }
 
+                lstTiposPedido_Change = function () {
+                    if ($("#lstTiposPedido > option:selected").attr("value") != 0) {
+                        $("#txtPecas").val("0")
+                        $("#txtPecas").disabled(true);
+                        $("#txtQuantidade").disabled(false);
+                    }
+                    else {
+                        $("#txtPecas").disabled(false);
+                        $("#txtQuantidade").disabled(true);
+                    }
+                }
+
                 //API Methods
 
                 // public API
@@ -122,16 +134,17 @@
 
             //Init
             (function Init() {
-                $('#lstTiposPedido').selectpicker();
+                $('#lstTiposPedido').selectpicker(null, cha
                 $("#lblQuantidade").text($("#hidUM").val());
                 $("#txtPecas").blur(this.txtPecas_Blur);
-
+                
                 $("#txtPecas").focus(function () {
                     this.select();
                 });
                 $("#txtPreco").focus(function () {
                     this.select();
                 });
+                $('#lstTiposPedido').on('change', scriptWrapper.lstTiposPedido_Change);
             })();
         });
     </script>

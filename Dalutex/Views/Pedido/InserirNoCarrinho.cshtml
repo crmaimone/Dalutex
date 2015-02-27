@@ -115,12 +115,12 @@
                 lstTiposPedido_Change = function () {
                     if ($("#lstTiposPedido > option:selected").attr("value") != 0) {
                         $("#txtPecas").val("0")
-                        $("#txtPecas").disabled(true);
-                        $("#txtQuantidade").disabled(false);
+                        $("#txtPecas").disabled();
+                        $("#txtQuantidade").enabled();
                     }
                     else {
-                        $("#txtPecas").disabled(false);
-                        $("#txtQuantidade").disabled(true);
+                        $("#txtPecas").disabled();
+                        $("#txtQuantidade").enabled();
                     }
                 }
 
@@ -128,13 +128,14 @@
 
                 // public API
                 return {
-                    txtPecas_Blur : txtPecas_Blur
+                    txtPecas_Blur: txtPecas_Blur,
+                    lstTiposPedido_Change: lstTiposPedido_Change
                 };
             })();
 
             //Init
             (function Init() {
-                $('#lstTiposPedido').selectpicker(null, cha
+                $('#lstTiposPedido').selectpicker();
                 $("#lblQuantidade").text($("#hidUM").val());
                 $("#txtPecas").blur(this.txtPecas_Blur);
                 
@@ -144,7 +145,7 @@
                 $("#txtPreco").focus(function () {
                     this.select();
                 });
-                $('#lstTiposPedido').on('change', scriptWrapper.lstTiposPedido_Change);
+                $('#lstTiposPedido').on('change', scriptWrapper.lstTiposPedido_Change());
             })();
         });
     </script>

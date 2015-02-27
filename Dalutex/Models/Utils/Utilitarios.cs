@@ -32,7 +32,7 @@ namespace Dalutex.Models.Utils
                 smtp.EnableSsl = false;
                 smtp.Send(mail);
             }
-            catch(Exception ex)
+            catch(Exception)
             {
                 //DO NOTHING
             }

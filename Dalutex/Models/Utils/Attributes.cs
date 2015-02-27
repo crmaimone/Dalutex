@@ -139,7 +139,7 @@ namespace Dalutex.Models.Utils
     {
         public override bool IsValid(object value)
         {
-            if (value == null || value == "")
+            if (value == null || value.ToString() == "")
             {
                 return false;
             }

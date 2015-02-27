@@ -13,6 +13,7 @@ using System.IO;
 using Dalutex.Models.Utils;
 using System.Net.Mail;
 using System.Drawing;
+using Microsoft.Reporting.WebForms;
 
 namespace Dalutex.Controllers
 {
@@ -944,9 +945,9 @@ namespace Dalutex.Controllers
             return View();
         }
 
-        public EspelhoPedidPdf EspelhoPedido()
+        public EspelhoPedidoPdf EspelhoPedido()
         {
-            return new EspelhoPedidPdf();
+            return new EspelhoPedidoPdf();
         }
         
         //[AllowAnonymous]

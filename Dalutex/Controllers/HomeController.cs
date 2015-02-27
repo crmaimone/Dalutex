@@ -58,11 +58,6 @@ namespace Dalutex.Controllers
 
         public ActionResult Teste()
         {
-            MemoryStream ms = new MemoryStream(new Relatorios().GerarEspelhoPedido());
-            Attachment anexo = new Attachment(ms, "Pedido_" + 1.ToString() + ".pdf", "application/pdf");
-            Utilitarios util = new Utilitarios();
-            util.EnviaEmail("crmaimone@gmail.com", "Novo pedido", "Segue novo pedido", anexo);
-
             return View();
         }
     }

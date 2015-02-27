@@ -50,6 +50,10 @@
       <HintPath>..\ExternalReferences\itextsharp.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.ReportViewer.WebForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ExternalReferences\Microsoft.ReportViewer.WebForms.dll</HintPath>
+    </Reference>
     <Reference Include="Oracle.ManagedDataAccess, Version=4.121.2.0, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Oracle.ManagedDataAccess.12.1.021\lib\net40\Oracle.ManagedDataAccess.dll</HintPath>
@@ -136,6 +140,11 @@
     <Compile Include="Controllers\CadastroController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PedidoController.cs" />
+    <Compile Include="DataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DataSet.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -146,6 +155,7 @@
     <Compile Include="Models\DataModels\COML_TIPOSPEDIDOS.cs" />
     <Compile Include="Models\DataModels\CRIACAO_REDUZIDOS.cs" />
     <Compile Include="Models\DataModels\DISPONIBILIDADE_MALHA.cs" />
+    <Compile Include="Models\DataModels\Model1.cs" />
     <Compile Include="Models\DataModels\PRE_PEDIDO_ATEND.cs" />
     <Compile Include="Models\DataModels\PRE_PEDIDO_COND_PAG.cs" />
     <Compile Include="Models\DataModels\PRE_PEDIDO_CRITICA.cs" />
@@ -187,6 +197,7 @@
     <Compile Include="Models\DataModels\LOCALVENDA.cs" />
     <Compile Include="Models\DataModels\CADASTRO_MOEDAS.cs" />
     <Compile Include="Models\DataModels\VW_CONDICAO_PGTO.cs" />
+    <Compile Include="Models\DataModels\VW_IMPRESSAO_WEB.cs" />
     <Compile Include="Models\DataModels\VW_LISOS_POR_COLECAO.cs" />
     <Compile Include="Models\DataModels\VW_TROCA_TEC.cs" />
     <Compile Include="Models\Relatorios.cs" />
@@ -237,6 +248,17 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\bootstrap-select.css.map" />
+    <Content Include="DataSet.xsc">
+      <DependentUpon>DataSet.xsd</DependentUpon>
+    </Content>
+    <None Include="DataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DataSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="DataSet.xss">
+      <DependentUpon>DataSet.xsd</DependentUpon>
+    </Content>
     <None Include="Properties\PublishProfiles\Deploy.pubxml" />
     <Content Include="Scripts\bootstrap-select.js.map" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -299,7 +321,9 @@
     <Content Include="Views\Home\Teste.cshtml" />
     <Content Include="Views\Pedido\LisosPorColecao.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Controllers\Relatorios\PrePedido.rdlc" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />

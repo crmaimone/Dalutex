@@ -24,7 +24,7 @@ namespace Dalutex.Controllers
             {
                 if(base.Session_Usuario.ID_REPRES > default(int))
                 {
-                    IDRepresentante = base.Session_Usuario.ID_REPRES;
+                    IDRepresentante = base.Session_Usuario.ID_REPRES.GetValueOrDefault();
                 }
             }
 

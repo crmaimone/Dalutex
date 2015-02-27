@@ -27,7 +27,7 @@ namespace Dalutex.Models.DataModels
 
         public int? DATA_CADASTRO { get; set; }
 
-        public int ID_REPRES { get; set; }
+        public int? ID_REPRES { get; set; }
 
         [StringLength(30)]
         public string SETOR { get; set; }

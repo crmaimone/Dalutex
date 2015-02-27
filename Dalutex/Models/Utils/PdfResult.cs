@@ -15,6 +15,7 @@ namespace Dalutex.Models
 {
     public class EspelhoPedidoPdf : ActionResult
     {
+        public decimal IDPedidoBloco { get; set; }
         public override void ExecuteResult(ControllerContext context)
         {
             LocalReport relatorio = new LocalReport();
@@ -31,9 +32,8 @@ namespace Dalutex.Models
 
             using (var ctx = new TIDalutexContext())
             {
-                //decimal dNumeroPedido = decimal.Parse(NumeroPedido);
                 //Define o nome do nosso DataSource e qual rotina irá preenche-lo, no caso, nosso método criado anteriormente
-                relatorio.DataSources.Add(new ReportDataSource("dsPrePedido", ctx.VW_IMPRESSAO_WEB.Where(x => x.PEDIDO_BLOCO == 116154).ToList()));
+                relatorio.DataSources.Add(new ReportDataSource("dsPrePedido", ctx.VW_IMPRESSAO_WEB.Where(x => x.PEDIDO_BLOCO == IDPedidoBloco).ToList()));
             }
 
             string reportType = "PDF";

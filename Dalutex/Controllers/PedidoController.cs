@@ -89,7 +89,7 @@ namespace Dalutex.Controllers
                 var query =
                     from dc in ctx.VW_DESENHOS_POR_COLECAO
                     where
-                        dc.COLECAO == model.IDColecao
+                        (dc.COLECAO == model.IDColecao)
                     group dc by
                         new
                         {
@@ -945,9 +945,9 @@ namespace Dalutex.Controllers
             return View();
         }
 
-        public EspelhoPedidoPdf EspelhoPedido()
+        public EspelhoPedidoPdf EspelhoPedido(string NumeroPedido)
         {
-            return new EspelhoPedidoPdf();
+            return new EspelhoPedidoPdf() { IDPedidoBloco = decimal.Parse(NumeroPedido) };
         }
         
         //[AllowAnonymous]

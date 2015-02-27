@@ -16,7 +16,7 @@
 
 
 @Html.ActionLink("VOLTAR AO INÍCIO", "Index", "Home", null, new { @class = "btn btn-default right" })
-@Html.ActionLink("IMPRIMIR PEDIDO", "EspelhoPedido", "Pedido", null, new { @class = "btn btn-default right" })
+@Html.ActionLink("IMPRIMIR PEDIDO", "EspelhoPedido", "Pedido", new { NumeroPedido = @ViewBag.NumeroPedido }, new { @class = "btn btn-default right" })
 
 
 

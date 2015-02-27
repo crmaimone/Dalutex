@@ -270,7 +270,8 @@ namespace Dalutex.Controllers
             , string tecnologia
             , string cor
             , string modo
-            , string rgb)
+            , string rgb
+            , int reduzido)
         {
             InserirNoCarrinhoViewModel model = new InserirNoCarrinhoViewModel();
             model.Desenho = desenho;
@@ -281,6 +282,7 @@ namespace Dalutex.Controllers
             model.NMColecao = NMColecao;
             model.Cor = cor;
             model.RGB = rgb;
+            model.Reduzido = reduzido;
 
             if(pagina != null)
                 model.Pagina = int.Parse(pagina);
@@ -779,7 +781,7 @@ namespace Dalutex.Controllers
 
                         PRE_PEDIDO_ITENS objItem = new PRE_PEDIDO_ITENS(){
                             ARTIGO = item.Artigo,
-                            //COR = TODO,
+                            COR = item.Cor,
                             DATA_ENTREGA = item.DataEntregaItem,
                             DESENHO = item.Desenho,
                             ITEM = i,

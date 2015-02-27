@@ -165,7 +165,7 @@ namespace Dalutex.Controllers
         {
             using (var ctx = new DalutexContext())
             {
-                model.Transportadoras = ctx.TRANSPORTADORAS.Where(x => x.NOME == model.Filtro).ToList();                              
+                model.Transportadoras = ctx.TRANSPORTADORAS.Where(x => x.NOME.Contains(model.Filtro.ToUpper())).OrderBy(x => x.NOME).ToList();                              
             }
             return View(model);
         }

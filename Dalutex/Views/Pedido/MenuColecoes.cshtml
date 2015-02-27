@@ -25,10 +25,13 @@
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
-                        <li>@Html.ActionLink("POCKET ATUAL", "DesenhosPorColecao", "Pedido", new { IDColecao = "POCKET", NMColecao = "POCKET" })</li>                        
+                        <li>
+                            <a href="@Url.Action("DesenhosPorColecao", "Pedido", new { IDColecao = "POCKET", NMColecao = "POCKET" })">POCKET ATUAL</a>
+                        </li>                        
                     </ul>
                     @using (Html.BeginForm("MenuColecoes", "Pedido", null, FormMethod.Post, new { @class = "navbar-form navbar-left", role = "search" }))
                     {
+                        @Html.AntiForgeryToken()
                         <div class="form-group">
                             @Html.TextBoxFor(x => x.Filtro, new { @class = "form-control", placeholder="PESQUISA COLEÇÃO" })
                         </div>

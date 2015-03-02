@@ -20,42 +20,46 @@ else
         <h5>DESENHO: @Model.Desenho | VARIANTE: @Model.Variante</h5>
     </div>
 
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-sm-6">
-                @if (Model.Artigos != null)
-                {
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-6">
+            @if (Model.Artigos != null)
+            {
                     <div class="list-group">
                         <a href="#" class="list-group-item active">ARTIGOS E TECNOLOGIAS DISPONÍVEIS</a>
                         @foreach (Dalutex.Models.ArtigoTecnologia item in Model.Artigos)
                         {
                             <a href="@Url.Content("~/Pedido/InserirNoCarrinho?"+
-                                                        "&desenho=" + Model.Desenho +
-                                                        "&variante=" + Model.Variante +
-                                                        "&artigo=" + item.Artigo +
-                                                        "&tecnologia=" + item.Tecnologia +
-                                                        "&IDColecao=0"+
-                                                        "&NMColecao="+
-                                                        "&pagina=1"+
-                                                        "&modo=I"+
-                                                        "&reduzido=-2"
-                                                        )"
+                                                                        "&desenho=" + Model.Desenho +
+                                                                        "&variante=" + Model.Variante +
+                                                                        "&artigo=" + item.Artigo +
+                                                                        "&tecnologia=" + item.Tecnologia +
+                                                                        "&IDColecao=0"+
+                                                                        "&NMColecao="+
+                                                                        "&pagina=1"+
+                                                                        "&modo=I"+
+                                                                        "&reduzido=-2"
+                                                                        )"
                                         class="list-group-item"><strong>@item.Artigo</strong>&nbsp;|&nbsp;@item.Tecnologia</a>
                         }
-                    </div>
-                }
-                else
-                {
-                    <h3>ESTE DESENHO NÃO POSSUI CARACTERÍSTICAS TÉCNICAS CADASTRADAS. POR FAVOR VERIFICAR COM DESENVOLVIMENTO</h3>
-                }
+                      </div>
+            }
+            else
+            {
+                <h5>Desenho <strong>@Model.Desenho</strong> não possui cadastro de</h5>
+                <h5><strong>CARACTERÍSTICAS TÉCNICAS ou TECNOLOGIA</strong></h5>
                 <br />
-                <a class="btn btn-default right" href="javascript:history.back()">VOLTAR</a>
+                <h5>Por verifiar com DESENVOLVIMENTO</h5>
+            }
+
+            <br />
+            <a class="btn btn-default right" href="javascript:history.back()">VOLTAR</a>
             </div>
             <div class="col-sm-6">
                 <a href="@Url.Action("Ampliacao", "Pedido", new { desenho = Model.Desenho, variante = Model.Variante })">
-                    <img src="@Url.Content(Model.Imagem)" class="img-rounded" style="max-width:100%"/>
+                    <img src="@Url.Content(Model.Imagem)" class="img-rounded" style="max-width:100%" />
                 </a>
+                </div>
             </div>
         </div>
-    </div>
 }

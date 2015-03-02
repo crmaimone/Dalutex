@@ -71,10 +71,12 @@ namespace Dalutex.Controllers
                 if( IDColecao == "ATUAL")
                 {
                     model.IDColecao = int.Parse(ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Atual).PARAMETRO1);
+                    model.NMColeao = ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Atual).PARAMETRO2;
                 }
                 else if( IDColecao == "POCKET")
                 {
                     model.IDColecao = int.Parse(ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Pocket).INT1.ToString());
+                    model.NMColeao = ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Pocket).PARAMETRO2;
                 }
                 else if(IDColecao == null)
                 {
@@ -227,7 +229,9 @@ namespace Dalutex.Controllers
                                 Tecnologia = grp.Key.TECNOLOGIA
                             };
 
-                    model.Artigos = query.OrderBy(x => x.Artigo).ThenBy(x => x.Tecnologia).ToList();
+                    string _sql = query.ToString();
+
+                    model.Artigos = query.OrderBy(x => x.Tecnologia).ThenBy(x => x.Artigo).ToList();
                 }
             }
 

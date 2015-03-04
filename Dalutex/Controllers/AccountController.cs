@@ -74,5 +74,14 @@ namespace Dalutex.Controllers
             Session.Abandon();
             return RedirectToAction("Index", "Home");
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ClearItens()
+        {
+            //FormsAuthentication.SignOut();
+            Session.Clear();
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

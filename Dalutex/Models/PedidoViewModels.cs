@@ -68,6 +68,7 @@ namespace Dalutex.Models
         public string Imagem { get; set; }
         public int IDColecao { get; set; }
         public List<ArtigoTecnologia> Artigos { get; set; }
+        public string TecnologiaAtual { get; set; } //VER COM CASSIANO SE É O MELHOR LUGAR PARA GUARDAR ESTA INFORMAÇÃO
     }
 
     public class InserirNoCarrinhoViewModel

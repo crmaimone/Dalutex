@@ -183,13 +183,15 @@ namespace Dalutex.Controllers
                     select vw;
 
                 lstQuery = query.ToList();
-            }
+            }            
 
             VW_CARACT_DESENHOS objPrimeiroCarac = lstQuery.FirstOrDefault();
             int? iIDTecnologia;
 
             if (objPrimeiroCarac != null)
             {
+                model.TecnologiaAtual = objPrimeiroCarac.TECNOLOGIA.Replace(" ","_");
+
                 iIDTecnologia = objPrimeiroCarac.ID_TECNOLOGIA;
 
                 List<int?> lstCaracteristicas = new List<int?>();
@@ -945,7 +947,7 @@ namespace Dalutex.Controllers
 
         public ActionResult ConfirmacaoPedido(string NumeroPedido)
         {
-            ViewBag.NumeroPedido = NumeroPedido;
+            ViewBag.NumeroPedido = NumeroPedido;            
             return View();
         }
 

@@ -220,4 +220,10 @@ namespace Dalutex.Models
 
         #endregion
     }
+
+    public class DesenhosViewModel
+    {
+        public string Filtro { get; set; }
+        public List<VW_DESENHOS> DESENHOS { get; set; }
+    }
 }

@@ -1,0 +1,36 @@
+﻿@using Dalutex.Models.DataModels
+
+@model Dalutex.Models.DesenhosViewModel
+
+@{
+    ViewBag.Title = "DESENHOS";
+}
+
+<div class="panel panel-default">
+    <h3>@ViewBag.Title</h3>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <section id="ResultadoDesenhos">
+                <div class="list-group" id="lstDesenhos">
+                    <a href="#" class="list-group-item active">Desenhos</a>
+                    @if (@Model != null && @Model.DESENHOS != null)
+                    {
+                        foreach (VW_DESENHOS item in Model.DESENHOS)
+                        {
+                            <a href="@Url.Action("Pedido", "Desenhos", new { IDClienteEntrega = item.DESENHO, IDTransportadora = item.VARIANTE})" class="list-group-item"><strong>@item.DESENHO</strong> | @item.VARIANTE</a>
+                        }
+                    }
+                    else
+                    {
+                        <p class="list-group-item"><em>UTILIZE O FILTRO PARA BUSCAR OS DESENHOS</em></p>
+                    }
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+

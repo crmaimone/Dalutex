@@ -1,14 +1,9 @@
 ﻿@model Dalutex.Models.MenuColecoesViewModel
 @using Dalutex.Models.DataModels
 
-@{    
-    ViewBag.Title = "MENU DE COLEÇÕES";
-}
+@{ViewBag.Title = "MENU DE COLEÇÕES";}
 
 <div class="panel panel-default"> <h3>@ViewBag.Title</h3> </div>
-
-@*<h1 class="viewTitle">@ViewBag.Title</h1>*@
-
 
 <div class="container-fluid">
     <div class="row">
@@ -27,7 +22,10 @@
                     <ul class="nav navbar-nav">
                         <li>
                             <a href="@Url.Action("DesenhosPorColecao", "Pedido", new { IDColecao = "POCKET", NMColecao = "POCKET" })">POCKET ATUAL</a>
-                        </li>                        
+                        </li>   
+                        <li>
+                            <a href="@Url.Action("DesenhosPorColecao", "Pedido", new { IDColecao = "DESENHOS", NMColecao = "DESENHOS" })">DESENHOS</a>
+                        </li>                     
                     </ul>
 
                     @using (Html.BeginForm("MenuColecoes", "Pedido", null, FormMethod.Post, new { @class = "navbar-form navbar-left", role = "search" }))

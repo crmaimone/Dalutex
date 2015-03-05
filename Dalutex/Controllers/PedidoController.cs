@@ -56,6 +56,29 @@ namespace Dalutex.Controllers
             return View();
         }
 
+
+
+        public ActionResult Desenhos(string DesenhoDe, string DesenhoAte)
+        {
+            DesenhosViewModel model = new DesenhosViewModel();
+
+            using (var ctx = new TIDalutexContext())
+            {
+                DesenhoDe = "A";
+                DesenhoAte = "A";
+
+                var query =
+                    from ds in ctx.VW_DESENHOS
+                    where
+                        (ds.DESENHO.StartsWith(DesenhoDe) || (ds.DESENHO.StartsWith(DesenhoAte)))
+                    select ds;
+
+                 query.OrderBy(x => x.DESENHO).ThenBy(x => x.VARIANTE).ToList();
+            }
+
+            return View(model);
+        }
+
         public ActionResult DesenhosPorColecao(string IDColecao, string NMColecao, string pagina)
         {
             DesenhosPorColecaoViewModel model = new DesenhosPorColecaoViewModel();
@@ -74,6 +97,11 @@ namespace Dalutex.Controllers
                     model.NMColeao = ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Atual).PARAMETRO2;
                 }
                 else if( IDColecao == "POCKET")
+                {
+                    model.IDColecao = int.Parse(ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Pocket).INT1.ToString());
+                    model.NMColeao = ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Pocket).PARAMETRO2;
+                }
+                else if (IDColecao == "DESENHOS")
                 {
                     model.IDColecao = int.Parse(ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Pocket).INT1.ToString());
                     model.NMColeao = ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Pocket).PARAMETRO2;

@@ -321,6 +321,7 @@
     <Content Include="Views\Home\Teste.cshtml" />
     <Content Include="Views\Pedido\LisosPorColecao.cshtml" />
     <Content Include="Views\Pedido\Desenhos.cshtml" />
+    <Content Include="Views\Pedido\PesquisaDesenhos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Controllers\Relatorios\PrePedido.rdlc" />

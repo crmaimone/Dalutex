@@ -22,10 +22,7 @@
                     <ul class="nav navbar-nav">
                         <li>
                             <a href="@Url.Action("DesenhosPorColecao", "Pedido", new { IDColecao = "POCKET", NMColecao = "POCKET" })">POCKET ATUAL</a>
-                        </li>   
-                        <li>
-                            <a href="@Url.Action("DesenhosPorColecao", "Pedido", new { IDColecao = "DESENHOS", NMColecao = "DESENHOS" })">DESENHOS</a>
-                        </li>                     
+                        </li>                                    
                     </ul>
 
                     @using (Html.BeginForm("MenuColecoes", "Pedido", null, FormMethod.Post, new { @class = "navbar-form navbar-left", role = "search" }))

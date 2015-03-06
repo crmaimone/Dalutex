@@ -1,4 +1,129 @@
-﻿@using Dalutex.Models.DataModels
+﻿@model Dalutex.Models.DesenhosViewModel
+
+@using Dalutex.Models;
+@using Dalutex.Models.DataModels;
+
+@{
+    ViewBag.Title = "Desenhos: ";
+}
+
+<div class="panel panel-default"><h3>@ViewBag.Title</h3></div>
+
+<div class="container-fluid">
+    <ul class="nav nav-tabs">
+        <li role="presentation" class="active"><a href="#">ESTAMPADOS</a></li>
+        
+        @*<li role="presentation">
+            <a href="@Url.Content(@"LisosPorColecao?" +
+                    "&IDColecao=" + @Model.IDColecao +
+                    "&NMColecao=" + @Model.NMColeao +
+                    "&pagina=" + @Model.Pagina)">LISOS
+            </a>
+        </li>*@
+    </ul>
+    <div class="row">
+        @if (Model.DESENHOS != null)
+        {
+            foreach (VW_DESENHOS item in Model.DESENHOS)
+            {
+                <div class="col-sm-4 col-md-2">
+
+                    @Html.Partial(
+                        "_Thumb",
+                        new Dalutex.Models.ThumbViewModel()
+                        {
+                            Desenho = item.DESENHO,
+                            Variante = item.VARIANTE,
+                            //UrlImagens = Model.UrlImagens,
+                            UrlImagens = "",
+                            Reduzido = 0,
+                            Cor = null,
+                            RGB = null,
+                            //IDColecao = Model.IDColecao,
+                            //NMColecao = Model.NMColeao,
+                            //Pagina = Model.Pagina
+                            IDColecao = -1,
+                            NMColecao = "Desenhos",
+                            Pagina = 1
+                        })
+
+                </div>
+            }
+        }
+    </div>
+    @*<div class="row">
+        <nav>
+            <ul class="pager">
+                @if (Model.DESENHOS != null)
+                {
+                    if (Model.Pagina > 1)
+                    {
+                        <li class="previous"><a href="@Url.Action("DesenhosPorColecao", "Pedido", new { IDColecao = Model.IDColecao, pagina = Model.Pagina - 1 })"><span aria-hidden="true">&larr;</span>P&aacute;gina Anterior</a></li>
+                    }
+                    <li class="next"><a href="@Url.Action("DesenhosPorColecao", "Pedido", new { IDColecao = Model.IDColecao, pagina = Model.Pagina + 1 })">Pr&oacute;xima P&aacute;gina <span aria-hidden="true">&rarr;</span></a></li>
+                }
+            </ul>
+        </nav>
+    </div>*@
+    <hr>
+    <a class="btn btn-default right" href="javascript:history.back()">VOLTAR</a>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/equalheight")
+    <script>
+        $(document).ready(function () {
+            //API
+            scriptWrapper = (function () {
+
+                //API Attributes
+
+                //API Methods
+                loadImages = function () {
+                    $(".img-thumbnail").each(function () {
+                        var $img = $(this);
+                        var data = $img.data("assigned-id").split("_");
+                        var desenho = data[0];
+                        var variante = data[1];
+
+                        $.ajax({
+                            type: 'POST',
+                            url: '@Url.Action("ObterDesenho", "Pedido")',
+                            data: 'desenho=' + desenho + '&variante=' + variante,
+                            async: false,
+                            success: function (Image) {
+                                if (Image != '') {
+                                    $img.attr('src', 'data:image/jpg;base64,' + Image.Image);
+                                }
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) {
+                                $img.attr('src', 'data:image/jpg;base64,');
+                            }
+                        })
+                    });
+                    $('.equal-height').equalHeight();
+                }
+
+                // public API
+                return {
+                    loadImages: loadImages
+                };
+            })();
+
+            //Init
+            (function Init() {
+                $('.equal-height').equalHeight();
+                //scriptWrapper.loadImages();
+            })();
+        });
+    </script>
+}
+
+
+
+@* teste oda ------------------------------------------------------------------------------
+    
+    @using Dalutex.Models.DataModels
 
 @model Dalutex.Models.DesenhosViewModel
 
@@ -31,6 +156,6 @@
             </section>
         </div>
     </div>
-</div>
+</div>*@
 
 

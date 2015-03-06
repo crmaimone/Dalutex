@@ -37,6 +37,8 @@ namespace Dalutex.Models
         public int TotalPaginas { get; set; }
         public List<DesenhoVariante> Galeria { get; set; }
         public string UrlImagens { get; set; }
+        public string Desenho_De { get; set; }
+        public string Desenho_Ate { get; set; }
     }
 
     public class LisosPorColecaoViewModel
@@ -225,5 +227,11 @@ namespace Dalutex.Models
     {
         public string Filtro { get; set; }
         public List<VW_DESENHOS> DESENHOS { get; set; }
+    }
+
+    public class PesquisaDesenhosViewModel
+    {
+        public string DesenhoInicio { get; set; }
+        public string DesenhoFim { get; set; }
     }
 }

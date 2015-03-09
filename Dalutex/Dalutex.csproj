@@ -321,13 +321,13 @@
     <Content Include="Views\Pedido\LisosPorColecao.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Controllers\Relatorios\PrePedido.rdlc" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Controllers\Relatorios\PrePedido.rdlc" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

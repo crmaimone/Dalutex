@@ -169,7 +169,6 @@
     <Compile Include="Models\DataModels\VW_ARTIGOS_DISPONIVEIS.cs" />
     <Compile Include="Models\DataModels\VW_CLIENTE_TRANSP.cs" />
     <Compile Include="Models\DataModels\VW_COLECAO.cs" />
-    <Compile Include="Models\DataModels\VW_DESENHOS.cs" />
     <Compile Include="Models\DataModels\VW_DESENHOS_POR_COLECAO.cs" />
     <Compile Include="Models\DataModels\VW_CARACT_DESENHOS.cs" />
     <Compile Include="Models\DataModels\COLECOES.cs" />
@@ -298,7 +297,7 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Home\SecurePage.cshtml" />
-    <Content Include="Views\Pedido\DesenhosPorColecao.cshtml" />
+    <Content Include="Views\Pedido\Desenhos.cshtml" />
     <Content Include="Views\Home\Busca.cshtml" />
     <Content Include="Views\Home\Mapa.cshtml" />
     <Content Include="Views\Pedido\ArtigosDisponiveis.cshtml" />
@@ -319,9 +318,7 @@
     <Content Include="Views\Shared\_ItemCarrinho.cshtml" />
     <Content Include="Views\Base\ErrorMessage.cshtml" />
     <Content Include="Views\Home\Teste.cshtml" />
-    <Content Include="Views\Pedido\LisosPorColecao.cshtml" />
-    <Content Include="Views\Pedido\Desenhos.cshtml" />
-    <Content Include="Views\Pedido\PesquisaDesenhos.cshtml" />
+    <Content Include="Views\Pedido\Lisos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

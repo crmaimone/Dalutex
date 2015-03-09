@@ -45,18 +45,9 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<VW_TROCA_TEC> VW_TROCA_TEC { get; set; }
         public virtual DbSet<VW_LISOS_POR_COLECAO> VW_LISOS_POR_COLECAO { get; set; }
         public virtual DbSet<VW_IMPRESSAO_WEB> VW_IMPRESSAO_WEB { get; set; }
-        public virtual DbSet<VW_DESENHOS> VW_DESENHOS { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<VW_DESENHOS>()
-                .Property(e => e.DESENHO)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<VW_DESENHOS>()
-                .Property(e => e.VARIANTE)
-                .IsUnicode(false);
-
             modelBuilder.Entity<VW_IMPRESSAO_WEB>()
                 .Property(e => e.VALOR_TOTAL_MT)
                 .HasPrecision(38, 0);

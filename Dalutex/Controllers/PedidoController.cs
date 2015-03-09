@@ -56,35 +56,9 @@ namespace Dalutex.Controllers
             return View();
         }
 
-        public ActionResult PesquisaDesenhos()
-        {            
-            return View();
-        }
-        
-        public ActionResult Desenhos(string DesenhoDe, string DesenhoAte)
+        public ActionResult Desenhos(string pIDColecao, string NMColecao, string pagina)
         {
             DesenhosViewModel model = new DesenhosViewModel();
-
-            using (var ctx = new TIDalutexContext())
-            {
-                DesenhoDe = "A1";
-                DesenhoAte = "A2";
-
-                var query =
-                    from ds in ctx.VW_DESENHOS
-                    where
-                        (ds.DESENHO.StartsWith(DesenhoDe) || (ds.DESENHO.StartsWith(DesenhoAte)))
-                    select ds;
-
-                 model.DESENHOS = query.OrderBy(x => x.DESENHO).ThenBy(x => x.VARIANTE).ToList();
-            }
-
-            return View(model);
-        }
-
-        public ActionResult DesenhosPorColecao(string IDColecao, string NMColecao, string pagina, string DesenhoDe, string DesenhoAte)
-        {
-            DesenhosPorColecaoViewModel model = new DesenhosPorColecaoViewModel();
             model.NMColeao = NMColecao;
 
             if (string.IsNullOrWhiteSpace(pagina))
@@ -94,81 +68,79 @@ namespace Dalutex.Controllers
 
             using (var ctx = new TIDalutexContext())
             {
-                if( IDColecao == "ATUAL")
+                if (pIDColecao == "ATUAL")
                 {
                     model.IDColecao = int.Parse(ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Atual).PARAMETRO1);
                     model.NMColeao = ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Atual).PARAMETRO2;
                 }
-                else if( IDColecao == "POCKET")
+                else if (pIDColecao == "POCKET")
                 {
                     model.IDColecao = int.Parse(ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Pocket).INT1.ToString());
                     model.NMColeao = ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Pocket).PARAMETRO2;
                 }
-                else if (IDColecao == "DESENHOS")
+                else if (pIDColecao == "DESENHOS")
                 {
                     model.IDColecao = -1;
-                    model.NMColeao = "Desenhos";
                 }
-                else if(IDColecao == null)
+                else if (pIDColecao == null)
                 {
                     ModelState.AddModelError("", "Coleção não informada.");
                     return View(model);
                 }
                 else
                 {
-                    model.IDColecao = int.Parse(IDColecao);
+                    model.IDColecao = int.Parse(pIDColecao);
                 }
+            }
 
-                if (model.IDColecao == -1)
-                {
-                    var _query =
-                        from dc in ctx.VW_DESENHOS_POR_COLECAO
-                        where
-                            (dc.DESENHO.StartsWith(DesenhoDe) || (dc.DESENHO.StartsWith(DesenhoAte)))
-                        group dc by
-                            new
-                            {
-                                dc.DESENHO,
-                                dc.VARIANTE
-                            }
-                            into dv
-                            select new DesenhoVariante
-                            {
-                                Desenho = dv.Key.DESENHO,
-                                Variante = dv.Key.VARIANTE
-                            };
-                    model.Galeria = _query.OrderBy(x => x.Desenho).ThenBy(x => x.Variante).Skip((model.Pagina - 1) * 24).Take(24).ToList();
-                }
-                else
-                {
-                    var query =
-                        from dc in ctx.VW_DESENHOS_POR_COLECAO
-                        where
-                            (dc.COLECAO == model.IDColecao)
-                        group dc by
-                            new
-                            {
-                                dc.DESENHO,
-                                dc.VARIANTE
-                            }
-                            into dv
-                            select new DesenhoVariante
-                            {
-                                Desenho = dv.Key.DESENHO,
-                                Variante = dv.Key.VARIANTE
-                            };
-
-                    model.Galeria = query.OrderBy(x => x.Desenho).ThenBy(x => x.Variante).Skip((model.Pagina - 1) * 24).Take(24).ToList();
-                }                
+            if (model.IDColecao != -1)
+            {
+                ObterDesenhos(model);              
             }
 
             model.UrlImagens = ConfigurationManager.AppSettings["PASTA_DESENHOS"];
             return View(model);
         }
 
-        public ActionResult LisosPorColecao(string IDColecao, string NMColecao, string pagina)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Desenhos(DesenhosViewModel model)
         {
-            LisosPorColecaoViewModel model = new LisosPorColecaoViewModel();
+            this.ObterDesenhos(model);
+            model.UrlImagens = ConfigurationManager.AppSettings["PASTA_DESENHOS"];
+
+            return View(model);
+        }
+
+        private void ObterDesenhos(DesenhosViewModel model)
+        {
+            using (var ctx = new TIDalutexContext())
+            {
+                var _query =
+                    from dc in ctx.VW_DESENHOS_POR_COLECAO
+                    where
+                        ((model.IDColecao == -1) || (dc.COLECAO == model.IDColecao))
+                        && (dc.DESENHO.StartsWith(model.FiltroDesenho.ToUpper()) || model.FiltroDesenho == null) 
+                    group dc by
+                        new
+                        {
+                            dc.DESENHO,
+                            dc.VARIANTE
+                        }
+                        into dv
+                        select new DesenhoVariante
+                        {
+                            Desenho = dv.Key.DESENHO,
+                            Variante = dv.Key.VARIANTE
+                        };
+
+                model.Galeria = _query.OrderBy(x => x.Desenho).ThenBy(x => x.Variante).Skip((model.Pagina - 1) * 24).Take(24).ToList();
+            }
+        }
+
+        public ActionResult Lisos(string IDColecao, string NMColecao, string pagina)
+        {
+            LisosViewModel model = new LisosViewModel();
             model.NMColeao = NMColecao;
 
             if (string.IsNullOrWhiteSpace(pagina))
@@ -546,7 +518,7 @@ namespace Dalutex.Controllers
                         base.Session_Carrinho.Itens.Add(model);
 
                         if(!string.IsNullOrWhiteSpace(model.Cor))
-                            return RedirectToAction("LisosPorColecao", "Pedido", new { IDColecao = model.IDColecao, NMColecao = model.NMColecao, pagina = model.Pagina});
+                            return RedirectToAction("Lisos", "Pedido", new { IDColecao = model.IDColecao, NMColecao = model.NMColecao, pagina = model.Pagina});
                         else
                             return RedirectToAction("ArtigosDisponiveis", "Pedido", new { desenho = model.Desenho, variante = model.Variante, });
                     }

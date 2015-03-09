@@ -116,7 +116,21 @@ h3 {
     font-weight: bold; 
     text-shadow: 1px 0px 3px #333;  
     color:rgb(31, 30, 30);
-    padding:  0px 0px 0px 5px;
+    padding:  0px 0px 0px 5px;          
+}
+
+.panel#pnlogin {    
+    margin-top: 5px;
+}
+
+.panel > .panel-default{    
+    margin-top: 5px;
+    background: red;
+}
+
+.panel-default > .panel-default {
+    background: red; 
+    color: #fff; 
 }
 
 h5 {

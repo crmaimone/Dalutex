@@ -37,6 +37,8 @@ namespace Dalutex.Models
         public int TotalPaginas { get; set; }
         public List<DesenhoVariante> Galeria { get; set; }
         public string UrlImagens { get; set; }
+        public string Desenho_De { get; set; }
+        public string Desenho_Ate { get; set; }
     }
 
     public class LisosPorColecaoViewModel
@@ -68,6 +70,7 @@ namespace Dalutex.Models
         public string Imagem { get; set; }
         public int IDColecao { get; set; }
         public List<ArtigoTecnologia> Artigos { get; set; }
+        public string TecnologiaAtual { get; set; } //VER COM CASSIANO SE É O MELHOR LUGAR PARA GUARDAR ESTA INFORMAÇÃO
     }
 
     public class InserirNoCarrinhoViewModel
@@ -218,5 +221,17 @@ namespace Dalutex.Models
         public List<InserirNoCarrinhoViewModel> Itens { get; set; }
 
         #endregion
+    }
+
+    public class DesenhosViewModel
+    {
+        public string Filtro { get; set; }
+        public List<VW_DESENHOS> DESENHOS { get; set; }
+    }
+
+    public class PesquisaDesenhosViewModel
+    {
+        public string DesenhoInicio { get; set; }
+        public string DesenhoFim { get; set; }
     }
 }

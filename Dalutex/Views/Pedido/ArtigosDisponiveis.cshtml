@@ -20,42 +20,93 @@ else
         <h5>DESENHO: @Model.Desenho | VARIANTE: @Model.Variante</h5>
     </div>
 
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-sm-6">
-                @if (Model.Artigos != null)
-                {
-                    <div class="list-group">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-6">
+            @if (Model.Artigos != null)
+            {   
+                    string _Key = "";
+                
+                    @*<div class="list-group">
                         <a href="#" class="list-group-item active">ARTIGOS E TECNOLOGIAS DISPONÍVEIS</a>
                         @foreach (Dalutex.Models.ArtigoTecnologia item in Model.Artigos)
                         {
                             <a href="@Url.Content("~/Pedido/InserirNoCarrinho?"+
-                                                        "&desenho=" + Model.Desenho +
-                                                        "&variante=" + Model.Variante +
-                                                        "&artigo=" + item.Artigo +
-                                                        "&tecnologia=" + item.Tecnologia +
-                                                        "&IDColecao=0"+
-                                                        "&NMColecao="+
-                                                        "&pagina=1"+
-                                                        "&modo=I"+
-                                                        "&reduzido=-2"
-                                                        )"
+                                                                        "&desenho=" + Model.Desenho +
+                                                                        "&variante=" + Model.Variante +
+                                                                        "&artigo=" + item.Artigo +
+                                                                        "&tecnologia=" + item.Tecnologia +
+                                                                        "&IDColecao=0"+
+                                                                        "&NMColecao="+
+                                                                        "&pagina=1"+
+                                                                        "&modo=I"+
+                                                                        "&reduzido=-2"
+                                                                        )"
                                         class="list-group-item"><strong>@item.Artigo</strong>&nbsp;|&nbsp;@item.Tecnologia</a>
                         }
+                      </div>*@                                
+
+                <hr>
+                
+                <div id="MainMenu">
+                    <div class="list-group panel">                       
+                                                
+                        @foreach (var group in Model.Artigos.GroupBy(item => item.Tecnologia))
+                        { 
+                            _Key = Html.Encode(group.Key).ToString().Replace(" ","_"); 
+                                        
+                            if (Model.TecnologiaAtual == _Key)                                                                 
+                            {     
+                                <a href="#@_Key" class="list-group-item list-group-item-success" data-toggle="collapse" 
+                                   data-parent="#MainMenu"><i class="glyphicon glyphicon-arrow-down"></i>
+                                   <strong>&nbsp;@_Key &nbsp;(Tecnologia Atual)</strong>                                     
+                                </a>
+                            }
+                            else 
+                            { 
+                                <a href="#@_Key" class="list-group-item list-group-item-success" data-toggle="collapse" 
+                                   data-parent="#MainMenu"><i class="glyphicon glyphicon-arrow-down"></i>
+                                    &nbsp;Tecnologia Disponível Para Troca:&nbsp;@_Key
+                                </a>
+                            }
+
+                            <div class="collapse" id="@_Key">
+                            @foreach (var item in group)
+                            {
+                                <a href="@Url.Content("~/Pedido/InserirNoCarrinho?"+
+                                                                        "&desenho=" + Model.Desenho +
+                                                                        "&variante=" + Model.Variante +
+                                                                        "&artigo=" + item.Artigo +
+                                                                        "&tecnologia=" + item.Tecnologia +
+                                                                        "&IDColecao=0"+
+                                                                        "&NMColecao="+
+                                                                        "&pagina=1"+
+                                                                        "&modo=I"+
+                                                                        "&reduzido=-2"
+                                                                        )" 
+                                   class="list-group-item"><i class="glyphicon glyphicon-ok"></i> &nbsp; @item.Artigo</a> 
+                            }
+                            </div>
+                        }                                                           
                     </div>
-                }
-                else
-                {
-                    <h3>ESTE DESENHO NÃO POSSUI CARACTERÍSTICAS TÉCNICAS CADASTRADAS. POR FAVOR VERIFICAR COM DESENVOLVIMENTO</h3>
-                }
+                </div>                
+            }
+            else
+            {
+                <h5>Desenho <strong>@Model.Desenho</strong> não possui cadastro de</h5>
+                <h5><strong>CARACTERÍSTICAS TÉCNICAS ou TECNOLOGIA</strong></h5>
                 <br />
-                <a class="btn btn-default right" href="javascript:history.back()">VOLTAR</a>
+                <h5>Por verifiar com DESENVOLVIMENTO</h5>
+            }
+
+            <br />
+            <a class="btn btn-default right" href="javascript:history.back()">VOLTAR</a>
             </div>
             <div class="col-sm-6">
                 <a href="@Url.Action("Ampliacao", "Pedido", new { desenho = Model.Desenho, variante = Model.Variante })">
-                    <img src="@Url.Content(Model.Imagem)" class="img-rounded" style="max-width:100%"/>
+                    <img src="@Url.Content(Model.Imagem)" class="img-rounded" style="max-width:100%" />
                 </a>
+                </div>
             </div>
         </div>
-    </div>
 }

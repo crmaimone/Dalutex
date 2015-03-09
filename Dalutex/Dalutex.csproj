@@ -155,6 +155,7 @@
     <Compile Include="Models\DataModels\COML_TIPOSPEDIDOS.cs" />
     <Compile Include="Models\DataModels\CRIACAO_REDUZIDOS.cs" />
     <Compile Include="Models\DataModels\DISPONIBILIDADE_MALHA.cs" />
+    <Compile Include="Models\DataModels\Model1.cs" />
     <Compile Include="Models\DataModels\PRE_PEDIDO_ATEND.cs" />
     <Compile Include="Models\DataModels\PRE_PEDIDO_COND_PAG.cs" />
     <Compile Include="Models\DataModels\PRE_PEDIDO_CRITICA.cs" />
@@ -168,6 +169,7 @@
     <Compile Include="Models\DataModels\VW_ARTIGOS_DISPONIVEIS.cs" />
     <Compile Include="Models\DataModels\VW_CLIENTE_TRANSP.cs" />
     <Compile Include="Models\DataModels\VW_COLECAO.cs" />
+    <Compile Include="Models\DataModels\VW_DESENHOS.cs" />
     <Compile Include="Models\DataModels\VW_DESENHOS_POR_COLECAO.cs" />
     <Compile Include="Models\DataModels\VW_CARACT_DESENHOS.cs" />
     <Compile Include="Models\DataModels\COLECOES.cs" />
@@ -235,7 +237,6 @@
     <Content Include="Content\images\header-pattern-10.jpg" />
     <Content Include="Content\images\header-pattern-11.jpg" />
     <Content Include="Content\images\header-pattern-12.jpg" />
-    <Content Include="Content\images\header-pattern-13.jpg" />
     <Content Include="Content\images\UnderConstruction.png" />
     <Content Include="Content\templates\TemplatePrePedido.htm" />
     <Content Include="favicon.ico" />
@@ -319,6 +320,8 @@
     <Content Include="Views\Base\ErrorMessage.cshtml" />
     <Content Include="Views\Home\Teste.cshtml" />
     <Content Include="Views\Pedido\LisosPorColecao.cshtml" />
+    <Content Include="Views\Pedido\Desenhos.cshtml" />
+    <Content Include="Views\Pedido\PesquisaDesenhos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

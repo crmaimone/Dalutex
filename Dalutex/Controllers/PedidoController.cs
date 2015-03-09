@@ -56,7 +56,33 @@ namespace Dalutex.Controllers
             return View();
         }
 
-        public ActionResult DesenhosPorColecao(string IDColecao, string NMColecao, string pagina)
+        public ActionResult PesquisaDesenhos()
+        {            
+            return View();
+        }
+        
+        public ActionResult Desenhos(string DesenhoDe, string DesenhoAte)
+        {
+            DesenhosViewModel model = new DesenhosViewModel();
+
+            using (var ctx = new TIDalutexContext())
+            {
+                DesenhoDe = "A1";
+                DesenhoAte = "A2";
+
+                var query =
+                    from ds in ctx.VW_DESENHOS
+                    where
+                        (ds.DESENHO.StartsWith(DesenhoDe) || (ds.DESENHO.StartsWith(DesenhoAte)))
+                    select ds;
+
+                 model.DESENHOS = query.OrderBy(x => x.DESENHO).ThenBy(x => x.VARIANTE).ToList();
+            }
+
+            return View(model);
+        }
+
+        public ActionResult DesenhosPorColecao(string IDColecao, string NMColecao, string pagina, string DesenhoDe, string DesenhoAte)
         {
             DesenhosPorColecaoViewModel model = new DesenhosPorColecaoViewModel();
             model.NMColeao = NMColecao;
@@ -71,10 +97,17 @@ namespace Dalutex.Controllers
                 if( IDColecao == "ATUAL")
                 {
                     model.IDColecao = int.Parse(ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Atual).PARAMETRO1);
+                    model.NMColeao = ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Atual).PARAMETRO2;
                 }
                 else if( IDColecao == "POCKET")
                 {
                     model.IDColecao = int.Parse(ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Pocket).INT1.ToString());
+                    model.NMColeao = ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Pocket).PARAMETRO2;
+                }
+                else if (IDColecao == "DESENHOS")
+                {
+                    model.IDColecao = -1;
+                    model.NMColeao = "Desenhos";
                 }
                 else if(IDColecao == null)
                 {
@@ -86,24 +119,47 @@ namespace Dalutex.Controllers
                     model.IDColecao = int.Parse(IDColecao);
                 }
 
-                var query =
-                    from dc in ctx.VW_DESENHOS_POR_COLECAO
-                    where
-                        (dc.COLECAO == model.IDColecao)
-                    group dc by
-                        new
-                        {
-                            dc.DESENHO,
-                            dc.VARIANTE
-                        }
-                        into dv
-                        select new DesenhoVariante
-                        {
-                            Desenho = dv.Key.DESENHO,
-                            Variante = dv.Key.VARIANTE
-                        };
+                if (model.IDColecao == -1)
+                {
+                    var _query =
+                        from dc in ctx.VW_DESENHOS_POR_COLECAO
+                        where
+                            (dc.DESENHO.StartsWith(DesenhoDe) || (dc.DESENHO.StartsWith(DesenhoAte)))
+                        group dc by
+                            new
+                            {
+                                dc.DESENHO,
+                                dc.VARIANTE
+                            }
+                            into dv
+                            select new DesenhoVariante
+                            {
+                                Desenho = dv.Key.DESENHO,
+                                Variante = dv.Key.VARIANTE
+                            };
+                    model.Galeria = _query.OrderBy(x => x.Desenho).ThenBy(x => x.Variante).Skip((model.Pagina - 1) * 24).Take(24).ToList();
+                }
+                else
+                {
+                    var query =
+                        from dc in ctx.VW_DESENHOS_POR_COLECAO
+                        where
+                            (dc.COLECAO == model.IDColecao)
+                        group dc by
+                            new
+                            {
+                                dc.DESENHO,
+                                dc.VARIANTE
+                            }
+                            into dv
+                            select new DesenhoVariante
+                            {
+                                Desenho = dv.Key.DESENHO,
+                                Variante = dv.Key.VARIANTE
+                            };
 
-                model.Galeria = query.OrderBy(x => x.Desenho).ThenBy(x => x.Variante).Skip((model.Pagina - 1) * 24).Take(24).ToList();
+                    model.Galeria = query.OrderBy(x => x.Desenho).ThenBy(x => x.Variante).Skip((model.Pagina - 1) * 24).Take(24).ToList();
+                }                
             }
 
             model.UrlImagens = ConfigurationManager.AppSettings["PASTA_DESENHOS"];
@@ -181,13 +237,15 @@ namespace Dalutex.Controllers
                     select vw;
 
                 lstQuery = query.ToList();
-            }
+            }            
 
             VW_CARACT_DESENHOS objPrimeiroCarac = lstQuery.FirstOrDefault();
             int? iIDTecnologia;
 
             if (objPrimeiroCarac != null)
             {
+                model.TecnologiaAtual = objPrimeiroCarac.TECNOLOGIA.Replace(" ","_");
+
                 iIDTecnologia = objPrimeiroCarac.ID_TECNOLOGIA;
 
                 List<int?> lstCaracteristicas = new List<int?>();
@@ -209,11 +267,19 @@ namespace Dalutex.Controllers
                         lstTecnologias.Add(item.ID_TEC_NOVA);
                     }
 
+                    //ESTA É CONDIÇÃO CORRETA PARA FILTRAR --------------------------------------------------------
+                    //and (r.id_tecnologia is null or tn.id_tec <> 3)--tec do desenho por parametro
+                    //and (r.id_carac_tec is null or r.id_carac_tec not in (1))--carac_tec do desenho por parametro
+                    //and (x.ID_TEC  in (3)) -- tec na lista de tec
+
                     var query =
                         from ar in ctx.VW_ARTIGOS_DISPONIVEIS
                         where
-                            (lstTecnologias.Contains(ar.ID_TECNOLOGIA))
-                            && (ar.ID_CARAC_TEC.Equals(null) || !lstCaracteristicas.Contains(ar.ID_CARAC_TEC))
+                            (ar.ID_TECNOLOGIA.Equals(null) || ar.ID_TEC != iIDTecnologia)  
+                            &&
+                            (ar.ID_CARAC_TEC.Equals(null) || !lstCaracteristicas.Contains(ar.ID_CARAC_TEC))                            
+                            &&
+                            (lstTecnologias.Contains(ar.ID_TEC))                            
                         group ar by
                             new
                             {
@@ -227,7 +293,29 @@ namespace Dalutex.Controllers
                                 Tecnologia = grp.Key.TECNOLOGIA
                             };
 
-                    model.Artigos = query.OrderBy(x => x.Artigo).ThenBy(x => x.Tecnologia).ToList();
+
+                    //BCK----- tem erro na validação das restrições ------------------------------------------------
+                    //var query =
+                    //    from ar in ctx.VW_ARTIGOS_DISPONIVEIS
+                    //    where
+                    //        (lstTecnologias.Contains(ar.ID_TECNOLOGIA))
+                    //        && (ar.ID_CARAC_TEC.Equals(null) || !lstCaracteristicas.Contains(ar.ID_CARAC_TEC))
+                    //    group ar by
+                    //        new
+                    //        {
+                    //            ar.ARTIGO,
+                    //            ar.TECNOLOGIA,
+                    //        }
+                    //        into grp
+                    //        select new ArtigoTecnologia
+                    //        {
+                    //            Artigo = grp.Key.ARTIGO,
+                    //            Tecnologia = grp.Key.TECNOLOGIA
+                    //        };
+
+                    string _sql = query.ToString();//apenas para pegar o SQL que esta sendo passado
+
+                    model.Artigos = query.OrderBy(x => x.Tecnologia).ThenBy(x => x.Artigo).ToList();
                 }
             }
 
@@ -941,7 +1029,7 @@ namespace Dalutex.Controllers
 
         public ActionResult ConfirmacaoPedido(string NumeroPedido)
         {
-            ViewBag.NumeroPedido = NumeroPedido;
+            ViewBag.NumeroPedido = NumeroPedido;            
             return View();
         }
 

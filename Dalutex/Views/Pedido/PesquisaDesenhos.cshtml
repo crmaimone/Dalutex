@@ -1,0 +1,59 @@
+﻿@model Dalutex.Models.PesquisaDesenhosViewModel
+@using Dalutex.Models.DataModels
+
+@{ViewBag.Title = "Pesquisa de Desenhos";}
+
+<div class="panel panel-default"> <h3>@ViewBag.Title</h3> </div>
+
+<div class="panel panel-default">
+    <div>
+        <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">Desenhos</span>
+            <input type="text" class="form-control" id="DesIn" name="txtDesIn" placeholder="De Desenho" aria-describedby="basic-addon1">
+            <input type="text" class="form-control" id="DesAt" name="txtDesAt" placeholder="Até Desenho" aria-describedby="basic-addon1">
+
+            <a class="btn btn-default btn-group-sm" href="@Url.Action("DesenhosPorColecao", "Pedido",
+                        new { IDColecao = "DESENHOS", NMColecao = "DESENHOS", DesenhoDe = "A10", DesenhoAte = "A15" })">
+                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                Desenhos
+            </a>
+        </div>
+    </div>   
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="@Url.Action("DesenhosPorColecao", "Pedido",
+                        new { IDColecao = "DESENHOS", NMColecao = "DESENHOS", DesenhoDe = "A10", DesenhoAte = "A15" })">Desenhos</a>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+                    @using (Html.BeginForm("PesquisaDesenhos", "Pedido", null, FormMethod.Post, new { @class = "navbar-form navbar-left", role = "search" } ))
+                    {                     
+                        @Html.AntiForgeryToken()                        
+                                                                    
+                        <div class="form-group">
+                            @Html.TextBoxFor(x => x.DesenhoInicio, new { @class = "form-control", placeholder = "De Desenho" })
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBoxFor(x => x.DesenhoFim, new { @class = "form-control", placeholder = "Até Desenho" })
+                        </div>
+                                               
+                        <button type="submit" class="btn btn-default btn-group-sm"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Carregar</button>                                                                     
+                    }
+                </div>
+            </div>
+        </nav>
+    </div>   
+</div>
+
+

@@ -29,7 +29,12 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">NEGÓCIOS<span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-                                <li>@Html.ActionLink("COLEÇÃO", "MenuColecoes", "Pedido")</li>
+                                <li>@Html.ActionLink("COLEÇÕES", "MenuColecoes", "Pedido")</li>
+                                <li class="divider"></li>
+                                <li>@Html.ActionLink("DESENHOS", "PesquisaDesenhos", "Pedido")</li>
+                                @*<li>@Html.ActionLink("DESENHOS", "MenuColecoes", "Pedido")</li>*@
+                                <li>@Html.ActionLink("LISOS", "MenuColecoes", "Pedido")</li>
+                                <li class="divider"></li>
                                 <li>@Html.ActionLink("EXCLUSIVOS", "EmConstrucao", "Pedido")</li>
                                 <li>@Html.ActionLink("PRONTA ENTREGA", "EmConstrucao", "Pedido")</li>
                                 <li>@Html.ActionLink("RECOLORAÇÃO/ACERVO", "EmConstrucao", "Pedido")</li>

@@ -29,9 +29,9 @@
                 <button type="submit" class="btn btn-default btn-group-sm"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Pesquisar</button>
             </div>
 
-            @Html.HiddenFor(x => x.IDColecao)
-            @Html.HiddenFor(x => x.NMColecao)
-            @Html.HiddenFor(x => x.Pagina)
+            <input type="hidden" name="IDColecao" value="@Model.IDColecao" />
+            <input type="hidden" name="NMColecao" value="@Model.NMColecao" />
+            <input type="hidden" name="Pagina" value="@Model.Pagina" />
         </div>
        }
     </div>

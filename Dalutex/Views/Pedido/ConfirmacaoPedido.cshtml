@@ -7,16 +7,16 @@
 </div>
 
 <hr/>
-<h5>Pedido Concluído com Sucesso!</h5> 
-<h5>Uma Cópia do Pedido Foi Encaminhada em seu e-Mail.</h5>
+<h5>Pedido concluído com sucesso!</h5> 
+<h5>Uma cópia do pedido foi encaminhada em seu e-mail.</h5>
 <hr />
-<h2><strong>Pedido Número: @ViewBag.NumeroPedido </strong></h2>
+<h2><strong>Pedido número: @ViewBag.NumeroPedido </strong></h2>
 <hr />
 <br />
 
 
 @Html.ActionLink("VOLTAR AO INÍCIO", "Index", "Home", null, new { @class = "btn btn-default right" })
-@Html.ActionLink("IMPRIMIR PEDIDO", "EspelhoPedido", "Pedido", new { NumeroPedido = @ViewBag.NumeroPedido }, new { @class = "btn btn-default right" })
+@Html.ActionLink("IMPRIMIR PEDIDO", "EspelhoPedido", "Pedido", new { numeropedido = @ViewBag.NumeroPedido }, new { @class = "btn btn-default right" })
 
 
 

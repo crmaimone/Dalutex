@@ -16,12 +16,12 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                   <a class="navbar-brand" href="@Url.Action("Desenhos", "Pedido", new { pIDColecao = "ATUAL", NMColecao = "ATUAL" })">COLEÇÃO ATUAL</a>
+                   <a class="navbar-brand" href="@Url.Action("Desenhos", "Pedido", new { idcolecao = "ATUAL", nmcolecao = "ATUAL" })">COLEÇÃO ATUAL</a>
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
                         <li>
-                            <a href="@Url.Action("Desenhos", "Pedido", new { pIDColecao = "POCKET", NMColecao = "POCKET" })">POCKET ATUAL</a>
+                            <a href="@Url.Action("Desenhos", "Pedido", new { idcolecao = "POCKET", nmcolecao = "POCKET" })">POCKET ATUAL</a>
                         </li>                                    
                     </ul>
 
@@ -46,7 +46,7 @@
                     {
                         foreach (VW_COLECAO item in Model.Colecoes)
                         {
-                            <a href="@Url.Action("Desenhos", "Pedido", new { pIDColecao = item.ID_COLECAO, NMColecao = item.NOME_COLECAO })" class="list-group-item"><strong>@item.NOME_COLECAO.Trim()</strong> - LANÇTO: @item.LANCAMENTO.Value.ToString("dd/MM/yy") | VIG: @item.VIGENCIA.Value.ToString("dd/MM/yy") </a>
+                            <a href="@Url.Action("Desenhos", "Pedido", new { idcolecao = item.ID_COLECAO, nmcolecao = item.NOME_COLECAO })" class="list-group-item"><strong>@item.NOME_COLECAO.Trim()</strong> - LANÇTO: @item.LANCAMENTO.Value.ToString("dd/MM/yy") | VIG: @item.VIGENCIA.Value.ToString("dd/MM/yy") </a>
                         }
                     }
                     else

@@ -43,7 +43,7 @@ namespace Dalutex.Models
     public class LisosViewModel
     {
         public int IDColecao { get; set; }
-        public string NMColeao { get; set; }
+        public string NMColecao { get; set; }
         public int Pagina { get; set; }
         public int TotalPaginas { get; set; }
         public List<Liso> Galeria { get; set; }
@@ -70,6 +70,8 @@ namespace Dalutex.Models
         public int IDColecao { get; set; }
         public List<ArtigoTecnologia> Artigos { get; set; }
         public string TecnologiaAtual { get; set; } //VER COM CASSIANO SE É O MELHOR LUGAR PARA GUARDAR ESTA INFORMAÇÃO
+        public string NMColecao { get; set; }
+        public int Pagina { get; set; }
     }
 
     public class InserirNoCarrinhoViewModel
@@ -137,6 +139,10 @@ namespace Dalutex.Models
         public string Desenho { get; set; }
         public string Variante { get; set; }
         public string Imagem { get; set; }
+        public string IDColecao { get; set; }
+        public string NMColecao { get; set; }
+        public int Pagina { get; set; }
+        public string RetornarPara { get; set; }
     }
 
     public class ConclusaoPedidoViewModel

@@ -6,7 +6,10 @@
         <a href="@Url.Content(@"ArtigosDisponiveis?" +
                                             "&imagem=" + Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg" +
                                             "&desenho=" + @Model.Desenho +
-                                            "&variante=" + @Model.Variante
+                                            "&variante=" + @Model.Variante+
+                                            "&idcolecao="+@Model.IDColecao+
+                                            "&nmcolecao="+@Model.NMColecao+
+                                            "&pagina="+@Model.Pagina
                                         )">
             <img src="@Url.Content(Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg")" class="img-thumbnail equal-height">
         </a>
@@ -21,8 +24,8 @@
                                 "&variante=" + Model.Variante +
                                 "&artigo=" + Model.Artigo +
                                 "&tecnologia=L" +
-                                "&IDColecao=" + Model.IDColecao +
-                                "&NMColecao=" + Model.NMColecao +
+                                "&idcolecao=" + Model.IDColecao +
+                                "&nmcolecao=" + Model.NMColecao +
                                 "&pagina=" + Model.Pagina +
                                 "&cor=" + Model.Cor +
                                 "&rgb=" + Model.RGB +

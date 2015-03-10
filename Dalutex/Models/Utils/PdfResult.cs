@@ -26,8 +26,9 @@ namespace Dalutex.Models
             //ReportParameter pedido = new ReportParameter("PEDIDO_BLOCO", "115824");
             //relatorio.SetParameters(pedido);
 
+            Uri url = context.RequestContext.HttpContext.Request.Url;
 
-            string strImagens = Path.Combine(context.RequestContext.HttpContext.Request.Url.Host, ConfigurationManager.AppSettings["PASTA_DESENHOS"].Replace("~", ""));
+            string strImagens = url.AbsoluteUri.Replace(url.AbsolutePath,"").Replace(url.Query,"") + ConfigurationManager.AppSettings["PASTA_DESENHOS"].Replace("~", "").Replace("\\","/");
             relatorio.SetParameters(new ReportParameter("PASTA_DESENHOS", strImagens));
 
             using (var ctx = new TIDalutexContext())

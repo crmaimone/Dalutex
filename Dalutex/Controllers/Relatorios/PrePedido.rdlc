@@ -716,7 +716,7 @@
               </TablixCells>
             </TablixRow>
             <TablixRow>
-              <Height>1.84356cm</Height>
+              <Height>1.87144cm</Height>
               <TablixCells>
                 <TablixCell>
                   <CellContents>
@@ -1308,17 +1308,16 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Rectangle Name="Rectangle4">
+                    <Rectangle Name="recLiso">
                       <ReportItems>
-                        <Image Name="Image1">
+                        <Image Name="imgEstampado">
                           <Source>External</Source>
-                          <Value>=Parameters!PASTA_DESENHOS.Value + Fields!DESENHO.Value + "_" + Fields!VARIANTE.Value+ ".JPG" +"&amp;w=75&amp;h=75"</Value>
+                          <Value>=Parameters!PASTA_DESENHOS.Value + Fields!DESENHO.Value + "_" + Fields!VARIANTE.Value + ".JPG"</Value>
                           <Sizing>Fit</Sizing>
-                          <Left>0.00001cm</Left>
-                          <Height>1.84356cm</Height>
-                          <Width>2.05239cm</Width>
+                          <Height>1.87144cm</Height>
+                          <Width>2.0524cm</Width>
                           <Visibility>
-                            <Hidden>=IIF(Len(Fields!IMAGEM.Value)&lt;20,True,False)</Hidden>
+                            <Hidden>=IIF(Fields!LISO_ESTAMP.Value = "C",False,True)</Hidden>
                           </Visibility>
                           <Style>
                             <Border>
@@ -1330,12 +1329,8 @@
                       <KeepTogether>true</KeepTogether>
                       <Style>
                         <Border>
-                          <Color>Gray</Color>
                           <Style>None</Style>
                         </Border>
-                        <BottomBorder>
-                          <Style>Solid</Style>
-                        </BottomBorder>
                         <BackgroundColor>=Code.RetornaBackground(Fields!IMAGEM.Value)</BackgroundColor>
                       </Style>
                     </Rectangle>
@@ -1393,7 +1388,7 @@
         <DataSetName>dsPrePedido</DataSetName>
         <Top>4.43051cm</Top>
         <Left>0.08823cm</Left>
-        <Height>2.44397cm</Height>
+        <Height>2.47185cm</Height>
         <Width>27.78948cm</Width>
         <Style>
           <Border>
@@ -2906,10 +2901,10 @@
         </Style>
       </Rectangle>
     </ReportItems>
-    <Height>6.97292cm</Height>
+    <Height>7.07875cm</Height>
     <Style />
   </Body>
-  <Width>28.15521cm</Width>
+  <Width>28.12875cm</Width>
   <Page>
     <PageFooter>
       <Height>5.47688cm</Height>

@@ -236,7 +236,6 @@
     <Content Include="Content\images\header-pattern-11.jpg" />
     <Content Include="Content\images\header-pattern-12.jpg" />
     <Content Include="Content\images\UnderConstruction.png" />
-    <Content Include="Content\templates\TemplatePrePedido.htm" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />

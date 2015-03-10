@@ -23,7 +23,7 @@
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("SOBRE", "About", "Home")</li>
                     <li>@Html.ActionLink("CONTATO", "Contact", "Home")</li>
-                    @*<li>@Html.ActionLink("RELATORIO", "EspelhoPedido", "Pedido")</li>*@
+                    @*<li>@Html.ActionLink("RELATORIO", "EspelhoPedido", "Pedido", new { numeropedido = "116183" }, null)</li>*@
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li class="dropdown">

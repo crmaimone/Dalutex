@@ -19,13 +19,13 @@ namespace Dalutex.Controllers
 {
     public class PedidoController : BaseController
     {
-        public ActionResult MenuColecoes(string IDColecao)
+        public ActionResult MenuColecoes(string idcolecao)
         {
             MenuColecoesViewModel model = new MenuColecoesViewModel();
 
             int iIDColecao;
 
-            if (int.TryParse(IDColecao, out iIDColecao))
+            if (int.TryParse(idcolecao, out iIDColecao))
             {
                 using (var ctx = new TIDalutexContext())
                 {
@@ -56,10 +56,10 @@ namespace Dalutex.Controllers
             return View();
         }
 
-        public ActionResult Desenhos(string pIDColecao, string NMColecao, string pagina)
+        public ActionResult Desenhos(string idcolecao, string nmcolecao, string pagina)
         {
             DesenhosViewModel model = new DesenhosViewModel();
-            model.NMColecao = NMColecao;
+            model.NMColecao = nmcolecao;
 
             if (string.IsNullOrWhiteSpace(pagina))
                 model.Pagina = 1;
@@ -68,36 +68,36 @@ namespace Dalutex.Controllers
 
             using (var ctx = new TIDalutexContext())
             {
-                if (pIDColecao == "ATUAL")
+                if (idcolecao == "ATUAL")
                 {
                     CONFIG_GERAL objResult = ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Atual);
                     model.IDColecao = int.Parse(objResult.PARAMETRO1);
                     model.NMColecao = objResult.PARAMETRO2;
                 }
-                else if (pIDColecao == "POCKET")
+                else if (idcolecao == "POCKET")
                 {
                     CONFIG_GERAL objResult = ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Pocket);
                     model.IDColecao = int.Parse(objResult.INT1.ToString());
                     model.NMColecao = objResult.PARAMETRO2;
                 }
-                else if (pIDColecao == "DESENHOS")
+                else if (idcolecao == "DESENHOS")
                 {
                     model.IDColecao = -1;
                 }
-                else if (pIDColecao == null)
+                else if (idcolecao == null)
                 {
                     ModelState.AddModelError("", "Coleção não informada.");
                     return View(model);
                 }
                 else
                 {
-                    model.IDColecao = int.Parse(pIDColecao);
+                    model.IDColecao = int.Parse(idcolecao);
                 }
             }
 
             if (model.IDColecao != -1)
             {
-                ObterDesenhos(model);              
+                ObterDesenhos(model);
             }
 
             model.UrlImagens = ConfigurationManager.AppSettings["PASTA_DESENHOS"];
@@ -122,7 +122,7 @@ namespace Dalutex.Controllers
                     from dc in ctx.VW_DESENHOS_POR_COLECAO
                     where
                         ((model.IDColecao == -1) || (dc.COLECAO == model.IDColecao))
-                        && (dc.DESENHO.StartsWith(model.FiltroDesenho.ToUpper()) || model.FiltroDesenho == null) 
+                        && (dc.DESENHO.StartsWith(model.FiltroDesenho.ToUpper()) || model.FiltroDesenho == null)
                     group dc by
                         new
                         {
@@ -140,10 +140,10 @@ namespace Dalutex.Controllers
             }
         }
 
-        public ActionResult Lisos(string IDColecao, string NMColecao, string pagina)
+        public ActionResult Lisos(string idcolecao, string nmcolecao, string pagina)
         {
             LisosViewModel model = new LisosViewModel();
-            model.NMColeao = NMColecao;
+            model.NMColecao = nmcolecao;
 
             if (string.IsNullOrWhiteSpace(pagina))
                 model.Pagina = 1;
@@ -152,22 +152,26 @@ namespace Dalutex.Controllers
 
             using (var ctx = new TIDalutexContext())
             {
-                if (IDColecao == "ATUAL")
+                if (idcolecao == "ATUAL")
                 {
-                    model.IDColecao = int.Parse(ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Atual).PARAMETRO1);
+                    CONFIG_GERAL objResult = ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Atual);
+                    model.IDColecao = int.Parse(objResult.PARAMETRO1);
+                    model.NMColecao = objResult.PARAMETRO2;
                 }
-                else if (IDColecao == "POCKET")
+                else if (idcolecao == "POCKET")
                 {
-                    model.IDColecao = int.Parse(ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Pocket).INT1.ToString());
+                    CONFIG_GERAL objResult = ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Pocket);
+                    model.IDColecao = int.Parse(objResult.INT1.ToString());
+                    model.NMColecao = objResult.PARAMETRO2;
                 }
-                else if (IDColecao == null)
+                else if (idcolecao == null)
                 {
                     ModelState.AddModelError("", "Coleção não informada.");
                     return View(model);
                 }
                 else
                 {
-                    model.IDColecao = int.Parse(IDColecao);
+                    model.IDColecao = int.Parse(idcolecao);
                 }
 
                 Utilitarios utils = new Utilitarios();
@@ -194,11 +198,14 @@ namespace Dalutex.Controllers
             return View(model);
         }
 
-        public ActionResult ArtigosDisponiveis(string desenho, string variante)
+        public ActionResult ArtigosDisponiveis(string desenho, string variante, int idcolecao, string nmcolecao, int pagina)
         {
             ArtigosDisponiveisViewModel model = new ArtigosDisponiveisViewModel();
             model.Desenho = desenho;
             model.Variante = variante;
+            model.IDColecao = idcolecao;
+            model.NMColecao = nmcolecao;
+            model.Pagina = pagina;
             model.Imagem = ConfigurationManager.AppSettings["PASTA_DESENHOS"] + desenho + "_" + variante + ".jpg";
 
             List<VW_CARACT_DESENHOS> lstQuery = null;
@@ -211,14 +218,14 @@ namespace Dalutex.Controllers
                     select vw;
 
                 lstQuery = query.ToList();
-            }            
+            }
 
             VW_CARACT_DESENHOS objPrimeiroCarac = lstQuery.FirstOrDefault();
             int? iIDTecnologia;
 
             if (objPrimeiroCarac != null)
             {
-                model.TecnologiaAtual = objPrimeiroCarac.TECNOLOGIA.Replace(" ","_");
+                model.TecnologiaAtual = objPrimeiroCarac.TECNOLOGIA.Replace(" ", "_");
 
                 iIDTecnologia = objPrimeiroCarac.ID_TECNOLOGIA;
 
@@ -249,11 +256,11 @@ namespace Dalutex.Controllers
                     var query =
                         from ar in ctx.VW_ARTIGOS_DISPONIVEIS
                         where
-                            (ar.ID_TECNOLOGIA.Equals(null) || ar.ID_TEC != iIDTecnologia)  
+                            (ar.ID_TECNOLOGIA.Equals(null) || ar.ID_TEC != iIDTecnologia)
                             &&
-                            (ar.ID_CARAC_TEC.Equals(null) || !lstCaracteristicas.Contains(ar.ID_CARAC_TEC))                            
+                            (ar.ID_CARAC_TEC.Equals(null) || !lstCaracteristicas.Contains(ar.ID_CARAC_TEC))
                             &&
-                            (lstTecnologias.Contains(ar.ID_TEC))                            
+                            (lstTecnologias.Contains(ar.ID_TEC))
                         group ar by
                             new
                             {
@@ -296,13 +303,17 @@ namespace Dalutex.Controllers
             return View(model);
         }
 
-        public ActionResult Ampliacao(string desenho, string variante)
+        public ActionResult Ampliacao(string desenho, string variante, string idcolecao, string nmcolecao, int pagina, string retornarpara)
         {
             AmpliacaoViewModel model = new AmpliacaoViewModel()
             {
                 Desenho = desenho,
                 Variante = variante,
                 Imagem = ConfigurationManager.AppSettings["PASTA_DESENHOS"] + desenho + "_" + variante + ".jpg",
+                IDColecao = idcolecao,
+                NMColecao = nmcolecao,
+                Pagina = pagina,
+                RetornarPara = retornarpara
             };
 
             return View(model);
@@ -324,8 +335,8 @@ namespace Dalutex.Controllers
         }
 
         public ActionResult InserirNoCarrinho(
-            string IDColecao
-            , string NMColecao
+            string idcolecao
+            , string nmcolecao
             , string pagina
             , string desenho
             , string variante
@@ -341,13 +352,13 @@ namespace Dalutex.Controllers
             model.Variante = variante;
             model.Artigo = artigo;
             model.TecnologiaPorExtenso = tecnologia;
-            model.IDColecao = IDColecao;
-            model.NMColecao = NMColecao;
+            model.IDColecao = idcolecao;
+            model.NMColecao = nmcolecao;
             model.Cor = cor;
             model.RGB = rgb;
             model.Reduzido = reduzido;
 
-            if(pagina != null)
+            if (pagina != null)
                 model.Pagina = int.Parse(pagina);
 
             if (modo == "A")//Alterando item
@@ -398,16 +409,16 @@ namespace Dalutex.Controllers
                     using (var ctx = new DalutexContext())
                     {
                         objValorPadraoView = ctx.VMASCARAPRODUTOACABADO.Where(x => x.ARTIGO == model.Artigo).FirstOrDefault();
-                        if(objValorPadraoView != null)
+                        if (objValorPadraoView != null)
                         {
                             model.UnidadeMedida = objValorPadraoView.UM;
                             if (model.UnidadeMedida.ToUpper() == "KG")
                             {
-                                model.ValorPadrao = (decimal) Enums.ValorPadraoUnidade.Quilo;
+                                model.ValorPadrao = (decimal)Enums.ValorPadraoUnidade.Quilo;
                             }
                             else if (model.UnidadeMedida.ToUpper() == "MT")
                             {
-                                model.ValorPadrao = (decimal) Enums.ValorPadraoUnidade.Metro;
+                                model.ValorPadrao = (decimal)Enums.ValorPadraoUnidade.Metro;
                             }
                             else
                             {
@@ -448,15 +459,15 @@ namespace Dalutex.Controllers
                         ModelState.AddModelError("", "Campo \"PEÇAS\" NÃO PODE SER MENOR OU IGUAL A ZERO.");
                         hasErrors = true;
                     }
-                    if(model.Preco <= 0)
+                    if (model.Preco <= 0)
                     {
                         ModelState.AddModelError("", "Campo \"PREÇO\" NÃO PODE SER MENOR OU IGUAL A ZERO.");
                         hasErrors = true;
                     }
 
-                    if(hasErrors)
+                    if (hasErrors)
                     {
-                        if(base.Session_Carrinho == null || base.Session_Carrinho.IDTipoPedido < 0)
+                        if (base.Session_Carrinho == null || base.Session_Carrinho.IDTipoPedido < 0)
                         {
                             model.ObterTipoPedido = true;
                             this.CarregarTiposPedidos(model);
@@ -499,12 +510,12 @@ namespace Dalutex.Controllers
                             model.DataEntregaItem = (DateTime)objDisponibilidade.DISPONIBILIDADE_PCP;
                         else
                             model.DataEntregaItem = DateTime.Today.AddYears(1);
-                        
+
                         if (base.Session_Carrinho.DataEntrega < model.DataEntregaItem)
                             base.Session_Carrinho.DataEntrega = model.DataEntregaItem;
                     }
 
-                    if(model.Modo == "I")//Inclusão
+                    if (model.Modo == "I")//Inclusão
                     {
                         if (base.Session_Carrinho.Itens.Contains(model))
                         {
@@ -513,16 +524,16 @@ namespace Dalutex.Controllers
                             {
                                 model.ObterTipoPedido = true;
                                 this.CarregarTiposPedidos(model);
-                            } 
+                            }
                             return View(model);
                         }
 
                         base.Session_Carrinho.Itens.Add(model);
 
-                        if(!string.IsNullOrWhiteSpace(model.Cor))
-                            return RedirectToAction("Lisos", "Pedido", new { IDColecao = model.IDColecao, NMColecao = model.NMColecao, pagina = model.Pagina});
+                        if (!string.IsNullOrWhiteSpace(model.Cor))
+                            return RedirectToAction("Lisos", "Pedido", new { idcolecao = model.IDColecao, nmcolecao = model.NMColecao, pagina = model.Pagina });
                         else
-                            return RedirectToAction("ArtigosDisponiveis", "Pedido", new { desenho = model.Desenho, variante = model.Variante, });
+                            return RedirectToAction("ArtigosDisponiveis", "Pedido", new { desenho = model.Desenho, variante = model.Variante, idcolecao = model.IDColecao, nmcolecao = model.NMColecao, pagina = model.Pagina });
                     }
                     else
                     {
@@ -552,16 +563,16 @@ namespace Dalutex.Controllers
             {
                 model.ObterTipoPedido = true;
                 this.CarregarTiposPedidos(model);
-            } 
+            }
             return View(model);
         }
 
         [HttpPost]
         public ActionResult ExcluirItemCarrinho(InserirNoCarrinhoViewModel model)
         {
-            if(base.Session_Carrinho != null && base.Session_Carrinho.Itens != null)
+            if (base.Session_Carrinho != null && base.Session_Carrinho.Itens != null)
             {
-                if(base.Session_Carrinho.Itens.Remove(model))
+                if (base.Session_Carrinho.Itens.Remove(model))
                 {
                     return RedirectToAction("Carrinho");
                 }
@@ -572,7 +583,7 @@ namespace Dalutex.Controllers
             }
             else
             {
-                return RedirectToAction("ErrorMessage", new { message="Não há itens no carrinho para excluir.", title ="EXCLUSÃO DO CARRINHO" });
+                return RedirectToAction("ErrorMessage", new { message = "Não há itens no carrinho para excluir.", title = "EXCLUSÃO DO CARRINHO" });
             }
         }
 
@@ -617,12 +628,22 @@ namespace Dalutex.Controllers
             return model;
         }
 
-        public ActionResult ConclusaoPedido(string IDTransportadora)
+        public ActionResult ConclusaoPedido(string idtransportadora)
         {
-            Session_Carrinho.IDTransportadora = int.Parse(IDTransportadora);
-
             ConclusaoPedidoViewModel model = new ConclusaoPedidoViewModel();
-            ConclusaoPedidoCarregarListas(model);
+
+            //Carrinho vazio não processar nada
+            if (Session_Carrinho != null)
+            {
+                Session_Carrinho.IDTransportadora = int.Parse(idtransportadora);
+
+                ConclusaoPedidoCarregarListas(model);
+                ViewBag.CarrinhoVazio = false;
+            }
+            else
+            {
+                ViewBag.CarrinhoVazio = true;
+            }
 
             return View(model);
         }
@@ -630,11 +651,20 @@ namespace Dalutex.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult ConclusaoPedido(ConclusaoPedidoViewModel model)
-        {            
+        {
             try
             {
                 if (ModelState.IsValid)
                 {
+                    //Carrinho vazio não processar nada
+                    if (Session_Carrinho == null)
+                    {
+                        ViewBag.CarrinhoVazio = true;
+                        return View(model);
+                    }
+
+                    ViewBag.CarrinhoVazio = false;
+
                     if (Session_Carrinho.Itens == null || Session_Carrinho.Itens.Count == 0)
                     {
                         ModelState.AddModelError("", "Não é permitido concluir o pedido sem itens.");
@@ -651,7 +681,7 @@ namespace Dalutex.Controllers
 
                     bool hasErrors = false;
 
-                    if(model.IDCondicoesPagto <= 0)
+                    if (model.IDCondicoesPagto <= 0)
                     {
                         ModelState.AddModelError("", "Por favor informe a condição de pagamento.");
                         hasErrors = true;
@@ -687,17 +717,17 @@ namespace Dalutex.Controllers
                         hasErrors = true;
                     }
 
-                    if( base.Session_Carrinho.IDTipoPedido.Equals((int) Enums.TiposPedido.VENDA)
-                        && !model.IDCanaisVenda.Equals((int) Enums.CanaisVenda.TELEVENDAS)
-                        && !model.IDCondicoesPagto.Equals((int) Enums.CondicoesPagamento.CORTESIA))
+                    if (base.Session_Carrinho.IDTipoPedido.Equals((int)Enums.TiposPedido.VENDA)
+                        && !model.IDCanaisVenda.Equals((int)Enums.CanaisVenda.TELEVENDAS)
+                        && !model.IDCondicoesPagto.Equals((int)Enums.CondicoesPagamento.CORTESIA))
                     {
-                        
+
                         int numParcelas = 0;
-                        using(var ctx = new TIDalutexContext() )
+                        using (var ctx = new TIDalutexContext())
                         {
                             numParcelas = ctx.VW_CONDICAO_PGTO.Find(model.IDCondicoesPagto).PARCELAS;
                         }
-                        
+
                         int fatorMultiplicacao = 0;
                         decimal valorMinimoParcelas = decimal.Parse(ConfigurationManager.AppSettings["VALOR_PARCELA_MINIMA"]);
 
@@ -716,36 +746,36 @@ namespace Dalutex.Controllers
 
                         if (model.IDTiposAtendimento.Equals((int)Enums.TiposAtendimento.EstampaCompleta))
                         {
-                            List<KeyValuePair<string,decimal>> lstConsolidada = base.Session_Carrinho.Itens
+                            List<KeyValuePair<string, decimal>> lstConsolidada = base.Session_Carrinho.Itens
                                 .GroupBy(g => g.Desenho)
                                 .Select(consolidado => new KeyValuePair<string, decimal>(consolidado.First().Desenho, consolidado.Sum(s => s.ValorTotalItem)))
                                 .ToList();
 
                             bool isValid = true;
 
-                            foreach(KeyValuePair<string,decimal> item in lstConsolidada)
+                            foreach (KeyValuePair<string, decimal> item in lstConsolidada)
                             {
-                                if (((item.Value / fatorMultiplicacao ) / numParcelas) < valorMinimoParcelas)
+                                if (((item.Value / fatorMultiplicacao) / numParcelas) < valorMinimoParcelas)
                                 {
                                     ModelState.AddModelError("", "Valor mínimo das parcelas é inferior a " + valorMinimoParcelas.ToString("C") + " para o desenho: " + item.Key);
                                     isValid = false;
                                 }
                             }
 
-                            if(!isValid)
+                            if (!isValid)
                             {
                                 hasErrors = true;
                             }
                         }
-                        else if(model.IDTiposAtendimento.Equals((int)Enums.TiposAtendimento.PedidoCompleto))
+                        else if (model.IDTiposAtendimento.Equals((int)Enums.TiposAtendimento.PedidoCompleto))
                         {
-                            if (((model.TotalPedido / fatorMultiplicacao ) / numParcelas) < valorMinimoParcelas)
+                            if (((model.TotalPedido / fatorMultiplicacao) / numParcelas) < valorMinimoParcelas)
                             {
                                 ModelState.AddModelError("", "Valor mínimo das parcelas é inferior a " + valorMinimoParcelas.ToString("C"));
                                 hasErrors = true;
                             }
                         }
-                        else if(model.IDTiposAtendimento.Equals((int)Enums.TiposAtendimento.CompletoPorArtigo))
+                        else if (model.IDTiposAtendimento.Equals((int)Enums.TiposAtendimento.CompletoPorArtigo))
                         {
                             List<KeyValuePair<string, decimal>> lstConsolidada = base.Session_Carrinho.Itens
                                 .GroupBy(g => g.Artigo)
@@ -787,7 +817,7 @@ namespace Dalutex.Controllers
                             }
                         }
 
-                        if(hasErrors)
+                        if (hasErrors)
                         {
                             this.ConclusaoPedidoCarregarListas(model);
                             return View(model);
@@ -838,11 +868,12 @@ namespace Dalutex.Controllers
                     List<PRE_PEDIDO_ITENS> lstItens = new List<PRE_PEDIDO_ITENS>();
 
                     int i = 0;
-                    foreach(InserirNoCarrinhoViewModel item in base.Session_Carrinho.Itens)
+                    foreach (InserirNoCarrinhoViewModel item in base.Session_Carrinho.Itens)
                     {
                         i++;
 
-                        PRE_PEDIDO_ITENS objItem = new PRE_PEDIDO_ITENS(){
+                        PRE_PEDIDO_ITENS objItem = new PRE_PEDIDO_ITENS()
+                        {
                             ARTIGO = item.Artigo,
                             COR = item.Cor,
                             DATA_ENTREGA = item.DataEntregaItem,
@@ -865,7 +896,7 @@ namespace Dalutex.Controllers
                         lstItens.Add(objItem);
                     }
 
-                    using(var ctx = new TIDalutexContext())
+                    using (var ctx = new TIDalutexContext())
                     {
                         ctx.PRE_PEDIDO.Add(objPrePedido);
 
@@ -888,7 +919,7 @@ namespace Dalutex.Controllers
 
                         foreach (PRE_PEDIDO_ITENS item in lstItens)
                         {
-                            if(!hasItemSemReduzido && item.REDUZIDO_ITEM.GetValueOrDefault() == -2)
+                            if (!hasItemSemReduzido && item.REDUZIDO_ITEM.GetValueOrDefault() == -2)
                             {
                                 hasItemSemReduzido = true;
                             }
@@ -913,19 +944,20 @@ namespace Dalutex.Controllers
 
                         foreach (PRE_PEDIDO_ITENS item in lstItens)
                         {
-                            if(item.REDUZIDO_ITEM != -2)//TEM REDUZIDO
+                            if (item.REDUZIDO_ITEM != -2)//TEM REDUZIDO
                             {
                                 decimal dReduzido = item.REDUZIDO_ITEM.GetValueOrDefault();
                                 using (var ctxDlx = new DalutexContext())
                                 {
                                     var queryParametros = from vw in ctxDlx.VMASCARAPRODUTOACABADO
-                                                join co in ctxDlx.COLECOES on vw.COLECAO equals co.COLECAO
-                                                where vw.CODIGO_REDUZIDO == dReduzido
-                                                select new ParametrosPreco{
-                                                    E_Exclusivo = vw.EXCL == "E" ? true : false,
-                                                    Comissao = co.ID_COLECAO == "POCK" ? 3 : 4,
-                                                    IDColecao = vw.COLECAO
-                                                };
+                                                          join co in ctxDlx.COLECOES on vw.COLECAO equals co.COLECAO
+                                                          where vw.CODIGO_REDUZIDO == dReduzido
+                                                          select new ParametrosPreco
+                                                          {
+                                                              E_Exclusivo = vw.EXCL == "E" ? true : false,
+                                                              Comissao = co.ID_COLECAO == "POCK" ? 3 : 4,
+                                                              IDColecao = vw.COLECAO
+                                                          };
 
                                     ParametrosPreco objParametro = queryParametros.First();
 
@@ -934,13 +966,13 @@ namespace Dalutex.Controllers
 
                                     int iCodCondPgto = 0;//TODO: BUSCAR NA FUNÇÃO DO ORACLE
                                     iCodCondPgto = ctx.Database.SqlQuery<int>("select ti_dalutex.pega_consicao_pgto(:p0) from dual", 1).FirstOrDefault();
-                                        
+
                                     #endregion
 
                                     int? iColecaoAtual = int.Parse(ctx.CONFIG_GERAL.Where(y => y.ID_CONFIG == (int)Enums.TipoColecaoEspecial.Atual).First().PARAMETRO1);
 
                                     TABELAPRECOITEM objPreco = ctx.TABELAPRECOITEM.Where(x =>
-                                            x.COLECAO == ( objParametro.E_Exclusivo ? objParametro.IDColecao : iColecaoAtual )
+                                            x.COLECAO == (objParametro.E_Exclusivo ? objParametro.IDColecao : iColecaoAtual)
                                             && x.QUALIDADECOMERCIAL == model.IDQualidadeComercial
                                             && x.COD_COND_PAGTO == iCodCondPgto
                                             && x.EST_LISO == "E"
@@ -949,7 +981,7 @@ namespace Dalutex.Controllers
                                         ).FirstOrDefault();
 
                                     //Se não tem preço, crítica. Se tem preço e ele é diferente do informado pelo representante, crítica.
-                                    if(objPreco == null || decimal.Round(objPreco.VALOR.GetValueOrDefault(), 2, MidpointRounding.ToEven) != item.PRECO_UNIT.GetValueOrDefault())
+                                    if (objPreco == null || decimal.Round(objPreco.VALOR.GetValueOrDefault(), 2, MidpointRounding.ToEven) != item.PRECO_UNIT.GetValueOrDefault())
                                     {
                                         ctx.PRE_PEDIDO_CRITICA.Add(new PRE_PEDIDO_CRITICA()
                                         {
@@ -988,7 +1020,7 @@ namespace Dalutex.Controllers
 
                     base.Session_Carrinho = null;
 
-                    return RedirectToAction("ConfirmacaoPedido", "Pedido", new { NumeroPedido = iNUMERO_PEDIDO_BLOCO.ToString() });
+                    return RedirectToAction("ConfirmacaoPedido", "Pedido", new { numeropedido = iNUMERO_PEDIDO_BLOCO.ToString() });
                 }
             }
             catch (Exception ex)
@@ -996,22 +1028,22 @@ namespace Dalutex.Controllers
                 base.Handle(ex);
             }
             // If we got this far, something failed, redisplay form
-            
+
             this.ConclusaoPedidoCarregarListas(model);
             return View(model);
         }
 
-        public ActionResult ConfirmacaoPedido(string NumeroPedido)
+        public ActionResult ConfirmacaoPedido(string numeropedido)
         {
-            ViewBag.NumeroPedido = NumeroPedido;            
+            ViewBag.NumeroPedido = numeropedido;
             return View();
         }
 
-        public EspelhoPedidoPdf EspelhoPedido(string NumeroPedido)
+        public EspelhoPedidoPdf EspelhoPedido(string numeropedido)
         {
-            return new EspelhoPedidoPdf() { IDPedidoBloco = decimal.Parse(NumeroPedido) };
+            return new EspelhoPedidoPdf() { IDPedidoBloco = decimal.Parse(numeropedido) };
         }
-        
+
         //[AllowAnonymous]
         //[HttpPost]
         //public JsonResult ObterDesenho(string desenho, string variante)

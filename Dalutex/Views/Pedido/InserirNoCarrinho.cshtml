@@ -79,7 +79,20 @@
                         <div class="col-md-offset-2 col-md-10">
                             <input type="submit" value="SALVAR" class="btn btn-default" />
 
-                            @Html.ActionLink("VOLTAR", "ArtigosDisponiveis", "Pedido", new { desenho = Model.Desenho, variante = Model.Variante }, new { @class = "btn btn-default right" })
+                            @if (Model.Modo == "I")
+                            {
+                                @Html.ActionLink("VOLTAR", "ArtigosDisponiveis", "Pedido", 
+                                new { desenho = Model.Desenho, 
+                                     variante = Model.Variante, 
+                                     idcolecao = Model.IDColecao, 
+                                     nmcolecao = Model.NMColecao, 
+                                     pagina = Model.Pagina},                                      
+                                new { @class = "btn btn-default right" })
+                            }
+                            else if (Model.Modo == "A")
+                            {
+                                @Html.ActionLink("VOLTAR", "Carrinho", "Pedido", null, new { @class = "btn btn-default right" })
+                            }
                         </div>
                     </div>
                 }

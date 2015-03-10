@@ -4,7 +4,7 @@
 @using Dalutex.Models.DataModels;
 
 @{
-    ViewBag.Title = "ITENS DA COLEÇÃO: " + Model.NMColeao;
+    ViewBag.Title = "ITENS DA COLEÇÃO: " + Model.NMColecao;
 }
 
 <div class="panel panel-default"><h3>@ViewBag.Title</h3></div>
@@ -13,8 +13,8 @@
     <ul class="nav nav-tabs">
         <li role="presentation" class="active"><a href="#">ESTAMPADOS</a></li>
         <li role="presentation"><a href="@Url.Content(@"Lisos?" +
-                    "&IDColecao=" + @Model.IDColecao +
-                    "&NMColecao=" + @Model.NMColeao +
+                    "&idcolecao=" + @Model.IDColecao +
+                    "&nmcolecao=" + @Model.NMColecao +
                     "&pagina=" + @Model.Pagina)">LISOS</a></li>
     </ul>
     <div class="row">
@@ -27,7 +27,7 @@
             </div>
            
             @Html.HiddenFor(x => x.IDColecao)
-            @Html.HiddenFor(x => x.NMColeao)
+            @Html.HiddenFor(x => x.NMColecao)
             @Html.HiddenFor(x => x.Pagina)
             <button type="submit" class="btn btn-default btn-group-sm"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Pesquisar</button>
         }
@@ -50,7 +50,7 @@
                             Cor = null,
                             RGB = null,
                             IDColecao = Model.IDColecao,
-                            NMColecao = Model.NMColeao,
+                            NMColecao = Model.NMColecao,
                             Pagina = Model.Pagina
                         })
 

@@ -19,13 +19,13 @@ namespace Dalutex.Controllers
 {
     public class PedidoController : BaseController
     {
-        public ActionResult MenuColecoes(string IDColecao)
+        public ActionResult MenuColecoes(string idcolecao)
         {
             MenuColecoesViewModel model = new MenuColecoesViewModel();
 
             int iIDColecao;
 
-            if (int.TryParse(IDColecao, out iIDColecao))
+            if (int.TryParse(idcolecao, out iIDColecao))
             {
                 using (var ctx = new TIDalutexContext())
                 {
@@ -56,10 +56,10 @@ namespace Dalutex.Controllers
             return View();
         }
 
-        public ActionResult Desenhos(string pIDColecao, string NMColecao, string pagina)
+        public ActionResult Desenhos(string idcolecao, string nmcolecao, string pagina)
         {
             DesenhosViewModel model = new DesenhosViewModel();
-            model.NMColeao = NMColecao;
+            model.NMColecao = nmcolecao;
 
             if (string.IsNullOrWhiteSpace(pagina))
                 model.Pagina = 1;
@@ -68,28 +68,28 @@ namespace Dalutex.Controllers
 
             using (var ctx = new TIDalutexContext())
             {
-                if (pIDColecao == "ATUAL")
+                if (idcolecao == "ATUAL")
                 {
                     model.IDColecao = int.Parse(ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Atual).PARAMETRO1);
-                    model.NMColeao = ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Atual).PARAMETRO2;
+                    model.NMColecao = ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Atual).PARAMETRO2;
                 }
-                else if (pIDColecao == "POCKET")
+                else if (idcolecao == "POCKET")
                 {
                     model.IDColecao = int.Parse(ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Pocket).INT1.ToString());
-                    model.NMColeao = ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Pocket).PARAMETRO2;
+                    model.NMColecao = ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Pocket).PARAMETRO2;
                 }
-                else if (pIDColecao == "DESENHOS")
+                else if (idcolecao == "DESENHOS")
                 {
                     model.IDColecao = -1;
                 }
-                else if (pIDColecao == null)
+                else if (idcolecao == null)
                 {
                     ModelState.AddModelError("", "Coleção não informada.");
                     return View(model);
                 }
                 else
                 {
-                    model.IDColecao = int.Parse(pIDColecao);
+                    model.IDColecao = int.Parse(idcolecao);
                 }
             }
 
@@ -138,10 +138,10 @@ namespace Dalutex.Controllers
             }
         }
 
-        public ActionResult Lisos(string IDColecao, string NMColecao, string pagina)
+        public ActionResult Lisos(string idcolecao, string nmcolecao, string pagina)
         {
             LisosViewModel model = new LisosViewModel();
-            model.NMColeao = NMColecao;
+            model.NMColecao = nmcolecao;
 
             if (string.IsNullOrWhiteSpace(pagina))
                 model.Pagina = 1;
@@ -150,22 +150,22 @@ namespace Dalutex.Controllers
 
             using (var ctx = new TIDalutexContext())
             {
-                if (IDColecao == "ATUAL")
+                if (idcolecao == "ATUAL")
                 {
                     model.IDColecao = int.Parse(ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Atual).PARAMETRO1);
                 }
-                else if (IDColecao == "POCKET")
+                else if (idcolecao == "POCKET")
                 {
                     model.IDColecao = int.Parse(ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Pocket).INT1.ToString());
                 }
-                else if (IDColecao == null)
+                else if (idcolecao == null)
                 {
                     ModelState.AddModelError("", "Coleção não informada.");
                     return View(model);
                 }
                 else
                 {
-                    model.IDColecao = int.Parse(IDColecao);
+                    model.IDColecao = int.Parse(idcolecao);
                 }
 
                 Utilitarios utils = new Utilitarios();
@@ -192,11 +192,14 @@ namespace Dalutex.Controllers
             return View(model);
         }
 
-        public ActionResult ArtigosDisponiveis(string desenho, string variante)
+        public ActionResult ArtigosDisponiveis(string desenho, string variante, int idcolecao, string nmcolecao, int pagina)
         {
             ArtigosDisponiveisViewModel model = new ArtigosDisponiveisViewModel();
             model.Desenho = desenho;
             model.Variante = variante;
+            model.IDColecao = idcolecao;
+            model.NMColecao = nmcolecao;
+            model.Pagina = pagina;
             model.Imagem = ConfigurationManager.AppSettings["PASTA_DESENHOS"] + desenho + "_" + variante + ".jpg";
 
             List<VW_CARACT_DESENHOS> lstQuery = null;
@@ -294,13 +297,17 @@ namespace Dalutex.Controllers
             return View(model);
         }
 
-        public ActionResult Ampliacao(string desenho, string variante)
+        public ActionResult Ampliacao(string desenho, string variante, string idcolecao, string nmcolecao, int pagina, string retornarpara)
         {
             AmpliacaoViewModel model = new AmpliacaoViewModel()
             {
                 Desenho = desenho,
                 Variante = variante,
                 Imagem = ConfigurationManager.AppSettings["PASTA_DESENHOS"] + desenho + "_" + variante + ".jpg",
+                IDColecao = idcolecao,
+                NMColecao = nmcolecao,
+                Pagina = pagina,
+                RetornarPara = retornarpara
             };
 
             return View(model);
@@ -322,8 +329,8 @@ namespace Dalutex.Controllers
         }
 
         public ActionResult InserirNoCarrinho(
-            string IDColecao
-            , string NMColecao
+            string idcolecao
+            , string nmcolecao
             , string pagina
             , string desenho
             , string variante
@@ -339,8 +346,8 @@ namespace Dalutex.Controllers
             model.Variante = variante;
             model.Artigo = artigo;
             model.TecnologiaPorExtenso = tecnologia;
-            model.IDColecao = IDColecao;
-            model.NMColecao = NMColecao;
+            model.IDColecao = idcolecao;
+            model.NMColecao = nmcolecao;
             model.Cor = cor;
             model.RGB = rgb;
             model.Reduzido = reduzido;
@@ -518,9 +525,9 @@ namespace Dalutex.Controllers
                         base.Session_Carrinho.Itens.Add(model);
 
                         if(!string.IsNullOrWhiteSpace(model.Cor))
-                            return RedirectToAction("Lisos", "Pedido", new { IDColecao = model.IDColecao, NMColecao = model.NMColecao, pagina = model.Pagina});
+                            return RedirectToAction("Lisos", "Pedido", new { idcolecao = model.IDColecao, nmcolecao = model.NMColecao, pagina = model.Pagina});
                         else
-                            return RedirectToAction("ArtigosDisponiveis", "Pedido", new { desenho = model.Desenho, variante = model.Variante, });
+                            return RedirectToAction("ArtigosDisponiveis", "Pedido", new { desenho = model.Desenho, variante = model.Variante, idcolecao=model.IDColecao, nmcolecao = model.NMColecao, pagina = model.Pagina  });
                     }
                     else
                     {
@@ -615,12 +622,22 @@ namespace Dalutex.Controllers
             return model;
         }
 
-        public ActionResult ConclusaoPedido(string IDTransportadora)
+        public ActionResult ConclusaoPedido(string idtransportadora)
         {
-            Session_Carrinho.IDTransportadora = int.Parse(IDTransportadora);
-
             ConclusaoPedidoViewModel model = new ConclusaoPedidoViewModel();
-            ConclusaoPedidoCarregarListas(model);
+
+            //Carrinho vazio não processar nada
+            if (Session_Carrinho != null)
+            {
+                Session_Carrinho.IDTransportadora = int.Parse(idtransportadora);
+
+                ConclusaoPedidoCarregarListas(model);
+                ViewBag.CarrinhoVazio = false;
+            }
+            else
+            {
+                ViewBag.CarrinhoVazio = true;
+            }
 
             return View(model);
         }
@@ -633,6 +650,15 @@ namespace Dalutex.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    //Carrinho vazio não processar nada
+                    if (Session_Carrinho == null)
+                    {
+                        ViewBag.CarrinhoVazio = true;
+                        return View(model);
+                    }
+
+                    ViewBag.CarrinhoVazio = false;
+
                     if (Session_Carrinho.Itens == null || Session_Carrinho.Itens.Count == 0)
                     {
                         ModelState.AddModelError("", "Não é permitido concluir o pedido sem itens.");
@@ -986,7 +1012,7 @@ namespace Dalutex.Controllers
 
                     base.Session_Carrinho = null;
 
-                    return RedirectToAction("ConfirmacaoPedido", "Pedido", new { NumeroPedido = iNUMERO_PEDIDO_BLOCO.ToString() });
+                    return RedirectToAction("ConfirmacaoPedido", "Pedido", new { numeropedido = iNUMERO_PEDIDO_BLOCO.ToString() });
                 }
             }
             catch (Exception ex)
@@ -999,15 +1025,15 @@ namespace Dalutex.Controllers
             return View(model);
         }
 
-        public ActionResult ConfirmacaoPedido(string NumeroPedido)
+        public ActionResult ConfirmacaoPedido(string numeropedido)
         {
-            ViewBag.NumeroPedido = NumeroPedido;            
+            ViewBag.NumeroPedido = numeropedido;            
             return View();
         }
 
-        public EspelhoPedidoPdf EspelhoPedido(string NumeroPedido)
+        public EspelhoPedidoPdf EspelhoPedido(string numeropedido)
         {
-            return new EspelhoPedidoPdf() { IDPedidoBloco = decimal.Parse(NumeroPedido) };
+            return new EspelhoPedidoPdf() { IDPedidoBloco = decimal.Parse(numeropedido) };
         }
         
         //[AllowAnonymous]

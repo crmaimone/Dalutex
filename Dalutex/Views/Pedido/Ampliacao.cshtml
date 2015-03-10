@@ -18,4 +18,11 @@ else
     <img src="@Url.Content(Model.Imagem)" class="img-rounded" style="max-width:100%" />
 }
 <br />
-<a class="btn btn-default right" href="@Url.Action("ArtigosDisponiveis", "Pedido", new { desenho = Model.Desenho, variante = Model.Variante })">VOLTAR</a>
+@if (Model.RetornarPara == "ArtigosDisponiveis")
+{
+    <a class="btn btn-default right" href="@Url.Action("ArtigosDisponiveis", "Pedido", new { desenho = Model.Desenho, variante = Model.Variante, idcolecao = Model.IDColecao, nmcolecao = Model.NMColecao, pagina=Model.Pagina })">VOLTAR</a>
+}
+else if (Model.RetornarPara == "Carrinho")
+{
+    <a class="btn btn-default right" href="@Url.Action("Carrinho", "Pedido")">VOLTAR</a>
+}

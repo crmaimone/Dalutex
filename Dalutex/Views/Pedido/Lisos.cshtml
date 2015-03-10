@@ -1,11 +1,11 @@
-﻿@model Dalutex.Models.Lisos
+﻿@model Dalutex.Models.LisosViewModel
 
 @using Dalutex.Models;
 @using Dalutex.Models.DataModels;
 @using System.Drawing;
 
 @{
-    ViewBag.Title = "ITENS DA COLEÇÃO: " + Model.NMColeao;
+    ViewBag.Title = "ITENS DA COLEÇÃO: " + Model.NMColecao;
 }
 
 <div class="panel panel-default"><h3>@ViewBag.Title</h3></div>
@@ -14,7 +14,7 @@
     <ul class="nav nav-tabs">
         <li role="presentation"><a href="@Url.Content(@"Desenhos?" +
                     "&IDColecao=" + @Model.IDColecao +
-                    "&NMColecao=" + @Model.NMColeao +
+                    "&nmcolecao=" + @Model.NMColecao +
                     "&pagina=" + @Model.Pagina)">ESTAMPADOS</a></li>
         <li role="presentation" class="active"><a href="#">LISOS</a></li>
     </ul>
@@ -37,7 +37,7 @@
                             Cor = item.Cor,
                             RGB = item.RGB,
                             IDColecao = Model.IDColecao,
-                            NMColecao = Model.NMColeao,
+                            NMColecao = Model.NMColecao,
                             Pagina = Model.Pagina
                         })
                 </div>
@@ -51,9 +51,9 @@
                 {
                     if (Model.Pagina > 1)
                     {
-                        <li class="previous"><a href="@Url.Action("Lisos", "Pedido", new { IDColecao = Model.IDColecao, pagina = Model.Pagina - 1 })"><span aria-hidden="true">&larr;</span>P&aacute;gina Anterior</a></li>
+                        <li class="previous"><a href="@Url.Action("Lisos", "Pedido", new { idcolecao = Model.IDColecao, pagina = Model.Pagina - 1 })"><span aria-hidden="true">&larr;</span>P&aacute;gina Anterior</a></li>
                     }
-                    <li class="next"><a href="@Url.Action("Lisos", "Pedido", new { IDColecao = Model.IDColecao, pagina = Model.Pagina + 1 })">Pr&oacute;xima P&aacute;gina <span aria-hidden="true">&rarr;</span></a></li>
+                    <li class="next"><a href="@Url.Action("Lisos", "Pedido", new { idcolecao = Model.IDColecao, pagina = Model.Pagina + 1 })">Pr&oacute;xima P&aacute;gina <span aria-hidden="true">&rarr;</span></a></li>
                 }
             </ul>
         </nav>

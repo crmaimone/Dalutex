@@ -357,6 +357,8 @@ namespace Dalutex.Controllers
             model.Cor = cor;
             model.RGB = rgb;
             model.Reduzido = reduzido;
+            if (base.Session_Carrinho != null)
+                model.IDTipoPedido = base.Session_Carrinho.IDTipoPedido;
 
             if (pagina != null)
                 model.Pagina = int.Parse(pagina);
@@ -454,9 +456,14 @@ namespace Dalutex.Controllers
                         ModelState.AddModelError("", "NÃO É PERMITIDO SALVAR SEM VALOR PADRÃO DEFINIDO.");
                         hasErrors = true;
                     }
-                    if (model.Pecas <= 0)
+                    if (model.IDTipoPedido == 0 && model.Pecas <= 0)
                     {
                         ModelState.AddModelError("", "Campo \"PEÇAS\" NÃO PODE SER MENOR OU IGUAL A ZERO.");
+                        hasErrors = true;
+                    }
+                    if (model.IDTipoPedido != 0 && model.Quantidade <= 0)
+                    {
+                        ModelState.AddModelError("", "Campo \""+model.UnidadeMedida+"\" NÃO PODE SER MENOR OU IGUAL A ZERO.");
                         hasErrors = true;
                     }
                     if (model.Preco <= 0)
@@ -492,7 +499,11 @@ namespace Dalutex.Controllers
                     if (model.IDTipoPedido >= 0)
                         base.Session_Carrinho.IDTipoPedido = model.IDTipoPedido;
 
-                    model.Quantidade = model.Pecas * model.ValorPadrao;
+                    if(model.IDTipoPedido == 0)
+                        model.Quantidade = model.Pecas * model.ValorPadrao;
+                    else
+                        model.Pecas = 1;
+
                     model.ValorTotalItem = model.Quantidade * model.Preco;
 
                     using (var ctx = new TIDalutexContext())

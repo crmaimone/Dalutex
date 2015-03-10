@@ -12,10 +12,10 @@
                                             "&pagina="+@Model.Pagina
                                         )">
             <img src="@Url.Content(Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg")" class="img-thumbnail equal-height">
+            <div class="caption">
+                <h5 style="text-decoration:none">@Model.Desenho&nbsp;@Model.Variante</h5>
+            </div>
         </a>
-        <div class="caption">
-            <h5>@Model.Desenho&nbsp;@Model.Variante</h5>
-        </div>
     }
     else
     {
@@ -31,12 +31,12 @@
                                 "&rgb=" + Model.RGB +
                                 "&reduzido=" + Model.Reduzido +
                                 "&modo=I")">
-            <img style="background-color:@Model.RGB;" class="liso-thumbnail">        
+            <img style="background-color:@Model.RGB;" class="liso-thumbnail">
+            <div class="caption" style="text-decoration:none">
+                <h5>Cor: @Model.Cor</h5>
+                <p>Artigo: @Model.Artigo</p>
+                <p>Reduzido: @Model.Reduzido</p>
+            </div>
         </a>
-        <div class="caption">
-            <h5>Cor: @Model.Cor</h5>
-            <p>Artigo: @Model.Artigo</p>
-            <p>Reduzido: @Model.Reduzido</p>
-        </div>               
     }
 </div>

@@ -24,12 +24,14 @@
             @Html.AntiForgeryToken()
 
         <div class="form-group" >
-            @Html.TextBoxFor(x => x.FiltroDesenho, new { @class = "form-control", placeholder = "Começa com.." })
+            <div>
+                @Html.TextBoxFor(x => x.FiltroDesenho, new { @class = "form-control", @style="display:inline", placeholder = "Começa com.." })
+                <button type="submit" class="btn btn-default btn-group-sm"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Pesquisar</button>
+            </div>
 
             @Html.HiddenFor(x => x.IDColecao)
             @Html.HiddenFor(x => x.NMColecao)
             @Html.HiddenFor(x => x.Pagina)
-            <span><button type="submit" class="btn btn-default btn-group-sm"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Pesquisar</button></span>
         </div>
        }
     </div>

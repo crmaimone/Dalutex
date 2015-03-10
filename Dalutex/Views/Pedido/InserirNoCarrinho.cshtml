@@ -43,14 +43,29 @@
                     <div class="form-group">
                         @Html.LabelFor(x => x.Pecas, new { @class = "col-md-4 control-label" })
                         <div class="col-md-8">
-                            @Html.TextBoxFor(x => x.Pecas, new { id = "txtPecas", @class = "form-control", @placeholder = "Qtde de Peças" })
+                            @if (Model.IDTipoPedido == 0)
+                            {
+                                @Html.TextBoxFor(x => x.Pecas, new { id = "txtPecas", @class = "form-control", @placeholder = "Qtde de Peças" })
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(x => x.Pecas, new { id = "txtPecas", disabled = "disabled", @class = "form-control", @placeholder = "Qtde de Peças" })
+                            }
+
                             @Html.ValidationMessageFor(m => m.Pecas, "", new { @class = "text-danger" })
                         </div>
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(x => x.Quantidade, new { @class = "col-md-4 control-label", id = "lblQuantidade" })
                         <div class="col-md-8">
-                            @Html.TextBoxFor(x => x.Quantidade, new { id = "txtQuantidade", disabled = "disabled", @class = "form-control" })
+                            @if (Model.IDTipoPedido == 0)
+                            {
+                                @Html.TextBoxFor(x => x.Quantidade, new { id = "txtQuantidade", disabled = "disabled", @class = "form-control" })
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(x => x.Quantidade, new { id = "txtQuantidade", @class = "form-control" })
+                            }
                             @Html.ValidationMessageFor(m => m.Quantidade, "", new { @class = "text-danger" })
                         </div>
                     </div>
@@ -68,6 +83,7 @@
                     @Html.HiddenFor(x => x.Reduzido)
                     @Html.HiddenFor(x => x.Modo);
                     @Html.HiddenFor(x => x.IDColecao);
+                    @Html.HiddenFor(x => x.IDTipoPedido);
                     @Html.HiddenFor(x => x.NMColecao);
                     @Html.HiddenFor(x => x.Pagina);
                     @Html.HiddenFor(x => x.Cor);
@@ -126,14 +142,15 @@
                 }
 
                 lstTiposPedido_Change = function () {
-                    if ($("#lstTiposPedido > option:selected").attr("value") != 0) {
-                        //$("#txtPecas").val("0")
-                        //$("#txtPecas").disabled();
-                        //$("#txtQuantidade").enabled();
+                    if ($("#lstTiposPedido > option:selected").attr("value") != "0") {
+                        $("#txtPecas").val("0")
+                        $("#txtPecas").prop('disabled', true);
+                        $("#txtQuantidade").prop('disabled', false);
                     }
                     else {
-                        //$("#txtPecas").disabled();
-                        //$("#txtQuantidade").enabled();
+                        $("#txtQuantidade").val("0")
+                        $("#txtPecas").prop('disabled', false);
+                        $("#txtQuantidade").prop('disabled', true);
                     }
                 }
 
@@ -158,7 +175,7 @@
                 $("#txtPreco").focus(function () {
                     this.select();
                 });
-                $('#lstTiposPedido').on('change', scriptWrapper.lstTiposPedido_Change());
+                $('#lstTiposPedido').on('change', scriptWrapper.lstTiposPedido_Change);
             })();
         });
     </script>

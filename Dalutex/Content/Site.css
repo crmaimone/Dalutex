@@ -162,3 +162,7 @@ h5 {
   margin-left:20px;
   font-weight:bold;
 }
+
+.caption:hover{
+    text-decoration:none !important;
+}

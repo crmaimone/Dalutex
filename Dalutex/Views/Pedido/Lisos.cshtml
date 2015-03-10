@@ -1,4 +1,4 @@
-﻿@model Dalutex.Models.LisosPorColecaoViewModel
+﻿@model Dalutex.Models.Lisos
 
 @using Dalutex.Models;
 @using Dalutex.Models.DataModels;
@@ -12,7 +12,7 @@
 
 <div class="container-fluid">
     <ul class="nav nav-tabs">
-        <li role="presentation"><a href="@Url.Content(@"DesenhosPorColecao?" +
+        <li role="presentation"><a href="@Url.Content(@"Desenhos?" +
                     "&IDColecao=" + @Model.IDColecao +
                     "&NMColecao=" + @Model.NMColeao +
                     "&pagina=" + @Model.Pagina)">ESTAMPADOS</a></li>
@@ -51,9 +51,9 @@
                 {
                     if (Model.Pagina > 1)
                     {
-                        <li class="previous"><a href="@Url.Action("LisosPorColecao", "Pedido", new { IDColecao = Model.IDColecao, pagina = Model.Pagina - 1 })"><span aria-hidden="true">&larr;</span>P&aacute;gina Anterior</a></li>
+                        <li class="previous"><a href="@Url.Action("Lisos", "Pedido", new { IDColecao = Model.IDColecao, pagina = Model.Pagina - 1 })"><span aria-hidden="true">&larr;</span>P&aacute;gina Anterior</a></li>
                     }
-                    <li class="next"><a href="@Url.Action("LisosPorColecao", "Pedido", new { IDColecao = Model.IDColecao, pagina = Model.Pagina + 1 })">Pr&oacute;xima P&aacute;gina <span aria-hidden="true">&rarr;</span></a></li>
+                    <li class="next"><a href="@Url.Action("Lisos", "Pedido", new { IDColecao = Model.IDColecao, pagina = Model.Pagina + 1 })">Pr&oacute;xima P&aacute;gina <span aria-hidden="true">&rarr;</span></a></li>
                 }
             </ul>
         </nav>

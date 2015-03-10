@@ -19,6 +19,8 @@ namespace Dalutex.Controllers
 {
     public class PedidoController : BaseController
     {
+        #region Coleções
+
         public ActionResult MenuColecoes(string idcolecao)
         {
             MenuColecoesViewModel model = new MenuColecoesViewModel();
@@ -83,6 +85,7 @@ namespace Dalutex.Controllers
                 else if (idcolecao == "DESENHOS")
                 {
                     model.IDColecao = -1;
+                    model.NMColecao = "DESENHOS";
                 }
                 else if (idcolecao == null)
                 {
@@ -118,25 +121,27 @@ namespace Dalutex.Controllers
         {
             using (var ctx = new TIDalutexContext())
             {
-                var _query =
-                    from dc in ctx.VW_DESENHOS_POR_COLECAO
-                    where
-                        ((model.IDColecao == -1) || (dc.COLECAO == model.IDColecao))
-                        && (dc.DESENHO.StartsWith(model.FiltroDesenho.ToUpper()) || model.FiltroDesenho == null)
-                    group dc by
-                        new
-                        {
-                            dc.DESENHO,
-                            dc.VARIANTE
-                        }
-                        into dv
-                        select new DesenhoVariante
-                        {
-                            Desenho = dv.Key.DESENHO,
-                            Variante = dv.Key.VARIANTE
-                        };
+                IQueryable<DesenhoVariante> query = null;
 
-                model.Galeria = _query.OrderBy(x => x.Desenho).ThenBy(x => x.Variante).Skip((model.Pagina - 1) * 24).Take(24).ToList();
+                    query =
+                        from dc in ctx.VW_DESENHOS_POR_COLECAO
+                        where
+                            ((model.IDColecao == -1) || (dc.COLECAO == model.IDColecao))
+                            && (dc.DESENHO.StartsWith(model.FiltroDesenho.ToUpper()) || model.FiltroDesenho == null)
+                        group dc by
+                            new
+                            {
+                                dc.DESENHO,
+                                dc.VARIANTE
+                            }
+                            into dv
+                            select new DesenhoVariante
+                            {
+                                Desenho = dv.Key.DESENHO,
+                                Variante = dv.Key.VARIANTE
+                            };
+
+                model.Galeria = query.OrderBy(x => x.Desenho).ThenBy(x => x.Variante).Skip((model.Pagina - 1) * 24).Take(24).ToList();
             }
         }
 
@@ -164,6 +169,11 @@ namespace Dalutex.Controllers
                     model.IDColecao = int.Parse(objResult.INT1.ToString());
                     model.NMColecao = objResult.PARAMETRO2;
                 }
+                else if (idcolecao == "LISOS")
+                {
+                    model.IDColecao = -1;
+                    model.NMColecao = "LISOS";
+                }
                 else if (idcolecao == null)
                 {
                     ModelState.AddModelError("", "Coleção não informada.");
@@ -179,7 +189,7 @@ namespace Dalutex.Controllers
                 var query =
                     from dc in ctx.VW_LISOS_POR_COLECAO
                     where
-                        dc.COLECAO == model.IDColecao
+                        (dc.COLECAO == model.IDColecao || model.IDColecao == -1)
                     select new Liso
                     {
                         Reduzido = dc.CODIGO_REDUZIDO,
@@ -1054,6 +1064,56 @@ namespace Dalutex.Controllers
         {
             return new EspelhoPedidoPdf() { IDPedidoBloco = decimal.Parse(numeropedido) };
         }
+
+        #endregion
+
+        #region Exclusivos
+
+        public ActionResult ItensParaReserva(string pagina)
+        {
+            ItensParaReservaViewModel model = new ItensParaReservaViewModel();
+
+            if (string.IsNullOrWhiteSpace(pagina))
+                model.Pagina = 1;
+            else
+                model.Pagina = int.Parse(pagina);
+
+            ObterItensParaReserva(model);
+
+            model.UrlImagens = ConfigurationManager.AppSettings["PASTA_DESENHOS"];
+            return View(model);
+        }
+
+        private void ObterItensParaReserva(ItensParaReservaViewModel model)
+        {
+            using (var ctx = new TIDalutexContext())
+            {
+                var query =
+                        from dc in ctx.VW_DESENHOS_DISP_RESERVA
+                        where
+                            (dc.DESENHO.StartsWith(model.FiltroDesenho.ToUpper()) || model.FiltroDesenho == null)
+                            && (dc.COD_STUDIO.ToUpper().StartsWith(model.FiltroCodStudio.ToUpper()) || model.FiltroCodStudio == null)
+                            && (dc.COD_DAL.ToUpper().Contains(model.FiltroCodDal.ToUpper()) || model.FiltroCodDal == null)
+                        group dc by
+                            new
+                            {
+                                dc.DESENHO,
+                                dc.COD_STUDIO,
+                                dc.COD_DAL
+                            }
+                            into dv
+                            select new ItemReserva
+                            {
+                                Desenho = dv.Key.DESENHO.ToUpper(),
+                                CodStudio = dv.Key.COD_STUDIO.ToUpper(),
+                                CodDal = dv.Key.COD_DAL.ToUpper()
+                            };
+
+                model.Galeria = query.OrderBy(x => x.CodDal).Skip((model.Pagina - 1) * 24).Take(24).ToList();
+            }
+        }
+
+        #endregion
 
         //[AllowAnonymous]
         //[HttpPost]

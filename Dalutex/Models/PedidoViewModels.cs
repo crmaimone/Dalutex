@@ -14,6 +14,13 @@ namespace Dalutex.Models
         public string Desenho { get; set; }
         public string Variante { get; set; }
     }
+    
+    public class ItemReserva
+    {
+        public string Desenho { get; set; }
+        public string CodStudio { get; set; }
+        public string CodDal { get; set; }
+    }
 
     public class ArtigoTecnologia
     {
@@ -47,6 +54,17 @@ namespace Dalutex.Models
         public int Pagina { get; set; }
         public int TotalPaginas { get; set; }
         public List<Liso> Galeria { get; set; }
+    }
+
+    public class ItensParaReservaViewModel
+    {
+        public int Pagina { get; set; }
+        public int TotalPaginas { get; set; }
+        public List<ItemReserva> Galeria { get; set; }
+        public string UrlImagens { get; set; }
+        public string FiltroDesenho { get; set; }
+        public string FiltroCodStudio { get; set; }
+        public string FiltroCodDal { get; set; }
     }
 
     public class ParametrosPreco

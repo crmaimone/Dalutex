@@ -1,7 +1,31 @@
 ﻿@model Dalutex.Models.ThumbViewModel
 
 <div class="thumbnail">
-    @if (Model.Cor == null)
+    @if (Model.Cor != null)
+    {
+        <a href="@Url.Content("InserirNoCarrinho?"+
+                                "&desenho=" + Model.Desenho +
+                                "&variante=" + Model.Variante +
+                                "&artigo=" + Model.Artigo +
+                                "&tecnologia=L" +
+                                "&idcolecao=" + Model.IDColecao +
+                                "&nmcolecao=" + Model.NMColecao +
+                                "&pagina=" + Model.Pagina +
+                                "&cor=" + Model.Cor +
+                                "&rgb=" + Model.RGB +
+                                "&reduzido=" + Model.Reduzido +
+                                "&codstudio=null" +
+                                "&coddal=null" +
+                                "&modo=I")">
+            <img style="background-color:@Model.RGB;" class="liso-thumbnail">
+            <div class="caption" style="text-decoration:none">
+                <h5>Cor: @Model.Cor</h5>
+                <p>Artigo: @Model.Artigo</p>
+                <p>Reduzido: @Model.Reduzido</p>
+            </div>
+        </a>
+    }
+    else if (Model.Variante != null)
     {
         <a href="@Url.Content(@"ArtigosDisponiveis?" +
                                             "&imagem=" + Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg" +
@@ -17,25 +41,27 @@
             </div>
         </a>
     }
-    else
+    else if (Model.CodStudio != null)
     {
         <a href="@Url.Content("InserirNoCarrinho?"+
                                 "&desenho=" + Model.Desenho +
-                                "&variante=" + Model.Variante +
-                                "&artigo=" + Model.Artigo +
-                                "&tecnologia=L" +
-                                "&idcolecao=" + Model.IDColecao +
-                                "&nmcolecao=" + Model.NMColecao +
+                                "&variante=null" +
+                                "&artigo=null"+
+                                "&tecnologia=C" +
+                                "&idcolecao=0"+
+                                "&nmcolecao=null" +
                                 "&pagina=" + Model.Pagina +
-                                "&cor=" + Model.Cor +
-                                "&rgb=" + Model.RGB +
-                                "&reduzido=" + Model.Reduzido +
+                                "&cor=null"+
+                                "&rgb=null"+
+                                "&reduzido=null" +
+                                "&codstudio=" + Model.CodStudio +
+                                "&coddal=" + Model.CodDal +
                                 "&modo=I")">
-            <img style="background-color:@Model.RGB;" class="liso-thumbnail">
-            <div class="caption" style="text-decoration:none">
-                <h5>Cor: @Model.Cor</h5>
-                <p>Artigo: @Model.Artigo</p>
-                <p>Reduzido: @Model.Reduzido</p>
+            <img src="@Url.Content(Model.UrlImagens + @Model.Desenho + "_CA.jpg")" class="img-thumbnail equal-height">
+            <div class="caption">
+                <h5 style="text-decoration:none">Studio:@Model.CodStudio</h5>
+                <h5 style="text-decoration:none">Dal:@Model.CodDal</h5>
+                <h5 style="text-decoration:none">Desenho:@Model.Desenho</h5>
             </div>
         </a>
     }

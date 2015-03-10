@@ -20,6 +20,8 @@ namespace Dalutex.Models
         public int IDColecao { get; set; }
         public string NMColecao { get; set; }
         public int Pagina { get; set; }
+        public string CodStudio { get; set; }
+        public string CodDal { get; set; }
     }
 
     public class BuscaRepresentanteViewModel

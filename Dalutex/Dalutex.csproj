@@ -168,6 +168,7 @@
     <Compile Include="Models\DataModels\VW_ARTIGOS_DISPONIVEIS.cs" />
     <Compile Include="Models\DataModels\VW_CLIENTE_TRANSP.cs" />
     <Compile Include="Models\DataModels\VW_COLECAO.cs" />
+    <Compile Include="Models\DataModels\VW_DESENHOS_DISP_RESERVA.cs" />
     <Compile Include="Models\DataModels\VW_DESENHOS_POR_COLECAO.cs" />
     <Compile Include="Models\DataModels\VW_CARACT_DESENHOS.cs" />
     <Compile Include="Models\DataModels\COLECOES.cs" />
@@ -317,6 +318,7 @@
     <Content Include="Views\Base\ErrorMessage.cshtml" />
     <Content Include="Views\Home\Teste.cshtml" />
     <Content Include="Views\Pedido\Lisos.cshtml" />
+    <Content Include="Views\Pedido\ItensParaReserva.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

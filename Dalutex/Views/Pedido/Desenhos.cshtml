@@ -4,7 +4,14 @@
 @using Dalutex.Models.DataModels;
 
 @{
-    ViewBag.Title = "ITENS DA COLEÇÃO: " + Model.NMColecao;
+    if(Model.IDColecao > 0)
+    {
+        ViewBag.Title = "ITENS DA COLEÇÃO: " + Model.NMColecao;
+    }
+    else
+    {
+        ViewBag.Title = Model.NMColecao;/*desenhos, etc..*/
+    }
 }
 
 <div class="panel panel-default"><h3>@ViewBag.Title</h3></div>
@@ -55,7 +62,9 @@
                             RGB = null,
                             IDColecao = Model.IDColecao,
                             NMColecao = Model.NMColecao,
-                            Pagina = Model.Pagina
+                            Pagina = Model.Pagina,
+                            CodStudio = null,
+                            CodDal = null
                         })
 
                 </div>

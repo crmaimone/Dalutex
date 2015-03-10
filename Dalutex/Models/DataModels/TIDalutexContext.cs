@@ -45,9 +45,42 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<VW_TROCA_TEC> VW_TROCA_TEC { get; set; }
         public virtual DbSet<VW_LISOS_POR_COLECAO> VW_LISOS_POR_COLECAO { get; set; }
         public virtual DbSet<VW_IMPRESSAO_WEB> VW_IMPRESSAO_WEB { get; set; }
+        public virtual DbSet<VW_DESENHOS_DISP_RESERVA> VW_DESENHOS_DISP_RESERVA { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<VW_DESENHOS_DISP_RESERVA>()
+                .Property(e => e.ID_ITEM_STUDIO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_DESENHOS_DISP_RESERVA>()
+                .Property(e => e.ID_CONTROLE_DESENV)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_DESENHOS_DISP_RESERVA>()
+                .Property(e => e.ID_STUDIO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_DESENHOS_DISP_RESERVA>()
+                .Property(e => e.COD_STUDIO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_DESENHOS_DISP_RESERVA>()
+                .Property(e => e.NOME_STUDIO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_DESENHOS_DISP_RESERVA>()
+                .Property(e => e.DESENHO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_DESENHOS_DISP_RESERVA>()
+                .Property(e => e.COD_DAL)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_DESENHOS_DISP_RESERVA>()
+                .Property(e => e.ID_CLIENTE)
+                .IsUnicode(false);
+
             modelBuilder.Entity<VW_IMPRESSAO_WEB>()
                 .Property(e => e.VALOR_TOTAL_MT)
                 .HasPrecision(38, 0);

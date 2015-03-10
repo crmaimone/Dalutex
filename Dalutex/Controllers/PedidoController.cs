@@ -59,7 +59,7 @@ namespace Dalutex.Controllers
         public ActionResult Desenhos(string pIDColecao, string NMColecao, string pagina)
         {
             DesenhosViewModel model = new DesenhosViewModel();
-            model.NMColeao = NMColecao;
+            model.NMColecao = NMColecao;
 
             if (string.IsNullOrWhiteSpace(pagina))
                 model.Pagina = 1;
@@ -70,13 +70,15 @@ namespace Dalutex.Controllers
             {
                 if (pIDColecao == "ATUAL")
                 {
-                    model.IDColecao = int.Parse(ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Atual).PARAMETRO1);
-                    model.NMColeao = ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Atual).PARAMETRO2;
+                    CONFIG_GERAL objResult = ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Atual);
+                    model.IDColecao = int.Parse(objResult.PARAMETRO1);
+                    model.NMColecao = objResult.PARAMETRO2;
                 }
                 else if (pIDColecao == "POCKET")
                 {
-                    model.IDColecao = int.Parse(ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Pocket).INT1.ToString());
-                    model.NMColeao = ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Pocket).PARAMETRO2;
+                    CONFIG_GERAL objResult = ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Pocket);
+                    model.IDColecao = int.Parse(objResult.INT1.ToString());
+                    model.NMColecao = objResult.PARAMETRO2;
                 }
                 else if (pIDColecao == "DESENHOS")
                 {

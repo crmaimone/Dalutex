@@ -119,6 +119,10 @@ h3 {
     padding:  0px 0px 0px 5px;          
 }
 
+.row-fluid#pesqDesenho{
+    padding-top: 2px;
+}
+
 .panel#pnlogin {    
     margin-top: 5px;
 }

@@ -32,7 +32,7 @@ namespace Dalutex.Models
     public class DesenhosViewModel
     {
         public int IDColecao { get; set; }
-        public string NMColeao { get; set; }
+        public string NMColecao { get; set; }
         public int Pagina { get; set; }
         public int TotalPaginas { get; set; }
         public List<DesenhoVariante> Galeria { get; set; }

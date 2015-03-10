@@ -4,7 +4,7 @@
 @using Dalutex.Models.DataModels;
 
 @{
-    ViewBag.Title = "ITENS DA COLEÇÃO: " + Model.NMColeao;
+    ViewBag.Title = "ITENS DA COLEÇÃO: " + Model.NMColecao;
 }
 
 <div class="panel panel-default"><h3>@ViewBag.Title</h3></div>
@@ -14,24 +14,26 @@
         <li role="presentation" class="active"><a href="#">ESTAMPADOS</a></li>
         <li role="presentation"><a href="@Url.Content(@"Lisos?" +
                     "&IDColecao=" + @Model.IDColecao +
-                    "&NMColecao=" + @Model.NMColeao +
+                    "&NMColecao=" + @Model.NMColecao +
                     "&pagina=" + @Model.Pagina)">LISOS</a></li>
     </ul>
-    <div class="row">
+    
+    <div class="row-fluid" id="pesqDesenho">
        @using (Html.BeginForm("Desenhos", "Pedido", null, FormMethod.Post, new { role = "search" }))
        {
             @Html.AntiForgeryToken()
 
-            <div class="form-group">
-                @Html.TextBoxFor(x => x.FiltroDesenho, new { @class = "form-control", placeholder = "Começa com.." })
-            </div>
-           
+        <div class="form-group" >
+            @Html.TextBoxFor(x => x.FiltroDesenho, new { @class = "form-control", placeholder = "Começa com.." })
+
             @Html.HiddenFor(x => x.IDColecao)
-            @Html.HiddenFor(x => x.NMColeao)
+            @Html.HiddenFor(x => x.NMColecao)
             @Html.HiddenFor(x => x.Pagina)
-            <button type="submit" class="btn btn-default btn-group-sm"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Pesquisar</button>
-        }
+            <span><button type="submit" class="btn btn-default btn-group-sm"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Pesquisar</button></span>
+        </div>
+       }
     </div>
+    
     <div class="row">
         @if (Model.Galeria != null)
         {
@@ -50,7 +52,7 @@
                             Cor = null,
                             RGB = null,
                             IDColecao = Model.IDColecao,
-                            NMColecao = Model.NMColeao,
+                            NMColecao = Model.NMColecao,
                             Pagina = Model.Pagina
                         })
 

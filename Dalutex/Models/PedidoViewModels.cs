@@ -244,7 +244,6 @@ namespace Dalutex.Models
 
         [Display(Name = "Qualidade comercial")]
         public List<KeyValuePair<string, string>> QualidadeComercial { get; set; }
-        [StringRequired(ErrorMessage="O campo qualidade comercial é obrigatório.")]
         public string IDQualidadeComercial { get; set; }
 
         [StringLength(1000)]

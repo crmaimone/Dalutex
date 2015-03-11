@@ -18,80 +18,84 @@
                     {
                         @Html.AntiForgeryToken()
 
-                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.QualidadeComercial, new { @class = "col-md-3 control-label" })
-                            <div class="col-md-9">
-                                @Html.DropDownListFor(m => m.IDQualidadeComercial, new SelectList(Model.QualidadeComercial, "key", "Value"), "Selecione", new { @id = "lstQualidades" })
-                                @Html.ValidationMessageFor(m => m.IDQualidadeComercial, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.Moedas, new { @class = "col-md-3 control-label" })
-                            <div class="col-md-9">
-                                @Html.DropDownListFor(m => m.IDMoedas, new SelectList(Model.Moedas, "CODIGOMOEDA", "NOMEMOEDA"), "Selecione", new { @id = "lstMoedas" })
-                                @Html.ValidationMessageFor(m => m.IDMoedas, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.CondicoesPagto, new { @class = "col-md-3 control-label" })
-                            <div class="col-md-9">
-                                @Html.DropDownListFor(m => m.IDCondicoesPagto, new SelectList(Model.CondicoesPagto, "ID_COND", "DESCRI_COND"), "Selecione", new { @id = "lstTiposPgto" })
-                                @Html.ValidationMessageFor(m => m.IDCondicoesPagto, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.CanaisVenda, new { @class = "col-md-3 control-label" })
-                            <div class="col-md-9">
-                                @Html.DropDownListFor(m => m.IDCanaisVenda, new SelectList(Model.CanaisVenda, "CANAL_VENDA", "DESCRICAO"), "Selecione", new { @id = "lstCanaisVenda" })
-                                @Html.ValidationMessageFor(m => m.IDCanaisVenda, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.ViasTransporte, new { @class = "col-md-3 control-label" })
-                            <div class="col-md-9">
-                                @Html.DropDownListFor(m => m.IDViasTransporte, new SelectList(Model.ViasTransporte, "VIATRANSPORTE", "DESCRICAO"), "Selecione", new { @id = "lstViasTransp" })
-                                @Html.ValidationMessageFor(m => m.IDViasTransporte, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.Fretes, new { @class = "col-md-3 control-label" })
-                            <div class="col-md-9">
-                                @Html.DropDownListFor(m => m.IDFretes, new SelectList(Model.Fretes, "TIPOFRETE", "DESCRICAO"), "Selecione", new { @id = "lstFretes" })
-                                @Html.ValidationMessageFor(m => m.IDFretes, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
-                        @*<div class="form-group">
-                                @Html.LabelFor(x => x.LocaisVenda, new { @class = "col-md-3 control-label" })
+                        if (Model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
+                        {
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.QualidadeComercial, new { @class = "col-md-3 control-label" })
                                 <div class="col-md-9">
-                                    @Html.DropDownListFor(m => m.IDLocaisVenda, new SelectList(Model.LocaisVenda, "CODIGO", "DESCRICAO"), "Selecione", new { @id = "lstLocaisVenda" })
-                                    @Html.ValidationMessageFor(m => m.IDLocaisVenda, "", new { @class = "text-danger" })
+                                    @Html.DropDownListFor(m => m.IDQualidadeComercial, new SelectList(Model.QualidadeComercial, "key", "Value"), "Selecione", new { @id = "lstQualidades" })
+                                    @Html.ValidationMessageFor(m => m.IDQualidadeComercial, "", new { @class = "text-danger" })
                                 </div>
-                            </div>*@
-
-                        @*<div class="form-group" id="elemGerentes">
-                                @Html.LabelFor(x => x.GerentesVenda, new { @class = "col-md-3 control-label" })
-                                <div class="col-md-9">
-                                    @Html.DropDownListFor(m => m.IDGerentesVenda, new SelectList(Model.GerentesVenda, "GERENTE", "DESCRICAO"), "Selecione", new { @id = "lstGerentes" })
-                                    @Html.ValidationMessageFor(m => m.IDGerentesVenda, "", new { @class = "text-danger" })
-                                </div>
-                            </div>*@
-
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.TiposAtendimento, new { @class = "col-md-3 control-label" })
-                            <div class="col-md-9">
-                                @Html.DropDownListFor(m => m.IDTiposAtendimento, new SelectList(Model.TiposAtendimento, "COD_ATEND", "DESCRI_ATEND"), "Selecione", new { @id = "lstTiposAtendimento" })
-                                @Html.ValidationMessageFor(m => m.IDTiposAtendimento, "", new { @class = "text-danger" })
                             </div>
-                        </div>
 
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.Moedas, new { @class = "col-md-3 control-label" })
+                                <div class="col-md-9">
+                                    @Html.DropDownListFor(m => m.IDMoedas, new SelectList(Model.Moedas, "CODIGOMOEDA", "NOMEMOEDA"), "Selecione", new { @id = "lstMoedas" })
+                                    @Html.ValidationMessageFor(m => m.IDMoedas, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.CondicoesPagto, new { @class = "col-md-3 control-label" })
+                                <div class="col-md-9">
+                                    @Html.DropDownListFor(m => m.IDCondicoesPagto, new SelectList(Model.CondicoesPagto, "ID_COND", "DESCRI_COND"), "Selecione", new { @id = "lstTiposPgto" })
+                                    @Html.ValidationMessageFor(m => m.IDCondicoesPagto, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.CanaisVenda, new { @class = "col-md-3 control-label" })
+                                <div class="col-md-9">
+                                    @Html.DropDownListFor(m => m.IDCanaisVenda, new SelectList(Model.CanaisVenda, "CANAL_VENDA", "DESCRICAO"), "Selecione", new { @id = "lstCanaisVenda" })
+                                    @Html.ValidationMessageFor(m => m.IDCanaisVenda, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.ViasTransporte, new { @class = "col-md-3 control-label" })
+                                <div class="col-md-9">
+                                    @Html.DropDownListFor(m => m.IDViasTransporte, new SelectList(Model.ViasTransporte, "VIATRANSPORTE", "DESCRICAO"), "Selecione", new { @id = "lstViasTransp" })
+                                    @Html.ValidationMessageFor(m => m.IDViasTransporte, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.Fretes, new { @class = "col-md-3 control-label" })
+                                <div class="col-md-9">
+                                    @Html.DropDownListFor(m => m.IDFretes, new SelectList(Model.Fretes, "TIPOFRETE", "DESCRICAO"), "Selecione", new { @id = "lstFretes" })
+                                    @Html.ValidationMessageFor(m => m.IDFretes, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            @*<div class="form-group">
+                                    @Html.LabelFor(x => x.LocaisVenda, new { @class = "col-md-3 control-label" })
+                                    <div class="col-md-9">
+                                        @Html.DropDownListFor(m => m.IDLocaisVenda, new SelectList(Model.LocaisVenda, "CODIGO", "DESCRICAO"), "Selecione", new { @id = "lstLocaisVenda" })
+                                        @Html.ValidationMessageFor(m => m.IDLocaisVenda, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>*@
+
+                            @*<div class="form-group" id="elemGerentes">
+                                    @Html.LabelFor(x => x.GerentesVenda, new { @class = "col-md-3 control-label" })
+                                    <div class="col-md-9">
+                                        @Html.DropDownListFor(m => m.IDGerentesVenda, new SelectList(Model.GerentesVenda, "GERENTE", "DESCRICAO"), "Selecione", new { @id = "lstGerentes" })
+                                        @Html.ValidationMessageFor(m => m.IDGerentesVenda, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>*@
+
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.TiposAtendimento, new { @class = "col-md-3 control-label" })
+                                <div class="col-md-9">
+                                    @Html.DropDownListFor(m => m.IDTiposAtendimento, new SelectList(Model.TiposAtendimento, "COD_ATEND", "DESCRI_ATEND"), "Selecione", new { @id = "lstTiposAtendimento" })
+                                    @Html.ValidationMessageFor(m => m.IDTiposAtendimento, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        }
+
+                        
                         <div class="form-group">
                             @Html.LabelFor(x => x.Observacoes, new { @class = "col-md-3 control-label" })
                             <div class="col-md-9">
@@ -102,7 +106,18 @@
                         <hr />
                         <div class="form-group">
                             <div class="col-md-12">
-                                @Html.ActionLink("VOLTAR", "Transportadora", "Cadastro", new { IDTransportadora = Model.IDTransportadora }, new { @class = "btn btn-default btn-warning pull-left" })
+                                @if (Model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
+                                {
+                                    @Html.ActionLink("VOLTAR", "Transportadora", "Cadastro", new { IDTransportadora = Model.IDTransportadora }, new { @class = "btn btn-default btn-warning pull-left" })
+                                }
+                                else
+                                { 
+                                    <h3>Deseja realmente concluir este pedido?</h3>
+                                    @Html.ActionLink("VOLTAR", "ClientesFatura", "Cadastro", new { IDRepresentante = Model.IDRepresentante, IDClienteFatura = Model.IDClienteFatura }, new { @class = "btn btn-default btn-warning pull-left" })
+                                }
+
+                                @Html.HiddenFor(x => x.IDTipoPedido)
+
                                 <input type="submit" value="CONFIRMAR" class="btn btn-default pull-right" />
                             </div>
                         </div>
@@ -116,10 +131,9 @@
             }
         </div>
     </div>
-    @if (!ViewBag.CarrinhoVazio)
+    @if (!ViewBag.CarrinhoVazio && Model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
     {
         <hr />
-
         <table id="listaCarrinho" class="table table-striped table-bordered" cellspacing="0" style="width:100%;">
             <thead>
                 <tr>

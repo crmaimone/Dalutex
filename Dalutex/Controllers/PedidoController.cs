@@ -694,6 +694,7 @@ namespace Dalutex.Controllers
         public ActionResult ConclusaoPedido(string idtransportadora, string idclienteFatura)
         {
             ConclusaoPedidoViewModel model = new ConclusaoPedidoViewModel();
+            model.IDTipoPedido = base.Session_Carrinho.IDTipoPedido;
 
             //Carrinho vazio não processar nada
             if (Session_Carrinho != null)
@@ -725,16 +726,25 @@ namespace Dalutex.Controllers
         {
             try
             {
+                if (model.IDTipoPedido == (int)Enums.TiposPedido.RESERVA)
+                {
+                    model.IDQualidadeComercial = Enums.QualidadeComercial.A.ToString();
+                    model.IDCondicoesPagto = (int)Enums.CondicoesPagamento.CORTESIA;
+                }
+
+                //Carrinho vazio não processar nada
+                if (Session_Carrinho == null)
+                {
+                    ViewBag.CarrinhoVazio = true;
+                    return View(model);
+                }
+                else
+                {
+                    ViewBag.CarrinhoVazio = false;
+                }
+
                 if (ModelState.IsValid)
                 {
-                    //Carrinho vazio não processar nada
-                    if (Session_Carrinho == null)
-                    {
-                        ViewBag.CarrinhoVazio = true;
-                        return View(model);
-                    }
-
-                    ViewBag.CarrinhoVazio = false;
 
                     if (Session_Carrinho.Itens == null || Session_Carrinho.Itens.Count == 0)
                     {
@@ -915,18 +925,6 @@ namespace Dalutex.Controllers
                         }
                     }
 
-                    if(model.IDTipoPedido == (int)Enums.TiposPedido.RESERVA)
-                    {
-                        model.IDQualidadeComercial = Enums.QualidadeComercial.A.ToString();
-                        model.IDCondicoesPagto = (int)Enums.CondicoesPagamento.CORTESIA;
-                        base.Session_Carrinho.DataEntrega = DateTime.Today;
-
-                        foreach (InserirNoCarrinhoViewModel item in base.Session_Carrinho.Itens)
-                        {
-                            //TODO COTINUAR AQUI
-                        }
-                    }
-
                     PRE_PEDIDO objPrePedido = new PRE_PEDIDO()
                     {
                         NUMERO_PEDIDO_BLOCO = iNUMERO_PEDIDO_BLOCO,
@@ -937,6 +935,8 @@ namespace Dalutex.Controllers
                         COD_COND_PGTO = model.IDCondicoesPagto,
                         OBSERVACOES = model.Observacoes,
                         DATA_ENTREGA = base.Session_Carrinho.DataEntrega,
+                        DATA_EMISSAO = DateTime.Now,
+                        DATA_EMISSAO_DT = DateTime.Today,
                         ID_CLIENTE_ENTREGA = base.Session_Carrinho.IDClienteEntrega,
                         ID_TRANSPORTADORA = base.Session_Carrinho.IDTransportadora,
                         USUARIO_INICIO = base.Session_Usuario.NOME_USU,
@@ -953,146 +953,181 @@ namespace Dalutex.Controllers
                         ORIGEM = "PW" // APENAS PRA INFORMAR QUE ESTE PEDIDO VEIO DO PEDIDO WEB NOVO.                                                                                                                                                                                                                                                                                                                                              
                     };
 
-                    List<PRE_PEDIDO_ITENS> lstItens = new List<PRE_PEDIDO_ITENS>();
-
-                    int i = 0;
-                    foreach (InserirNoCarrinhoViewModel item in base.Session_Carrinho.Itens)
-                    {
-                        i++;
-
-                        PRE_PEDIDO_ITENS objItem = new PRE_PEDIDO_ITENS()
-                        {
-                            ARTIGO = item.Artigo,
-                            COR = item.Cor,
-                            DATA_ENTREGA = item.DataEntregaItem,
-                            DESENHO = item.Desenho,
-                            ITEM = i,
-                            LISO_ESTAMP = item.Tecnologia,
-                            NUMERO_PEDIDO_BLOCO = iNUMERO_PEDIDO_BLOCO,
-                            //COLECAO = Discutir com a Etiane
-                            PE = "N",
-                            PRECO_UNIT = item.Preco,
-                            //PRECOLISTA = Buscar qdo tivermos o preço da tabela
-                            QTDEPC = item.Pecas,
-                            QUANTIDADE = item.Quantidade,
-                            REDUZIDO_ITEM = item.Reduzido,
-                            UM = item.UnidadeMedida,
-                            VALOR_TOTAL = item.Preco * item.Quantidade,
-                            VARIANTE = item.Variante,
-                        };
-
-                        lstItens.Add(objItem);
-                    }
-
                     using (var ctx = new TIDalutexContext())
                     {
-                        ctx.PRE_PEDIDO.Add(objPrePedido);
+                        List<PRE_PEDIDO_ITENS> lstItens = new List<PRE_PEDIDO_ITENS>();
 
-                        #region Criticas
-
-                        #region Liberação financeira
-
-                        ctx.PRE_PEDIDO_CRITICA.Add(new PRE_PEDIDO_CRITICA()
+                        int i = 0;
+                        foreach (InserirNoCarrinhoViewModel item in base.Session_Carrinho.Itens)
                         {
-                            NUMERO_PRE_PEDIDO = objPrePedido.NUMERO_PEDIDO_BLOCO,
-                            COD_CRITICA = (decimal)Enums.TiposCritica.LiberacaoFinanceira,
-                            FLG_STATUS = "C"
-                        });
-
-                        #endregion
-
-                        #region Item sem reduzido
-
-                        bool hasItemSemReduzido = false;
-
-                        foreach (PRE_PEDIDO_ITENS item in lstItens)
-                        {
-                            if (!hasItemSemReduzido && item.REDUZIDO_ITEM.GetValueOrDefault() == -2)
+                            if (model.IDTipoPedido == (int)Enums.TiposPedido.RESERVA)
                             {
-                                hasItemSemReduzido = true;
+                                item.Artigo = "0000";
+                                item.Quantidade = 100;
+                                item.Pecas = 1;
+                                item.TecnologiaPorExtenso = null;
+
+                                #region Reserva - Item sem reduzido
+
+                                if (item.Reduzido <= default(int))
+                                {
+                                    item.Reduzido = ctx.Database.SqlQuery<int>("SELECT SEQ_ID_CONTROLE_DESENV.NEXTVAL FROM DUAL", 1).FirstOrDefault();
+
+                                    CONTROLE_DESENV objInsert = new CONTROLE_DESENV()
+                                    {
+                                        ID_CONTROLE_DESENV = item.Reduzido,
+                                        DT_ENT_ATEND = DateTime.Now,
+                                        ID_USUARIO = base.Session_Usuario.COD_USU,
+                                        ID_CLIENTE = base.Session_Carrinho.IDClienteFatura.ToString("000000"),
+                                        ID_REP = base.Session_Carrinho.IDRepresentante,
+                                        ID_STUDIO = item.IDStudio,
+                                        ID_ITEM_STUDIO = item.IDItemStudio,
+                                        STATUS_GERAL = 1
+                                    };
+
+                                    ctx.CONTROLE_DESENV.Add(objInsert);
+                                }
+
+                                CONTROLE_DESENV_ITEM_STUDIO objUpdate = ctx.CONTROLE_DESENV_ITEM_STUDIO.Find(item.IDItemStudio);
+                                objUpdate.STATUS = 1; //INDISPONÍVEL
+
+                                #endregion
                             }
 
-                            ctx.PRE_PEDIDO_ITENS.Add(item);
+                            i++;
+
+                            PRE_PEDIDO_ITENS objItem = new PRE_PEDIDO_ITENS()
+                            {
+                                ARTIGO = item.Artigo,
+                                COR = item.Cor,
+                                DATA_ENTREGA = item.DataEntregaItem,
+                                DESENHO = item.Desenho,
+                                ITEM = i,
+                                LISO_ESTAMP = item.Tecnologia,
+                                NUMERO_PEDIDO_BLOCO = iNUMERO_PEDIDO_BLOCO,
+                                //COLECAO = Discutir com a Etiane
+                                PE = "N",
+                                PRECO_UNIT = item.Preco,
+                                //PRECOLISTA = Buscar qdo tivermos o preço da tabela
+                                QTDEPC = item.Pecas,
+                                QUANTIDADE = item.Quantidade,
+                                REDUZIDO_ITEM = item.Reduzido,
+                                UM = item.UnidadeMedida,
+                                VALOR_TOTAL = item.Preco * item.Quantidade,
+                                VARIANTE = item.Variante,
+                            };
+
+                            lstItens.Add(objItem);
                         }
 
-                        if (hasItemSemReduzido)
+                        ctx.PRE_PEDIDO.Add(objPrePedido);
+
+                        if (model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
                         {
+                            #region Criticas
+
+                            #region Liberação financeira
+
                             ctx.PRE_PEDIDO_CRITICA.Add(new PRE_PEDIDO_CRITICA()
                             {
                                 NUMERO_PRE_PEDIDO = objPrePedido.NUMERO_PEDIDO_BLOCO,
-                                COD_CRITICA = (decimal)Enums.TiposCritica.SemReduzido,
+                                COD_CRITICA = (decimal)Enums.TiposCritica.LiberacaoFinanceira,
                                 FLG_STATUS = "C"
                             });
-                        }
 
-                        #endregion
+                            #endregion
 
-                        #region Preço divergente
+                            #region Item sem reduzido
 
+                            bool hasItemSemReduzido = false;
 
-                        foreach (PRE_PEDIDO_ITENS item in lstItens)
-                        {
-                            if (item.REDUZIDO_ITEM != -2)//TEM REDUZIDO
+                            foreach (PRE_PEDIDO_ITENS item in lstItens)
                             {
-                                decimal dReduzido = item.REDUZIDO_ITEM.GetValueOrDefault();
-                                using (var ctxDlx = new DalutexContext())
+                                if (!hasItemSemReduzido && item.REDUZIDO_ITEM.GetValueOrDefault() == -2)
                                 {
-                                    var queryParametros = from vw in ctxDlx.VMASCARAPRODUTOACABADO
-                                                          join co in ctxDlx.COLECOES on vw.COLECAO equals co.COLECAO
-                                                          where vw.CODIGO_REDUZIDO == dReduzido
-                                                          select new ParametrosPreco
-                                                          {
-                                                              E_Exclusivo = vw.EXCL == "E" ? true : false,
-                                                              Comissao = co.ID_COLECAO == "POCK" ? 3 : 4,
-                                                              IDColecao = vw.COLECAO
-                                                          };
+                                    hasItemSemReduzido = true;
+                                }
+                            }
 
-                                    ParametrosPreco objParametro = queryParametros.First();
+                            if (hasItemSemReduzido)
+                            {
+                                ctx.PRE_PEDIDO_CRITICA.Add(new PRE_PEDIDO_CRITICA()
+                                {
+                                    NUMERO_PRE_PEDIDO = objPrePedido.NUMERO_PEDIDO_BLOCO,
+                                    COD_CRITICA = (decimal)Enums.TiposCritica.SemReduzido,
+                                    FLG_STATUS = "C"
+                                });
+                            }
+
+                            #endregion
+
+                            #region Preço divergente
 
 
-                                    #region Call Function Oracle
-
-                                    int iCodCondPgto = 0;//TODO: BUSCAR NA FUNÇÃO DO ORACLE
-                                    iCodCondPgto = ctx.Database.SqlQuery<int>("select ti_dalutex.pega_consicao_pgto(:p0) from dual", 1).FirstOrDefault();
-
-                                    #endregion
-
-                                    int? iColecaoAtual = int.Parse(ctx.CONFIG_GERAL.Where(y => y.ID_CONFIG == (int)Enums.TipoColecaoEspecial.Atual).First().PARAMETRO1);
-
-                                    TABELAPRECOITEM objPreco = ctx.TABELAPRECOITEM.Where(x =>
-                                            x.COLECAO == (objParametro.E_Exclusivo ? objParametro.IDColecao : iColecaoAtual)
-                                            && x.QUALIDADECOMERCIAL == model.IDQualidadeComercial
-                                            && x.COD_COND_PAGTO == iCodCondPgto
-                                            && x.EST_LISO == "E"
-                                            && x.COMISSAO == objParametro.Comissao
-                                            && x.ARTIGO == item.ARTIGO
-                                        ).FirstOrDefault();
-
-                                    //Se não tem preço, crítica. Se tem preço e ele é diferente do informado pelo representante, crítica.
-                                    if (objPreco == null || decimal.Round(objPreco.VALOR.GetValueOrDefault(), 2, MidpointRounding.ToEven) != item.PRECO_UNIT.GetValueOrDefault())
+                            foreach (PRE_PEDIDO_ITENS item in lstItens)
+                            {
+                                if (item.REDUZIDO_ITEM != -2)//TEM REDUZIDO
+                                {
+                                    decimal dReduzido = item.REDUZIDO_ITEM.GetValueOrDefault();
+                                    using (var ctxDlx = new DalutexContext())
                                     {
-                                        ctx.PRE_PEDIDO_CRITICA.Add(new PRE_PEDIDO_CRITICA()
+                                        var queryParametros = from vw in ctxDlx.VMASCARAPRODUTOACABADO
+                                                              join co in ctxDlx.COLECOES on vw.COLECAO equals co.COLECAO
+                                                              where vw.CODIGO_REDUZIDO == dReduzido
+                                                              select new ParametrosPreco
+                                                              {
+                                                                  E_Exclusivo = vw.EXCL == "E" ? true : false,
+                                                                  Comissao = co.ID_COLECAO == "POCK" ? 3 : 4,
+                                                                  IDColecao = vw.COLECAO
+                                                              };
+
+                                        ParametrosPreco objParametro = queryParametros.First();
+
+
+                                        #region Call Function Oracle
+
+                                        int iCodCondPgto = 0;//TODO: BUSCAR NA FUNÇÃO DO ORACLE
+                                        iCodCondPgto = ctx.Database.SqlQuery<int>("select ti_dalutex.pega_consicao_pgto(:p0) from dual", 1).FirstOrDefault();
+
+                                        #endregion
+
+                                        int? iColecaoAtual = int.Parse(ctx.CONFIG_GERAL.Where(y => y.ID_CONFIG == (int)Enums.TipoColecaoEspecial.Atual).First().PARAMETRO1);
+
+                                        TABELAPRECOITEM objPreco = ctx.TABELAPRECOITEM.Where(x =>
+                                                x.COLECAO == (objParametro.E_Exclusivo ? objParametro.IDColecao : iColecaoAtual)
+                                                && x.QUALIDADECOMERCIAL == model.IDQualidadeComercial
+                                                && x.COD_COND_PAGTO == iCodCondPgto
+                                                && x.EST_LISO == "E"
+                                                && x.COMISSAO == objParametro.Comissao
+                                                && x.ARTIGO == item.ARTIGO
+                                            ).FirstOrDefault();
+
+                                        //Se não tem preço, crítica. Se tem preço e ele é diferente do informado pelo representante, crítica.
+                                        if (objPreco == null || decimal.Round(objPreco.VALOR.GetValueOrDefault(), 2, MidpointRounding.ToEven) != item.PRECO_UNIT.GetValueOrDefault())
                                         {
-                                            NUMERO_PRE_PEDIDO = objPrePedido.NUMERO_PEDIDO_BLOCO,
-                                            COD_CRITICA = (decimal)Enums.TiposCritica.PrecoDiferente,
-                                            FLG_STATUS = "C",
-                                            ITEM_PEDIDO = item.ITEM,
-                                            VALOR_TAB = decimal.Round(objPreco != null ? objPreco.VALOR.GetValueOrDefault() : 0, 2, MidpointRounding.ToEven),
-                                            VALOR_ITEM = item.PRECO_UNIT
-                                        });
+                                            ctx.PRE_PEDIDO_CRITICA.Add(new PRE_PEDIDO_CRITICA()
+                                            {
+                                                NUMERO_PRE_PEDIDO = objPrePedido.NUMERO_PEDIDO_BLOCO,
+                                                COD_CRITICA = (decimal)Enums.TiposCritica.PrecoDiferente,
+                                                FLG_STATUS = "C",
+                                                ITEM_PEDIDO = item.ITEM,
+                                                VALOR_TAB = decimal.Round(objPreco != null ? objPreco.VALOR.GetValueOrDefault() : 0, 2, MidpointRounding.ToEven),
+                                                VALOR_ITEM = item.PRECO_UNIT
+                                            });
+                                        }
                                     }
                                 }
                             }
+
+                            #endregion
+
+                            #endregion
                         }
 
                         foreach (PRE_PEDIDO_ITENS item in lstItens)
                         {
                             ctx.PRE_PEDIDO_ITENS.Add(item);
                         }
-
-                        #endregion
-
-                        #endregion
 
                         ctx.SaveChanges();
                     }

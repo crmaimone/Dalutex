@@ -63,9 +63,9 @@
                 {
                     if (Model.Pagina > 1)
                     {
-                        <li class="previous"><a href="@Url.Action("Desenhos", "Pedido", new { IDColecao = Model.IDColecao, pagina = Model.Pagina - 1 })"><span aria-hidden="true">&larr;</span>P&aacute;gina Anterior</a></li>
+                        <li class="previous"><a href="@Url.Action("ItensParaReserva", "Pedido", new { pagina = Model.Pagina - 1 })"><span aria-hidden="true">&larr;</span>P&aacute;gina Anterior</a></li>
                     }
-                    <li class="next"><a href="@Url.Action("Desenhos", "Pedido", new { IDColecao = Model.IDColecao, pagina = Model.Pagina + 1 })">Pr&oacute;xima P&aacute;gina <span aria-hidden="true">&rarr;</span></a></li>
+                    <li class="next"><a href="@Url.Action("ItensParaReserva", "Pedido", new { pagina = Model.Pagina + 1 })">Pr&oacute;xima P&aacute;gina <span aria-hidden="true">&rarr;</span></a></li>
                 }
             </ul>
         </nav>
@@ -84,41 +84,16 @@
                 //API Attributes
 
                 //API Methods
-                loadImages = function () {
-                    $(".img-thumbnail").each(function () {
-                        var $img = $(this);
-                        var data = $img.data("assigned-id").split("_");
-                        var desenho = data[0];
-                        var variante = data[1];
-
-                        $.ajax({
-                            type: 'POST',
-                            url: '@Url.Action("ObterDesenho", "Pedido")',
-                            data: 'desenho=' + desenho + '&variante=' + variante,
-                            async: false,
-                            success: function (Image) {
-                                if (Image != '') {
-                                    $img.attr('src', 'data:image/jpg;base64,' + Image.Image);
-                                }
-                            },
-                            error: function (xhr, ajaxOptions, thrownError) {
-                                $img.attr('src', 'data:image/jpg;base64,');
-                            }
-                        })
-                    });
-                    $('.equal-height').equalHeight();
-                }
-
+                
                 // public API
                 return {
-                    loadImages: loadImages
+
                 };
             })();
 
             //Init
             (function Init() {
                 $('.equal-height').equalHeight();
-                //scriptWrapper.loadImages();
             })();
         });
     </script>

@@ -8,7 +8,7 @@
     <h3>@ViewBag.Title</h3>
 </div>
 
-<div class="panel panel-default">
+<div>
     @if (Model.Tipo == Enums.ItemType.Estampado)
     {
         <h5>ARTIGO: @Model.Artigo | TECNOLOGIA: @Model.TecnologiaPorExtenso | DESENHO: @Model.Desenho | VARIANTE: @Model.Variante</h5>
@@ -19,7 +19,9 @@
     }
     else if (Model.Tipo == Enums.ItemType.Reserva)
     {
-        <h5>COD. STUDIO: @Model.CodStudio| COD. DAL: @Model.CodDal| DESENHO: @Model.Desenho</h5>
+        <p>CÓDIGO DE STUDIO: @Model.CodStudio</p>
+        <p>CÓDIGO DAL: @Model.CodDal</p>
+        <p>DESENHO: @Model.Desenho</p>
     }
 </div>
 
@@ -34,7 +36,7 @@
                     @Html.AntiForgeryToken()
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     
-                    @if (Model.Tipo != Enums.ItemType.Reserva)
+                    if (Model.Tipo != Enums.ItemType.Reserva)
                     {
                         if (Model.ObterTipoPedido)
                         {
@@ -88,7 +90,8 @@
                     {
                         <h5>Clique em salvar para incluir este desenho no carrinho.</h5>
                     }
-                    
+
+                    @Html.HiddenFor(x => x.Tipo);
                     @Html.HiddenFor(x => x.Desenho)
                     @Html.HiddenFor(x => x.Variante)
                     @Html.HiddenFor(x => x.Artigo)
@@ -103,6 +106,8 @@
                     @Html.HiddenFor(x => x.RGB);
                     @Html.HiddenFor(x => x.CodStudio);
                     @Html.HiddenFor(x => x.CodDal);
+                    @Html.HiddenFor(x => x.IDStudio);
+                    @Html.HiddenFor(x => x.IDItemStudio);
                     @Html.HiddenFor(x => x.UnidadeMedida, new { id = "hidUM" })
                     @Html.HiddenFor(x => x.ValorPadrao, new { id = "hidValPadrao" })
 
@@ -112,7 +117,7 @@
 
                             @if (Model.Modo == "I")
                             {
-                                @if (Model.Tipo == Enums.ItemType.Estampado)
+                                if (Model.Tipo == Enums.ItemType.Estampado)
                                 {
                                     @Html.ActionLink("VOLTAR", "ArtigosDisponiveis", "Pedido",
                                     new

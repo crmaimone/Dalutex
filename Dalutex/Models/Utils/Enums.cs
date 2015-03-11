@@ -89,5 +89,10 @@ namespace Dalutex.Models
             CompletoPorArtigo = 4,
             PedidoIncompleto = 5
         }
+
+        public enum Transportadoras
+        {
+            NossoCarro = 1
+        }
     }
 }

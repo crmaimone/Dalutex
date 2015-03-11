@@ -1,4 +1,4 @@
-﻿@using Dalutex.Models.DataModels
+﻿@using Dalutex.Models;
 
 @model Dalutex.Models.PesquisaClientesFaturaViewModel
 
@@ -37,9 +37,16 @@
                     <a href="#" class="list-group-item active">CLIENTE FATURA</a>
                     @if (@Model != null && @Model.ClientesFatura != null)
                     {
-                        foreach (VW_CLIENTE_TRANSP item in Model.ClientesFatura)
+                        foreach (Dalutex.Models.DataModels.VW_CLIENTE_TRANSP item in Model.ClientesFatura)
                         {
-                            <a href="@Url.Action("ClientesEntrega", "Cadastro", new { IDClienteFatura = item.ID_CLIENTE, IDClienteEntrega = item.ID_CLIENTE })" class="list-group-item"><strong> @item.CNPJ.Trim()</strong> | @item.NOME.Trim() | @item.ENDERECO</a>
+                            if (Model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
+                            {
+                                <a href="@Url.Action("ClientesEntrega", "Cadastro", new { IDClienteFatura = item.ID_CLIENTE, IDClienteEntrega = item.ID_CLIENTE })" class="list-group-item"><strong> @item.CNPJ.Trim()</strong> | @item.NOME.Trim() | @item.ENDERECO</a>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("ConclusaoPedido", "Pedido", new { idtransportadora = "", idclienteFatura = item.ID_CLIENTE })" class="list-group-item"><strong> @item.CNPJ.Trim()</strong> | @item.NOME.Trim() | @item.ENDERECO</a>
+                            }
                         }
                     }
                     else

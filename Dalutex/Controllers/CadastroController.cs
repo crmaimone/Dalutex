@@ -63,6 +63,7 @@ namespace Dalutex.Controllers
         public ActionResult ClientesFatura(string IDRepresentante, string IDClienteFatura)
         {
             PesquisaClientesFaturaViewModel model = new PesquisaClientesFaturaViewModel();
+            model.IDTipoPedido = Session_Carrinho.IDTipoPedido;
 
             int iIDClienteFatura;
 
@@ -87,6 +88,8 @@ namespace Dalutex.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ClientesFatura(PesquisaClientesFaturaViewModel model)
         {
+            model.IDTipoPedido = Session_Carrinho.IDTipoPedido;
+
             using (var ctx = new TIDalutexContext())
             {
                 int idRepresentante = base.Session_Carrinho.IDRepresentante;

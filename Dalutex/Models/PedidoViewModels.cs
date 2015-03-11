@@ -20,6 +20,9 @@ namespace Dalutex.Models
         public string Desenho { get; set; }
         public string CodStudio { get; set; }
         public string CodDal { get; set; }
+        public decimal? IDControleDesenvolvimento { get; set; }
+        public int IDItemStudio { get; set; }
+        public int IDStudio { get; set; }
     }
 
     public class ArtigoTecnologia
@@ -62,9 +65,12 @@ namespace Dalutex.Models
         public int TotalPaginas { get; set; }
         public List<ItemReserva> Galeria { get; set; }
         public string UrlImagens { get; set; }
-        public string FiltroDesenho { get; set; }
+        [Display(Name = "CÓDIGO DE STUDIO:")]
         public string FiltroCodStudio { get; set; }
+        [Display(Name = "CÓDIGO DAL:")]
         public string FiltroCodDal { get; set; }
+        [Display(Name = "DESENHO:")]
+        public string FiltroDesenho { get; set; }
     }
 
     public class ParametrosPreco
@@ -116,6 +122,8 @@ namespace Dalutex.Models
 
         public string CodStudio { get; set; }
         public string CodDal { get; set; }
+        public int IDStudio { get; set; }
+        public int IDItemStudio { get; set; }
 
         public int Comissao {get; set; } //ver com cassiano onde criar este field e como mapear a regra para comissão (vide coleção);
 
@@ -198,32 +206,32 @@ namespace Dalutex.Models
         [Display(Name = "Condição de pagto")]
         public List<VW_CONDICAO_PGTO> CondicoesPagto { get; set; }
         [Display(Name = "Condição de pagto")]
-        public int IDCondicoesPagto { get; set; }
+        public int? IDCondicoesPagto { get; set; }
 
         [Display(Name = "Moeda")]
         public List<CADASTRO_MOEDAS> Moedas { get; set; }
         [Display(Name = "Moeda")]
-        public int IDMoedas { get; set; }
+        public int? IDMoedas { get; set; }
 
         [Display(Name = "Via transporte")]
         public List<COML_VIASTRANSPORTE> ViasTransporte { get; set; }
         [Display(Name = "Via transporte")]
-        public int IDViasTransporte { get; set; }
+        public int? IDViasTransporte { get; set; }
 
         [Display(Name = "Frete")]
         public List<COML_TIPOSFRETE> Fretes { get; set; }
         [Display(Name = "Frete")]
-        public int IDFretes { get; set; }
+        public int? IDFretes { get; set; }
 
         [Display(Name = "Local de vendas")]
         public List<LOCALVENDA> LocaisVenda { get; set; }
         [Display(Name = "Local de vendas")]
-        public int IDLocaisVenda { get; set; }
+        public int? IDLocaisVenda { get; set; }
 
         [Display(Name = "Canal de vendas")]
         public List<CANAIS_VENDA> CanaisVenda { get; set; }
         [Display(Name = "Canal de vendas")]
-        public int IDCanaisVenda { get; set; }
+        public int? IDCanaisVenda { get; set; }
 
         [Display(Name = "Gerente de vendas")]
         public List<COML_GERENCIAS> GerentesVenda { get; set; }
@@ -232,7 +240,7 @@ namespace Dalutex.Models
 
         [Display(Name = "Tipo de atendimento")]
         public List<PRE_PEDIDO_ATEND> TiposAtendimento { get; set; }
-        public int IDTiposAtendimento { get; set; }
+        public int? IDTiposAtendimento { get; set; }
 
         [Display(Name = "Qualidade comercial")]
         public List<KeyValuePair<string, string>> QualidadeComercial { get; set; }
@@ -250,8 +258,8 @@ namespace Dalutex.Models
         public int IDTipoPedido { get; set; }
         public int IDRepresentante { get; set; }
         public int IDClienteFatura { get; set; }
-        public int IDClienteEntrega { get; set; }
-        public int IDTransportadora { get; set; }
+        public int? IDClienteEntrega { get; set; }
+        public int? IDTransportadora { get; set; }
         public decimal PorcentagemComissao { get; set; }
         public DateTime DataEntrega { get; set; }
         public decimal TotalPedido { get; set; }

@@ -18,64 +18,90 @@
         <div class="col-xs-10">
             <div class="row">
                 <div style="box-shadow:rgba(0,0,0,0.4),10px,,10px,inset; margin-right:20px">
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <strong>
-                                ART.: @Model.Artigo
-                            </strong>
-                        </div>
-                        <div class="col-xs-6">
-                            <strong>
-                                TEC.: @Model.TecnologiaPorExtenso
-                            </strong>
-                        </div>
-                    </div>
-                    @if (Model.Desenho != null)
+                    @if (Model.Tipo != Enums.ItemType.Reserva)
                     {
                         <div class="row">
                             <div class="col-xs-6">
                                 <strong>
-                                    DES.: @Model.Desenho
+                                    ART.: @Model.Artigo
                                 </strong>
                             </div>
                             <div class="col-xs-6">
                                 <strong>
-                                    VAR.: @Model.Variante
+                                    TEC.: @Model.TecnologiaPorExtenso
                                 </strong>
                             </div>
                         </div>
+                        if (Model.Desenho != null)
+                        {
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <strong>
+                                        DES.: @Model.Desenho
+                                    </strong>
+                                </div>
+                                <div class="col-xs-6">
+                                    <strong>
+                                        VAR.: @Model.Variante
+                                    </strong>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <strong>
+                                        COR.: @Model.Cor
+                                    </strong>
+                                </div>
+                            </div>
+                        }
                     }
                     else
                     {
                         <div class="row">
-                            <div class="col-xs-6">
+                            <div class="col-xs-4">
                                 <strong>
-                                    COR.: @Model.Cor
+                                    COD DAL: @Model.CodDal
+                                </strong>
+                            </div>
+                            <div class="col-xs-4">
+                                <strong>
+                                    COD STUDIO: @Model.CodStudio
+                                </strong>
+                            </div>
+                            <div class="col-xs-4">
+                                <strong>
+                                    DES.: @Model.Desenho
                                 </strong>
                             </div>
                         </div>
                     }
                 </div>
             </div>
-            <div class="row">
-                <div class="col-xs-6">
-                    Peças: @Model.Pecas
+            @if (Model.Tipo != Enums.ItemType.Reserva)
+            {
+                <div class="row">
+                    <div class="col-xs-6">
+                        Peças: @Model.Pecas
+                    </div>
+                    <div class="col-xs-6">
+                        Preço unit.: @Model.Preco.ToString("C")
+                    </div>
                 </div>
-                <div class="col-xs-6">
-                    Preço unit.: @Model.Preco.ToString("C")
+                <div class="row">
+                    <div class="col-xs-4">
+                        Prev.: @Model.DataEntregaItem.ToString("d")
+                    </div>
+                    <div class="col-xs-4">
+                        Qtde.: @Model.Quantidade @Model.UnidadeMedida
+                    </div>
+                    <div class="col-xs-4">
+                        Total: @Model.ValorTotalItem.ToString("c")
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-4">
-                    Prev.: @Model.DataEntregaItem.ToString("d")
-                </div>
-                <div class="col-xs-4">
-                    Qtde.: @Model.Quantidade @Model.UnidadeMedida
-                </div>
-                <div class="col-xs-4">
-                    Total: @Model.ValorTotalItem.ToString("c")
-                </div>
-            </div>
+            }
         </div>
     </div>
     <div class="row">
@@ -85,6 +111,7 @@
                 @Html.HiddenFor(x => x.Artigo)
                 @Html.HiddenFor(x => x.Desenho)
                 @Html.HiddenFor(x => x.Variante)
+                @Html.HiddenFor(x => x.CodDal)
 
                 <div class="form-group">
                     <input type="submit" value="REMOVER" class="btn btn-danger pull-left" />

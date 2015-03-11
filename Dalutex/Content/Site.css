@@ -37,6 +37,21 @@ textarea {
     background-color:rgba(0, 0, 0, 0.4);
     letter-spacing:0.8px;   
 }
+ .thumb-paragraph
+ {
+     text-decoration:none;
+     font-size:10px;
+     line-height:10px;
+     padding-left: 5px;
+     margin-left: 0px;
+     margin-top: 8px;
+     margin-right: 0px;
+     margin-bottom: 0px;
+ }
+  .thumb-paragraph:hover
+ {
+     text-decoration:none !important;
+ }
 
 .body-content>h2:first-of-type
 {

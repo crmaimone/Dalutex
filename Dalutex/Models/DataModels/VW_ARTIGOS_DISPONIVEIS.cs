@@ -27,7 +27,8 @@ namespace Dalutex.Models.DataModels
        public int? ID_PROCESSO { get; set; }
        public int? PROCESSO { get; set; }
        public int? ID_CARAC_TEC { get; set; }       
-       public int? ID_TECNOLOGIA { get; set; } 
+       public int? ID_TECNOLOGIA { get; set; }
+       public int? ID_TEC_ARTIGO { get; set; } 
        public string CARACT_TECNICA { get; set; }            
        public string DESC_TEC { get; set; }                            
        public string TECNOLOGIA { get; set; }  

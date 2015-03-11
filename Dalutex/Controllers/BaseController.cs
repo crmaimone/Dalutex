@@ -27,8 +27,14 @@ namespace Dalutex.Controllers
 
         #region ErrorHandling
 
-        [Authorize]
         public ActionResult ErrorMessage(string message, string title)
+        {
+            ViewBag.Title = title;
+            ViewBag.Message = message;
+            return View();
+        }
+
+        public ActionResult Message(string message, string title)
         {
             ViewBag.Title = title;
             ViewBag.Message = message;

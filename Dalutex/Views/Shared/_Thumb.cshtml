@@ -56,18 +56,18 @@
                                 "&pagina=" + Model.Pagina +
                                 "&cor=null"+
                                 "&rgb=null"+
-                                "&reduzido=null" +
+                                "&reduzido=" + Model.Reduzido+
                                 "&codstudio=" + Model.CodStudio +
                                 "&coddal=" + Model.CodDal +
                                 "&modo=I" +
-                                "&tipo=" + ((int)Model.Tipo).ToString()
+                                "&tipo=" + ((int)Model.Tipo).ToString()+
+                                "&idstudio=" + Model.IDStudio.ToString()+
+                                "&iditemstudio=" + Model.IDItemStudio.ToString()
                                 )">
             <img src="@Url.Content(Model.UrlImagens + @Model.Desenho + ".jpg")" class="img-thumbnail equal-height">
-            <div class="caption">
-                <h5 style="text-decoration:none">Studio:@Model.CodStudio</h5>
-                <h5 style="text-decoration:none">Dal:@Model.CodDal</h5>
-                <h5 style="text-decoration:none">Desenho:@Model.Desenho</h5>
-            </div>
+            <p class="thumb-paragraph">Cod. Dal:@Model.CodDal</p>
+            <p class="thumb-paragraph">Cod. Studio:@Model.CodStudio</p>
+            <p class="thumb-paragraph">Desenho:@Model.Desenho</p>
         </a>
     }
 </div>

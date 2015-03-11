@@ -16,14 +16,26 @@
             @Html.AntiForgeryToken()
 
             <div class="form-group">
-                <div>
+                @Html.LabelFor(x => x.FiltroCodStudio, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
                     @Html.TextBoxFor(x => x.FiltroCodStudio, new { @class = "form-control", placeholder = "Começa com.." })
-                    @Html.TextBoxFor(x => x.FiltroCodDal, new { @class = "form-control", placeholder = "Contém.." })
-                    @Html.TextBoxFor(x => x.FiltroDesenho, new { @class = "form-control", placeholder = "Começa com.." })
-                    <button type="submit" class="btn btn-default btn-group-sm"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Pesquisar</button>
                 </div>
-
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(x => x.FiltroCodDal, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(x => x.FiltroCodDal, new { @class = "form-control", placeholder = "Contém.." })
+                </div>
+            </div>        
+            <div class="form-group">
+                @Html.LabelFor(x => x.FiltroDesenho, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(x => x.FiltroDesenho, new { @class = "form-control", placeholder = "Começa com.." })
+                </div>
+            </div>
+            <div class="form-group">
                 <input type="hidden" name="Pagina" value="@Model.Pagina" />
+                <button type="submit" class="btn btn-default btn-group-sm"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Pesquisar</button>
             </div>
         }
     </div>
@@ -39,28 +51,30 @@
                         "_Thumb",
                         new Dalutex.Models.ThumbViewModel()
                         {
-                            Tipo = Enums.ThumbType.Reserva,
+                            Tipo = Enums.ItemType.Reserva,
                             Desenho = item.Desenho,
                             Variante = null,
                             UrlImagens = Model.UrlImagens,
-                            Reduzido = 0,
+                            Reduzido = (int)item.IDControleDesenvolvimento.GetValueOrDefault(),
                             Cor = null,
                             RGB = null,
                             IDColecao = 0,
                             NMColecao = null,
                             Pagina = Model.Pagina,
                             CodStudio = item.CodStudio,
-                            CodDal = item.CodDal
+                            CodDal = item.CodDal,
+                            IDStudio = item.IDStudio,
+                            IDItemStudio = item.IDItemStudio
                         })
 
                 </div>
             }
         }
-    </div>
-    <div class="row">
-        <nav>
-            <ul class="pager">
-                @if (Model.Galeria != null)
+                </div>
+                <div class="row">
+                    <nav>
+                        <ul class="pager">
+                            @if (Model.Galeria != null)
                 {
                     if (Model.Pagina > 1)
                     {
@@ -68,34 +82,34 @@
                     }
                     <li class="next"><a href="@Url.Action("ItensParaReserva", "Pedido", new { pagina = Model.Pagina + 1 })">Pr&oacute;xima P&aacute;gina <span aria-hidden="true">&rarr;</span></a></li>
                 }
-            </ul>
-        </nav>
-    </div>
-    <hr>
-    <a class="btn btn-default right" href="javascript:history.back()">VOLTAR</a>
-</div>
+                        </ul>
+                    </nav>
+                </div>
+                <hr>
+                <a class="btn btn-default right" href="javascript:history.back()">VOLTAR</a>
+            </div>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/equalheight")
-    <script>
-        $(document).ready(function () {
-            //API
-            scriptWrapper = (function () {
+            @section Scripts {
+                @Scripts.Render("~/bundles/equalheight")
+                <script>
+                    $(document).ready(function () {
+                        //API
+                        scriptWrapper = (function () {
 
-                //API Attributes
+                            //API Attributes
 
-                //API Methods
-                
-                // public API
-                return {
+                            //API Methods
 
-                };
-            })();
+                            // public API
+                            return {
 
-            //Init
-            (function Init() {
-                $('.equal-height').equalHeight();
-            })();
-        });
-    </script>
-}
+                            };
+                        })();
+
+                        //Init
+                        (function Init() {
+                            $('.equal-height').equalHeight();
+                        })();
+                    });
+                </script>
+            }

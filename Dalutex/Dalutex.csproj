@@ -201,7 +201,6 @@
     <Compile Include="Models\DataModels\VW_LISOS_POR_COLECAO.cs" />
     <Compile Include="Models\DataModels\VW_TROCA_TEC.cs" />
     <Compile Include="Models\Relatorios.cs" />
-    <Compile Include="Models\Utils\HtmlToPdfBuilder.cs" />
     <Compile Include="Models\Utils\PdfResult.cs" />
     <Compile Include="Models\Utils\Enums.cs" />
     <Compile Include="Models\PedidoViewModels.cs" />
@@ -319,6 +318,7 @@
     <Content Include="Views\Home\Teste.cshtml" />
     <Content Include="Views\Pedido\Lisos.cshtml" />
     <Content Include="Views\Pedido\ItensParaReserva.cshtml" />
+    <Content Include="Views\Base\Message.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

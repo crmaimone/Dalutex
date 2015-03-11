@@ -267,10 +267,9 @@ namespace Dalutex.Controllers
                         from ar in ctx.VW_ARTIGOS_DISPONIVEIS
                         where
                             (ar.ID_TECNOLOGIA.Equals(null) || ar.ID_TEC != iIDTecnologia)
-                            &&
-                            (ar.ID_CARAC_TEC.Equals(null) || !lstCaracteristicas.Contains(ar.ID_CARAC_TEC))
-                            &&
-                            (lstTecnologias.Contains(ar.ID_TEC))
+                            && (ar.ID_CARAC_TEC.Equals(null) || !lstCaracteristicas.Contains(ar.ID_CARAC_TEC))
+                            && (lstTecnologias.Contains(ar.ID_TEC))
+                            && (lstTecnologias.Contains(ar.ID_TEC_ARTIGO))
                         group ar by
                             new
                             {
@@ -358,7 +357,9 @@ namespace Dalutex.Controllers
             , int reduzido
             , string codstudio
             , string coddal
-            , int tipo)
+            , int tipo
+            , int idstudio
+            , int iditemstudio)
         {
             InserirNoCarrinhoViewModel model = new InserirNoCarrinhoViewModel();
             model.Desenho = desenho;
@@ -371,6 +372,10 @@ namespace Dalutex.Controllers
             model.RGB = rgb;
             model.Reduzido = reduzido;
             model.Tipo = (Enums.ItemType)tipo;
+            model.CodDal = coddal;
+            model.CodStudio = codstudio;
+            model.IDStudio = idstudio;
+            model.IDItemStudio = iditemstudio;
 
             if (base.Session_Carrinho != null)
                 model.IDTipoPedido = base.Session_Carrinho.IDTipoPedido;
@@ -624,6 +629,10 @@ namespace Dalutex.Controllers
             {
                 if (base.Session_Carrinho.Itens.Remove(model))
                 {
+                    if (base.Session_Carrinho.Itens.Count == default(int))
+                    {
+                        base.Session_Carrinho = null;
+                    }
                     return RedirectToAction("Carrinho");
                 }
                 else
@@ -647,45 +656,57 @@ namespace Dalutex.Controllers
 
         private ConclusaoPedidoViewModel ConclusaoPedidoCarregarListas(ConclusaoPedidoViewModel model)
         {
-            model.QualidadeComercial = new List<KeyValuePair<string, string>>();
-            model.QualidadeComercial.Add(new KeyValuePair<string, string>(Enums.QualidadeComercial.A.ToString(), Enums.QualidadeComercial.A.ToString()));
-            model.QualidadeComercial.Add(new KeyValuePair<string, string>(Enums.QualidadeComercial.B.ToString(), Enums.QualidadeComercial.B.ToString()));
-            model.QualidadeComercial.Add(new KeyValuePair<string, string>(Enums.QualidadeComercial.C.ToString(), Enums.QualidadeComercial.C.ToString()));
-
-            using (DalutexContext ctxDalutex = new DalutexContext())
+            if (model.IDTipoPedido != (int) Enums.TiposPedido.RESERVA)
             {
-                model.Moedas = ctxDalutex.CADASTRO_MOEDAS.ToList();
-                model.ViasTransporte = ctxDalutex.COML_VIASTRANSPORTE.ToList();
-                model.Fretes = ctxDalutex.COML_TIPOSFRETE.ToList();
-                model.CanaisVenda = ctxDalutex.CANAIS_VENDA.ToList();
-                model.GerentesVenda = ctxDalutex.COML_GERENCIAS.Where(x => x.CANALVENDA == (int)Enums.CanaisVenda.TELEVENDAS).ToList();
+                model.QualidadeComercial = new List<KeyValuePair<string, string>>();
+                model.QualidadeComercial.Add(new KeyValuePair<string, string>(Enums.QualidadeComercial.A.ToString(), Enums.QualidadeComercial.A.ToString()));
+                model.QualidadeComercial.Add(new KeyValuePair<string, string>(Enums.QualidadeComercial.B.ToString(), Enums.QualidadeComercial.B.ToString()));
+                model.QualidadeComercial.Add(new KeyValuePair<string, string>(Enums.QualidadeComercial.C.ToString(), Enums.QualidadeComercial.C.ToString()));
+
+                using (DalutexContext ctxDalutex = new DalutexContext())
+                {
+                    model.Moedas = ctxDalutex.CADASTRO_MOEDAS.ToList();
+                    model.ViasTransporte = ctxDalutex.COML_VIASTRANSPORTE.ToList();
+                    model.Fretes = ctxDalutex.COML_TIPOSFRETE.ToList();
+                    model.CanaisVenda = ctxDalutex.CANAIS_VENDA.ToList();
+                    model.GerentesVenda = ctxDalutex.COML_GERENCIAS.Where(x => x.CANALVENDA == (int)Enums.CanaisVenda.TELEVENDAS).ToList();
+                }
+
+                using (TIDalutexContext ctxTI = new TIDalutexContext())
+                {
+                    model.LocaisVenda = ctxTI.LOCALVENDA.ToList();
+                    model.TiposAtendimento = ctxTI.PRE_PEDIDO_ATEND.ToList();
+                    model.CondicoesPagto = ctxTI.VW_CONDICAO_PGTO.ToList();
+                }
+
+                if (base.Session_Carrinho != null)
+                    model.Itens = base.Session_Carrinho.Itens;
+
+                foreach (InserirNoCarrinhoViewModel item in model.Itens)
+                {
+                    model.TotalPedido += item.ValorTotalItem;
+                }
             }
 
-            using (TIDalutexContext ctxTI = new TIDalutexContext())
-            {
-                model.LocaisVenda = ctxTI.LOCALVENDA.ToList();
-                model.TiposAtendimento = ctxTI.PRE_PEDIDO_ATEND.ToList();
-                model.CondicoesPagto = ctxTI.VW_CONDICAO_PGTO.ToList();
-            }
-
-            if (base.Session_Carrinho != null)
-                model.Itens = base.Session_Carrinho.Itens;
-
-            foreach (InserirNoCarrinhoViewModel item in model.Itens)
-            {
-                model.TotalPedido += item.ValorTotalItem;
-            }
             return model;
         }
 
-        public ActionResult ConclusaoPedido(string idtransportadora)
+        public ActionResult ConclusaoPedido(string idtransportadora, string idclienteFatura)
         {
             ConclusaoPedidoViewModel model = new ConclusaoPedidoViewModel();
 
             //Carrinho vazio não processar nada
             if (Session_Carrinho != null)
             {
-                Session_Carrinho.IDTransportadora = int.Parse(idtransportadora);
+                if (!string.IsNullOrWhiteSpace(idtransportadora))
+                {
+                    Session_Carrinho.IDTransportadora = int.Parse(idtransportadora);
+                }
+
+                if (!string.IsNullOrWhiteSpace(idclienteFatura))
+                {
+                    Session_Carrinho.IDClienteFatura = int.Parse(idclienteFatura);
+                }
 
                 ConclusaoPedidoCarregarListas(model);
                 ViewBag.CarrinhoVazio = false;
@@ -731,147 +752,152 @@ namespace Dalutex.Controllers
 
                     bool hasErrors = false;
 
-                    if (model.IDCondicoesPagto <= 0)
-                    {
-                        ModelState.AddModelError("", "Por favor informe a condição de pagamento.");
-                        hasErrors = true;
-                    }
-                    if (model.IDMoedas < 0)
-                    {
-                        ModelState.AddModelError("", "Por favor informe a moeda.");
-                        hasErrors = true;
-                    }
-                    if (model.IDViasTransporte <= 0)
-                    {
-                        ModelState.AddModelError("", "Por favor informe a via de transporte.");
-                        hasErrors = true;
-                    }
-                    if (model.IDFretes <= 0)
-                    {
-                        ModelState.AddModelError("", "Por favor informe o tipo de frete.");
-                        hasErrors = true;
-                    }
-                    if (model.IDCanaisVenda <= 0)
-                    {
-                        ModelState.AddModelError("", "Por favor informe o canal de venda.");
-                        hasErrors = true;
-                    }
-                    if (model.IDTiposAtendimento <= 0)
-                    {
-                        ModelState.AddModelError("", "Por favor informe o tipo de atendimento.");
-                        hasErrors = true;
-                    }
-                    if (string.IsNullOrWhiteSpace(model.IDQualidadeComercial))
-                    {
-                        ModelState.AddModelError("", "Por favor informe a qualidade comercial.");
-                        hasErrors = true;
-                    }
-
-                    if (base.Session_Carrinho.IDTipoPedido.Equals((int)Enums.TiposPedido.VENDA)
-                        && !model.IDCanaisVenda.Equals((int)Enums.CanaisVenda.TELEVENDAS)
-                        && !model.IDCondicoesPagto.Equals((int)Enums.CondicoesPagamento.CORTESIA))
+                    if (model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
                     {
 
-                        int numParcelas = 0;
-                        using (var ctx = new TIDalutexContext())
+                        if (model.IDCondicoesPagto <= 0)
                         {
-                            numParcelas = ctx.VW_CONDICAO_PGTO.Find(model.IDCondicoesPagto).PARCELAS;
+                            ModelState.AddModelError("", "Por favor informe a condição de pagamento.");
+                            hasErrors = true;
+                        }
+                        if (model.IDMoedas < 0)
+                        {
+                            ModelState.AddModelError("", "Por favor informe a moeda.");
+                            hasErrors = true;
+                        }
+                        if (model.IDViasTransporte <= 0)
+                        {
+                            ModelState.AddModelError("", "Por favor informe a via de transporte.");
+                            hasErrors = true;
+                        }
+                        if (model.IDFretes <= 0)
+                        {
+                            ModelState.AddModelError("", "Por favor informe o tipo de frete.");
+                            hasErrors = true;
+                        }
+                        if (model.IDCanaisVenda <= 0)
+                        {
+                            ModelState.AddModelError("", "Por favor informe o canal de venda.");
+                            hasErrors = true;
+                        }
+                        if (model.IDTiposAtendimento <= 0)
+                        {
+                            ModelState.AddModelError("", "Por favor informe o tipo de atendimento.");
+                            hasErrors = true;
+                        }
+                        if (string.IsNullOrWhiteSpace(model.IDQualidadeComercial))
+                        {
+                            ModelState.AddModelError("", "Por favor informe a qualidade comercial.");
+                            hasErrors = true;
                         }
 
-                        int fatorMultiplicacao = 0;
-                        decimal valorMinimoParcelas = decimal.Parse(ConfigurationManager.AppSettings["VALOR_PARCELA_MINIMA"]);
-
-                        if (model.IDQualidadeComercial == Enums.QualidadeComercial.A.ToString())
+                        if (base.Session_Carrinho.IDTipoPedido.Equals((int)Enums.TiposPedido.VENDA)
+                            && !model.IDCanaisVenda.Equals((int)Enums.CanaisVenda.TELEVENDAS)
+                            && !model.IDCondicoesPagto.Equals((int)Enums.CondicoesPagamento.CORTESIA))
                         {
-                            fatorMultiplicacao = (int)Enums.FatorMultiplicacaoQualidadeComercial.A;
-                        }
-                        else if (model.IDQualidadeComercial == Enums.QualidadeComercial.B.ToString())
-                        {
-                            fatorMultiplicacao = (int)Enums.FatorMultiplicacaoQualidadeComercial.B;
-                        }
-                        else if (model.IDQualidadeComercial == Enums.QualidadeComercial.C.ToString())
-                        {
-                            fatorMultiplicacao = (int)Enums.FatorMultiplicacaoQualidadeComercial.C;
-                        }
 
-                        if (model.IDTiposAtendimento.Equals((int)Enums.TiposAtendimento.EstampaCompleta))
-                        {
-                            List<KeyValuePair<string, decimal>> lstConsolidada = base.Session_Carrinho.Itens
-                                .GroupBy(g => g.Desenho)
-                                .Select(consolidado => new KeyValuePair<string, decimal>(consolidado.First().Desenho, consolidado.Sum(s => s.ValorTotalItem)))
-                                .ToList();
-
-                            bool isValid = true;
-
-                            foreach (KeyValuePair<string, decimal> item in lstConsolidada)
+                            int numParcelas = 0;
+                            using (var ctx = new TIDalutexContext())
                             {
-                                if (((item.Value / fatorMultiplicacao) / numParcelas) < valorMinimoParcelas)
+                                numParcelas = ctx.VW_CONDICAO_PGTO.Find(model.IDCondicoesPagto).PARCELAS;
+                            }
+
+                            int fatorMultiplicacao = 0;
+                            decimal valorMinimoParcelas = decimal.Parse(ConfigurationManager.AppSettings["VALOR_PARCELA_MINIMA"]);
+
+                            if (model.IDQualidadeComercial == Enums.QualidadeComercial.A.ToString())
+                            {
+                                fatorMultiplicacao = (int)Enums.FatorMultiplicacaoQualidadeComercial.A;
+                            }
+                            else if (model.IDQualidadeComercial == Enums.QualidadeComercial.B.ToString())
+                            {
+                                fatorMultiplicacao = (int)Enums.FatorMultiplicacaoQualidadeComercial.B;
+                            }
+                            else if (model.IDQualidadeComercial == Enums.QualidadeComercial.C.ToString())
+                            {
+                                fatorMultiplicacao = (int)Enums.FatorMultiplicacaoQualidadeComercial.C;
+                            }
+
+                            if (model.IDTiposAtendimento.Equals((int)Enums.TiposAtendimento.EstampaCompleta))
+                            {
+                                List<KeyValuePair<string, decimal>> lstConsolidada = base.Session_Carrinho.Itens
+                                    .GroupBy(g => g.Desenho)
+                                    .Select(consolidado => new KeyValuePair<string, decimal>(consolidado.First().Desenho, consolidado.Sum(s => s.ValorTotalItem)))
+                                    .ToList();
+
+                                bool isValid = true;
+
+                                foreach (KeyValuePair<string, decimal> item in lstConsolidada)
                                 {
-                                    ModelState.AddModelError("", "Valor mínimo das parcelas é inferior a " + valorMinimoParcelas.ToString("C") + " para o desenho: " + item.Key);
-                                    isValid = false;
+                                    if (((item.Value / fatorMultiplicacao) / numParcelas) < valorMinimoParcelas)
+                                    {
+                                        ModelState.AddModelError("", "Valor mínimo das parcelas é inferior a " + valorMinimoParcelas.ToString("C") + " para o desenho: " + item.Key);
+                                        isValid = false;
+                                    }
+                                }
+
+                                if (!isValid)
+                                {
+                                    hasErrors = true;
+                                }
+                            }
+                            else if (model.IDTiposAtendimento.Equals((int)Enums.TiposAtendimento.PedidoCompleto))
+                            {
+                                if (((model.TotalPedido / fatorMultiplicacao) / numParcelas) < valorMinimoParcelas)
+                                {
+                                    ModelState.AddModelError("", "Valor mínimo das parcelas é inferior a " + valorMinimoParcelas.ToString("C"));
+                                    hasErrors = true;
+                                }
+                            }
+                            else if (model.IDTiposAtendimento.Equals((int)Enums.TiposAtendimento.CompletoPorArtigo))
+                            {
+                                List<KeyValuePair<string, decimal>> lstConsolidada = base.Session_Carrinho.Itens
+                                    .GroupBy(g => g.Artigo)
+                                    .Select(consolidado => new KeyValuePair<string, decimal>(consolidado.First().Artigo, consolidado.Sum(s => s.ValorTotalItem)))
+                                    .ToList();
+
+                                bool isValid = true;
+
+                                foreach (KeyValuePair<string, decimal> item in lstConsolidada)
+                                {
+                                    if (((item.Value / fatorMultiplicacao) / numParcelas) < valorMinimoParcelas)
+                                    {
+                                        ModelState.AddModelError("", "Valor mínimo das parcelas é inferior a " + valorMinimoParcelas.ToString("C") + " para o artigo: " + item.Key);
+                                        isValid = false;
+                                    }
+                                }
+
+                                if (!isValid)
+                                {
+                                    hasErrors = true;
+                                }
+                            }
+                            else if (model.IDTiposAtendimento.Equals((int)Enums.TiposAtendimento.PedidoIncompleto))
+                            {
+                                bool isValid = true;
+
+                                foreach (InserirNoCarrinhoViewModel item in base.Session_Carrinho.Itens)
+                                {
+                                    if (((item.ValorTotalItem / fatorMultiplicacao) / numParcelas) < valorMinimoParcelas)
+                                    {
+                                        ModelState.AddModelError("", "Valor mínimo das parcelas é inferior a " + valorMinimoParcelas.ToString("C") + " para o item: Desenho=" + item.Desenho + " Variante=" + item.Variante);
+                                        isValid = false;
+                                    }
+                                }
+
+                                if (!isValid)
+                                {
+                                    hasErrors = true;
                                 }
                             }
 
-                            if (!isValid)
-                            {
-                                hasErrors = true;
-                            }
                         }
-                        else if (model.IDTiposAtendimento.Equals((int)Enums.TiposAtendimento.PedidoCompleto))
-                        {
-                            if (((model.TotalPedido / fatorMultiplicacao) / numParcelas) < valorMinimoParcelas)
-                            {
-                                ModelState.AddModelError("", "Valor mínimo das parcelas é inferior a " + valorMinimoParcelas.ToString("C"));
-                                hasErrors = true;
-                            }
-                        }
-                        else if (model.IDTiposAtendimento.Equals((int)Enums.TiposAtendimento.CompletoPorArtigo))
-                        {
-                            List<KeyValuePair<string, decimal>> lstConsolidada = base.Session_Carrinho.Itens
-                                .GroupBy(g => g.Artigo)
-                                .Select(consolidado => new KeyValuePair<string, decimal>(consolidado.First().Artigo, consolidado.Sum(s => s.ValorTotalItem)))
-                                .ToList();
+                    }
 
-                            bool isValid = true;
-
-                            foreach (KeyValuePair<string, decimal> item in lstConsolidada)
-                            {
-                                if (((item.Value / fatorMultiplicacao) / numParcelas) < valorMinimoParcelas)
-                                {
-                                    ModelState.AddModelError("", "Valor mínimo das parcelas é inferior a " + valorMinimoParcelas.ToString("C") + " para o artigo: " + item.Key);
-                                    isValid = false;
-                                }
-                            }
-
-                            if (!isValid)
-                            {
-                                hasErrors = true;
-                            }
-                        }
-                        else if (model.IDTiposAtendimento.Equals((int)Enums.TiposAtendimento.PedidoIncompleto))
-                        {
-                            bool isValid = true;
-
-                            foreach (InserirNoCarrinhoViewModel item in base.Session_Carrinho.Itens)
-                            {
-                                if (((item.ValorTotalItem / fatorMultiplicacao) / numParcelas) < valorMinimoParcelas)
-                                {
-                                    ModelState.AddModelError("", "Valor mínimo das parcelas é inferior a " + valorMinimoParcelas.ToString("C") + " para o item: Desenho=" + item.Desenho + " Variante=" + item.Variante);
-                                    isValid = false;
-                                }
-                            }
-
-                            if (!isValid)
-                            {
-                                hasErrors = true;
-                            }
-                        }
-
-                        if (hasErrors)
-                        {
-                            this.ConclusaoPedidoCarregarListas(model);
-                            return View(model);
-                        }
+                    if (hasErrors)
+                    {
+                        this.ConclusaoPedidoCarregarListas(model);
+                        return View(model);
                     }
 
                     #endregion
@@ -886,6 +912,18 @@ namespace Dalutex.Controllers
                             iNUMERO_PEDIDO_BLOCO = reservar.NUMERO_PEDIDO;
                             reservar.DISPONIVEL = 1;
                             ctx.SaveChanges();
+                        }
+                    }
+
+                    if(model.IDTipoPedido == (int)Enums.TiposPedido.RESERVA)
+                    {
+                        model.IDQualidadeComercial = Enums.QualidadeComercial.A.ToString();
+                        model.IDCondicoesPagto = (int)Enums.CondicoesPagamento.CORTESIA;
+                        base.Session_Carrinho.DataEntrega = DateTime.Today;
+
+                        foreach (InserirNoCarrinhoViewModel item in base.Session_Carrinho.Itens)
+                        {
+                            //TODO COTINUAR AQUI
                         }
                     }
 
@@ -937,10 +975,10 @@ namespace Dalutex.Controllers
                             //PRECOLISTA = Buscar qdo tivermos o preço da tabela
                             QTDEPC = item.Pecas,
                             QUANTIDADE = item.Quantidade,
-                            REDUZIDO_ITEM = item.Reduzido, // REDUZIDO_0 -- VER COM CASSIANO;
+                            REDUZIDO_ITEM = item.Reduzido,
                             UM = item.UnidadeMedida,
                             VALOR_TOTAL = item.Preco * item.Quantidade,
-                            VARIANTE = item.Variante
+                            VARIANTE = item.Variante,
                         };
 
                         lstItens.Add(objItem);
@@ -1100,6 +1138,23 @@ namespace Dalutex.Controllers
 
         public ActionResult ItensParaReserva(string pagina)
         {
+            if(Session_Carrinho == null)
+            {
+                Session_Carrinho = new ConclusaoPedidoViewModel();
+                Session_Carrinho.IDTipoPedido = (int)Enums.TiposPedido.RESERVA;
+            }
+            else
+            {
+                if(Session_Carrinho.IDTipoPedido == -1)
+                {
+                    Session_Carrinho.IDTipoPedido = (int)Enums.TiposPedido.RESERVA;
+                }
+                else
+                {
+                    RedirectToAction("Message", new { message = "Já existem itens de venda no seu carrinho. Não é permitido incluir itens de reserva.", title = "Carrinho com itens" });
+                }
+            }
+
             ItensParaReservaViewModel model = new ItensParaReservaViewModel();
 
             if (string.IsNullOrWhiteSpace(pagina))
@@ -1138,14 +1193,20 @@ namespace Dalutex.Controllers
                             {
                                 dc.DESENHO,
                                 dc.COD_STUDIO,
-                                dc.COD_DAL
+                                dc.COD_DAL,
+                                dc.ID_CONTROLE_DESENV,
+                                dc.ID_STUDIO,
+                                dc.ID_ITEM_STUDIO
                             }
                             into dv
                             select new ItemReserva
                             {
                                 Desenho = dv.Key.DESENHO.ToUpper(),
                                 CodStudio = dv.Key.COD_STUDIO.ToUpper(),
-                                CodDal = dv.Key.COD_DAL.ToUpper()
+                                CodDal = dv.Key.COD_DAL.ToUpper(),
+                                IDControleDesenvolvimento = dv.Key.ID_CONTROLE_DESENV,
+                                IDStudio = (int)dv.Key.ID_STUDIO,
+                                IDItemStudio = (int)dv.Key.ID_ITEM_STUDIO
                             };
 
                 model.Galeria = query.OrderBy(x => x.CodDal).Skip((model.Pagina - 1) * 24).Take(24).ToList();

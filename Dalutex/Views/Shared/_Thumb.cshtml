@@ -1,7 +1,8 @@
 ﻿@model Dalutex.Models.ThumbViewModel
+@using Dalutex.Models
 
 <div class="thumbnail">
-    @if (Model.Cor != null)
+    @if (Model.Tipo == Enums.ItemType.Liso)
     {
         <a href="@Url.Content("InserirNoCarrinho?"+
                                 "&desenho=" + Model.Desenho +
@@ -16,7 +17,9 @@
                                 "&reduzido=" + Model.Reduzido +
                                 "&codstudio=null" +
                                 "&coddal=null" +
-                                "&modo=I")">
+                                "&modo=I"+
+                                "&tipo=" + ((int)Model.Tipo).ToString()
+                                )">
             <img style="background-color:@Model.RGB;" class="liso-thumbnail">
             <div class="caption" style="text-decoration:none">
                 <h5>Cor: @Model.Cor</h5>
@@ -25,15 +28,15 @@
             </div>
         </a>
     }
-    else if (Model.Variante != null)
+    else if (Model.Tipo == Enums.ItemType.Estampado)
     {
         <a href="@Url.Content(@"ArtigosDisponiveis?" +
                                             "&imagem=" + Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg" +
                                             "&desenho=" + @Model.Desenho +
                                             "&variante=" + @Model.Variante+
-                                            "&idcolecao="+@Model.IDColecao+
-                                            "&nmcolecao="+@Model.NMColecao+
-                                            "&pagina="+@Model.Pagina
+                                            "&idcolecao="+ @Model.IDColecao+
+                                            "&nmcolecao="+ @Model.NMColecao+
+                                            "&pagina="+ @Model.Pagina
                                         )">
             <img src="@Url.Content(Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg")" class="img-thumbnail equal-height">
             <div class="caption">
@@ -41,7 +44,7 @@
             </div>
         </a>
     }
-    else if (Model.CodStudio != null)
+    else if (Model.Tipo == Enums.ItemType.Reserva)
     {
         <a href="@Url.Content("InserirNoCarrinho?"+
                                 "&desenho=" + Model.Desenho +
@@ -56,8 +59,10 @@
                                 "&reduzido=null" +
                                 "&codstudio=" + Model.CodStudio +
                                 "&coddal=" + Model.CodDal +
-                                "&modo=I")">
-            <img src="@Url.Content(Model.UrlImagens + @Model.Desenho + "_CA.jpg")" class="img-thumbnail equal-height">
+                                "&modo=I" +
+                                "&tipo=" + ((int)Model.Tipo).ToString()
+                                )">
+            <img src="@Url.Content(Model.UrlImagens + @Model.Desenho + ".jpg")" class="img-thumbnail equal-height">
             <div class="caption">
                 <h5 style="text-decoration:none">Studio:@Model.CodStudio</h5>
                 <h5 style="text-decoration:none">Dal:@Model.CodDal</h5>

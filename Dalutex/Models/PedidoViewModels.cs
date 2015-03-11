@@ -106,12 +106,16 @@ namespace Dalutex.Models
         public int Reduzido { get; set; }
         public DateTime DataEntregaItem { get; set; }
         public string Modo { get; set; } //I= Inclusão A=Alteração
+        public Enums.ItemType Tipo { get; set; }
 
         public string IDColecao { get; set; }
         public string NMColecao { get; set; }
         public int Pagina { get; set; }
         public string Cor { get; set; }
         public string RGB { get; set; }
+
+        public string CodStudio { get; set; }
+        public string CodDal { get; set; }
 
         public int Comissao {get; set; } //ver com cassiano onde criar este field e como mapear a regra para comissão (vide coleção);
 
@@ -136,9 +140,24 @@ namespace Dalutex.Models
         {
             if(obj is InserirNoCarrinhoViewModel)
             {
-                return this.Artigo == (obj as InserirNoCarrinhoViewModel).Artigo
-                        && this.Desenho == (obj as InserirNoCarrinhoViewModel).Desenho
-                        && this.Variante == (obj as InserirNoCarrinhoViewModel).Variante; 
+                if (this.Tipo == Enums.ItemType.Estampado)
+                {
+                    return this.Artigo == (obj as InserirNoCarrinhoViewModel).Artigo
+                            && this.Desenho == (obj as InserirNoCarrinhoViewModel).Desenho
+                            && this.Variante == (obj as InserirNoCarrinhoViewModel).Variante; 
+                }
+                else if (this.Tipo == Enums.ItemType.Liso)
+                {
+                    return this.Reduzido == (obj as InserirNoCarrinhoViewModel).Reduzido;
+                }
+                else if (this.Tipo == Enums.ItemType.Reserva)
+                {
+                    return this.CodDal == (obj as InserirNoCarrinhoViewModel).CodDal;
+                }
+                else
+                {
+                    return this.Reduzido == (obj as InserirNoCarrinhoViewModel).Reduzido;
+                }
             }
             else
             {

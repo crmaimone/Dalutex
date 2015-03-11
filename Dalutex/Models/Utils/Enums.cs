@@ -23,6 +23,13 @@ namespace Dalutex.Models
             DESENVOLVIMENTO = 17
         }
 
+        public enum ItemType 
+        { 
+            Estampado = 1,
+            Liso = 2,
+            Reserva = 3
+        }
+
         public enum CondicoesPagamento
         {
             CORTESIA = 432

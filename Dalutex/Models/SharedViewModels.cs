@@ -10,6 +10,7 @@ namespace Dalutex.Models
 {
     public class ThumbViewModel
     {
+        public Enums.ItemType Tipo { get; set; }
         public string UrlImagens { get; set; }
         public string Desenho { get; set; }
         public string Variante { get; set; }

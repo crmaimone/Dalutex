@@ -355,7 +355,10 @@ namespace Dalutex.Controllers
             , string cor
             , string modo
             , string rgb
-            , int reduzido)
+            , int reduzido
+            , string codstudio
+            , string coddal
+            , int tipo)
         {
             InserirNoCarrinhoViewModel model = new InserirNoCarrinhoViewModel();
             model.Desenho = desenho;
@@ -367,6 +370,8 @@ namespace Dalutex.Controllers
             model.Cor = cor;
             model.RGB = rgb;
             model.Reduzido = reduzido;
+            model.Tipo = (Enums.ItemType)tipo;
+
             if (base.Session_Carrinho != null)
                 model.IDTipoPedido = base.Session_Carrinho.IDTipoPedido;
 
@@ -380,74 +385,81 @@ namespace Dalutex.Controllers
 
             model.Modo = modo;
 
-            using (var ctxTI = new TIDalutexContext())
+            if (model.Tipo != Enums.ItemType.Reserva)
             {
-                using (var ctx = new DalutexContext())
+                using (var ctxTI = new TIDalutexContext())
                 {
-                    VMASCARAPRODUTOACABADO objReduzido = ctx.VMASCARAPRODUTOACABADO.Where(
-                            x =>
-                                x.ARTIGO == model.Artigo
-                                && x.DESENHO == model.Desenho
-                                && x.VARIANTE == model.Variante
-                                && x.MAQUINA == model.Tecnologia
-                            ).FirstOrDefault();
-
-                    if (objReduzido != null && objReduzido.CODIGO_REDUZIDO > default(int))
-                        model.Reduzido = objReduzido.CODIGO_REDUZIDO;
-                    else
-                        model.Reduzido = -2; //Deixar o JOB buscar mais tarde ou criar o reduzido?
-                }
-
-                var query =
-                    from app in ctxTI.ARTIGO_PESO_PADRAO
-                    where
-                        (
-                            app.ATIVO == true
-                            && app.ARTIGO == artigo
-                            && app.TECNOLOGIA == tecnologia.Substring(0, 1)
-                        )
-                    select app;
-
-                ARTIGO_PESO_PADRAO objValorPadrao = query.FirstOrDefault();
-                if (objValorPadrao != null)
-                {
-                    model.UnidadeMedida = objValorPadrao.UM;
-                    model.ValorPadrao = objValorPadrao.VALOR;
-                }
-                else
-                {
-                    VMASCARAPRODUTOACABADO objValorPadraoView = null;
-
                     using (var ctx = new DalutexContext())
                     {
-                        objValorPadraoView = ctx.VMASCARAPRODUTOACABADO.Where(x => x.ARTIGO == model.Artigo).FirstOrDefault();
-                        if (objValorPadraoView != null)
+                        VMASCARAPRODUTOACABADO objReduzido = ctx.VMASCARAPRODUTOACABADO.Where(
+                                x =>
+                                    x.ARTIGO == model.Artigo
+                                    && x.DESENHO == model.Desenho
+                                    && x.VARIANTE == model.Variante
+                                    && x.MAQUINA == model.Tecnologia
+                                ).FirstOrDefault();
+
+                        if (objReduzido != null && objReduzido.CODIGO_REDUZIDO > default(int))
+                            model.Reduzido = objReduzido.CODIGO_REDUZIDO;
+                        else
+                            model.Reduzido = -2; //Deixar o JOB buscar mais tarde ou criar o reduzido?
+                    }
+
+                    var query =
+                        from app in ctxTI.ARTIGO_PESO_PADRAO
+                        where
+                            (
+                                app.ATIVO == true
+                                && app.ARTIGO == artigo
+                                && app.TECNOLOGIA == tecnologia.Substring(0, 1)
+                            )
+                        select app;
+
+                    ARTIGO_PESO_PADRAO objValorPadrao = query.FirstOrDefault();
+                    if (objValorPadrao != null)
+                    {
+                        model.UnidadeMedida = objValorPadrao.UM;
+                        model.ValorPadrao = objValorPadrao.VALOR;
+                    }
+                    else
+                    {
+                        VMASCARAPRODUTOACABADO objValorPadraoView = null;
+
+                        using (var ctx = new DalutexContext())
                         {
-                            model.UnidadeMedida = objValorPadraoView.UM;
-                            if (model.UnidadeMedida.ToUpper() == "KG")
+                            objValorPadraoView = ctx.VMASCARAPRODUTOACABADO.Where(x => x.ARTIGO == model.Artigo).FirstOrDefault();
+                            if (objValorPadraoView != null)
                             {
-                                model.ValorPadrao = (decimal)Enums.ValorPadraoUnidade.Quilo;
-                            }
-                            else if (model.UnidadeMedida.ToUpper() == "MT")
-                            {
-                                model.ValorPadrao = (decimal)Enums.ValorPadraoUnidade.Metro;
+                                model.UnidadeMedida = objValorPadraoView.UM;
+                                if (model.UnidadeMedida.ToUpper() == "KG")
+                                {
+                                    model.ValorPadrao = (decimal)Enums.ValorPadraoUnidade.Quilo;
+                                }
+                                else if (model.UnidadeMedida.ToUpper() == "MT")
+                                {
+                                    model.ValorPadrao = (decimal)Enums.ValorPadraoUnidade.Metro;
+                                }
+                                else
+                                {
+                                    ModelState.AddModelError("", "UNIDADE DE MEDIDA INVÁLIDA.");
+                                }
                             }
                             else
                             {
-                                ModelState.AddModelError("", "UNIDADE DE MEDIDA INVÁLIDA.");
+                                ModelState.AddModelError("", "UNIDADE DE MEDIDA NÃO ENCONTRADA.");
                             }
-                        }
-                        else
-                        {
-                            ModelState.AddModelError("", "UNIDADE DE MEDIDA NÃO ENCONTRADA.");
                         }
                     }
                 }
+
+                this.CarregarTiposPedidos(model);
+
+                model.ObterTipoPedido = base.Session_Carrinho == null || base.Session_Carrinho.IDTipoPedido < 0;
             }
-
-            this.CarregarTiposPedidos(model);
-
-            model.ObterTipoPedido = base.Session_Carrinho == null || base.Session_Carrinho.IDTipoPedido < 0;
+            else
+            {
+                model.ObterTipoPedido = false;
+            }
 
             return View(model);
         }
@@ -461,33 +473,43 @@ namespace Dalutex.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    if (model.ValorPadrao <= 0)
+                    if (model.Tipo != Enums.ItemType.Reserva)
                     {
-                        ModelState.AddModelError("", "NÃO É PERMITIDO SALVAR SEM VALOR PADRÃO DEFINIDO.");
-                        hasErrors = true;
-                    }
-                    if (model.IDTipoPedido == 0 && model.Pecas <= 0)
-                    {
-                        ModelState.AddModelError("", "Campo \"PEÇAS\" NÃO PODE SER MENOR OU IGUAL A ZERO.");
-                        hasErrors = true;
-                    }
-                    if (model.IDTipoPedido != 0 && model.Quantidade <= 0)
-                    {
-                        ModelState.AddModelError("", "Campo \""+model.UnidadeMedida+"\" NÃO PODE SER MENOR OU IGUAL A ZERO.");
-                        hasErrors = true;
-                    }
-                    if (model.Preco <= 0)
-                    {
-                        ModelState.AddModelError("", "Campo \"PREÇO\" NÃO PODE SER MENOR OU IGUAL A ZERO.");
-                        hasErrors = true;
+                        if (model.ValorPadrao <= 0)
+                        {
+                            ModelState.AddModelError("", "NÃO É PERMITIDO SALVAR SEM VALOR PADRÃO DEFINIDO.");
+                            hasErrors = true;
+                        }
+                        if (model.IDTipoPedido == 0 && model.Pecas <= 0)
+                        {
+                            ModelState.AddModelError("", "CAMPO \"PEÇAS\" NÃO PODE SER MENOR OU IGUAL A ZERO.");
+                            hasErrors = true;
+                        }
+                        if (model.IDTipoPedido != 0 && model.Quantidade <= 0)
+                        {
+                            ModelState.AddModelError("", "CAMPO \"" + model.UnidadeMedida + "\" NÃO PODE SER MENOR OU IGUAL A ZERO.");
+                            hasErrors = true;
+                        }
+                        if (model.Preco <= 0)
+                        {
+                            ModelState.AddModelError("", "CAMPO \"PREÇO\" NÃO PODE SER MENOR OU IGUAL A ZERO.");
+                            hasErrors = true;
+                        }
                     }
 
                     if (hasErrors)
                     {
-                        if (base.Session_Carrinho == null || base.Session_Carrinho.IDTipoPedido < 0)
+                        if (model.Tipo != Enums.ItemType.Reserva)
                         {
-                            model.ObterTipoPedido = true;
-                            this.CarregarTiposPedidos(model);
+                            if (base.Session_Carrinho == null || base.Session_Carrinho.IDTipoPedido < 0)
+                            {
+                                model.ObterTipoPedido = true;
+                                this.CarregarTiposPedidos(model);
+                            }
+                        }
+                        else
+                        {
+                            model.ObterTipoPedido = false;
                         }
 
                         return View(model);
@@ -506,34 +528,37 @@ namespace Dalutex.Controllers
                         }
                     }
 
-                    if (model.IDTipoPedido >= 0)
+                    if (model.IDTipoPedido >= default(int))
                         base.Session_Carrinho.IDTipoPedido = model.IDTipoPedido;
 
-                    if(model.IDTipoPedido == 0)
+                    if(model.IDTipoPedido == (int)Enums.TiposPedido.VENDA)
                         model.Quantidade = model.Pecas * model.ValorPadrao;
                     else
                         model.Pecas = 1;
 
                     model.ValorTotalItem = model.Quantidade * model.Preco;
 
-                    using (var ctx = new TIDalutexContext())
+                    if (model.Tipo != Enums.ItemType.Reserva)
                     {
-                        int iID_DISP = ctx.DISPONIBILIDADE_MALHA
-                                                .OrderByDescending(x => x.ID_DISP)
-                                                .First()
-                                                .ID_DISP;
+                        using (var ctx = new TIDalutexContext())
+                        {
+                            int iID_DISP = ctx.DISPONIBILIDADE_MALHA
+                                                    .OrderByDescending(x => x.ID_DISP)
+                                                    .First()
+                                                    .ID_DISP;
 
-                        DISPONIBILIDADE_MALHA objDisponibilidade = ctx.DISPONIBILIDADE_MALHA
-                                                .Where(x => x.ARTIGO == model.Artigo && x.MAQUINA == model.Tecnologia && x.ID_DISP == iID_DISP)
-                                                .FirstOrDefault();
+                            DISPONIBILIDADE_MALHA objDisponibilidade = ctx.DISPONIBILIDADE_MALHA
+                                                    .Where(x => x.ARTIGO == model.Artigo && x.MAQUINA == model.Tecnologia && x.ID_DISP == iID_DISP)
+                                                    .FirstOrDefault();
 
-                        if (objDisponibilidade != null && objDisponibilidade.DISPONIBILIDADE_PCP != null)
-                            model.DataEntregaItem = (DateTime)objDisponibilidade.DISPONIBILIDADE_PCP;
-                        else
-                            model.DataEntregaItem = DateTime.Today.AddYears(1);
+                            if (objDisponibilidade != null && objDisponibilidade.DISPONIBILIDADE_PCP != null)
+                                model.DataEntregaItem = (DateTime)objDisponibilidade.DISPONIBILIDADE_PCP;
+                            else
+                                model.DataEntregaItem = DateTime.Today.AddYears(1);
 
-                        if (base.Session_Carrinho.DataEntrega < model.DataEntregaItem)
-                            base.Session_Carrinho.DataEntrega = model.DataEntregaItem;
+                            if (base.Session_Carrinho.DataEntrega < model.DataEntregaItem)
+                                base.Session_Carrinho.DataEntrega = model.DataEntregaItem;
+                        }
                     }
 
                     if (model.Modo == "I")//Inclusão
@@ -551,10 +576,14 @@ namespace Dalutex.Controllers
 
                         base.Session_Carrinho.Itens.Add(model);
 
-                        if (!string.IsNullOrWhiteSpace(model.Cor))
-                            return RedirectToAction("Lisos", "Pedido", new { idcolecao = model.IDColecao, nmcolecao = model.NMColecao, pagina = model.Pagina });
-                        else
+                        if (model.Tipo == Enums.ItemType.Estampado)
                             return RedirectToAction("ArtigosDisponiveis", "Pedido", new { desenho = model.Desenho, variante = model.Variante, idcolecao = model.IDColecao, nmcolecao = model.NMColecao, pagina = model.Pagina });
+                        else if (model.Tipo == Enums.ItemType.Liso)
+                            return RedirectToAction("Lisos", "Pedido", new { idcolecao = model.IDColecao, nmcolecao = model.NMColecao, pagina = model.Pagina });
+                        else if (model.Tipo == Enums.ItemType.Reserva)
+                            return RedirectToAction("ItensParaReserva", "Pedido", new { pagina = model.Pagina });
+                        else
+                            return RedirectToAction("Index", "Home");
                     }
                     else
                     {

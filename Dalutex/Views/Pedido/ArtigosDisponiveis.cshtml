@@ -1,6 +1,7 @@
 ﻿@model Dalutex.Models.ArtigosDisponiveisViewModel
 
 @using Dalutex.Models.DataModels;
+@using Dalutex.Models;
 
 @{
     ViewBag.Title = "ARTIGOS E TECNOLOGIAS DISPONÍVEIS";
@@ -64,7 +65,8 @@ else
                                                                         "&codstudio=null" +
                                                                         "&coddal=null" +
                                                                         "&modo=I" +
-                                                                        "&reduzido=-2"
+                                                                        "&reduzido=-2"+
+                                                                        "&tipo=" + ((int)Enums.ItemType.Estampado).ToString()
                                                                         )" 
                                    class="list-group-item"><i class="glyphicon glyphicon-ok"></i> &nbsp; @item.Artigo</a> 
                             }

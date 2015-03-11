@@ -90,7 +90,7 @@
                     <input type="submit" value="REMOVER" class="btn btn-danger pull-left" />
                     @if (Model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
                     {
-                        @Html.ActionLink("ALTERAR", "InserirNoCarrinho", "Pedido", new { desenho = Model.Desenho, variante = Model.Variante, artigo = Model.Artigo, tecnologia = Model.Tecnologia, modo = "A", codstudio = null, coddal = null }, new { @class = "btn btn-info pull-right" })
+                        @Html.ActionLink("ALTERAR", "InserirNoCarrinho", "Pedido", new { desenho = Model.Desenho, variante = Model.Variante, artigo = Model.Artigo, tecnologia = Model.Tecnologia, modo = "A", codstudio = "", coddal = "", tipo = (int)Model.Tipo }, new { @class = "btn btn-info pull-right" })
                     }
                 </div>
             }

@@ -188,6 +188,8 @@ namespace Dalutex.Models
         public string NMColecao { get; set; }
         public int Pagina { get; set; }
         public string RetornarPara { get; set; }
+        public Enums.ItemType Tipo { get; set; }
+        public string CodStudio { get; set; }
     }
 
     public class ConclusaoPedidoViewModel

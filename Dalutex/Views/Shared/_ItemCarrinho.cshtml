@@ -4,16 +4,22 @@
 <div class="item-carrinho" style="background-color:rgba(128, 128, 128, 0.1)">
     <div class="row">
         <div class="col-xs-2">
-            <a href="@Url.Action("Ampliacao", "Pedido", new { desenho = Model.Desenho, variante = Model.Variante, pagina=0, retornarpara  = "Carrinho" })">
-                @if (string.IsNullOrWhiteSpace(Model.Cor))
-                {
+            @if (Model.Tipo == Enums.ItemType.Estampado)
+            {
+                <a href="@Url.Action("Ampliacao", "Pedido", new { desenho = Model.Desenho, variante = Model.Variante, pagina=0, retornarpara  = "Carrinho", codstudio = "", tipo = (int)Enums.ItemType.Estampado  })">
                     <img src="@Url.Content(ViewData["URLIMAGENS"] + @Model.Desenho + "_" + @Model.Variante + ".jpg")" class="img-rounded" style="width:100%; height:100%;">
-                }
-                else
-                {
-                    <img style="background-color:@Model.RGB; width:100%; height:80px;" class="img-rounded">
-                }
-            </a>
+                </a>
+            }
+            else if (Model.Tipo == Enums.ItemType.Liso)
+            {
+                <img style="background-color:@Model.RGB; width:100%; height:80px;" class="img-rounded">
+            }
+            else if (Model.Tipo == Enums.ItemType.Reserva)
+            {
+                <a href="@Url.Action("Ampliacao", "Pedido", new { desenho = Model.Desenho, variante = Model.Variante, pagina=0, retornarpara  = "Carrinho", codstudio = Model.CodStudio, tipo = (int)Enums.ItemType.Reserva  })">
+                    <img src="@Url.Content(ViewData["URLIMAGENS"] + @Model.CodStudio + ".jpg")" class="img-rounded" style="width:100%; height:100%;">
+                </a>
+            }
         </div>
         <div class="col-xs-10">
             <div class="row">

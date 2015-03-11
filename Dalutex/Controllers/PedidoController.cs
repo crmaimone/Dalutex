@@ -312,7 +312,7 @@ namespace Dalutex.Controllers
             return View(model);
         }
 
-        public ActionResult Ampliacao(string desenho, string variante, string idcolecao, string nmcolecao, int pagina, string retornarpara)
+        public ActionResult Ampliacao(string desenho, string variante, string idcolecao, string nmcolecao, int pagina, string retornarpara, string codstudio, int tipo)
         {
             AmpliacaoViewModel model = new AmpliacaoViewModel()
             {
@@ -322,7 +322,9 @@ namespace Dalutex.Controllers
                 IDColecao = idcolecao,
                 NMColecao = nmcolecao,
                 Pagina = pagina,
-                RetornarPara = retornarpara
+                RetornarPara = retornarpara,
+                CodStudio = codstudio,
+                Tipo = (Enums.ItemType)tipo
             };
 
             return View(model);
@@ -649,7 +651,10 @@ namespace Dalutex.Controllers
         public ActionResult Carrinho()
         {
             ViewBag.Carrinho = base.Session_Carrinho;
-            ViewBag.UrlImagens = ConfigurationManager.AppSettings["PASTA_DESENHOS"];
+            if (base.Session_Carrinho.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
+                ViewBag.UrlImagens = ConfigurationManager.AppSettings["PASTA_DESENHOS"];
+            else
+                ViewBag.UrlImagens = ConfigurationManager.AppSettings["PASTA_RESERVA"];
 
             return View();
         }
@@ -1199,7 +1204,7 @@ namespace Dalutex.Controllers
 
             ObterItensParaReserva(model);
 
-            model.UrlImagens = ConfigurationManager.AppSettings["PASTA_DESENHOS"];
+            model.UrlImagens = ConfigurationManager.AppSettings["PASTA_RESERVAS"];
             return View(model);
         }
 
@@ -1208,7 +1213,7 @@ namespace Dalutex.Controllers
         public ActionResult ItensParaReserva(ItensParaReservaViewModel model)
         {
             this.ObterItensParaReserva(model);
-            model.UrlImagens = ConfigurationManager.AppSettings["PASTA_DESENHOS"];
+            model.UrlImagens = ConfigurationManager.AppSettings["PASTA_RESERVAS"];
 
             return View(model);
         }

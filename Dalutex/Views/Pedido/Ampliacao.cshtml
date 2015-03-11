@@ -1,11 +1,24 @@
 ﻿@model Dalutex.Models.AmpliacaoViewModel
 
-@using Dalutex.Models.DataModels;
+@using Dalutex.Models;
 
 @{
     ViewBag.Title = "VISUALIZAÇÃO DO DESENHO";
 }
 <h1 class="viewTitle">@ViewBag.Title</h1>
+@if (Model.Tipo == Enums.ItemType.Estampado)
+{
+    <img src="@Url.Content(ViewData["URLIMAGENS"] + @Model.Desenho + "_" + @Model.Variante + ".jpg")" class="img-rounded" style="width:100%; height:100%;">
+}
+else if (Model.Tipo == Enums.ItemType.Liso)
+{
+    <img style="background-color:@Model.RGB; width:100%; height:80px;" class="img-rounded">
+}
+else if (Model.Tipo == Enums.ItemType.Reserva)
+{
+    <img src="@Url.Content(ViewData["URLIMAGENS"] + @Model.CodStudio + ".jpg")" class="img-rounded" style="width:100%; height:100%;">
+}
+
 @if (Model.Desenho == null)
 {
     <div class="panel panel-default">

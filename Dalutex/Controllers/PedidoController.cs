@@ -1084,6 +1084,16 @@ namespace Dalutex.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ItensParaReserva(ItensParaReservaViewModel model)
+        {
+            this.ObterItensParaReserva(model);
+            model.UrlImagens = ConfigurationManager.AppSettings["PASTA_DESENHOS"];
+
+            return View(model);
+        }
+
         private void ObterItensParaReserva(ItensParaReservaViewModel model)
         {
             using (var ctx = new TIDalutexContext())

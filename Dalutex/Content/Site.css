@@ -142,6 +142,11 @@ h3 {
     margin-top: 5px;
 }
 
+.panel#pnreserva {    
+    margin-top: 5px;
+    padding: 10px 0 0 5px;
+}
+
 .panel > .panel-default{    
     margin-top: 5px;
     background: red;

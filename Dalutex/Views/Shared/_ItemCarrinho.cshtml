@@ -123,7 +123,36 @@
                     <input type="submit" value="REMOVER" class="btn btn-danger pull-left" />
                     @if (Model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
                     {
-                        @Html.ActionLink("ALTERAR", "InserirNoCarrinho", "Pedido", new { desenho = Model.Desenho, variante = Model.Variante, artigo = Model.Artigo, tecnologia = Model.Tecnologia, modo = "A", codstudio = "", coddal = "", tipo = (int)Model.Tipo }, new { @class = "btn btn-info pull-right" })
+                        @Html.ActionLink("ALTERAR", "InserirNoCarrinho", "Pedido", 
+                                            new { desenho = Model.Desenho, 
+                                                  variante = Model.Variante, 
+                                                  artigo = Model.Artigo, 
+                                                  tecnologia = Model.Tecnologia, 
+                                                  modo = "A", 
+                                                  codstudio = "", 
+                                                  coddal = "", 
+                                                  tipo = (int)Model.Tipo,
+                                                  idstudio = 0,
+                                                  iditemstudio = 0                                                    
+                                                }, 
+                                                new { @class = "btn btn-info pull-right" })
+                        
+                        //  string idcolecao
+                        //, string nmcolecao
+                        //, string pagina
+                        //, string desenho
+                        //, string variante
+                        //, string artigo
+                        //, string tecnologia
+                        //, string cor
+                        //, string modo
+                        //, string rgb
+                        //, int reduzido
+                        //, string codstudio
+                        //, string coddal
+                        //, int tipo
+                        //, int idstudio
+                        //, int iditemstudio
                     }
                 </div>
             }

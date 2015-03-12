@@ -650,6 +650,10 @@ namespace Dalutex.Controllers
 
         public ActionResult Carrinho()
         {
+            if (base.Session_Carrinho == null)
+            {
+                return View();
+            }
             ViewBag.Carrinho = base.Session_Carrinho;
             if (base.Session_Carrinho.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
                 ViewBag.UrlImagens = ConfigurationManager.AppSettings["PASTA_DESENHOS"];
@@ -770,17 +774,17 @@ namespace Dalutex.Controllers
                     if (model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
                     {
 
-                        if (model.IDCondicoesPagto <= 0)
+                        if (model.IDCondicoesPagto <= 0 || model.IDCondicoesPagto == null)
                         {
                             ModelState.AddModelError("", "Por favor informe a condição de pagamento.");
                             hasErrors = true;
                         }
-                        if (model.IDMoedas < 0)
+                        if (model.IDMoedas < 0 || model.IDMoedas == null)
                         {
                             ModelState.AddModelError("", "Por favor informe a moeda.");
                             hasErrors = true;
                         }
-                        if (model.IDViasTransporte <= 0)
+                        if (model.IDViasTransporte <= 0 || model.IDViasTransporte == null)
                         {
                             ModelState.AddModelError("", "Por favor informe a via de transporte.");
                             hasErrors = true;
@@ -795,7 +799,7 @@ namespace Dalutex.Controllers
                             ModelState.AddModelError("", "Por favor informe o canal de venda.");
                             hasErrors = true;
                         }
-                        if (model.IDTiposAtendimento <= 0)
+                        if (model.IDTiposAtendimento <= 0 || model.IDTiposAtendimento == null)
                         {
                             ModelState.AddModelError("", "Por favor informe o tipo de atendimento.");
                             hasErrors = true;
@@ -805,6 +809,15 @@ namespace Dalutex.Controllers
                             ModelState.AddModelError("", "Por favor informe a qualidade comercial.");
                             hasErrors = true;
                         }
+
+
+                        //está duplicado pra tratar o erro....
+                        if (hasErrors)
+                        {
+                            this.ConclusaoPedidoCarregarListas(model);
+                            return View(model);
+                        }
+
 
                         if (base.Session_Carrinho.IDTipoPedido.Equals((int)Enums.TiposPedido.VENDA)
                             && !model.IDCanaisVenda.Equals((int)Enums.CanaisVenda.TELEVENDAS)
@@ -972,7 +985,7 @@ namespace Dalutex.Controllers
                                 item.Pecas = 1;
                                 item.TecnologiaPorExtenso = null;
 
-                                #region Reserva - Item sem reduzido
+                                #region Reserva - Item sem reduzido (id_controle)
 
                                 if (item.Reduzido <= default(int))
                                 {
@@ -1174,7 +1187,7 @@ namespace Dalutex.Controllers
 
         #endregion
 
-        #region Exclusivos
+        #region Pedido Reserva (Exclusivos parte 1)
 
         public ActionResult ItensParaReserva(string pagina)
         {
@@ -1249,7 +1262,7 @@ namespace Dalutex.Controllers
                                 IDItemStudio = (int)dv.Key.ID_ITEM_STUDIO
                             };
 
-                model.Galeria = query.OrderBy(x => x.CodDal).Skip((model.Pagina - 1) * 24).Take(24).ToList();
+                model.Galeria = query.OrderByDescending(x => x.CodDal).Skip((model.Pagina - 1) * 24).Take(24).ToList();
             }
         }
 

@@ -208,8 +208,10 @@
     <Compile Include="Models\DataModels\CADASTRO_MOEDAS.cs" />
     <Compile Include="Models\DataModels\VW_CONDICAO_PGTO.cs" />
     <Compile Include="Models\DataModels\VW_IMPRESSAO_WEB.cs" />
+    <Compile Include="Models\DataModels\VW_ITENS_VALIDAR_RESERVA.cs" />
     <Compile Include="Models\DataModels\VW_LISOS_POR_COLECAO.cs" />
     <Compile Include="Models\DataModels\VW_TROCA_TEC.cs" />
+    <Compile Include="Models\DataModels\VW_VALIDAR_RESERVA.cs" />
     <Compile Include="Models\Relatorios.cs" />
     <Compile Include="Models\Utils\PdfResult.cs" />
     <Compile Include="Models\Utils\Enums.cs" />
@@ -252,6 +254,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap-select.js" />
     <Content Include="Scripts\bootstrap-select.min.js" />
+    <Content Include="Scripts\bootstrap-table-pt-BR.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\bootstrap-select.css.map" />
@@ -268,6 +271,7 @@
     </Content>
     <None Include="Properties\PublishProfiles\Deploy.pubxml" />
     <Content Include="Scripts\bootstrap-select.js.map" />
+    <Content Include="Scripts\data2.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\dataTables.bootstrap.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -329,6 +333,7 @@
     <Content Include="Views\Pedido\Lisos.cshtml" />
     <Content Include="Views\Pedido\ItensParaReserva.cshtml" />
     <Content Include="Views\Base\Message.cshtml" />
+    <Content Include="Views\Pedido\ValidaPedidoReserva.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

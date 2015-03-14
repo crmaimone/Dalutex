@@ -73,6 +73,27 @@ namespace Dalutex.Models
         public string FiltroDesenho { get; set; }
     }
 
+    public class ValidaPedidoReservaViewModel
+    {
+        [Display(Name = "Pedido Reserva:")]
+        public string FiltroPedidoReserva { get; set; }
+
+        [Display(Name = "Cliente:")]
+        public string FiltroCliente { get; set; }
+
+        [Display(Name = "Representante:")]
+        public string FiltroRepresentante { get; set; }
+
+        [Display(Name = "Cód. de Studio:")]
+        public string FiltroCodStudio { get; set; }
+
+        [Display(Name = "Cód. Dal:")]
+        public string FiltroCodDal { get; set; }
+
+        [Display(Name = "Desenho:")]
+        public string FiltroDesenho { get; set; }        
+    }
+
     public class ParametrosPreco
     {
         public bool E_Exclusivo { get; set; }

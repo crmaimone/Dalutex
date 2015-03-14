@@ -1276,6 +1276,15 @@ namespace Dalutex.Controllers
 
         #endregion
 
+
+        #region Validar Pedidos de reserva (Exclusivos parte 2)
+        public ActionResult ValidaPedidoReserva() 
+        {
+            return View();
+        }
+        #endregion
+
+
         //[AllowAnonymous]
         //[HttpPost]
         //public JsonResult ObterDesenho(string desenho, string variante)

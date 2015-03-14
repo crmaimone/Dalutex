@@ -1,0 +1,242 @@
+﻿@model Dalutex.Models.ValidaPedidoReservaViewModel
+
+@using Dalutex.Models;
+@using Dalutex.Models.DataModels;
+
+@{
+    ViewBag.Title = "Validação de Pedidos de Reserva";
+}    
+
+    <div class="panel panel-default"><h3>@ViewBag.Title</h3></div>
+
+    <div class="container-fluid">
+        <div class="row-fluid" id="pesqDesenho">
+            @using (Html.BeginForm("ValidaPedidoReserva", "Pedido", null, FormMethod.Post, new { role = "search" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-group">
+                    @Html.LabelFor(x => x.FiltroRepresentante, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(x => x.FiltroRepresentante, new { @class = "form-control", placeholder = "Começa com.." })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.FiltroCliente, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(x => x.FiltroCliente, new { @class = "form-control", placeholder = "Começa com.." })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.FiltroPedidoReserva, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(x => x.FiltroPedidoReserva, new { @class = "form-control", placeholder = "Nr Pedido" })
+                    </div>
+                </div>                
+                <div class="form-group">
+                    @Html.LabelFor(x => x.FiltroCodStudio, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(x => x.FiltroCodStudio, new { @class = "form-control", placeholder = "Começa com.." })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.FiltroCodDal, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(x => x.FiltroCodDal, new { @class = "form-control", placeholder = "Contém.." })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.FiltroDesenho, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(x => x.FiltroDesenho, new { @class = "form-control", placeholder = "Começa com.." })
+                    </div>
+                </div>               
+                <div class="form-group">
+                    @*<input type="hidden" name="Pagina" value="@Model.Pagina" />*@
+                    <button type="submit" class="btn btn-default btn-group-sm"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Pesquisar</button>
+                </div>
+            }
+        </div>        
+    </div>
+
+
+    @*exemplo table bootstrap: http://wenzhixin.net.cn/p/bootstrap-table/docs/examples.html*@    
+
+    <br />
+    <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">Panel heading</div>
+        <div class="panel-body">
+            <p>panel-body</p>
+        </div>
+
+        <!-- Table -->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Username</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>mdo</td>
+                </tr>
+                <tr>
+                    <th scope="row">2</th>
+                    <td>Jacob</td>
+                    <td>Thornton</td>
+                    <td>fat</td>
+                </tr>
+                <tr>
+                    <th scope="row">3</th>
+                    <td>Larry</td>
+                    <td>the Bird</td>
+                    <td>twitter</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <hr />
+    <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">Panel heading</div>
+
+        <!-- Table -->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th data-field="ID_REP" data-checkbox="true"></th>
+                    <th data-field="REPRESENTANTE" data-sortable="true">_REPRESENTANTE</th>
+                    <th data-field="CLIENTE" data-sortable="true">_CLIENTE</th>
+                    <th data-field="PEDIDO" data-sortable="true">_PEDIDO</th>
+                    <th data-field="DATA_EMISSAO" data-sortable="true">_DATA_EMISSAO</th>
+                    <th data-field="ITEM_PEDIDO" data-sortable="true">_ITEM_PEDIDO</th>
+                    <th data-field="ID_CONTROLE" data-sortable="true">_ID_CONTROLE</th>
+                    <th data-field="COD_STUDIO" data-sortable="true">_COD_STUDIO</th>
+                    <th data-field="STUDIO" data-sortable="true">_STUDIO</th>
+                    <th data-field="DESENHO" data-sortable="true">_DESENHO</th>
+                    <th data-field="COD_DAL" data-sortable="true">_COD_DAL</th>
+                    <th data-field="VARIANTE" data-sortable="true">_VARIANTE</th>
+                    <th data-field="DIGITADOR" data-sortable="true">_DIGITADOR</th>
+                </tr>                
+            </thead>
+        </table>
+    </div>
+    <hr />
+
+    <div class="alert alert-success" id="events-result" data-es="Aquí se muestra el resultado del evento">
+        Here is the result of event.
+    </div>
+    <table id="events-table" data-url="data2.json" data-height="299" data-search="true" data-pagination="true" data-show-columns="true">
+        <thead>
+            <tr>
+                <th data-field="state" data-checkbox="true"></th>
+                <th data-field="id" data-sortable="true">Item ID</th>
+                <th data-field="name" data-sortable="true">Item Name</th>
+                <th data-field="price" data-sortable="true">Item Price</th>
+            </tr>
+        </thead>
+    </table>   
+
+    @*
+    artivos que adicionei ao projeto pra testar (pasta SCRIPTS):
+        - data
+        - data1.json
+        - data2.json
+        - data3.json
+        - data4.json
+        - bootstrap-table-pt-BR.js
+    *@
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/equalheight")
+        <script>
+            $(function () {
+                $('#basic-events-table').next().click(function () {
+                    $(this).hide();
+
+                    var $result = $('#events-result');
+
+                    $('#events-table').bootstrapTable({
+                        /*
+                        onAll: function (name, args) {
+                            console.log('Event: onAll, data: ', args);
+                        }
+                        onClickRow: function (row) {
+                            $result.text('Event: onClickRow, data: ' + JSON.stringify(row));
+                        },
+                        onDblClickRow: function (row) {
+                            $result.text('Event: onDblClickRow, data: ' + JSON.stringify(row));
+                        },
+                        onSort: function (name, order) {
+                            $result.text('Event: onSort, data: ' + name + ', ' + order);
+                        },
+                        onCheck: function (row) {
+                            $result.text('Event: onCheck, data: ' + JSON.stringify(row));
+                        },
+                        onUncheck: function (row) {
+                            $result.text('Event: onUncheck, data: ' + JSON.stringify(row));
+                        },
+                        onCheckAll: function () {
+                            $result.text('Event: onCheckAll');
+                        },
+                        onUncheckAll: function () {
+                            $result.text('Event: onUncheckAll');
+                        },
+                        onLoadSuccess: function (data) {
+                            $result.text('Event: onLoadSuccess, data: ' + data);
+                        },
+                        onLoadError: function (status) {
+                            $result.text('Event: onLoadError, data: ' + status);
+                        },
+                        onColumnSwitch: function (field, checked) {
+                            $result.text('Event: onSort, data: ' + field + ', ' + checked);
+                        },
+                        onPageChange: function (number, size) {
+                            $result.text('Event: onPageChange, data: ' + number + ', ' + size);
+                        },
+                        onSearch: function (text) {
+                            $result.text('Event: onSearch, data: ' + text);
+                        }
+                        */
+                    }).on('all.bs.table', function (e, name, args) {
+                        console.log('Event:', name, ', data:', args);
+                    }).on('click-row.bs.table', function (e, row, $element) {
+                        $result.text('Event: click-row.bs.table, data: ' + JSON.stringify(row));
+                    }).on('dbl-click-row.bs.table', function (e, row, $element) {
+                        $result.text('Event: dbl-click-row.bs.table, data: ' + JSON.stringify(row));
+                    }).on('sort.bs.table', function (e, name, order) {
+                        $result.text('Event: sort.bs.table, data: ' + name + ', ' + order);
+                    }).on('check.bs.table', function (e, row) {
+                        $result.text('Event: check.bs.table, data: ' + JSON.stringify(row));
+                    }).on('uncheck.bs.table', function (e, row) {
+                        $result.text('Event: uncheck.bs.table, data: ' + JSON.stringify(row));
+                    }).on('check-all.bs.table', function (e) {
+                        $result.text('Event: check-all.bs.table');
+                    }).on('uncheck-all.bs.table', function (e) {
+                        $result.text('Event: uncheck-all.bs.table');
+                    }).on('load-success.bs.table', function (e, data) {
+                        $result.text('Event: load-success.bs.table');
+                    }).on('load-error.bs.table', function (e, status) {
+                        $result.text('Event: load-error.bs.table, data: ' + status);
+                    }).on('column-switch.bs.table', function (e, field, checked) {
+                        $result.text('Event: column-switch.bs.table, data: ' +
+                            field + ', ' + checked);
+                    }).on('page-change.bs.table', function (e, size, number) {
+                        $result.text('Event: page-change.bs.table, data: ' + number + ', ' + size);
+                    }).on('search.bs.table', function (e, text) {
+                        $result.text('Event: search.bs.table, data: ' + text);
+                    });
+                });
+            });
+
+        </script>
+    }

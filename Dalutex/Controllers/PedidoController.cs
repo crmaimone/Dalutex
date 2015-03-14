@@ -1182,7 +1182,15 @@ namespace Dalutex.Controllers
 
         public EspelhoPedidoPdf EspelhoPedido(string numeropedido)
         {
-            return new EspelhoPedidoPdf() { IDPedidoBloco = decimal.Parse(numeropedido) };
+            try
+            {
+                return new EspelhoPedidoPdf() { IDPedidoBloco = decimal.Parse(numeropedido) };
+            }
+            catch (Exception ex)
+            {
+                base.Handle(ex);
+                return null;
+            }
         }
 
         #endregion

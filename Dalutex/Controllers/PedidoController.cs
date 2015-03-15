@@ -208,7 +208,8 @@ namespace Dalutex.Controllers
             return View(model);
         }
 
-        public ActionResult ArtigosDisponiveis(string desenho, string variante, int idcolecao, string nmcolecao, int pagina)
+        public ActionResult ArtigosDisponiveis(string desenho, string variante, int idcolecao, string nmcolecao, int pagina,
+            int idvariante, int pedidoreserva, int itempedidoreserva)
         {
             ArtigosDisponiveisViewModel model = new ArtigosDisponiveisViewModel();
             model.Desenho = desenho;
@@ -217,6 +218,9 @@ namespace Dalutex.Controllers
             model.NMColecao = nmcolecao;
             model.Pagina = pagina;
             model.Imagem = ConfigurationManager.AppSettings["PASTA_DESENHOS"] + desenho + "_" + variante + ".jpg";
+            model.PedidoReserva = pedidoreserva;
+            model.IDVariante = idvariante;
+            model.ItemPedidoReserva = itempedidoreserva;
 
             List<VW_CARACT_DESENHOS> lstQuery = null;
 
@@ -361,7 +365,10 @@ namespace Dalutex.Controllers
             , string coddal
             , int tipo
             , int idstudio
-            , int iditemstudio)
+            , int iditemstudio
+            , int idvariante
+            , int pedidoreserva
+            , int itempedidoreserva)
         {
             InserirNoCarrinhoViewModel model = new InserirNoCarrinhoViewModel();
             model.Desenho = desenho;
@@ -378,6 +385,10 @@ namespace Dalutex.Controllers
             model.CodStudio = codstudio;
             model.IDStudio = idstudio;
             model.IDItemStudio = iditemstudio;
+
+            model.IDVariante = idvariante;
+            model.PedidoReserva = pedidoreserva;
+            model.ItemPedidoReserva = itempedidoreserva;
 
             if (base.Session_Carrinho != null)
                 model.IDTipoPedido = base.Session_Carrinho.IDTipoPedido;
@@ -583,14 +594,17 @@ namespace Dalutex.Controllers
 
                         base.Session_Carrinho.Itens.Add(model);
 
-                        if (model.Tipo == Enums.ItemType.Estampado)
-                            return RedirectToAction("ArtigosDisponiveis", "Pedido", new { desenho = model.Desenho, variante = model.Variante, idcolecao = model.IDColecao, nmcolecao = model.NMColecao, pagina = model.Pagina });
+                        if (model.Tipo == Enums.ItemType.Estampado || model.Tipo == Enums.ItemType.ValidacaoReserva)
+                            return RedirectToAction("ArtigosDisponiveis", "Pedido", new { desenho = model.Desenho, variante = model.Variante, idcolecao = model.IDColecao, nmcolecao = model.NMColecao, pagina = model.Pagina, pedidoreserva = model.PedidoReserva, idvariante = model.IDVariante, itempedidoreserva = model.ItemPedidoReserva });
                         else if (model.Tipo == Enums.ItemType.Liso)
                             return RedirectToAction("Lisos", "Pedido", new { idcolecao = model.IDColecao, nmcolecao = model.NMColecao, pagina = model.Pagina });
                         else if (model.Tipo == Enums.ItemType.Reserva)
                             return RedirectToAction("ItensParaReserva", "Pedido", new { pagina = model.Pagina });
-                        else
+                        else 
                             return RedirectToAction("Index", "Home");
+
+                        //if (model.Tipo == Enums.ItemType.ValidacaoReserva)
+                        //    return RedirectToAction("DesenhosValidaReserva", "Pedido", new { pagina = model.Pagina });                        
                     }
                     else
                     {
@@ -1019,6 +1033,23 @@ namespace Dalutex.Controllers
 
                             i++;
 
+                            string origem = "";
+
+                            if(item.Tipo == Enums.ItemType.ValidacaoReserva )
+                            {
+                                origem = "E";
+
+                                //TODO: gravar ligação de pedido reserva com validação. Criar chave para tabela de ligação, insert pra cada item.
+
+                                //ctx.PED_RESERVA_VENDA.Add(new PED_RESERVA_VENDA()
+                                //{
+                                //    PEDIDO_RESERVA = item.PedidoReserva,
+                                //    IT_PEDIDO_RES = item.ItemPedidoReserva,
+                                //    ID_VAR = item.IDVariante,
+                                //    NR_PEDIDO_NOVO = iNUMERO_PEDIDO_BLOCO
+                                //});        
+                            }
+
                             PRE_PEDIDO_ITENS objItem = new PRE_PEDIDO_ITENS()
                             {
                                 ARTIGO = item.Artigo,
@@ -1027,17 +1058,16 @@ namespace Dalutex.Controllers
                                 DESENHO = item.Desenho,
                                 ITEM = i,
                                 LISO_ESTAMP = item.Tecnologia,
-                                NUMERO_PEDIDO_BLOCO = iNUMERO_PEDIDO_BLOCO,
-                                //COLECAO = Discutir com a Etiane
+                                NUMERO_PEDIDO_BLOCO = iNUMERO_PEDIDO_BLOCO,                                
                                 PE = "N",
-                                PRECO_UNIT = item.Preco,
-                                //PRECOLISTA = Buscar qdo tivermos o preço da tabela
+                                PRECO_UNIT = item.Preco,                                
                                 QTDEPC = item.Pecas,
                                 QUANTIDADE = item.Quantidade,
                                 REDUZIDO_ITEM = item.Reduzido,
                                 UM = item.UnidadeMedida,
                                 VALOR_TOTAL = item.Preco * item.Quantidade,
                                 VARIANTE = item.Variante,
+                                ORIGEM = origem
                             };
 
                             lstItens.Add(objItem);
@@ -1145,7 +1175,7 @@ namespace Dalutex.Controllers
                             #endregion
 
                             #endregion
-                        }
+                        }                       
 
                         foreach (PRE_PEDIDO_ITENS item in lstItens)
                         {
@@ -1279,25 +1309,57 @@ namespace Dalutex.Controllers
             }
         }
 
+        public ActionResult DesenhosValidaReserva(int pedidoreserva, int pagina)
+        {
+            DesenhosValidaReservaViewModel model = new DesenhosValidaReservaViewModel();
+            model.Pagina = pagina;
+            model.UrlImagens = ConfigurationManager.AppSettings["PASTA_DESENHOS"];
+
+            using( TIDalutexContext ctx = new TIDalutexContext() )
+            {
+                model.Galeria =
+                    ctx.VW_ITENS_VALIDAR_RESERVA.Where(x => x.PEDIDO_RESERVA == pedidoreserva).
+                    OrderBy(x => x.DESENHO).ThenBy(x => x.VARIANTE).Skip((model.Pagina - 1) * 24).Take(24).ToList();    
+            }
+
+            return View(model);
+        }
+
         #endregion
 
         #region Validar Pedidos de reserva (Exclusivos parte 2)
         public ActionResult ValidaPedidoReserva() 
         {
-            return View();
+            ValidaPedidoReservaViewModel model = new ValidaPedidoReservaViewModel();
+            return View(model);
         }
 
         [HttpPost]
         public ActionResult ValidaPedidoReserva(ValidaPedidoReservaViewModel model)
         {
+            int PedidoReserva = 0;
+            int.TryParse(model.FiltroPedidoReserva, out PedidoReserva);            
+
             using (var ctx = new TIDalutexContext())
-            {
-                List<VW_VALIDAR_RESERVA> lstValidaReserva = 
+            {               
+                model.ListaValidaReserva = 
                         ctx.VW_VALIDAR_RESERVA.Where(
-                            x => x.REPRESENTANTE.StartsWith(model.FiltroRepresentante.ToUpper())
-                            && x.CLIENTE.StartsWith(model.FiltroCliente.ToUpper()) 
-                        ).ToList();
-            }
+                            x =>
+                            (model.FiltroRepresentante == null || x.REPRESENTANTE.StartsWith(model.FiltroRepresentante.ToUpper()))
+                            &&
+                            (model.FiltroCliente == null || x.CLIENTE.StartsWith(model.FiltroCliente.ToUpper()))
+                            &&
+                            (model.FiltroCodDal == null || x.COD_DAL.Contains(model.FiltroCodDal.ToUpper()))
+                            &&
+                            (model.FiltroDesenho == null || x.DESENHO.StartsWith(model.FiltroDesenho.ToUpper()))
+                            &&
+                            (model.FiltroCodStudio == null || x.COD_STUDIO.StartsWith(model.FiltroCodStudio.ToUpper()))
+                            &&
+                            (PedidoReserva == 0 || x.PEDIDO.Equals(PedidoReserva))
+                        ).OrderByDescending(x => x.DATA_EMISSAO).ToList();
+            }           
+
+
 
             return View(model);            
         }

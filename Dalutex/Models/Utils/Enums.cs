@@ -27,7 +27,8 @@ namespace Dalutex.Models
         { 
             Estampado = 1,
             Liso = 2,
-            Reserva = 3
+            Reserva = 3,
+            ValidacaoReserva = 4
         }
 
         public enum CondicoesPagamento

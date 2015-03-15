@@ -60,24 +60,21 @@
          
     </div>
 
-    @if(true)
-    { 
-        @*exemplo table bootstrap: http://wenzhixin.net.cn/p/bootstrap-table/docs/examples.html*@    
-
-        <br />
-        
+    @if(Model != null && Model.ListaValidaReserva != null)
+    {                       
         <div class="panel panel-default">
             <!-- Default panel contents -->
-            <div class="panel-heading">Panel heading</div>
+            @*<div class="panel-heading">Panel heading</div>
             <div class="panel-body">
                 <p>panel-body</p>
-            </div>
+            </div>*@
 
             <!-- Table -->
             <div class="table-responsive">
-                <table class="table">
+                <table class="table table-hover">
                     <thead>
                         <tr>
+                            <th></th>
                             <th>Representante</th>
                             <th>Cliente</th>
                             <th>Pedido</th>
@@ -92,11 +89,24 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>mdo</td>
-                        </tr>
+                        @foreach (var item in Model.ListaValidaReserva)
+                        {
+                            <tr>
+                                <td><a href="@Url.Content("DesenhosValidaReserva?&pedidoreserva=" + item.PEDIDO + "&pagina=1")"></a></td>
+                                <td>@item.REPRESENTANTE</td>
+                                <td>@item.CLIENTE</td>
+                                <td>@item.PEDIDO</td>
+                                <td>@item.DATA_EMISSAO</td>
+                                <td>@item.ITEM_PEDIDO</td>
+                                <td>@item.COD_STUDIO</td>
+                                <td>@item.STUDIO</td>
+                                <td>@item.DESENHO</td>
+                                <td>@item.COD_DAL</td>
+                                <td>@item.VARIANTE</td>
+                                <td>@item.DIGITADOR</td>
+
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>
@@ -104,6 +114,10 @@
     }
 @section Scripts {
     <script>
-
+        $('tr').click(function () {
+            window.location = $(this).find('a').attr('href');
+        }).hover(function () {
+            $(this).toggleClass('hover-cursor');
+        });
     </script>
 }

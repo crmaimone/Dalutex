@@ -25,6 +25,10 @@ namespace Dalutex.Models
         public string CodDal { get; set; }
         public int IDStudio { get; set; }
         public int IDItemStudio { get; set; }
+        public int PedidoReserva { get; set; }
+        public int ItemPedidoReserva { get; set; }
+        public int IDVariante { get; set; }      
+
     }
 
     public class BuscaRepresentanteViewModel

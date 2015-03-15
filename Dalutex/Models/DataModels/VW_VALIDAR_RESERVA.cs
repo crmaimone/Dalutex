@@ -18,6 +18,7 @@ namespace Dalutex.Models.DataModels
         public string CLIENTE { get; set; }
 
         [Key]
+        [Column(Order=0)]
         public decimal PEDIDO { get; set; }
 
         public DateTime? DATA_EMISSAO { get; set; }
@@ -32,12 +33,16 @@ namespace Dalutex.Models.DataModels
         [StringLength(60)]
         public string STUDIO { get; set; }
 
+        [Key]
+        [Column(Order = 1)]
         [StringLength(10)]
         public string DESENHO { get; set; }
 
         [StringLength(50)]
         public string COD_DAL { get; set; }
 
+        [Key]
+        [Column(Order = 2)]
         [StringLength(4)]
         public string VARIANTE { get; set; }
 

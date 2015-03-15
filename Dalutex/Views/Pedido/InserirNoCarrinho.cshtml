@@ -93,25 +93,28 @@
                         <h5>Clique em INCLUIR para adicionar este desenho ao carrinho.</h5>
                     }
 
-                    @Html.HiddenFor(x => x.Tipo);
+                    @Html.HiddenFor(x => x.Tipo)
                     @Html.HiddenFor(x => x.Desenho)
                     @Html.HiddenFor(x => x.Variante)
                     @Html.HiddenFor(x => x.Artigo)
                     @Html.HiddenFor(x => x.TecnologiaPorExtenso)
                     @Html.HiddenFor(x => x.Reduzido)
-                    @Html.HiddenFor(x => x.Modo);
-                    @Html.HiddenFor(x => x.IDColecao);
-                    @Html.HiddenFor(x => x.IDTipoPedido);
-                    @Html.HiddenFor(x => x.NMColecao);
-                    @Html.HiddenFor(x => x.Pagina);
-                    @Html.HiddenFor(x => x.Cor);
-                    @Html.HiddenFor(x => x.RGB);
-                    @Html.HiddenFor(x => x.CodStudio);
-                    @Html.HiddenFor(x => x.CodDal);
-                    @Html.HiddenFor(x => x.IDStudio);
-                    @Html.HiddenFor(x => x.IDItemStudio);
+                    @Html.HiddenFor(x => x.Modo)
+                    @Html.HiddenFor(x => x.IDColecao)
+                    @Html.HiddenFor(x => x.IDTipoPedido)
+                    @Html.HiddenFor(x => x.NMColecao)
+                    @Html.HiddenFor(x => x.Pagina)
+                    @Html.HiddenFor(x => x.Cor)
+                    @Html.HiddenFor(x => x.RGB)
+                    @Html.HiddenFor(x => x.CodStudio)
+                    @Html.HiddenFor(x => x.CodDal)
+                    @Html.HiddenFor(x => x.IDStudio)
+                    @Html.HiddenFor(x => x.IDItemStudio)
                     @Html.HiddenFor(x => x.UnidadeMedida, new { id = "hidUM" })
                     @Html.HiddenFor(x => x.ValorPadrao, new { id = "hidValPadrao" })
+                    @Html.HiddenFor(x => x.IDVariante)
+                    @Html.HiddenFor(x => x.PedidoReserva)
+                    @Html.HiddenFor(x => x.ItemPedidoReserva)
 
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-10">
@@ -123,7 +126,7 @@
 
                             @if (Model.Modo == "I")
                             {
-                                if (Model.Tipo == Enums.ItemType.Estampado)
+                                if (Model.Tipo == Enums.ItemType.Estampado || Model.Tipo == Enums.ItemType.ValidacaoReserva) 
                                 {
                                     @Html.ActionLink("VOLTAR", "ArtigosDisponiveis", "Pedido",
                                     new
@@ -132,7 +135,10 @@
                                         variante = Model.Variante,
                                         idcolecao = Model.IDColecao,
                                         nmcolecao = Model.NMColecao,
-                                        pagina = Model.Pagina
+                                        pagina = Model.Pagina,
+                                        pedidoreserva = Model.PedidoReserva,
+                                        idvariante = Model.IDVariante,
+                                        itempedidoreserva = Model.ItemPedidoReserva
                                     },
                                     new { @class = "btn btn-default right" })
                                 }

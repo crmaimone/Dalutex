@@ -91,7 +91,40 @@ namespace Dalutex.Models
         public string FiltroCodDal { get; set; }
 
         [Display(Name = "Desenho:")]
-        public string FiltroDesenho { get; set; }        
+        public string FiltroDesenho { get; set; }
+
+        public int Pagina { get; set; }
+        public List<VW_VALIDAR_RESERVA> ListaValidaReserva { get; set; }
+    }
+
+
+    public class DesenhosValidaReservaViewModel
+    {    
+        public int PedidoReserva { get; set; }
+
+        public string IDCliente { get; set; }
+    
+        public int IDRepresentante { get; set; }
+
+        public string CodStudio { get; set; }
+
+        public string CodDal { get; set; }
+
+        public string Desenho { get; set; }
+        
+        public int IDControle { get; set; }
+        
+        public string Variante { get; set; }
+        
+        public int IDVariante { get; set; }
+        
+        public int ItemPedidoRes { get; set; }
+
+        public List<VW_ITENS_VALIDAR_RESERVA> Galeria { get; set; }
+
+        public int Pagina { get; set; }
+
+        public string UrlImagens { get; set; }
     }
 
     public class ParametrosPreco
@@ -117,6 +150,10 @@ namespace Dalutex.Models
         public string TecnologiaAtual { get; set; } //VER COM CASSIANO SE É O MELHOR LUGAR PARA GUARDAR ESTA INFORMAÇÃO
         public string NMColecao { get; set; }
         public int Pagina { get; set; }
+
+        public int PedidoReserva { get; set; }
+        public int IDVariante { get; set; }
+        public int ItemPedidoReserva { get; set; }
     }
 
     public class InserirNoCarrinhoViewModel
@@ -145,6 +182,10 @@ namespace Dalutex.Models
         public string CodDal { get; set; }
         public int IDStudio { get; set; }
         public int IDItemStudio { get; set; }
+
+        public int IDVariante { get; set; }
+        public int PedidoReserva { get; set; }
+        public int ItemPedidoReserva { get; set; }
 
         public int Comissao {get; set; } //ver com cassiano onde criar este field e como mapear a regra para comissão (vide coleção);
 
@@ -198,6 +239,8 @@ namespace Dalutex.Models
         {
             return base.GetHashCode();
         }
+
+         
     }
 
     public class AmpliacaoViewModel

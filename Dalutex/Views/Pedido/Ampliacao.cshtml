@@ -33,7 +33,10 @@ else
 <br />
 @if (Model.RetornarPara == "ArtigosDisponiveis")
 {
-    <a class="btn btn-default right" href="@Url.Action("ArtigosDisponiveis", "Pedido", new { desenho = Model.Desenho, variante = Model.Variante, idcolecao = Model.IDColecao, nmcolecao = Model.NMColecao, pagina=Model.Pagina })">VOLTAR</a>
+    <a class="btn btn-default right" href="@Url.Action("ArtigosDisponiveis", "Pedido", 
+    new { desenho = Model.Desenho, variante = Model.Variante, idcolecao = Model.IDColecao, nmcolecao = Model.NMColecao, pagina=Model.Pagina,
+          pedidoreserva = 0, idvariante = 0, itempedidoreserva = 0})">
+    VOLTAR</a>
 }
 else if (Model.RetornarPara == "Carrinho")
 {

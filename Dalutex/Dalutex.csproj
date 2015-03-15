@@ -335,6 +335,7 @@
     <Content Include="Views\Base\Message.cshtml" />
     <Content Include="Views\Pedido\ValidaPedidoReserva.cshtml" />
     <Content Include="Views\Pedido\Teste.cshtml" />
+    <Content Include="Views\Pedido\DesenhosValidaReserva.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

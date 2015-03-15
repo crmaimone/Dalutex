@@ -25,6 +25,10 @@ textarea {
     max-width: 280px;
 }
 
+tr.hover-cursor {
+   cursor: pointer;
+   /* whatever other hover styles you want */
+}
 .jumbotron
 {
     background-repeat:round;

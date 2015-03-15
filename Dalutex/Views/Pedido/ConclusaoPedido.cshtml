@@ -4,7 +4,7 @@
 @{
     ViewBag.Title = "CONCLUSÃO DE PEDIDO";
 }
-@Styles.Render("~/Content/dataTables")
+@Styles.Render("~/Content/bootstrap-table")
 
 <div class="panel panel-default"> <h3>@ViewBag.Title</h3> </div>
 
@@ -134,62 +134,36 @@
     @if (!ViewBag.CarrinhoVazio && Model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
     {
         <hr />
-        <table id="listaCarrinho" class="table table-striped table-bordered" cellspacing="0" style="width:100%;">
+
+        <table id="listaCarrinho">
             <thead>
                 <tr>
-                    <th>ARTIGO</th>
-                    <th>TECNOL</th>
-                    <th>DESENHO</th>
-                    <th>VARIANTE</th>                
-                    <th>PÇS</th>
-                    <th>UM</th>
-                    <th>QTDE</th>
-                    <th>UNIT.</th>
-                    <th>SUB TOTAL</th>
+                    <th data-field="Artigo" data-sortable="true">Artigo</th>
+                    <th data-field="Tecnologia" data-sortable="true">Tecnologia</th>
+                    <th data-field="Desenho" data-sortable="true">Desenho</th>
+                    <th data-field="Variante" data-sortable="true">Variante</th>
+                    <th data-field="Pecas" data-sortable="true">Peças</th>
+                    <th data-field="UnidadeMedida" data-sortable="true">UM</th>
+                    <th data-field="Quantidade" data-sortable="true">Qtde</th>
+                    <th data-field="Preco" data-sortable="true">Unit.</th>
+                    <th data-field="ValorTotalItem" data-sortable="true">Sub total</th>
                 </tr>
             </thead>
-            <tbody>
-                @if (Model.Itens != null)
-                {
-                    decimal _Total = 0;
-                    decimal _qtde;
-                    decimal _valor;
-                 
-                    foreach (InserirNoCarrinhoViewModel item in Model.Itens)
-                    {
-                        _qtde = item.Quantidade;
-                        _valor = item.Preco;
-
-                        _Total = (_qtde * _valor);
-                        <tr>
-                            <th>@item.Artigo</th>
-                            <th>@item.TecnologiaPorExtenso</th>
-                            <th>@item.Desenho</th>
-                            <th>@item.Variante</th>                        
-                            <th>@item.Pecas</th>
-                            <th>@item.UnidadeMedida</th>
-                            <th>@item.Quantidade</th>
-                            <th>@item.Preco.ToString("c")</th>
-                            <th>@item.ValorTotalItem.ToString("c")</th>
-                        </tr>
-                    }
-                }
-            </tbody>
-
             <tfoot>
                 <tr>
                     <th>QUANTIDADE DE ITENS:</th>
-                    <th>@Model.Itens.Count.ToString()</th>
+@*                  <th>@Model.Itens.Count.ToString()</th>*@
+                    <th></th>
                     <th colspan="4"></th>
                     <th><strong>TOTAL:</strong></th>
                     <th>@Model.TotalPedido.ToString("c")</th>
                 </tr>
             </tfoot>
-        </table>
+</table>
     }
 </div>
 @section Scripts {
-    @Scripts.Render("~/bundles/dataTables")
+    @Scripts.Render("~/bundles/bootstrap-table")
     <script>
         $(document).ready(function () {
             //API
@@ -227,7 +201,10 @@
                 $('#lstViasTransp').selectpicker();
                 $('#elemGerentes').hide();
 
-                $('#listaCarrinho').dataTable();
+                $('#listaCarrinho').bootstrapTable({
+                    url: 'ObterItensCarrinho',
+                    method: 'GET'
+                });
             })();
         });
     </script>

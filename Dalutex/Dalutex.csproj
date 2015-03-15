@@ -228,9 +228,10 @@
     </Content>
     <Content Include="Content\bootstrap-select.css" />
     <Content Include="Content\bootstrap-select.min.css" />
+    <Content Include="Content\bootstrap-table.css" />
+    <Content Include="Content\bootstrap-table.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\dataTables.bootstrap.css" />
     <Content Include="Content\images\ajax-loader.gif" />
     <Content Include="Content\images\dalutex-bg.png" />
     <Content Include="Content\images\dalutex.png" />
@@ -255,6 +256,8 @@
     <Content Include="Scripts\bootstrap-select.js" />
     <Content Include="Scripts\bootstrap-select.min.js" />
     <Content Include="Scripts\bootstrap-table-pt-BR.js" />
+    <Content Include="Scripts\bootstrap-table.js" />
+    <Content Include="Scripts\bootstrap-table.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\bootstrap-select.css.map" />
@@ -271,13 +274,10 @@
     </Content>
     <None Include="Properties\PublishProfiles\Deploy.pubxml" />
     <Content Include="Scripts\bootstrap-select.js.map" />
-    <Content Include="Scripts\data2.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
-    <Content Include="Scripts\dataTables.bootstrap.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery.dataTables.min.js" />
     <Content Include="Scripts\jquery.equalheight.js" />
     <Content Include="Scripts\jquery.equalheight.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
@@ -334,6 +334,7 @@
     <Content Include="Views\Pedido\ItensParaReserva.cshtml" />
     <Content Include="Views\Base\Message.cshtml" />
     <Content Include="Views\Pedido\ValidaPedidoReserva.cshtml" />
+    <Content Include="Views\Pedido\Teste.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

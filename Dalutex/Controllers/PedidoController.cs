@@ -688,8 +688,8 @@ namespace Dalutex.Controllers
                     model.CondicoesPagto = ctxTI.VW_CONDICAO_PGTO.ToList();
                 }
 
-                if (base.Session_Carrinho != null)
-                    model.Itens = base.Session_Carrinho.Itens;
+                //if (base.Session_Carrinho != null)
+                //    model.Itens = base.Session_Carrinho.Itens;
 
                 foreach (InserirNoCarrinhoViewModel item in model.Itens)
                 {
@@ -727,6 +727,11 @@ namespace Dalutex.Controllers
             }
 
             return View(model);
+        }
+
+        public JsonResult ObterItensCarrinho()
+        {
+            return Json(base.Session_Carrinho.Itens, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -1276,12 +1281,27 @@ namespace Dalutex.Controllers
 
         #endregion
 
-
         #region Validar Pedidos de reserva (Exclusivos parte 2)
         public ActionResult ValidaPedidoReserva() 
         {
             return View();
         }
+
+        [HttpPost]
+        public ActionResult ValidaPedidoReserva(ValidaPedidoReservaViewModel model)
+        {
+            using (var ctx = new TIDalutexContext())
+            {
+                List<VW_VALIDAR_RESERVA> lstValidaReserva = 
+                        ctx.VW_VALIDAR_RESERVA.Where(
+                            x => x.REPRESENTANTE.StartsWith(model.FiltroRepresentante.ToUpper())
+                            && x.CLIENTE.StartsWith(model.FiltroCliente.ToUpper()) 
+                        ).ToList();
+            }
+
+            return View(model);            
+        }
+        
         #endregion
 
 

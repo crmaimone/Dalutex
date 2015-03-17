@@ -48,10 +48,36 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<VW_DESENHOS_DISP_RESERVA> VW_DESENHOS_DISP_RESERVA { get; set; }
         public virtual DbSet<VW_ITENS_VALIDAR_RESERVA> VW_ITENS_VALIDAR_RESERVA { get; set; }
         public virtual DbSet<VW_VALIDAR_RESERVA> VW_VALIDAR_RESERVA { get; set; }
+        public virtual DbSet<PED_RESERVA_VENDA> PED_RESERVA_VENDA { get; set; }
 
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+       
+            modelBuilder.Entity<PED_RESERVA_VENDA>()
+                .Property(e => e.PEDIDO_RESERVA)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<PED_RESERVA_VENDA>()
+                .Property(e => e.ITEM_PED_RESERVA)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<PED_RESERVA_VENDA>()
+                .Property(e => e.ID_VAR_PED_RESERVA)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<PED_RESERVA_VENDA>()
+                .Property(e => e.PEDIDO_VENDA)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<PED_RESERVA_VENDA>()
+                .Property(e => e.ITEM_PED_VENDA)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<PED_RESERVA_VENDA>()
+                .Property(e => e.ID_PED_RESERVA_VENDA)
+                .HasPrecision(38, 0);
+        
             modelBuilder.Entity<VW_ITENS_VALIDAR_RESERVA>()
                 .Property(e => e.ID_CONTROLE)
                 .HasPrecision(38, 0);

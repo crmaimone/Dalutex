@@ -114,7 +114,7 @@
                     @Html.HiddenFor(x => x.ValorPadrao, new { id = "hidValPadrao" })
                     @Html.HiddenFor(x => x.IDVariante)
                     @Html.HiddenFor(x => x.PedidoReserva)
-                    @Html.HiddenFor(x => x.ItemPedidoReserva)
+                    @Html.HiddenFor(x => x.ItemPedidoReserva)                    
 
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-10">
@@ -138,7 +138,8 @@
                                         pagina = Model.Pagina,
                                         pedidoreserva = Model.PedidoReserva,
                                         idvariante = Model.IDVariante,
-                                        itempedidoreserva = Model.ItemPedidoReserva
+                                        itempedidoreserva = Model.ItemPedidoReserva,
+                                        tipo = Model.Tipo
                                     },
                                     new { @class = "btn btn-default right" })
                                 }

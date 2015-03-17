@@ -209,7 +209,7 @@ namespace Dalutex.Controllers
         }
 
         public ActionResult ArtigosDisponiveis(string desenho, string variante, int idcolecao, string nmcolecao, int pagina,
-            int idvariante, int pedidoreserva, int itempedidoreserva)
+            int idvariante, int pedidoreserva, int itempedidoreserva, string tipo)
         {
             ArtigosDisponiveisViewModel model = new ArtigosDisponiveisViewModel();
             model.Desenho = desenho;
@@ -221,6 +221,7 @@ namespace Dalutex.Controllers
             model.PedidoReserva = pedidoreserva;
             model.IDVariante = idvariante;
             model.ItemPedidoReserva = itempedidoreserva;
+            model.Tipo = tipo;
 
             List<VW_CARACT_DESENHOS> lstQuery = null;
 
@@ -342,7 +343,7 @@ namespace Dalutex.Controllers
                 { 
                     (int)Enums.TiposPedido.AMOSTRA,
                     (int)Enums.TiposPedido.PILOTAGEM,
-                    (int)Enums.TiposPedido.VENDA
+                    (int)Enums.TiposPedido.VENDA,                    
                 };
 
                 model.TiposPedido = ctxDalutex.COML_TIPOSPEDIDOS.Where(x => tiposPedidos.Any(tipo => x.TIPOPEDIDO.Equals(tipo))).ToList();
@@ -595,7 +596,10 @@ namespace Dalutex.Controllers
                         base.Session_Carrinho.Itens.Add(model);
 
                         if (model.Tipo == Enums.ItemType.Estampado || model.Tipo == Enums.ItemType.ValidacaoReserva)
-                            return RedirectToAction("ArtigosDisponiveis", "Pedido", new { desenho = model.Desenho, variante = model.Variante, idcolecao = model.IDColecao, nmcolecao = model.NMColecao, pagina = model.Pagina, pedidoreserva = model.PedidoReserva, idvariante = model.IDVariante, itempedidoreserva = model.ItemPedidoReserva });
+                            return RedirectToAction("ArtigosDisponiveis", "Pedido", 
+                                new { desenho = model.Desenho, variante = model.Variante, idcolecao = model.IDColecao, 
+                                      nmcolecao = model.NMColecao, pagina = model.Pagina, pedidoreserva = model.PedidoReserva, 
+                                      idvariante = model.IDVariante, itempedidoreserva = model.ItemPedidoReserva, tipo = model.Tipo });
                         else if (model.Tipo == Enums.ItemType.Liso)
                             return RedirectToAction("Lisos", "Pedido", new { idcolecao = model.IDColecao, nmcolecao = model.NMColecao, pagina = model.Pagina });
                         else if (model.Tipo == Enums.ItemType.Reserva)
@@ -705,10 +709,13 @@ namespace Dalutex.Controllers
                 //if (base.Session_Carrinho != null)
                 //    model.Itens = base.Session_Carrinho.Itens;
 
-                foreach (InserirNoCarrinhoViewModel item in model.Itens)
-                {
-                    model.TotalPedido += item.ValorTotalItem;
-                }
+
+                //TODO: ver com cassiano alterações na forma de calcular o total do item:::::
+
+                //foreach (InserirNoCarrinhoViewModel item in model.Itens)
+                //{
+                //    model.TotalPedido += item.ValorTotalItem;
+                //}
             }
 
             return model;
@@ -1041,13 +1048,14 @@ namespace Dalutex.Controllers
 
                                 //TODO: gravar ligação de pedido reserva com validação. Criar chave para tabela de ligação, insert pra cada item.
 
-                                //ctx.PED_RESERVA_VENDA.Add(new PED_RESERVA_VENDA()
-                                //{
-                                //    PEDIDO_RESERVA = item.PedidoReserva,
-                                //    IT_PEDIDO_RES = item.ItemPedidoReserva,
-                                //    ID_VAR = item.IDVariante,
-                                //    NR_PEDIDO_NOVO = iNUMERO_PEDIDO_BLOCO
-                                //});        
+                                ctx.PED_RESERVA_VENDA.Add(new PED_RESERVA_VENDA()
+                                {
+                                    PEDIDO_RESERVA = item.PedidoReserva,
+                                    ITEM_PED_RESERVA = item.ItemPedidoReserva,
+                                    ID_VAR_PED_RESERVA = item.IDVariante,
+                                    PEDIDO_VENDA = iNUMERO_PEDIDO_BLOCO,                                    
+                                    ITEM_PED_VENDA = i
+                                });        
                             }
 
                             PRE_PEDIDO_ITENS objItem = new PRE_PEDIDO_ITENS()

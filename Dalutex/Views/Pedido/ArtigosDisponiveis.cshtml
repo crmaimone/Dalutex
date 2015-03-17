@@ -66,29 +66,18 @@ else
                                                                         "&coddal=null" +
                                                                         "&modo=I" +
                                                                         "&reduzido=-2"+
-                                                                        "&tipo=" + ((int)Enums.ItemType.Estampado).ToString()+
-                                                                    
+                                                                        
+                                                                        //"&tipo=" + ((int)Enums.ItemType.Estampado).ToString()+
+                                                                        //"&tipo=" + ((int)Enums.ItemType.ValidacaoReserva).ToString() +
+                                                                        
+                                                                        "&tipo=" + Model.Tipo+                                                                        
                                                                         "&idstudio=0"+
-                                                                        "&iditemstudio=0"
+                                                                        "&iditemstudio=0"+
+                                                                        "&idvariante="+Model.IDVariante+
+                                                                        "&pedidoreserva="+Model.PedidoReserva+
+                                                                        "&itempedidoreserva="+Model.ItemPedidoReserva                                                                    
                                                                         )"
-                                     @*string idcolecao
-                                   , string nmcolecao
-                                   , string pagina
-                                   , string desenho
-                                   , string variante
-                                   , string artigo
-                                   , string tecnologia
-                                   , string cor
-                                   , string modo
-                                   , string rgb
-                                   , int reduzido
-                                   , string codstudio
-                                   , string coddal
-                                   , int tipo
-                                   , int idstudio
-                                   , int iditemstudio*@
-
-
+                                                                         
                                    class="list-group-item"><i class="glyphicon glyphicon-ok"></i>&nbsp;@item.Artigo</a>
                             }
                             </div>
@@ -108,7 +97,10 @@ else
             @Html.ActionLink("VOLTAR", "Desenhos", "Pedido", new { idcolecao = Model.IDColecao, nmcolecao = Model.NMColecao, pagina = Model.Pagina}, new { @class = "btn btn-default" })
             </div>
             <div class="col-sm-6">
-                <a href="@Url.Action("Ampliacao", "Pedido", new { desenho = Model.Desenho, variante = Model.Variante, idcolecao = Model.IDColecao, nmcolecao = Model.NMColecao, pagina = Model.Pagina, retornarpara  = "ArtigosDisponiveis", codstudio = "", tipo = (int)Enums.ItemType.Estampado})">
+                <a href="@Url.Action("Ampliacao", "Pedido", 
+                                    new { desenho = Model.Desenho, variante = Model.Variante, idcolecao = Model.IDColecao, 
+                                          nmcolecao = Model.NMColecao, pagina = Model.Pagina, retornarpara  = "ArtigosDisponiveis", 
+                                          codstudio = "", tipo = Model.Tipo})">
                     <img src="@Url.Content(Model.Imagem)" class="img-rounded" style="max-width:100%" />
                 </a>
                 </div>

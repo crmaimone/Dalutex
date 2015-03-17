@@ -35,7 +35,7 @@ else
 {
     <a class="btn btn-default right" href="@Url.Action("ArtigosDisponiveis", "Pedido", 
     new { desenho = Model.Desenho, variante = Model.Variante, idcolecao = Model.IDColecao, nmcolecao = Model.NMColecao, pagina=Model.Pagina,
-          pedidoreserva = 0, idvariante = 0, itempedidoreserva = 0})">
+          pedidoreserva = 0, idvariante = 0, itempedidoreserva = 0, tipo = Model.Tipo})">
     VOLTAR</a>
 }
 else if (Model.RetornarPara == "Carrinho")

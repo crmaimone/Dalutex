@@ -154,6 +154,7 @@ namespace Dalutex.Models
         public int PedidoReserva { get; set; }
         public int IDVariante { get; set; }
         public int ItemPedidoReserva { get; set; }
+        public string Tipo { get; set; }
     }
 
     public class InserirNoCarrinhoViewModel
@@ -185,9 +186,9 @@ namespace Dalutex.Models
 
         public int IDVariante { get; set; }
         public int PedidoReserva { get; set; }
-        public int ItemPedidoReserva { get; set; }
+        public int ItemPedidoReserva { get; set; }        
 
-        public int Comissao {get; set; } //ver com cassiano onde criar este field e como mapear a regra para comissão (vide coleção);
+        public int Comissao {get; set; } 
 
         [Required]
         [Display(Name = "TIPO DE PEDIDO:")]

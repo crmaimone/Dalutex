@@ -364,7 +364,7 @@ namespace Dalutex.Controllers
             , int reduzido
             , string codstudio
             , string coddal
-            , int tipo
+            , Enums.ItemType tipo
             , int idstudio
             , int iditemstudio
             , int idvariante
@@ -372,6 +372,7 @@ namespace Dalutex.Controllers
             , int itempedidoreserva)
         {
             InserirNoCarrinhoViewModel model = new InserirNoCarrinhoViewModel();
+
             model.Desenho = desenho;
             model.Variante = variante;
             model.Artigo = artigo;
@@ -390,6 +391,8 @@ namespace Dalutex.Controllers
             model.IDVariante = idvariante;
             model.PedidoReserva = pedidoreserva;
             model.ItemPedidoReserva = itempedidoreserva;
+
+            model.CodigoReduzido = reduzido;      
 
             if (base.Session_Carrinho != null)
                 model.IDTipoPedido = base.Session_Carrinho.IDTipoPedido;
@@ -410,16 +413,26 @@ namespace Dalutex.Controllers
                 {
                     using (var ctx = new DalutexContext())
                     {
+                        string _cor = "0000000";
+                        if (model.Tipo == Enums.ItemType.ValidacaoReserva)
+                        {
+                            _cor = "E000000";
+                        }
+
                         VMASCARAPRODUTOACABADO objReduzido = ctx.VMASCARAPRODUTOACABADO.Where(
                                 x =>
                                     x.ARTIGO == model.Artigo
                                     && x.DESENHO == model.Desenho
                                     && x.VARIANTE == model.Variante
                                     && x.MAQUINA == model.Tecnologia
+                                    && x.COR == (_cor)
                                 ).FirstOrDefault();
 
                         if (objReduzido != null && objReduzido.CODIGO_REDUZIDO > default(int))
+                        {
                             model.Reduzido = objReduzido.CODIGO_REDUZIDO;
+                            model.CodigoReduzido = objReduzido.CODIGO_REDUZIDO;
+                        }
                         else
                             model.Reduzido = -2; //Deixar o JOB buscar mais tarde ou criar o reduzido?
                     }
@@ -1045,9 +1058,7 @@ namespace Dalutex.Controllers
                             if(item.Tipo == Enums.ItemType.ValidacaoReserva )
                             {
                                 origem = "E";
-
-                                //TODO: gravar ligação de pedido reserva com validação. Criar chave para tabela de ligação, insert pra cada item.
-
+                               
                                 ctx.PED_RESERVA_VENDA.Add(new PED_RESERVA_VENDA()
                                 {
                                     PEDIDO_RESERVA = item.PedidoReserva,
@@ -1366,8 +1377,6 @@ namespace Dalutex.Controllers
                             (PedidoReserva == 0 || x.PEDIDO.Equals(PedidoReserva))
                         ).OrderByDescending(x => x.DATA_EMISSAO).ToList();
             }           
-
-
 
             return View(model);            
         }

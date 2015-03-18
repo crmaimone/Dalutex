@@ -26,7 +26,7 @@
             </div>
         </a>
     }
-    else if (Model.Tipo == Enums.ItemType.Estampado || Model.Tipo == Enums.ItemType.ValidacaoReserva)
+    else if (Model.Tipo == Enums.ItemType.Estampado)
     {
         <a href="@Url.Content(@"ArtigosDisponiveis?" +
                                             "&imagem=" + Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg" +
@@ -36,7 +36,27 @@
                                             "&nmcolecao="+ @Model.NMColecao+
                                             "&pagina="+ @Model.Pagina+
                                             "&pedidoreserva=" +@Model.PedidoReserva+ 
-                                            "&idvariante="+ @Model.IDVariante+ 
+                                            "&idvariante=0"+ 
+                                            "&itempedidoreserva=0"+
+                                            "&tipo=0"
+                                        )">
+            <img src="@Url.Content(Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg")" class="img-thumbnail equal-height">
+            <div class="caption">
+                <h5 style="text-decoration:none">@Model.Desenho&nbsp;@Model.Variante</h5>
+            </div>
+        </a>
+    }
+    else if (Model.Tipo == Enums.ItemType.ValidacaoReserva)
+    {
+        <a href="@Url.Content(@"ArtigosDisponiveis?" +
+                                            "&imagem=" + Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg" +
+                                            "&desenho=" + @Model.Desenho +
+                                            "&variante=" + @Model.Variante+
+                                            "&idcolecao="+ @Model.IDColecao+
+                                            "&nmcolecao="+ @Model.NMColecao+
+                                            "&pagina="+ @Model.Pagina+
+                                            "&pedidoreserva=" +@Model.PedidoReserva+
+                                            "&idvariante="+ @Model.IDVariante+
                                             "&itempedidoreserva="+ @Model.ItemPedidoReserva+
                                             "&tipo="+ @Model.Tipo
                                         )">

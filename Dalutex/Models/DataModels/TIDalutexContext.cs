@@ -77,14 +77,12 @@ namespace Dalutex.Models.DataModels
             modelBuilder.Entity<PED_RESERVA_VENDA>()
                 .Property(e => e.ID_PED_RESERVA_VENDA)
                 .HasPrecision(38, 0);
-        
-            modelBuilder.Entity<VW_ITENS_VALIDAR_RESERVA>()
-                .Property(e => e.ID_CONTROLE)
-                .HasPrecision(38, 0);
 
             modelBuilder.Entity<VW_ITENS_VALIDAR_RESERVA>()
-                .Property(e => e.ID_REPRESENTANTE)
-                .HasPrecision(38, 0);
+                .Property(e => e.ID_CONTROLE);
+
+            modelBuilder.Entity<VW_ITENS_VALIDAR_RESERVA>()
+                .Property(e => e.ID_REPRESENTANTE);
 
             modelBuilder.Entity<VW_ITENS_VALIDAR_RESERVA>()
                 .Property(e => e.COD_STUDIO)
@@ -102,21 +100,23 @@ namespace Dalutex.Models.DataModels
                 .Property(e => e.VARIANTE)
                 .IsUnicode(false);
 
+
+            //TODO: ver com cassiano pq esta dando erro com ".HasPrecision(38, 0);" - alterei de decimal para int no datamodel
             modelBuilder.Entity<VW_ITENS_VALIDAR_RESERVA>()
-                .Property(e => e.PEDIDO_RESERVA)
-                .HasPrecision(38, 0);
+                .Property(e => e.PEDIDO_RESERVA);
+            //.HasPrecision(38, 0); 
 
             modelBuilder.Entity<VW_ITENS_VALIDAR_RESERVA>()
-                .Property(e => e.ID_VAR)
-                .HasPrecision(38, 0);
+                .Property(e => e.ID_VAR);
+            //.HasPrecision(38, 0);
 
             modelBuilder.Entity<VW_ITENS_VALIDAR_RESERVA>()
-                .Property(e => e.ID_CLIENTE)
-                .HasPrecision(38, 0);
+                .Property(e => e.ID_CLIENTE);
+            //.HasPrecision(38, 0);.HasPrecision(38, 0);
 
             modelBuilder.Entity<VW_ITENS_VALIDAR_RESERVA>()
-                .Property(e => e.IT_PEDIDO_RES)
-                .HasPrecision(38, 0);
+                .Property(e => e.IT_PEDIDO_RES);
+            //.HasPrecision(38, 0);
 
             modelBuilder.Entity<VW_VALIDAR_RESERVA>()
                 .Property(e => e.ID_REP)

@@ -9,9 +9,9 @@ namespace Dalutex.Models.DataModels
     [Table("TI_DALUTEX.VW_ITENS_VALIDAR_RESERVA")]
     public partial class VW_ITENS_VALIDAR_RESERVA
     {
-        public decimal? ID_CONTROLE { get; set; }
+        public int? ID_CONTROLE { get; set; }
 
-        public decimal? ID_REPRESENTANTE { get; set; }
+        public int? ID_REPRESENTANTE { get; set; }
 
         [StringLength(50)]
         public string COD_STUDIO { get; set; }
@@ -27,14 +27,14 @@ namespace Dalutex.Models.DataModels
 
         [Key]
         [Column(Order = 0)]
-        public decimal PEDIDO_RESERVA { get; set; }
+        public int PEDIDO_RESERVA { get; set; }
 
         [Key]
         [Column(Order = 1)]
-        public decimal ID_VAR { get; set; }
+        public int ID_VAR { get; set; }
 
-        public decimal? ID_CLIENTE { get; set; }
+        public int? ID_CLIENTE { get; set; }
 
-        public decimal? IT_PEDIDO_RES { get; set; }
+        public int IT_PEDIDO_RES { get; set; }
     }
 }

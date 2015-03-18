@@ -147,7 +147,7 @@ namespace Dalutex.Models
         public string Imagem { get; set; }
         public int IDColecao { get; set; }
         public List<ArtigoTecnologia> Artigos { get; set; }
-        public string TecnologiaAtual { get; set; } //VER COM CASSIANO SE É O MELHOR LUGAR PARA GUARDAR ESTA INFORMAÇÃO
+        public string TecnologiaAtual { get; set; } 
         public string NMColecao { get; set; }
         public int Pagina { get; set; }
 
@@ -155,6 +155,7 @@ namespace Dalutex.Models
         public int IDVariante { get; set; }
         public int ItemPedidoReserva { get; set; }
         public string Tipo { get; set; }
+        public int Reduzido { get; set; }
     }
 
     public class InserirNoCarrinhoViewModel
@@ -169,6 +170,9 @@ namespace Dalutex.Models
         public decimal ValorTotalItem { get; set; }
         public bool ObterTipoPedido { get; set; }
         public int Reduzido { get; set; }
+
+        public int CodigoReduzido { get; set; }
+
         public DateTime DataEntregaItem { get; set; }
         public string Modo { get; set; } //I= Inclusão A=Alteração
         public Enums.ItemType Tipo { get; set; }

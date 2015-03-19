@@ -8,7 +8,7 @@
 <h1 class="viewTitle">@ViewBag.Title</h1>
 @if (Model.Tipo == Enums.ItemType.Estampado)
 {
-    <img src="@Url.Content(ViewData["URLIMAGENS"] + @Model.Desenho + "_" + @Model.Variante + ".jpg")" class="img-rounded" style="width:100%; height:100%;">
+    <img src="@Model.Imagem" class="img-rounded" style="width:100%; height:100%;">
 }
 else if (Model.Tipo == Enums.ItemType.Liso)
 {
@@ -16,19 +16,17 @@ else if (Model.Tipo == Enums.ItemType.Liso)
 }
 else if (Model.Tipo == Enums.ItemType.Reserva)
 {
-    <img src="@Url.Content(ViewData["URLIMAGENS"] + @Model.CodStudio + ".jpg")" class="img-rounded" style="width:100%; height:100%;">
+    <img src="@Model.Imagem" class="img-rounded" style="width:100%; height:100%;">
 }
 
-@if (Model.Desenho == null)
+@if ((Model.Tipo == Enums.ItemType.Estampado || Model.Tipo == Enums.ItemType.ValidacaoReserva))
 {
-    <div class="panel panel-default">
-        <h3>DESENHO NÃO INFORMADO</h3>
-    </div>       
-}
-else
-{
-    <h2>DESENHO: @Model.Desenho VARIANTE: @Model.Variante</h2>
-    <img src="@Url.Content(Model.Imagem)" class="img-rounded" style="max-width:100%" />
+    if (Model.Desenho == null)
+    {
+        <div class="panel panel-default">
+            <h3>DESENHO NÃO INFORMADO</h3>
+        </div>
+    }
 }
 <br />
 @if (Model.RetornarPara == "ArtigosDisponiveis")

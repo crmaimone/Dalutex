@@ -26,34 +26,6 @@
         </div>
     }
 </div>
-
-<hr/>    
-    <p><strong> Tipo</strong> @Model.Tipo</p>
-    <p><strong> Desenho</strong> @Model.Desenho</p>
-    <p><strong> Variante</strong> @Model.Variante</p>
-    <p><strong> Artigo</strong> @Model.Artigo</p>
-    <p><strong> TecnologiaPorExte</strong> @Model.TecnologiaPorExtenso</p>
-    <p><strong> Reduzido: </strong> @Model.Reduzido</p>
-    <p><strong> Código Reduzido: </strong> @Model.CodigoReduzido</p>
-    <p><strong> Modo</strong> @Model.Modo</p>
-    <p><strong> IDColecao</strong> @Model.IDColecao</p>
-    <p><strong> IDTipoPedido</strong> @Model.IDTipoPedido</p>
-    <p><strong> NMColecao</strong> @Model.NMColecao</p>
-    <p><strong> Pagina</strong> @Model.Pagina</p>
-    <p><strong> Cor</strong> @Model.Cor</p>
-    <p><strong> RGB</strong> @Model.RGB</p>
-    <p><strong> CodStudio</strong> @Model.CodStudio</p>
-    <p><strong> CodDal</strong> @Model.CodDal</p>
-    <p><strong> IDStudio</strong> @Model.IDStudio</p>
-    <p><strong> IDItemStudio</strong> @Model.IDItemStudio</p>
-    <p><strong> UnidadeMedida</strong> @Model.UnidadeMedida</p>
-    <p><strong> ValorPadrao </strong> @Model.ValorPadrao</p>
-    <p><strong> IDVariante</strong> @Model.IDVariante</p>
-    <p><strong> PedidoReserva</strong> @Model.PedidoReserva</p>
-    <p><strong> ItemPedidoReserva</strong> @Model.ItemPedidoReserva</p>
-       
-<hr />
-
 <div class="container">
     <div class="row">
         <div class="col-md-8">
@@ -117,12 +89,6 @@
                     {
                         <h5>Clique em INCLUIR para adicionar este desenho ao carrinho.</h5>
                     }
-                    <input name="Reduzido" id="Reduzido" value="@Model.Reduzido" >
-                    <br />
-                    <div>
-                        <strong><input name="CodReduzido" id="CodigoReduzido" value="@Model.CodigoReduzido"></strong>
-                    </div>
-
                     @Html.HiddenFor(x => x.Tipo)
                     @Html.HiddenFor(x => x.Desenho)
                     @Html.HiddenFor(x => x.Variante)
@@ -149,8 +115,6 @@
 
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-10">
-                            @*<input type="submit" value="INCLUIR" class="btn btn-default" />*@
-                            
                             <div class="col-xs-6">
                                 <button type="submit" class="btn btn-default right"><span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span> INCLUIR</button>
                             </div>                                                                                                               

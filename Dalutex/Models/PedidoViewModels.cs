@@ -259,6 +259,7 @@ namespace Dalutex.Models
         public string RetornarPara { get; set; }
         public Enums.ItemType Tipo { get; set; }
         public string CodStudio { get; set; }
+        public string RGB { get; set; }
     }
 
     public class ConclusaoPedidoViewModel

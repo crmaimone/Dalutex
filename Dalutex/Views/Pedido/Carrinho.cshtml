@@ -16,7 +16,8 @@
                 foreach (InserirNoCarrinhoViewModel item in ViewBag.Carrinho.Itens)
                 {
                     ViewDataDictionary partialViewData = new ViewDataDictionary();
-                    partialViewData.Add(new KeyValuePair<string,object>("URLIMAGENS", ViewBag.UrlImagens));
+                    partialViewData.Add(new KeyValuePair<string, object>("URLDESENHOS", ViewBag.UrlImagens));
+                    partialViewData.Add(new KeyValuePair<string, object>("URLRESERVAS", ViewBag.UrlReervas));
 
                     @Html.Partial(
                         "_ItemCarrinho",

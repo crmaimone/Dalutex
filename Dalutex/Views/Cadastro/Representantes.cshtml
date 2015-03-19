@@ -19,14 +19,14 @@
                 {
                     @Html.AntiForgeryToken()
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    <div class="form-group">
+                    <div class="form-group" style="display:-webkit-inline-box -moz-inline-box inline">
                         @Html.LabelFor(m => m.Filtro, new { @class = "col-md-2 control-label" })
 
                         <div class="col-md-10">
                             @Html.TextBoxFor(m => m.Filtro, new { @class = "form-control" })
                             @Html.ValidationMessageFor(m => m.Filtro, "", new { @class = "text-danger" })
-                            <input type="submit" id="btnRepres" value="Pesquisar" class="btn btn-default"/> 
-                        </div>                                                                     
+                            <input type="submit" id="btnRepres" value="Pesquisar" class="btn btn-default" />
+                        </div>
                     </div>
                 }
             </section>

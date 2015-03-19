@@ -17,7 +17,7 @@
             else if (Model.Tipo == Enums.ItemType.Reserva)
             {
                 <a href="@Url.Action("Ampliacao", "Pedido", new { desenho = Model.Desenho, variante = Model.Variante, pagina=0, retornarpara  = "Carrinho", codstudio = Model.CodStudio, tipo = (int)Enums.ItemType.Reserva  })">
-                    <img src="@Url.Content(ViewData["URLIMAGENS"] + @Model.CodStudio + ".jpg")" class="img-rounded" style="width:100%; height:100%;">
+                    <img src="@Url.Content(ViewData["URLIRESERVAS"] + @Model.CodStudio + ".jpg")" class="img-rounded" style="width:100%; height:100%;">
                 </a>
             }
         </div>

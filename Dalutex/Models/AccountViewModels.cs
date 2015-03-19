@@ -13,7 +13,7 @@ namespace Dalutex.Models
         [Display(Name = "SENHA")]
         public string Password { get; set; }
 
-        [Display(Name = "LEMBRAR SENHA")]
+        [Display(Name = "MANTENHA-ME CONECTADO")]
         public bool RememberMe { get; set; }
     }
 

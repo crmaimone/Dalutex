@@ -323,7 +323,6 @@ namespace Dalutex.Controllers
             {
                 Desenho = desenho,
                 Variante = variante,
-                Imagem = ConfigurationManager.AppSettings["PASTA_DESENHOS"] + desenho + "_" + variante + ".jpg",
                 IDColecao = idcolecao,
                 NMColecao = nmcolecao,
                 Pagina = pagina,
@@ -331,6 +330,15 @@ namespace Dalutex.Controllers
                 CodStudio = codstudio,
                 Tipo = (Enums.ItemType)tipo
             };
+
+            if(tipo == (int)Enums.ItemType.Estampado || tipo == (int)Enums.ItemType.ValidacaoReserva )
+            {
+                model.Imagem = ConfigurationManager.AppSettings["PASTA_DESENHOS"].Replace("~","") + desenho + "_" + variante + ".jpg";
+            }
+            else if(tipo == (int)Enums.ItemType.Reserva)
+            {
+                model.Imagem = ConfigurationManager.AppSettings["PASTA_RESERVAS"].Replace("~", "") + codstudio + ".jpg";
+            }
 
             return View(model);
         }
@@ -364,7 +372,7 @@ namespace Dalutex.Controllers
             , int reduzido
             , string codstudio
             , string coddal
-            , Enums.ItemType tipo
+            , int tipo
             , int idstudio
             , int iditemstudio
             , int idvariante
@@ -612,7 +620,7 @@ namespace Dalutex.Controllers
                             return RedirectToAction("ArtigosDisponiveis", "Pedido", 
                                 new { desenho = model.Desenho, variante = model.Variante, idcolecao = model.IDColecao, 
                                       nmcolecao = model.NMColecao, pagina = model.Pagina, pedidoreserva = model.PedidoReserva, 
-                                      idvariante = model.IDVariante, itempedidoreserva = model.ItemPedidoReserva, tipo = model.Tipo });
+                                      idvariante = model.IDVariante, itempedidoreserva = model.ItemPedidoReserva, tipo = (int)model.Tipo });
                         else if (model.Tipo == Enums.ItemType.Liso)
                             return RedirectToAction("Lisos", "Pedido", new { idcolecao = model.IDColecao, nmcolecao = model.NMColecao, pagina = model.Pagina });
                         else if (model.Tipo == Enums.ItemType.Reserva)
@@ -685,11 +693,10 @@ namespace Dalutex.Controllers
             {
                 return View();
             }
+
             ViewBag.Carrinho = base.Session_Carrinho;
-            if (base.Session_Carrinho.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
-                ViewBag.UrlImagens = ConfigurationManager.AppSettings["PASTA_DESENHOS"];
-            else
-                ViewBag.UrlImagens = ConfigurationManager.AppSettings["PASTA_RESERVA"];
+            ViewBag.UrlDesenhos = ConfigurationManager.AppSettings["PASTA_DESENHOS"];
+            ViewBag.UrlReservas = ConfigurationManager.AppSettings["PASTA_RESERVAS"];
 
             return View();
         }

@@ -16,7 +16,12 @@
                                 "&rgb=" + Model.RGB +
                                 "&reduzido=" + Model.Reduzido +
                                 "&modo=I"+
-                                "&tipo=" + ((int)Model.Tipo).ToString()
+                                "&tipo=" + ((int)Model.Tipo).ToString()+
+                                "&idstudio=0"+
+                                "&iditemstudio=0"+
+                                "&idvariante=0"+
+                                "&pedidoreserva=0"+
+                                "&itempedidoreserva=0"
                                 )">
             <img style="background-color:@Model.RGB;" class="liso-thumbnail">
             <div class="caption" style="text-decoration:none">
@@ -38,7 +43,7 @@
                                             "&pedidoreserva=" +@Model.PedidoReserva+ 
                                             "&idvariante=0"+ 
                                             "&itempedidoreserva=0"+
-                                            "&tipo=0"
+                                            "&tipo=" + ((int)Model.Tipo).ToString()
                                         )">
             <img src="@Url.Content(Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg")" class="img-thumbnail equal-height">
             <div class="caption">
@@ -79,8 +84,12 @@
                                 "&modo=I" +
                                 "&tipo=" + ((int)Model.Tipo).ToString()+
                                 "&idstudio=" + Model.IDStudio.ToString()+
-                                "&iditemstudio=" + Model.IDItemStudio.ToString()
+                                "&iditemstudio=" + Model.IDItemStudio.ToString()+
+                                "&idvariante=0"+
+                                "&pedidoreserva=0"+
+                                "&itempedidoreserva=0"
                                 )">
+
             <img src="@Url.Content(Model.UrlImagens + @Model.CodStudio + ".jpg")" class="img-thumbnail equal-height">
             <p class="thumb-paragraph">Cod. Dal:@Model.CodDal</p>
             <p class="thumb-paragraph">Cod. Studio:@Model.CodStudio</p>

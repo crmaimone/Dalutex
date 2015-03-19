@@ -63,7 +63,7 @@
                                             "&pedidoreserva=" +@Model.PedidoReserva+
                                             "&idvariante="+ @Model.IDVariante+
                                             "&itempedidoreserva="+ @Model.ItemPedidoReserva+
-                                            "&tipo="+ @Model.Tipo
+                                            "&tipo="+ (int)@Model.Tipo
                                         )">
             <img src="@Url.Content(Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg")" class="img-thumbnail equal-height">
             <div class="caption">

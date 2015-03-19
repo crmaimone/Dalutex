@@ -209,7 +209,7 @@ namespace Dalutex.Controllers
         }
 
         public ActionResult ArtigosDisponiveis(string desenho, string variante, int idcolecao, string nmcolecao, int pagina,
-            int idvariante, int pedidoreserva, int itempedidoreserva, string tipo)
+            int idvariante, int pedidoreserva, int itempedidoreserva, int tipo)
         {
             ArtigosDisponiveisViewModel model = new ArtigosDisponiveisViewModel();
             model.Desenho = desenho;
@@ -221,7 +221,7 @@ namespace Dalutex.Controllers
             model.PedidoReserva = pedidoreserva;
             model.IDVariante = idvariante;
             model.ItemPedidoReserva = itempedidoreserva;
-            model.Tipo = tipo;
+            model.Tipo = (Enums.ItemType)tipo;
 
             List<VW_CARACT_DESENHOS> lstQuery = null;
 
@@ -388,8 +388,7 @@ namespace Dalutex.Controllers
             model.IDColecao = idcolecao;
             model.NMColecao = nmcolecao;
             model.Cor = cor;
-            model.RGB = rgb;
-            model.Reduzido = reduzido;
+            model.RGB = rgb;                         
             model.Tipo = (Enums.ItemType)tipo;
             model.CodDal = coddal;
             model.CodStudio = codstudio;
@@ -400,8 +399,9 @@ namespace Dalutex.Controllers
             model.PedidoReserva = pedidoreserva;
             model.ItemPedidoReserva = itempedidoreserva;
 
-            model.CodigoReduzido = reduzido;      
-
+            model.Reduzido = reduzido;
+            model.CodigoReduzido = reduzido;
+                 
             if (base.Session_Carrinho != null)
                 model.IDTipoPedido = base.Session_Carrinho.IDTipoPedido;
 
@@ -779,6 +779,7 @@ namespace Dalutex.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ConclusaoPedido(ConclusaoPedidoViewModel model)
         {
+            #region Validações
             try
             {
                 if (model.IDTipoPedido == (int)Enums.TiposPedido.RESERVA)
@@ -812,9 +813,7 @@ namespace Dalutex.Controllers
                     {
                         model.TotalPedido += item.ValorTotalItem;
                     }
-
-                    #region Validações
-
+                    
                     bool hasErrors = false;
 
                     if (model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
@@ -989,6 +988,7 @@ namespace Dalutex.Controllers
                         }
                     }
 
+                    #region Grava Pedido
                     PRE_PEDIDO objPrePedido = new PRE_PEDIDO()
                     {
                         NUMERO_PEDIDO_BLOCO = iNUMERO_PEDIDO_BLOCO,
@@ -1016,6 +1016,7 @@ namespace Dalutex.Controllers
                         COMISSAO = Session_Carrinho.PorcentagemComissao,
                         ORIGEM = "PW" // APENAS PRA INFORMAR QUE ESTE PEDIDO VEIO DO PEDIDO WEB NOVO.                                                                                                                                                                                                                                                                                                                                              
                     };
+                    #endregion
 
                     using (var ctx = new TIDalutexContext())
                     {
@@ -1066,13 +1067,15 @@ namespace Dalutex.Controllers
                             {
                                 origem = "E";
                                
+                                //TODO: ESTE É O INSERT Q TEM A KEY NO BANCO E QUE EM TEORIA PRECISA DE "COMMIT" PRA SEGUIR O FLUXO
                                 ctx.PED_RESERVA_VENDA.Add(new PED_RESERVA_VENDA()
                                 {
                                     PEDIDO_RESERVA = item.PedidoReserva,
                                     ITEM_PED_RESERVA = item.ItemPedidoReserva,
                                     ID_VAR_PED_RESERVA = item.IDVariante,
                                     PEDIDO_VENDA = iNUMERO_PEDIDO_BLOCO,                                    
-                                    ITEM_PED_VENDA = i
+                                    ITEM_PED_VENDA = i,
+                                    ID_PED_RESERVA_VENDA = 0
                                 });        
                             }
 
@@ -1145,8 +1148,12 @@ namespace Dalutex.Controllers
 
                             foreach (PRE_PEDIDO_ITENS item in lstItens)
                             {
-                                if (item.REDUZIDO_ITEM != -2)//TEM REDUZIDO
+                                if ( (item.REDUZIDO_ITEM != -2)//TEM REDUZIDO
+                                    && 
+                                   //TODO: apenas pra não dar erro até resolver o problema, pois o reduzido estava chagando aki como "0".
+                                   (item.REDUZIDO_ITEM != 0) )    
                                 {
+                                                                                                            
                                     decimal dReduzido = item.REDUZIDO_ITEM.GetValueOrDefault();
                                     using (var ctxDlx = new DalutexContext())
                                     {
@@ -1160,8 +1167,7 @@ namespace Dalutex.Controllers
                                                                   IDColecao = vw.COLECAO
                                                               };
 
-                                        ParametrosPreco objParametro = queryParametros.First();
-
+                                        ParametrosPreco objParametro = queryParametros.First();                                        
 
                                         #region Call Function Oracle
 
@@ -1256,8 +1262,8 @@ namespace Dalutex.Controllers
 
         #endregion
 
-        #region Pedido Reserva (Exclusivos parte 1)
 
+        #region Pedido Reserva (Exclusivos parte 1)
         public ActionResult ItensParaReserva(string pagina)
         {
             if(Session_Carrinho == null)
@@ -1350,7 +1356,6 @@ namespace Dalutex.Controllers
 
             return View(model);
         }
-
         #endregion
 
         #region Validar Pedidos de reserva (Exclusivos parte 2)

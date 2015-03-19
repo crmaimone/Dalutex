@@ -9,13 +9,18 @@
 </div>
 
 <div>
-    @if (Model.Tipo == Enums.ItemType.Estampado)
+    @if (Model.Tipo == Enums.ItemType.Estampado || Model.Tipo == Enums.ItemType.ValidacaoReserva)
     {
-        <h5>ARTIGO: @Model.Artigo | TECNOLOGIA: @Model.TecnologiaPorExtenso | DESENHO: @Model.Desenho | VARIANTE: @Model.Variante</h5>
+        <div class="panel panel-default">
+            <h5>ARTIGO: @Model.Artigo | TECNOLOGIA: @Model.TecnologiaPorExtenso | DESENHO: @Model.Desenho | VARIANTE: @Model.Variante</h5>
+        </div>
+        
     }
     else if (Model.Tipo == Enums.ItemType.Liso)
     {
-        <h5>ARTIGO: @Model.Artigo | TECNOLOGIA: @Model.TecnologiaPorExtenso | COR: @Model.Cor</h5>
+        <div class="panel panel-default">
+            <h5>ARTIGO: @Model.Artigo | TECNOLOGIA: @Model.TecnologiaPorExtenso | COR: @Model.Cor</h5>
+        </div>
     }
     else if (Model.Tipo == Enums.ItemType.Reserva)
     {
@@ -89,12 +94,22 @@
                     {
                         <h5>Clique em INCLUIR para adicionar este desenho ao carrinho.</h5>
                     }
+                    
+                    <input name="Reduzido" id="Reduzido" value="@Model.Reduzido">
+                    <br />
+                    <div>
+                        <strong><input name="CodReduzido" id="CodigoReduzido" value="@Model.CodigoReduzido"></strong>
+                    </div>
+                    
+                    
                     @Html.HiddenFor(x => x.Tipo)
                     @Html.HiddenFor(x => x.Desenho)
                     @Html.HiddenFor(x => x.Variante)
                     @Html.HiddenFor(x => x.Artigo)
                     @Html.HiddenFor(x => x.TecnologiaPorExtenso)
-                    @Html.HiddenFor(x => x.Reduzido)
+                    
+                    @*@Html.HiddenFor(x => x.Reduzido)*@
+                    
                     @Html.HiddenFor(x => x.CodigoReduzido)
                     @Html.HiddenFor(x => x.Modo)
                     @Html.HiddenFor(x => x.IDColecao)

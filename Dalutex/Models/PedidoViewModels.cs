@@ -154,7 +154,7 @@ namespace Dalutex.Models
         public int PedidoReserva { get; set; }
         public int IDVariante { get; set; }
         public int ItemPedidoReserva { get; set; }
-        public string Tipo { get; set; }
+        public Enums.ItemType Tipo { get; set; }
         public int Reduzido { get; set; }
     }
 

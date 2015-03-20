@@ -1125,6 +1125,10 @@ namespace Dalutex.Models.DataModels
                 .IsUnicode(false);
 
             modelBuilder.Entity<PRE_PEDIDO_ITENS>()
+                .Property(e => e.TROCA_TECNOLOGIA)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<PRE_PEDIDO_ITENS>()
                 .Property(e => e.COMPOSE)
                 .IsFixedLength()
                 .IsUnicode(false);

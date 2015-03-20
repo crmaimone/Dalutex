@@ -163,6 +163,7 @@ namespace Dalutex.Models
         public string Desenho { get; set; }
         public string Variante { get; set; }
         public string Artigo { get; set; }
+        public string TecnologiaOriginal { get; set; }
         public string TecnologiaPorExtenso { get; set; }
         public string Tecnologia { get { return this.TecnologiaPorExtenso != null ? this.TecnologiaPorExtenso.Substring(0, 1) : null; } }
         public string UnidadeMedida { get; set; }
@@ -228,6 +229,12 @@ namespace Dalutex.Models
                 else if (this.Tipo == Enums.ItemType.Reserva)
                 {
                     return this.CodDal == (obj as InserirNoCarrinhoViewModel).CodDal;
+                }
+                else if (this.Tipo == Enums.ItemType.ValidacaoReserva)
+                {
+                    return this.Artigo == (obj as InserirNoCarrinhoViewModel).Artigo
+                            && this.Desenho == (obj as InserirNoCarrinhoViewModel).Desenho
+                            && this.Variante == (obj as InserirNoCarrinhoViewModel).Variante;
                 }
                 else
                 {

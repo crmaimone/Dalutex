@@ -59,6 +59,7 @@ else
                                                                         "&variante=" + Model.Variante +
                                                                         "&artigo=" + item.Artigo +
                                                                         "&tecnologia=" + item.Tecnologia +
+                                                                        "&tecnologiaoriginal=" + Model.TecnologiaAtual +
                                                                         "&idcolecao="+ Model.IDColecao +
                                                                         "&nmcolecao="+ Model.NMColecao +
                                                                         "&pagina="+ Model.Pagina +
@@ -66,7 +67,7 @@ else
                                                                         "&coddal=null" +
                                                                         "&modo=I" +                                                                                                                                               
                                                                         "&reduzido=" + Model.Reduzido+                                                                                                                                                
-                                                                        "&tipo=" + ((int)Model.Tipo) +                                                                     
+                                                                        "&tipo=" + ((int)Model.Tipo).ToString() +                                                                     
                                                                         "&idstudio=0"+
                                                                         "&iditemstudio=0"+
                                                                         "&idvariante="+Model.IDVariante+

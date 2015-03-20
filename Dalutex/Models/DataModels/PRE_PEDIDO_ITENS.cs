@@ -81,5 +81,8 @@ namespace Dalutex.Models.DataModels
         public decimal? PRECOLISTA { get; set; }
 
         public decimal? QTDEPC { get; set; }
+
+        public string TROCA_TECNOLOGIA { get; set; }
+        
     }
 }

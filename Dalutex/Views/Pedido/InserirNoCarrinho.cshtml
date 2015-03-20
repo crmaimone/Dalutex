@@ -92,24 +92,15 @@
                     }
                     else
                     {
-                        <h5>Clique em INCLUIR para adicionar este desenho ao carrinho.</h5>
+                        <h5>Clique em INCLUIR para adicionar este item desenho ao carrinho.</h5>
                     }
-                    
-                    <input name="Reduzido" id="Reduzido" value="@Model.Reduzido">
-                    <br />
-                    <div>
-                        <strong><input name="CodReduzido" id="CodigoReduzido" value="@Model.CodigoReduzido"></strong>
-                    </div>
-                    
-                    
+                                        
                     @Html.HiddenFor(x => x.Tipo)
                     @Html.HiddenFor(x => x.Desenho)
                     @Html.HiddenFor(x => x.Variante)
                     @Html.HiddenFor(x => x.Artigo)
                     @Html.HiddenFor(x => x.TecnologiaPorExtenso)
-                    
-                    @*@Html.HiddenFor(x => x.Reduzido)*@
-                    
+                    @Html.HiddenFor(x => x.TecnologiaOriginal)
                     @Html.HiddenFor(x => x.CodigoReduzido)
                     @Html.HiddenFor(x => x.Modo)
                     @Html.HiddenFor(x => x.IDColecao)
@@ -149,7 +140,7 @@
                                         pedidoreserva = Model.PedidoReserva,
                                         idvariante = Model.IDVariante,
                                         itempedidoreserva = Model.ItemPedidoReserva,
-                                        tipo = Model.Tipo
+                                        tipo = ((int)Model.Tipo).ToString()
                                     },
                                     new { @class = "btn btn-default right" })
                                 }

@@ -59,19 +59,19 @@ namespace Dalutex.Controllers
 
         public ActionResult Teste()
         {
-            using (var ctx = new TIDalutexContext())
-            {
-                ctx.PED_RESERVA_VENDA.Add(new PED_RESERVA_VENDA()
-                {
-                    PEDIDO_RESERVA = 88888888888,
-                    ITEM_PED_RESERVA = 88888888888,
-                    ID_VAR_PED_RESERVA = 88888888888,
-                    PEDIDO_VENDA = 88888888888,
-                    ITEM_PED_VENDA = 88888888888
-                });
+            //using (var ctx = new TIDalutexContext())
+            //{
+            //    ctx.PED_RESERVA_VENDA.Add(new PED_RESERVA_VENDA()
+            //    {
+            //        PEDIDO_RESERVA = 88888888888,
+            //        ITEM_PED_RESERVA = 88888888888,
+            //        ID_VAR_PED_RESERVA = 88888888888,
+            //        PEDIDO_VENDA = 88888888888,
+            //        ITEM_PED_VENDA = 88888888888
+            //    });
 
-                ctx.SaveChanges();
-            }  
+            //    ctx.SaveChanges();
+            //}  
 
             return View();
         }

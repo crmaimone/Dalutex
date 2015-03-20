@@ -4,7 +4,7 @@
 <div class="item-carrinho" style="background-color:rgba(128, 128, 128, 0.1)">
     <div class="row">
         <div class="col-xs-2">
-            @if (Model.Tipo == Enums.ItemType.Estampado)
+            @if (Model.Tipo == Enums.ItemType.Estampado || Model.Tipo == Enums.ItemType.ValidacaoReserva)
             {
                 <a href="@Url.Action("Ampliacao", "Pedido", new { desenho = Model.Desenho, variante = Model.Variante, pagina=0, retornarpara  = "Carrinho", codstudio = "", tipo = (int)Enums.ItemType.Estampado  })">
                     <img src="@Url.Content(ViewData["URLIMAGENS"] + @Model.Desenho + "_" + @Model.Variante + ".jpg")" class="img-rounded" style="width:100%; height:100%;">
@@ -26,43 +26,34 @@
                 <div style="box-shadow:rgba(0,0,0,0.4),10px,,10px,inset; margin-right:20px">
                     @if (Model.Tipo != Enums.ItemType.Reserva)
                     {
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <strong>
-                                    ART.: @Model.Artigo
-                                </strong>
+                        <div class="col-md-8">
+                            <div>
+                                Artigo: @Model.Artigo
                             </div>
-                            <div class="col-xs-6">
-                                <strong>
-                                    TEC.: @Model.TecnologiaPorExtenso
-                                </strong>
-                            </div>
+
+                            @if (Model.Desenho != null)
+                            {
+                                <div> Desenho: @Model.Desenho </div>
+                                <div> Variante: @Model.Variante </div>
+                                <div> Artigo: @Model.TecnologiaPorExtenso </div>
+                                
+                                if (Model.Reduzido != -2) 
+                                { 
+                                    <div> Reduzido: @Model.Reduzido </div>
+                                }
+                                
+                                <div> Peças: @Model.Pecas</div>
+                                <div> Preço unit.: @Model.Preco.ToString("C")</div>
+                                <div> Prev Entrega: @Model.DataEntregaItem.ToString("d")</div>
+                                <div> Quantidade: @Model.Quantidade  <strong>@Model.UnidadeMedida</strong></div>
+                                <div>Total: @Model.ValorTotalItem.ToString("c")</div>
+                            }
+                            else
+                            {
+                                <div>Cor: @Model.Cor </div>                               
+                                <div>Reduzido: @Model.Reduzido</div>
+                            }
                         </div>
-                        if (Model.Desenho != null)
-                        {
-                            <div class="row">
-                                <div class="col-xs-6">
-                                    <strong>
-                                        DES.: @Model.Desenho
-                                    </strong>
-                                </div>
-                                <div class="col-xs-6">
-                                    <strong>
-                                        VAR.: @Model.Variante
-                                    </strong>
-                                </div>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="row">
-                                <div class="col-xs-6">
-                                    <strong>
-                                        COR.: @Model.Cor
-                                    </strong>
-                                </div>
-                            </div>
-                        }
                     }
                     else
                     {
@@ -88,78 +79,48 @@
             </div>
             @if (Model.Tipo != Enums.ItemType.Reserva)
             {
-                <div class="row">
-                    <div class="col-xs-6">
-                        Peças: @Model.Pecas
-                    </div>
-                    <div class="col-xs-6">
-                        Preço unit.: @Model.Preco.ToString("C")
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-4">
-                        Prev.: @Model.DataEntregaItem.ToString("d")
-                    </div>
-                    <div class="col-xs-4">
-                        Qtde.: @Model.Quantidade @Model.UnidadeMedida
-                    </div>
-                    <div class="col-xs-4">
-                        Total: @Model.ValorTotalItem.ToString("c")
-                    </div>
-                </div>
+                
             }
         </div>
     </div>
-    <div class="row">
-        <div class=" col-xs-12">
-            @using (Html.BeginForm("ExcluirItemCarrinho", "Pedido", null, FormMethod.Post))
-            {
-                @Html.HiddenFor(x => x.Artigo)
-                @Html.HiddenFor(x => x.Desenho)
-                @Html.HiddenFor(x => x.Variante)
-                @Html.HiddenFor(x => x.CodDal)
+    <div class="panel panel-default">
+        <div class="row">
+            <div class=" col-xs-12">
+                @using (Html.BeginForm("ExcluirItemCarrinho", "Pedido", null, FormMethod.Post))
+                {
+                    @Html.HiddenFor(x => x.Artigo)
+                    @Html.HiddenFor(x => x.Desenho)
+                    @Html.HiddenFor(x => x.Variante)
+                    @Html.HiddenFor(x => x.CodDal)
 
-                <div class="form-group">
-                    <input type="submit" value="REMOVER" class="btn btn-danger pull-left" />
-                    @if (Model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
-                    {
-                        @Html.ActionLink("ALTERAR", "InserirNoCarrinho", "Pedido", 
-                                            new { desenho = Model.Desenho, 
-                                                  variante = Model.Variante, 
-                                                  artigo = Model.Artigo, 
-                                                  tecnologia = Model.Tecnologia, 
-                                                  modo = "A", 
-                                                  codstudio = "", 
-                                                  coddal = "", 
-                                                  tipo = (int)Model.Tipo,
-                                                  reduzido = Model.Reduzido,
-                                                  idstudio = Model.IDStudio,
-                                                  iditemstudio = Model.IDItemStudio,
-                                                  idvariante = Model.IDVariante,
-                                                  pedidoreserva = Model.PedidoReserva,
-                                                  itempedidoreserva = Model.ItemPedidoReserva
-                                                }, 
+                    <div class="form-group">
+                        <input type="submit" value="REMOVER" class="btn btn-danger pull-left" />
+                        @if (Model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
+                        {
+                            @Html.ActionLink("ALTERAR", "InserirNoCarrinho", "Pedido",
+                                            new
+                                            {
+                                                desenho = Model.Desenho,
+                                                variante = Model.Variante,
+                                                artigo = Model.Artigo,
+                                                tecnologia = Model.Tecnologia,
+                                                modo = "A",
+                                                codstudio = "",
+                                                coddal = "",
+                                                tipo = (int)Model.Tipo,
+                                                reduzido = Model.Reduzido,
+                                                idstudio = Model.IDStudio,
+                                                iditemstudio = Model.IDItemStudio,
+                                                idvariante = Model.IDVariante,
+                                                pedidoreserva = Model.PedidoReserva,
+                                                itempedidoreserva = Model.ItemPedidoReserva
+                                            },
                                                 new { @class = "btn btn-info pull-right" })
-                        
-                        //  string idcolecao
-                        //, string nmcolecao
-                        //, string pagina
-                        //, string desenho
-                        //, string variante
-                        //, string artigo
-                        //, string tecnologia
-                        //, string cor
-                        //, string modo
-                        //, string rgb
-                        //, int reduzido
-                        //, string codstudio
-                        //, string coddal
-                        //, int tipo
-                        //, int idstudio
-                        //, int iditemstudio
-                    }
-                </div>
-            }
+
+                        }
+                    </div>
+                }
+            </div>
         </div>
     </div>
 </div>

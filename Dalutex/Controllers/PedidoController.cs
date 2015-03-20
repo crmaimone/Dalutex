@@ -1073,19 +1073,23 @@ namespace Dalutex.Controllers
                                     if(item.Tipo == Enums.ItemType.ValidacaoReserva )
                                     {
                                         origem = "E";
-                               
+                                        
                                         //TODO: ESTE É O INSERT Q TEM A KEY NO BANCO E QUE EM TEORIA PRECISA DE "COMMIT" PRA SEGUIR O FLUXO
                                         //Não consigo testar aqui por casa do mu banco. Veja que eu envolvi tudo numa transação e 
                                         //Por isto posso chamar o save por partes
                                         //Veja se funcionou por favor
+
+                                        //Engenharia alternativa: 
+                                        int _id = ctx.Database.SqlQuery<int>("SELECT SEQ_ID_PED_RES_VENDA.NEXTVAL FROM DUAL", 1).FirstOrDefault();
+
                                         ctx.PED_RESERVA_VENDA.Add(new PED_RESERVA_VENDA()
                                         {
                                             PEDIDO_RESERVA = item.PedidoReserva,
                                             ITEM_PED_RESERVA = item.ItemPedidoReserva,
                                             ID_VAR_PED_RESERVA = item.IDVariante,
                                             PEDIDO_VENDA = iNUMERO_PEDIDO_BLOCO,                                    
-                                            ITEM_PED_VENDA = i,
-                                            ID_PED_RESERVA_VENDA = 0
+                                            ITEM_PED_VENDA = i
+                                            ,ID_PED_RESERVA_VENDA = _id
                                         });
 
                                         ctx.SaveChanges();

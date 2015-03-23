@@ -1112,7 +1112,8 @@ namespace Dalutex.Controllers
                         //GERENTE = model.IDGerentesVenda,// não é necessario gravar neste campo para pedidos <> de PE
                         VIATRANSPORTE = model.IDViasTransporte,
                         COMISSAO = Session_Carrinho.PorcentagemComissao,
-                        ORIGEM = "PW" // APENAS PRA INFORMAR QUE ESTE PEDIDO VEIO DO PEDIDO WEB NOVO.                                                                                                                                                                                                                                                                                                                                              
+                        ORIGEM = "PW", // APENAS PRA INFORMAR QUE ESTE PEDIDO VEIO DO PEDIDO WEB NOVO. 
+                        STATUS_PEDIDO = 1 //embora esteja definido no banco como padrão "1", esta gravando nullo, então, deixar explicito.....                                                                                                                                                                                                                                                                                                                     
                     };
                     #endregion
 

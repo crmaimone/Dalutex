@@ -7,8 +7,7 @@
     ViewBag.Title = "ITENS PARA RESERVA";
 }
 
-<div class="panel panel-default"><h3>@ViewBag.Title</h3></div>
-
+<div class="header-title"><h3>@ViewBag.Title</h3></div>
 <div class="container-fluid">
     <div class="row-fluid" id="pesqDesenho">
         @using (Html.BeginForm("ItensParaReserva", "Pedido", null, FormMethod.Post, new { role = "search" }))
@@ -113,3 +112,5 @@
                     });
                 </script>
             }
+
+

@@ -1,9 +1,7 @@
 ﻿@if (!string.IsNullOrWhiteSpace(@ViewBag.Title))
 {
-    <div class="panel panel-default">
-        <h3 class="viewTitle">@ViewBag.Title</h3>
-    </div>
+    <div class="header-title"><h3>@ViewBag.Title</h3></div>
 }
-<h2>@ViewBag.Message</h2>
+<h5 class="text-info">@ViewBag.Message</h5>
 <a class="btn btn-default right" href="javascript:history.back()">OK</a>
 

@@ -34,7 +34,6 @@
     else if (Model.Tipo == Enums.ItemType.Estampado)
     {
         <a href="@Url.Content(@"ArtigosDisponiveis?" +
-                                            "&imagem=" + Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg" +
                                             "&desenho=" + @Model.Desenho +
                                             "&variante=" + @Model.Variante+
                                             "&idcolecao="+ @Model.IDColecao+
@@ -91,9 +90,9 @@
                                 )">
 
             <img src="@Url.Content(Model.UrlImagens + @Model.CodStudio + ".jpg")" class="img-thumbnail equal-height">
-            <p class="thumb-paragraph">Cod. Dal:@Model.CodDal</p>
-            <p class="thumb-paragraph">Cod. Studio:@Model.CodStudio</p>
-            <p class="thumb-paragraph">Desenho:@Model.Desenho</p>
+            <p class="thumb-paragraph">Cod. Dal:&nbsp;@Model.CodDal</p>
+            <p class="thumb-paragraph">Cod. Studio:&nbsp;@Model.CodStudio</p>
+            <p class="thumb-paragraph">Desenho:&nbsp;@Model.Desenho</p>
         </a>
     }
 </div>

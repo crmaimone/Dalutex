@@ -4,30 +4,32 @@
 @{
     ViewBag.Title = "ADICIONAR AO CARRINHO";
 }
-<div class="panel panel-default">
-    <h3>@ViewBag.Title</h3>
-</div>
-
+<div class="header-title"><h3>@ViewBag.Title</h3></div>
 <div>
     @if (Model.Tipo == Enums.ItemType.Estampado || Model.Tipo == Enums.ItemType.ValidacaoReserva)
     {
         <div class="panel panel-default">
-            <h5>ARTIGO: @Model.Artigo | TECNOLOGIA: @Model.TecnologiaPorExtenso | DESENHO: @Model.Desenho | VARIANTE: @Model.Variante</h5>
+            <h5><strong>Artigo:</strong>&nbsp;@Model.Artigo 
+            | <strong>TecnologiA:</strong>&nbsp;@Model.TecnologiaPorExtenso 
+            | <strong>Desenho:</strong>&nbsp;@Model.Desenho 
+            | <strong>Variante:</strong>&nbsp;@Model.Variante</h5>
         </div>
         
     }
     else if (Model.Tipo == Enums.ItemType.Liso)
     {
         <div class="panel panel-default">
-            <h5>ARTIGO: @Model.Artigo | TECNOLOGIA: @Model.TecnologiaPorExtenso | COR: @Model.Cor</h5>
+            <h5><strong>Artigo:</strong>&nbsp;@Model.Artigo
+            |<strong>Tecnologia:</strong>&nbsp;@Model.TecnologiaPorExtenso 
+            |<strong>Cor:</strong>&nbsp;@Model.Cor</h5>
         </div>
     }
     else if (Model.Tipo == Enums.ItemType.Reserva)
     {
-        <div class="panel panel-default" id="pnreserva">               
-            <p><strong> Código de Studio:</strong> @Model.CodStudio</p>
-            <p><strong> Código Dal: </strong>@Model.CodDal</p>
-            <p><strong> Desenho: </strong>@Model.Desenho</p>               
+        <div class="panel panel-default">               
+            <p><strong>Código de studio:</strong>&nbsp;@Model.CodStudio</p>
+            <p><strong>Código Dal:</strong>&nbsp;@Model.CodDal</p>
+            <p><strong>Desenho:</strong>&nbsp;@Model.Desenho</p>               
         </div>
     }
 </div>
@@ -94,46 +96,35 @@
                     {
                         <h5>Clique em INCLUIR para adicionar este item desenho ao carrinho.</h5>
                     }
-                    <input name="Reduzido" id="Reduzido" value="@Model.Reduzido">
-                    <br />
-                    <div>
-                        <strong><input name="CodReduzido" id="CodigoReduzido" value="@Model.CodigoReduzido"></strong>
-                    </div>
-
-                    @Html.HiddenFor(x => x.Tipo)
-                    @Html.HiddenFor(x => x.Desenho)
-                    @Html.HiddenFor(x => x.Variante)
-                    @Html.HiddenFor(x => x.Artigo)
-                    @Html.HiddenFor(x => x.TecnologiaPorExtenso)
-                    @Html.HiddenFor(x => x.TecnologiaOriginal)
-                    @Html.HiddenFor(x => x.Reduzido)
-                    @Html.HiddenFor(x => x.CodigoReduzido)
-                    @Html.HiddenFor(x => x.Modo)
-                    @Html.HiddenFor(x => x.IDColecao)
-                    @Html.HiddenFor(x => x.IDTipoPedido)
-                    @Html.HiddenFor(x => x.NMColecao)
-                    @Html.HiddenFor(x => x.Pagina)
-                    @Html.HiddenFor(x => x.Cor)
-                    @Html.HiddenFor(x => x.RGB)
-                    @Html.HiddenFor(x => x.CodStudio)
-                    @Html.HiddenFor(x => x.CodDal)
-                    @Html.HiddenFor(x => x.IDStudio)
-                    @Html.HiddenFor(x => x.IDItemStudio)
-                    @Html.HiddenFor(x => x.UnidadeMedida, new { id = "hidUM" })
-                    @Html.HiddenFor(x => x.ValorPadrao, new { id = "hidValPadrao" })
-                    @Html.HiddenFor(x => x.IDVariante)
-                    @Html.HiddenFor(x => x.PedidoReserva)
-                    @Html.HiddenFor(x => x.ItemPedidoReserva)                    
-
+                    <input type="hidden" name="Tipo" value="@Model.Tipo" />
+                    <input type="hidden" name="Desenho" value="@Model.Desenho" />
+                    <input type="hidden" name="Variante" value="@Model.Variante" />
+                    <input type="hidden" name="Artigo" value="@Model.Artigo" />
+                    <input type="hidden" name="TecnologiaPorExtenso" value="@Model.TecnologiaPorExtenso" />
+                    <input type="hidden" name="TecnologiaOriginal" value="@Model.TecnologiaOriginal" />
+                    <input type="hidden" name="Reduzido" value="@Model.Reduzido" />
+                    <input type="hidden" name="Modo" value="@Model.Modo" />
+                    <input type="hidden" name="IDColecao" value="@Model.IDColecao" />
+                    <input type="hidden" name="IDTipoPedido" value="@Model.IDTipoPedido" />
+                    <input type="hidden" name="NMColecao" value="@Model.NMColecao" />
+                    <input type="hidden" name="Pagina" value="@Model.Pagina" />
+                    <input type="hidden" name="Cor" value="@Model.Cor" />
+                    <input type="hidden" name="RGB" value="@Model.RGB" />
+                    <input type="hidden" name="CodStudio" value="@Model.CodStudio" />
+                    <input type="hidden" name="CodDal" value="@Model.CodDal" />
+                    <input type="hidden" name="IDStudio" value="@Model.IDStudio" />
+                    <input type="hidden" name="IDItemStudio" value="@Model.IDItemStudio" />
+                    <input type="hidden" name="UnidadeMedida" id="hidUM" value="@Model.UnidadeMedida" />
+                    <input type="hidden" name="ValorPadrao" id="hidValPadrao" value="@Model.ValorPadrao ">
+                    <input type="hidden" name="IDVariante" value="@Model.IDVariante" />
+                    <input type="hidden" name="PedidoReserva" value="@Model.PedidoReserva" />
+                    <input type="hidden" name="ItemPedidoReserva" value="@Model.ItemPedidoReserva" />
                     <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <div class="col-xs-6">
-                                <button type="submit" class="btn btn-default right"><span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span> INCLUIR</button>
-                            </div>                                                                                                               
-
+                        <div class="col-xs-12">
                             @if (Model.Modo == "I")
                             {
-                                if (Model.Tipo == Enums.ItemType.Estampado || Model.Tipo == Enums.ItemType.ValidacaoReserva) 
+                                <button type="submit" class="btn btn-default pull-right"><span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span> INCLUIR</button>
+                                if (Model.Tipo == Enums.ItemType.Estampado || Model.Tipo == Enums.ItemType.ValidacaoReserva)
                                 {
                                     @Html.ActionLink("VOLTAR", "ArtigosDisponiveis", "Pedido",
                                     new
@@ -148,7 +139,7 @@
                                         itempedidoreserva = Model.ItemPedidoReserva,
                                         tipo = ((int)Model.Tipo).ToString()
                                     },
-                                    new { @class = "btn btn-default right" })
+                                    new { @class = "btn btn-default pull-left" })
                                 }
                                 else if (Model.Tipo == Enums.ItemType.Liso)
                                 {
@@ -159,7 +150,7 @@
                                         nmcolecao = Model.NMColecao,
                                         pagina = Model.Pagina
                                     },
-                                    new { @class = "btn btn-default right" })
+                                    new { @class = "btn btn-default pull-left" })
                                 }
                                 else if (Model.Tipo == Enums.ItemType.Reserva)
                                 {
@@ -168,12 +159,13 @@
                                     {
                                         pagina = Model.Pagina
                                     },
-                                    new { @class = "btn btn-default right" })
+                                    new { @class = "btn btn-default pull-left" })
                                 }
                             }
                             else if (Model.Modo == "A")
                             {
-                                @Html.ActionLink("VOLTAR", "Carrinho", "Pedido", null, new { @class = "btn btn-default right" })
+                                <button type="submit" class="btn btn-default pull-right"><span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span> ALTERAR</button>
+                                @Html.ActionLink("VOLTAR", "Carrinho", "Pedido", null, new { @class = "btn btn-default pull-left" })
                             }
                         </div>
                     </div>

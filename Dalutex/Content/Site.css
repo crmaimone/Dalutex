@@ -1,12 +1,40 @@
-﻿body {
+﻿.header-title {
+    background-image: url('images/headerTitle.jpg');
+    background-repeat:no-repeat;
+    background-size:cover;
+    padding:1px;
+    margin-top:3px;
+    margin-bottom:10px;
+    border-radius:10px;
+    border-bottom-style:solid;
+    border-bottom-color:lightgray;
+}
+
+.header-title h3
+{
+    font-family: 'Lucida Handwriting';
+    font-size: 20px; 
+    font-weight: bold; 
+    color:black;
+    text-shadow:2px 3px 1px white;
+    letter-spacing:0.8px; 
+    margin-left:10px;
+    margin-top:10px;
+}
+
+[role=search] input[type='text'] {
+    margin-bottom:3px;
+}
+
+body {
     padding-top: 50px;
     padding-bottom: 20px;
 }
 
 h2.hand{
-   font-family: 'Lucida Handwriting';
-   font-size: 20px; 
-   color:White;
+    font-family: 'Lucida Handwriting';
+    font-size: 20px; 
+    color:White;
     text-shadow:2px 3px 1px black;
     background-color:rgba(0, 0, 0, 0.4);
     letter-spacing:0.8px; 
@@ -43,14 +71,18 @@ tr.hover-cursor {
 }
  .thumb-paragraph
  {
-     text-decoration:none;
-     font-size:10px;
-     line-height:10px;
-     padding-left: 5px;
-     margin-left: 0px;
-     margin-top: 8px;
-     margin-right: 0px;
-     margin-bottom: 0px;
+    text-decoration:none;
+    font-size:10px;
+    line-height:10px;
+    font-weight:bold;
+    padding-left: 5px;
+    margin-left: 0px;
+    margin-top: 8px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
  }
   .thumb-paragraph:hover
  {
@@ -127,15 +159,6 @@ footer{
 
 input#btnRepres{
     margin-top: 0px;
-}
-
-h3 {
-    font-family: Verdana;
-    font-size: 12pt;
-    font-weight: bold; 
-    text-shadow: 1px 0px 3px #333;  
-    color:rgb(31, 30, 30);
-    padding:  0px 0px 0px 5px;          
 }
 
 .row-fluid#pesqDesenho{

@@ -7,115 +7,112 @@
     ViewBag.Title = "Validação de pedidos de reserva";
 }    
 
-    <div class="panel panel-default"><h3>@ViewBag.Title</h3></div>
+<div class="header-title"><h3>@ViewBag.Title</h3></div>
 
-    <div class="container-fluid">
-        <div class="row-fluid" id="pesqDesenho">
-            @using (Html.BeginForm("ValidaPedidoReserva", "Pedido", null, FormMethod.Post, new { role = "search" }))
-            {
-                @Html.AntiForgeryToken()
-
-                <div class="form-group">
-                    @Html.LabelFor(x => x.FiltroRepresentante, new { @class = "col-md-2 control-label" })
-                    <div class="col-md-10">
-                        @Html.TextBoxFor(x => x.FiltroRepresentante, new { @class = "form-control", placeholder = "Começa com.." })
-                    </div>
+<div class="container-fluid">
+    <div class="row-fluid" id="pesqDesenho">
+        @using (Html.BeginForm("ValidaPedidoReserva", "Pedido", null, FormMethod.Post, new { role = "search" }))
+        {
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                @Html.LabelFor(x => x.FiltroRepresentante, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(x => x.FiltroRepresentante, new { @class = "form-control", placeholder = "Começa com.." })
                 </div>
-                <div class="form-group">
-                    @Html.LabelFor(x => x.FiltroCliente, new { @class = "col-md-2 control-label" })
-                    <div class="col-md-10">
-                        @Html.TextBoxFor(x => x.FiltroCliente, new { @class = "form-control", placeholder = "Começa com.." })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(x => x.FiltroPedidoReserva, new { @class = "col-md-2 control-label" })
-                    <div class="col-md-10">
-                        @Html.TextBoxFor(x => x.FiltroPedidoReserva, new { @class = "form-control", placeholder = "Nr Pedido" })
-                    </div>
-                </div>                
-                <div class="form-group">
-                    @Html.LabelFor(x => x.FiltroCodStudio, new { @class = "col-md-2 control-label" })
-                    <div class="col-md-10">
-                        @Html.TextBoxFor(x => x.FiltroCodStudio, new { @class = "form-control", placeholder = "Começa com.." })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(x => x.FiltroCodDal, new { @class = "col-md-2 control-label" })
-                    <div class="col-md-10">
-                        @Html.TextBoxFor(x => x.FiltroCodDal, new { @class = "form-control", placeholder = "Contém.." })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(x => x.FiltroDesenho, new { @class = "col-md-2 control-label" })
-                    <div class="col-md-10">
-                        @Html.TextBoxFor(x => x.FiltroDesenho, new { @class = "form-control", placeholder = "Começa com.." })
-                    </div>
-                </div>               
-                <div class="form-group">
-                    @*<input type="hidden" name="Pagina" value="@Model.Pagina" />*@
-                    <button type="submit" class="btn btn-default btn-group-sm"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Pesquisar</button>
-                </div>
-            }
-        </div>       
-         
-    </div>
-
-    @if(Model != null && Model.ListaValidaReserva != null)
-    {                       
-        <div class="panel panel-default">
-            <!-- Default panel contents -->
-            @*<div class="panel-heading">Panel heading</div>
-            <div class="panel-body">
-                <p>panel-body</p>
-            </div>*@
-
-            <!-- Table -->
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Representante</th>
-                            <th>Cliente</th>
-                            <th>Pedido</th>
-                            <th>Dt. Emissão</th>
-                            <th>Item</th>
-                            <th>Cód. Studio</th>
-                            <th>Studio</th>
-                            <th>Desenho</th>
-                            <th>Cód. Dal</th>
-                            <th>Variante</th>
-                            <th>Digitador</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.ListaValidaReserva)
-                        {
-                            <tr>
-                                <td><a href="@Url.Content("DesenhosValidaReserva?&pedidoreserva=" + item.PEDIDO + "&pagina=1")"></a></td>
-                                <td>@item.REPRESENTANTE</td>
-                                <td>@item.CLIENTE</td>
-                                <td>@item.PEDIDO</td>
-                                <td>@item.DATA_EMISSAO</td>
-                                <td>@item.ITEM_PEDIDO</td>
-                                <td>@item.COD_STUDIO</td>
-                                <td>@item.STUDIO</td>
-                                <td>@item.DESENHO</td>
-                                <td>@item.COD_DAL</td>
-                                <td>@item.VARIANTE</td>
-                                <td>@item.DIGITADOR</td>
-
-                            </tr>
-                        }
-                    </tbody>
-                </table>
             </div>
+            <div class="form-group">
+                @Html.LabelFor(x => x.FiltroCliente, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(x => x.FiltroCliente, new { @class = "form-control", placeholder = "Começa com.." })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(x => x.FiltroPedidoReserva, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(x => x.FiltroPedidoReserva, new { @class = "form-control", placeholder = "Nr Pedido" })
+                </div>
+            </div>                
+            <div class="form-group">
+                @Html.LabelFor(x => x.FiltroCodStudio, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(x => x.FiltroCodStudio, new { @class = "form-control", placeholder = "Começa com.." })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(x => x.FiltroCodDal, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(x => x.FiltroCodDal, new { @class = "form-control", placeholder = "Contém.." })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(x => x.FiltroDesenho, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(x => x.FiltroDesenho, new { @class = "form-control", placeholder = "Começa com.." })
+                </div>
+            </div>               
+            <div class="form-group">
+                @*<input type="hidden" name="Pagina" value="@Model.Pagina" />*@
+                <button type="submit" class="btn btn-default btn-group-sm"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Pesquisar</button>
+            </div>
+        }
+    </div>       
+         
+</div>
+
+@if(Model != null && Model.ListaValidaReserva != null)
+{                       
+    <div class="panel panel-default">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Representante</th>
+                        <th>Cliente</th>
+                        <th>Pedido</th>
+                        <th>Dt. Emissão</th>
+                        <th>Item</th>
+                        <th>Cód. Studio</th>
+                        <th>Studio</th>
+                        <th>Desenho</th>
+                        <th>Cód. Dal</th>
+                        <th>Variante</th>
+                        <th>Digitador</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ListaValidaReserva)
+                    {
+                        <tr>
+                            <td><a href="@Url.Content("DesenhosValidaReserva?&pedidoreserva=" + item.PEDIDO + "&pagina=1")"></a></td>
+                            <td>@item.REPRESENTANTE</td>
+                            <td>@item.CLIENTE</td>
+                            <td>@item.PEDIDO</td>
+                            <td>@item.DATA_EMISSAO</td>
+                            <td>@item.ITEM_PEDIDO</td>
+                            <td>@item.COD_STUDIO</td>
+                            <td>@item.STUDIO</td>
+                            <td>@item.DESENHO</td>
+                            <td>@item.COD_DAL</td>
+                            <td>@item.VARIANTE</td>
+                            <td>@item.DIGITADOR</td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
-    }
+    </div>
+}
 @section Scripts {
     <script>
         $('tr').click(function () {
-            window.location = $(this).find('a').attr('href');
+            var target = $(this).find('a').attr('href');
+            if (target != undefined) {
+                window.location = $(this).find('a').attr('href');
+            }
+
         }).hover(function () {
             $(this).toggleClass('hover-cursor');
         });

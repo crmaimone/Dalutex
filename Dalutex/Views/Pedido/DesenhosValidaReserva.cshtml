@@ -7,8 +7,7 @@
      ViewBag.Title = "Desenhos da validação de reserva";
 }
 
-<div class="panel panel-default"><h3>@ViewBag.Title</h3></div>
-
+<div class="header-title"><h3>@ViewBag.Title</h3></div>
     <div class="row">
         @if (Model.Galeria != null)
         {
@@ -71,41 +70,15 @@
                 //API Attributes
 
                 //API Methods
-                loadImages = function () {
-                    $(".img-thumbnail").each(function () {
-                        var $img = $(this);
-                        var data = $img.data("assigned-id").split("_");
-                        var desenho = data[0];
-                        var variante = data[1];
-
-                        $.ajax({
-                            type: 'POST',
-                            url: '@Url.Action("ObterDesenho", "Pedido")',
-                            data: 'desenho=' + desenho + '&variante=' + variante,
-                            async: false,
-                            success: function (Image) {
-                                if (Image != '') {
-                                    $img.attr('src', 'data:image/jpg;base64,' + Image.Image);
-                                }
-                            },
-                            error: function (xhr, ajaxOptions, thrownError) {
-                                $img.attr('src', 'data:image/jpg;base64,');
-                            }
-                        })
-                    });
-                    $('.equal-height').equalHeight();
-                }
 
                 // public API
                 return {
-                    loadImages: loadImages
                 };
             })();
 
             //Init
             (function Init() {
                 $('.equal-height').equalHeight();
-                //scriptWrapper.loadImages();
             })();
         });
     </script>

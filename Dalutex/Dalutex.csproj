@@ -249,6 +249,7 @@
     <Content Include="Content\images\header-pattern-10.jpg" />
     <Content Include="Content\images\header-pattern-11.jpg" />
     <Content Include="Content\images\header-pattern-12.jpg" />
+    <Content Include="Content\images\headerTitle.jpg" />
     <Content Include="Content\images\UnderConstruction.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -309,7 +310,6 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Home\SecurePage.cshtml" />
     <Content Include="Views\Pedido\Desenhos.cshtml" />
     <Content Include="Views\Home\Busca.cshtml" />
     <Content Include="Views\Home\Mapa.cshtml" />
@@ -329,14 +329,14 @@
     <Content Include="Views\Pedido\Ampliacao.cshtml" />
     <Content Include="Views\Pedido\EmConstrucao.cshtml" />
     <Content Include="Views\Shared\_ItemCarrinho.cshtml" />
-    <Content Include="Views\Base\ErrorMessage.cshtml" />
+    <Content Include="Views\Shared\ErrorMessage.cshtml" />
     <Content Include="Views\Home\Teste.cshtml" />
     <Content Include="Views\Pedido\Lisos.cshtml" />
     <Content Include="Views\Pedido\ItensParaReserva.cshtml" />
-    <Content Include="Views\Base\Message.cshtml" />
+    <Content Include="Views\Shared\Message.cshtml" />
     <Content Include="Views\Pedido\ValidaPedidoReserva.cshtml" />
-    <Content Include="Views\Pedido\Teste.cshtml" />
     <Content Include="Views\Pedido\DesenhosValidaReserva.cshtml" />
+    <Content Include="Views\Pedido\EsvaziarCarrinho.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

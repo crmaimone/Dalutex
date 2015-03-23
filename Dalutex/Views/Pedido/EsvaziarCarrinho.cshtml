@@ -1,0 +1,14 @@
+﻿@{
+    ViewBag.Title = "Esvaziar carrinho";
+}
+
+<div class="header-title"><h3>@ViewBag.Title</h3></div>
+<div class="container-fluid">
+    <p>Deseja realmente remover todos os itens do carrinho?</p>
+    @using (Html.BeginForm("EsvaziarCarrinho", "Pedido", null, FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <a class="btn btn-info pull-left" href="javascript:history.back()">NÃO! Tire-me daqui</a>
+        <input type="submit" value="REMOVER" class="btn btn-danger pull-right" />
+    }
+</div>

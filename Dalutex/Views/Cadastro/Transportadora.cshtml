@@ -3,12 +3,10 @@
 @model Dalutex.Models.PesquisaTransportadoraViewModel
 
 @{
-    ViewBag.Title = "SELECIONE A TRANSPORTADORA";
+    ViewBag.Title = "TRANSPORTADORA";
 }
 
-<div class="panel panel-default">
-    <h3>@ViewBag.Title</h3>
-</div>
+<div class="header-title"><h3>@ViewBag.Title</h3></div>
 
 <div class="container">
     <div class="row">
@@ -18,7 +16,7 @@
                 {
                     @Html.AntiForgeryToken()
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    <div class="form-group" style="display:-webkit-inline-box -moz-inline-box inline">
+                    <div class="form-group" style="display:-webkit-inline-box">
                         @Html.LabelFor(m => m.Filtro, new { @class = "col-md-2 control-label" })
                         <div class="col-md-10">
                             @Html.TextBoxFor(m => m.Filtro, new { @class = "form-control" })
@@ -31,7 +29,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-8">
             <section id="ResultadoTransportadoras">
                 <div class="list-group" id="lstTransportadoras">
                     <a href="#" class="list-group-item active">TRANSPORTADORAS</a>

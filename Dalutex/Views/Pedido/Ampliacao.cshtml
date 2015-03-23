@@ -5,7 +5,7 @@
 @{
     ViewBag.Title = "VISUALIZAÇÃO DO DESENHO";
 }
-<h1 class="viewTitle">@ViewBag.Title</h1>
+<div class="header-title"><h3>@ViewBag.Title</h3></div>
 @if (Model.Tipo == Enums.ItemType.Estampado)
 {
     <img src="@Model.Imagem" class="img-rounded" style="width:100%; height:100%;">
@@ -31,10 +31,19 @@ else if (Model.Tipo == Enums.ItemType.Reserva)
 <br />
 @if (Model.RetornarPara == "ArtigosDisponiveis")
 {
-    <a class="btn btn-default right" href="@Url.Action("ArtigosDisponiveis", "Pedido", 
-    new { desenho = Model.Desenho, variante = Model.Variante, idcolecao = Model.IDColecao, nmcolecao = Model.NMColecao, pagina=Model.Pagina,
-          pedidoreserva = 0, idvariante = 0, itempedidoreserva = 0, tipo = Model.Tipo})">
-    VOLTAR</a>
+    <a class="btn btn-default right" 
+       href="@Url.Action("ArtigosDisponiveis", "Pedido", 
+       new { 
+            desenho = Model.Desenho, 
+            variante = Model.Variante, 
+            idcolecao = Model.IDColecao, 
+            nmcolecao = Model.NMColecao, 
+            pagina=Model.Pagina,
+            pedidoreserva = 0, 
+            idvariante = 0, 
+            itempedidoreserva = 0, 
+            tipo = Model.Tipo
+       })">VOLTAR</a>
 }
 else if (Model.RetornarPara == "Carrinho")
 {

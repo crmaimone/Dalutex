@@ -22,10 +22,59 @@ namespace Dalutex.Controllers
     {
         #region Coleções
 
+        private ActionResult ValidarTipoPedido(object model)
+        {
+            if (base.Session_Carrinho != null && base.Session_Carrinho.IDTipoPedido != -1) //Pedido de algum tipo já iniciado
+            {
+                if (base.Session_Carrinho.Itens == null || base.Session_Carrinho.Itens.Count == 0)//Se já foi iniciado mas ainda não tem itens, limpar
+                {
+                    base.Session_Carrinho.IDTipoPedido = -1;
+                    return null;
+                }
+                else
+                {
+                    if ((model is ItensParaReservaViewModel))//Se for pedido de reserva
+                    {
+                        if (base.Session_Carrinho.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
+                        {
+                            //Não permitir
+                            return RedirectToAction("Message", new { message = "Iniciado pedido de venda. Esvazie o carrinho antes de incluir pedidos de reserva.", title = "Pedido já iniciado." });
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                    else//Outros tipos de pedidos
+                    {
+                        if (base.Session_Carrinho.IDTipoPedido == (int)Enums.TiposPedido.RESERVA)//Se uma reserva já tiver iniciada
+                        {
+                            //Não permitir
+                            return RedirectToAction("Message", new { message = "Iniciado pedido de reserva. Esvazie o carrinho antes de incluir outros tipos de pedidos.", title = "Pedido já iniciado." });
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public ActionResult MenuColecoes(string idcolecao)
         {
             MenuColecoesViewModel model = new MenuColecoesViewModel();
 
+            ActionResult objValidatorResult = this.ValidarTipoPedido(model);
+            if(objValidatorResult != null)
+            {
+                return objValidatorResult;
+            }
+            
             int iIDColecao;
 
             if (int.TryParse(idcolecao, out iIDColecao))
@@ -68,6 +117,12 @@ namespace Dalutex.Controllers
                 model.Pagina = 1;
             else
                 model.Pagina = int.Parse(pagina);
+
+            ActionResult objValidatorResult = this.ValidarTipoPedido(model);
+            if (objValidatorResult != null)
+            {
+                return objValidatorResult;
+            }
 
             using (var ctx = new TIDalutexContext())
             {
@@ -156,6 +211,12 @@ namespace Dalutex.Controllers
             else
                 model.Pagina = int.Parse(pagina);
 
+            ActionResult objValidatorResult = this.ValidarTipoPedido(model);
+            if (objValidatorResult != null)
+            {
+                return objValidatorResult;
+            }
+
             using (var ctx = new TIDalutexContext())
             {
                 if (idcolecao == "ATUAL")
@@ -209,8 +270,16 @@ namespace Dalutex.Controllers
             return View(model);
         }
 
-        public ActionResult ArtigosDisponiveis(string desenho, string variante, int idcolecao, string nmcolecao, int pagina,
-            int idvariante, int pedidoreserva, int itempedidoreserva, int tipo)
+        public ActionResult ArtigosDisponiveis(
+            string desenho, 
+            string variante, 
+            int idcolecao, 
+            string nmcolecao, 
+            int pagina,
+            int idvariante, 
+            int pedidoreserva, 
+            int itempedidoreserva, 
+            int tipo)
         {
             ArtigosDisponiveisViewModel model = new ArtigosDisponiveisViewModel();
             model.Desenho = desenho;
@@ -318,7 +387,15 @@ namespace Dalutex.Controllers
             return View(model);
         }
 
-        public ActionResult Ampliacao(string desenho, string variante, string idcolecao, string nmcolecao, int pagina, string retornarpara, string codstudio, int tipo)
+        public ActionResult Ampliacao(
+            string desenho, 
+            string variante, 
+            string idcolecao, 
+            string nmcolecao, 
+            int pagina, 
+            string retornarpara, 
+            string codstudio, 
+            int tipo)
         {
             AmpliacaoViewModel model = new AmpliacaoViewModel()
             {
@@ -403,7 +480,6 @@ namespace Dalutex.Controllers
             model.ItemPedidoReserva = itempedidoreserva;
 
             model.Reduzido = reduzido;
-            model.CodigoReduzido = reduzido;
                  
             if (base.Session_Carrinho != null)
                 model.IDTipoPedido = base.Session_Carrinho.IDTipoPedido;
@@ -442,7 +518,6 @@ namespace Dalutex.Controllers
                         if (objReduzido != null && objReduzido.CODIGO_REDUZIDO > default(int))
                         {
                             model.Reduzido = objReduzido.CODIGO_REDUZIDO;
-                            model.CodigoReduzido = objReduzido.CODIGO_REDUZIDO;
                         }
                         else
                             model.Reduzido = -2; //Deixar o JOB buscar mais tarde ou criar o reduzido?
@@ -704,6 +779,19 @@ namespace Dalutex.Controllers
             return View();
         }
 
+        public ActionResult EsvaziarCarrinho()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EsvaziarCarrinho(object model)
+        {
+            base.Session_Carrinho = new ConclusaoPedidoViewModel();
+            return RedirectToAction("Index", "Home");
+        }
+
         private ConclusaoPedidoViewModel ConclusaoPedidoCarregarListas(ConclusaoPedidoViewModel model)
         {
             if (model.IDTipoPedido != (int) Enums.TiposPedido.RESERVA)
@@ -782,7 +870,6 @@ namespace Dalutex.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ConclusaoPedido(ConclusaoPedidoViewModel model)
         {
-            #region Validações
             try
             {
                 if (model.IDTipoPedido == (int)Enums.TiposPedido.RESERVA)
@@ -804,6 +891,7 @@ namespace Dalutex.Controllers
 
                 if (ModelState.IsValid)
                 {
+                    #region Validações
 
                     if (Session_Carrinho.Itens == null || Session_Carrinho.Itens.Count == 0)
                     {
@@ -816,7 +904,14 @@ namespace Dalutex.Controllers
                     {
                         model.TotalPedido += item.ValorTotalItem;
                     }
-                    
+
+                    if (Session_Carrinho.Itens.Exists(x => x.Reduzido == 0))
+                    {
+                        ModelState.AddModelError("", "Este carrinho possuem itens com o código reduzido zerado. Favor entrar em contato com o TI.");
+                        this.ConclusaoPedidoCarregarListas(model);
+                        return View(model);
+                    }
+
                     bool hasErrors = false;
 
                     if (model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
@@ -1162,7 +1257,6 @@ namespace Dalutex.Controllers
 
                                     #region Preço divergente
 
-
                                     foreach (PRE_PEDIDO_ITENS item in lstItens)
                                     {
                                         if ( (item.REDUZIDO_ITEM != -2)//TEM REDUZIDO
@@ -1288,9 +1382,23 @@ namespace Dalutex.Controllers
 
         #endregion
 
-        #region Pedido Reserva (Exclusivos parte 1)
+        #region Pedido Reserva
+
         public ActionResult ItensParaReserva(string pagina)
         {
+            ItensParaReservaViewModel model = new ItensParaReservaViewModel();
+
+            if (string.IsNullOrWhiteSpace(pagina))
+                model.Pagina = 1;
+            else
+                model.Pagina = int.Parse(pagina);
+
+            ActionResult objValidatorResult = this.ValidarTipoPedido(model);
+            if (objValidatorResult != null)
+            {
+                return objValidatorResult;
+            }
+
             if(Session_Carrinho == null)
             {
                 Session_Carrinho = new ConclusaoPedidoViewModel();
@@ -1298,22 +1406,8 @@ namespace Dalutex.Controllers
             }
             else
             {
-                if(Session_Carrinho.IDTipoPedido == -1)
-                {
-                    Session_Carrinho.IDTipoPedido = (int)Enums.TiposPedido.RESERVA;
-                }
-                else
-                {
-                    RedirectToAction("Message", new { message = "Já existem itens de venda no seu carrinho. Não é permitido incluir itens de reserva.", title = "Carrinho com itens" });
-                }
+                Session_Carrinho.IDTipoPedido = (int)Enums.TiposPedido.RESERVA;
             }
-
-            ItensParaReservaViewModel model = new ItensParaReservaViewModel();
-
-            if (string.IsNullOrWhiteSpace(pagina))
-                model.Pagina = 1;
-            else
-                model.Pagina = int.Parse(pagina);
 
             ObterItensParaReserva(model);
 
@@ -1381,12 +1475,17 @@ namespace Dalutex.Controllers
 
             return View(model);
         }
-        #endregion
 
-        #region Validar Pedidos de reserva (Exclusivos parte 2)
-        public ActionResult ValidaPedidoReserva() 
+        public ActionResult ValidaPedidoReserva()
         {
             ValidaPedidoReservaViewModel model = new ValidaPedidoReservaViewModel();
+
+            ActionResult objValidatorResult = this.ValidarTipoPedido(model);
+            if (objValidatorResult != null)
+            {
+                return objValidatorResult;
+            }
+
             return View(model);
         }
 
@@ -1394,11 +1493,11 @@ namespace Dalutex.Controllers
         public ActionResult ValidaPedidoReserva(ValidaPedidoReservaViewModel model)
         {
             int PedidoReserva = 0;
-            int.TryParse(model.FiltroPedidoReserva, out PedidoReserva);            
+            int.TryParse(model.FiltroPedidoReserva, out PedidoReserva);
 
             using (var ctx = new TIDalutexContext())
-            {               
-                model.ListaValidaReserva = 
+            {
+                model.ListaValidaReserva =
                         ctx.VW_VALIDAR_RESERVA.Where(
                             x =>
                             (model.FiltroRepresentante == null || x.REPRESENTANTE.StartsWith(model.FiltroRepresentante.ToUpper()))
@@ -1413,13 +1512,12 @@ namespace Dalutex.Controllers
                             &&
                             (PedidoReserva == 0 || x.PEDIDO.Equals(PedidoReserva))
                         ).OrderByDescending(x => x.DATA_EMISSAO).ToList();
-            }           
+            }
 
-            return View(model);            
+            return View(model);
         }
-        
-        #endregion
 
+        #endregion
 
         //[AllowAnonymous]
         //[HttpPost]

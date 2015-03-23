@@ -7,7 +7,7 @@
             @if (Model.Tipo == Enums.ItemType.Estampado || Model.Tipo == Enums.ItemType.ValidacaoReserva)
             {
                 <a href="@Url.Action("Ampliacao", "Pedido", new { desenho = Model.Desenho, variante = Model.Variante, pagina=0, retornarpara  = "Carrinho", codstudio = "", tipo = (int)Enums.ItemType.Estampado  })">
-                    <img src="@Url.Content(ViewData["URLIMAGENS"] + @Model.Desenho + "_" + @Model.Variante + ".jpg")" class="img-rounded" style="width:100%; height:100%;">
+                    <img src="@Url.Content(ViewData["URLDESENHOS"] + @Model.Desenho + "_" + @Model.Variante + ".jpg")" class="img-rounded" style="width:100%; height:100%;">
                 </a>
             }
             else if (Model.Tipo == Enums.ItemType.Liso)
@@ -17,7 +17,7 @@
             else if (Model.Tipo == Enums.ItemType.Reserva)
             {
                 <a href="@Url.Action("Ampliacao", "Pedido", new { desenho = Model.Desenho, variante = Model.Variante, pagina=0, retornarpara  = "Carrinho", codstudio = Model.CodStudio, tipo = (int)Enums.ItemType.Reserva  })">
-                    <img src="@Url.Content(ViewData["URLIRESERVAS"] + @Model.CodStudio + ".jpg")" class="img-rounded" style="width:100%; height:100%;">
+                    <img src="@Url.Content(ViewData["URLRESERVAS"] + @Model.CodStudio + ".jpg")" class="img-rounded" style="width:100%; height:100%;">
                 </a>
             }
         </div>
@@ -27,65 +27,47 @@
                     @if (Model.Tipo != Enums.ItemType.Reserva)
                     {
                         <div class="col-md-8">
-                            <div>
-                                Artigo: @Model.Artigo
-                            </div>
+                            <div><strong>Artigo:</strong> @Model.Artigo</div>
 
-                            @if (Model.Desenho != null)
+                            @if (Model.Tipo == Enums.ItemType.Estampado || Model.Tipo == Enums.ItemType.ValidacaoReserva)
                             {
-                                <div> Desenho: @Model.Desenho </div>
-                                <div> Variante: @Model.Variante </div>
-                                <div> Artigo: @Model.TecnologiaPorExtenso </div>
-                                
-                                if (Model.Reduzido != -2) 
-                                { 
-                                    <div> Reduzido: @Model.Reduzido </div>
+                                <div> <strong>Desenho:</strong> @Model.Desenho </div>
+                                <div> <strong>Variante:</strong> @Model.Variante </div>
+                                <div> <strong>Artigo:</strong> @Model.TecnologiaPorExtenso </div>
+
+                                if (Model.Reduzido != -2)
+                                {
+                                    <div> <strong>Reduzido:</strong> @Model.Reduzido </div>
                                 }
-                                
-                                <div> Peças: @Model.Pecas</div>
-                                <div> Preço unit.: @Model.Preco.ToString("C")</div>
-                                <div> Prev Entrega: @Model.DataEntregaItem.ToString("d")</div>
-                                <div> Quantidade: @Model.Quantidade  <strong>@Model.UnidadeMedida</strong></div>
-                                <div>Total: @Model.ValorTotalItem.ToString("c")</div>
+
+                                <div><strong>Peças:</strong>&nbsp;@Model.Pecas</div>
+                                <div><strong>Preço unitário:</strong>&nbsp;@Model.Preco.ToString("C")</div>
+                                <div><strong>Previsão de entrega:</strong>&nbsp;@Model.DataEntregaItem.ToString("d")</div>
+                                <div><strong>Quantidade:</strong>&nbsp;@Model.Quantidade&nbsp;@Model.UnidadeMedida</div>
+                                <div><strong>Total:</strong>&nbsp;@Model.ValorTotalItem.ToString("c")</div>
                             }
-                            else
+                            else if (Model.Tipo == Enums.ItemType.Liso)
                             {
-                                <div>Cor: @Model.Cor </div>                               
-                                <div>Reduzido: @Model.Reduzido</div>
+                                <div><strong>Cor:</strong>&nbsp;@Model.Cor </div>                               
+                                <div><strong>Reduzido:</strong>&nbsp;@Model.Reduzido</div>
                             }
                         </div>
                     }
                     else
                     {
-                        <div class="row">
-                            <div class="col-xs-4">
-                                <strong>
-                                    COD DAL: @Model.CodDal
-                                </strong>
-                            </div>
-                            <div class="col-xs-4">
-                                <strong>
-                                    COD STUDIO: @Model.CodStudio
-                                </strong>
-                            </div>
-                            <div class="col-xs-4">
-                                <strong>
-                                    DES.: @Model.Desenho
-                                </strong>
-                            </div>
+                        <div class="col-md-8">
+                            <div><strong>Código DAL:</strong>&nbsp;@Model.CodDal</div>
+                            <div><strong>Código do studio:</strong>&nbsp;@Model.CodStudio</div>
+                            <div><strong>Desenho:</strong>&nbsp;@Model.Desenho</div>
                         </div>
                     }
                 </div>
             </div>
-            @if (Model.Tipo != Enums.ItemType.Reserva)
-            {
-                
-            }
         </div>
     </div>
-    <div class="panel panel-default">
+    <div style="border:1px solid gray; background-color: ghostwhite; padding:3px">
         <div class="row">
-            <div class=" col-xs-12">
+            <div class="col-xs-12">
                 @using (Html.BeginForm("ExcluirItemCarrinho", "Pedido", null, FormMethod.Post))
                 {
                     @Html.HiddenFor(x => x.Artigo)
@@ -93,32 +75,31 @@
                     @Html.HiddenFor(x => x.Variante)
                     @Html.HiddenFor(x => x.CodDal)
 
-                    <div class="form-group">
-                        <input type="submit" value="REMOVER" class="btn btn-danger pull-left" />
-                        @if (Model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
-                        {
-                            @Html.ActionLink("ALTERAR", "InserirNoCarrinho", "Pedido",
-                                            new
-                                            {
-                                                desenho = Model.Desenho,
-                                                variante = Model.Variante,
-                                                artigo = Model.Artigo,
-                                                tecnologia = Model.Tecnologia,
-                                                modo = "A",
-                                                codstudio = "",
-                                                coddal = "",
-                                                tipo = (int)Model.Tipo,
-                                                reduzido = Model.Reduzido,
-                                                idstudio = Model.IDStudio,
-                                                iditemstudio = Model.IDItemStudio,
-                                                idvariante = Model.IDVariante,
-                                                pedidoreserva = Model.PedidoReserva,
-                                                itempedidoreserva = Model.ItemPedidoReserva
-                                            },
-                                                new { @class = "btn btn-info pull-right" })
+                    <input type="submit" value="REMOVER" class="btn btn-danger pull-left" />
 
-                        }
-                    </div>
+                    if (Model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
+                    {
+                        @Html.ActionLink("ALTERAR", "InserirNoCarrinho", "Pedido",
+                        new
+                        {
+                            desenho = Model.Desenho,
+                            variante = Model.Variante,
+                            artigo = Model.Artigo,
+                            tecnologia = Model.Tecnologia,
+                            modo = "A",
+                            codstudio = "",
+                            coddal = "",
+                            tipo = (int)Model.Tipo,
+                            reduzido = Model.Reduzido,
+                            idstudio = Model.IDStudio,
+                            iditemstudio = Model.IDItemStudio,
+                            idvariante = Model.IDVariante,
+                            pedidoreserva = Model.PedidoReserva,
+                            itempedidoreserva = Model.ItemPedidoReserva
+                        },
+                        new { @class = "btn btn-info pull-right" })
+
+                    }
                 }
             </div>
         </div>

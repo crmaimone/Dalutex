@@ -6,10 +6,7 @@
 @{
     ViewBag.Title = "ARTIGOS E TECNOLOGIAS DISPONÍVEIS";
 }
-<div class="panel panel-default">
-    <h3>@ViewBag.Title</h3>
-</div>
-
+<div class="header-title"><h3>@ViewBag.Title</h3></div>
 
 @if (Model.Desenho == null)
 {
@@ -21,86 +18,93 @@ else
         <h5>DESENHO: @Model.Desenho | VARIANTE: @Model.Variante</h5>
     </div>
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-6">
-            @if (Model.Artigos != null)
-            {   
-                string _Key = "";
-                <hr>
-                
-                <div id="MainMenu">
-                    <div class="list-group panel">                       
-                                                
-                        @foreach (var group in Model.Artigos.GroupBy(item => item.Tecnologia))
-                        { 
-                            _Key = Html.Encode(group.Key).ToString().Replace(" ","_"); 
-                                        
-                            if (Model.TecnologiaAtual == _Key)                                                                 
-                            {     
-                                <a href="#@_Key" class="list-group-item list-group-item-success" data-toggle="collapse" 
-                                   data-parent="#MainMenu"><i class="glyphicon glyphicon-arrow-down"></i>
-                                   <strong>&nbsp;@_Key &nbsp;(Tecnologia Atual)</strong>                                     
-                                </a>
-                            }
-                            else 
-                            { 
-                                <a href="#@_Key" class="list-group-item list-group-item-success" data-toggle="collapse" 
-                                   data-parent="#MainMenu"><i class="glyphicon glyphicon-arrow-down"></i>
-                                    &nbsp;Tecnologia Disponível Para Troca:&nbsp;@_Key
-                                </a>
-                            }
-
-                            <div class="collapse" id="@_Key">
-                            @foreach (var item in group)
-                            {
-                                <a href="@Url.Content("~/Pedido/InserirNoCarrinho?"+
-                                                                        "&desenho=" + Model.Desenho +
-                                                                        "&variante=" + Model.Variante +
-                                                                        "&artigo=" + item.Artigo +
-                                                                        "&tecnologia=" + item.Tecnologia +
-                                                                        "&tecnologiaoriginal=" + Model.TecnologiaAtual +
-                                                                        "&idcolecao="+ Model.IDColecao +
-                                                                        "&nmcolecao="+ Model.NMColecao +
-                                                                        "&pagina="+ Model.Pagina +
-                                                                        "&codstudio=null" +
-                                                                        "&coddal=null" +
-                                                                        "&modo=I" +                                                                                                                                               
-                                                                        "&reduzido=" + Model.Reduzido+                                                                                                                                                
-                                                                        "&tipo=" + ((int)Model.Tipo).ToString() +                                                                     
-                                                                        "&idstudio=0"+
-                                                                        "&iditemstudio=0"+
-                                                                        "&idvariante="+Model.IDVariante+
-                                                                        "&pedidoreserva="+Model.PedidoReserva+
-                                                                        "&itempedidoreserva="+Model.ItemPedidoReserva                                                                    
-                                                                        )"
-                                                                         
-                                   class="list-group-item"><i class="glyphicon glyphicon-ok"></i>&nbsp;@item.Artigo</a>
-                            }
-                            </div>
-                        }                                                           
-                    </div>
-                </div>                
-            }
-            else
-            {
-                <h5>Desenho <strong>@Model.Desenho</strong> não possui cadastro de</h5>
-                <h5><strong>CARACTERÍSTICAS TÉCNICAS ou TECNOLOGIA</strong></h5>
-                <br />
-                <h5>Por favor verificar com o DESENVOLVIMENTO</h5>
-            }
-
-            <br />
-            @Html.ActionLink("VOLTAR", "Desenhos", "Pedido", new { idcolecao = Model.IDColecao, nmcolecao = Model.NMColecao, pagina = Model.Pagina}, new { @class = "btn btn-default" })
-            </div>
+    <div class="container-fluid">
+        <div class="row">
             <div class="col-sm-6">
-                <a href="@Url.Action("Ampliacao", "Pedido", 
-                                    new { desenho = Model.Desenho, variante = Model.Variante, idcolecao = Model.IDColecao, 
-                                          nmcolecao = Model.NMColecao, pagina = Model.Pagina, retornarpara  = "ArtigosDisponiveis", 
-                                          codstudio = "", tipo = Model.Tipo})">
-                    <img src="@Url.Content(Model.Imagem)" class="img-rounded" style="max-width:100%" />
-                </a>
+                @if (Model.Artigos != null)
+                {   
+                    string _Key = "";
+                
+                    <div id="MainMenu">
+                        <div class="list-group panel">                       
+                                                
+                            @foreach (var group in Model.Artigos.GroupBy(item => item.Tecnologia))
+                            { 
+                                _Key = Html.Encode(group.Key).ToString().Replace(" ","_"); 
+                                        
+                                if (Model.TecnologiaAtual == _Key)                                                                 
+                                {     
+                                    <a href="#@_Key" class="list-group-item list-group-item-success" data-toggle="collapse" 
+                                       data-parent="#MainMenu"><i class="glyphicon glyphicon-arrow-down"></i>
+                                       <strong>&nbsp;@_Key &nbsp;(Tecnologia Atual)</strong>                                     
+                                    </a>
+                                }
+                                else 
+                                { 
+                                    <a href="#@_Key" class="list-group-item list-group-item-success" data-toggle="collapse" 
+                                       data-parent="#MainMenu"><i class="glyphicon glyphicon-arrow-down"></i>
+                                        &nbsp;Tecnologia Disponível Para Troca:&nbsp;@_Key
+                                    </a>
+                                }
+
+                                <div class="collapse" id="@_Key">
+                                @foreach (var item in group)
+                                {
+                                    <a href="@Url.Content("~/Pedido/InserirNoCarrinho?"+
+                                                                            "&desenho=" + Model.Desenho +
+                                                                            "&variante=" + Model.Variante +
+                                                                            "&artigo=" + item.Artigo +
+                                                                            "&tecnologia=" + item.Tecnologia +
+                                                                            "&tecnologiaoriginal=" + Model.TecnologiaAtual +
+                                                                            "&idcolecao="+ Model.IDColecao +
+                                                                            "&nmcolecao="+ Model.NMColecao +
+                                                                            "&pagina="+ Model.Pagina +
+                                                                            "&codstudio=null" +
+                                                                            "&coddal=null" +
+                                                                            "&modo=I" +                                                                                                                                               
+                                                                            "&reduzido=" + Model.Reduzido+                                                                                                                                                
+                                                                            "&tipo=" + ((int)Model.Tipo).ToString() +                                                                     
+                                                                            "&idstudio=0"+
+                                                                            "&iditemstudio=0"+
+                                                                            "&idvariante="+Model.IDVariante+
+                                                                            "&pedidoreserva="+Model.PedidoReserva+
+                                                                            "&itempedidoreserva="+Model.ItemPedidoReserva                                                                    
+                                                                            )"
+                                                                         
+                                       class="list-group-item"><i class="glyphicon glyphicon-ok"></i>&nbsp;@item.Artigo</a>
+                                }
+                                </div>
+                            }                                                           
+                        </div>
+                    </div>                
+                }
+                else
+                {
+                    <h5>Desenho <strong>@Model.Desenho</strong> não possui cadastro de</h5>
+                    <h5><strong>CARACTERÍSTICAS TÉCNICAS ou TECNOLOGIA</strong></h5>
+                    <br />
+                    <h5>Por favor verificar com o DESENVOLVIMENTO</h5>
+                }
+
+                <br />
+                @if (Model.Tipo == Enums.ItemType.Estampado)
+                {
+                    @Html.ActionLink("VOLTAR", "Desenhos", "Pedido", new { idcolecao = Model.IDColecao, nmcolecao = Model.NMColecao, pagina = Model.Pagina }, new { @class = "btn btn-default" })
+                }
+                else
+                {
+                    @Html.ActionLink("VOLTAR", "DesenhosValidaReserva", "Pedido", new { pedidoreserva = Model.PedidoReserva, pagina = Model.Pagina }, new { @class = "btn btn-default" })
+                }                
+    
+                </div>
+                <div class="col-sm-6">
+                    <a href="@Url.Action("Ampliacao", "Pedido", 
+                                        new { desenho = Model.Desenho, variante = Model.Variante, idcolecao = Model.IDColecao, 
+                                              nmcolecao = Model.NMColecao, pagina = Model.Pagina, retornarpara  = "ArtigosDisponiveis", 
+                                              codstudio = "", tipo = Model.Tipo})">
+                        <img src="@Url.Content(Model.Imagem)" class="img-rounded" style="max-width:100%" />
+                    </a>
+                    </div>
                 </div>
             </div>
-        </div>
 }

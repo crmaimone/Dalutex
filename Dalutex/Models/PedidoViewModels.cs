@@ -65,17 +65,17 @@ namespace Dalutex.Models
         public int TotalPaginas { get; set; }
         public List<ItemReserva> Galeria { get; set; }
         public string UrlImagens { get; set; }
-        [Display(Name = "CÓDIGO DE STUDIO:")]
+        [Display(Name = "Código de studio:")]
         public string FiltroCodStudio { get; set; }
-        [Display(Name = "CÓDIGO DAL:")]
+        [Display(Name = "Código DAL:")]
         public string FiltroCodDal { get; set; }
-        [Display(Name = "DESENHO:")]
+        [Display(Name = "Desenho:")]
         public string FiltroDesenho { get; set; }
     }
 
     public class ValidaPedidoReservaViewModel
     {
-        [Display(Name = "Pedido Reserva:")]
+        [Display(Name = "Pedido reserva:")]
         public string FiltroPedidoReserva { get; set; }
 
         [Display(Name = "Cliente:")]
@@ -84,7 +84,7 @@ namespace Dalutex.Models
         [Display(Name = "Representante:")]
         public string FiltroRepresentante { get; set; }
 
-        [Display(Name = "Cód. de Studio:")]
+        [Display(Name = "Cód. de studio:")]
         public string FiltroCodStudio { get; set; }
 
         [Display(Name = "Cód. Dal:")]
@@ -171,8 +171,6 @@ namespace Dalutex.Models
         public decimal ValorTotalItem { get; set; }
         public bool ObterTipoPedido { get; set; }
         public int Reduzido { get; set; }
-
-        public int CodigoReduzido { get; set; }
 
         public DateTime DataEntregaItem { get; set; }
         public string Modo { get; set; } //I= Inclusão A=Alteração

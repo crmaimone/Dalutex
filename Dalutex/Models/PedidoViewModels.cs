@@ -137,6 +137,7 @@ namespace Dalutex.Models
     public class MenuColecoesViewModel
     {
         public string Filtro { get; set; }
+        public int Pagina { get; set; }
         public List<VW_COLECAO> Colecoes { get; set; }
     }
 
@@ -160,6 +161,14 @@ namespace Dalutex.Models
 
     public class InserirNoCarrinhoViewModel
     {
+        public InserirNoCarrinhoViewModel()
+        {
+            this.ComposeOpcoes = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };//Valores fixos de um a dez. verificar necessidade de mais.
+            this.Compose = 1;
+        }
+
+        public int NumeroSequencial { get; set; }
+
         public string Desenho { get; set; }
         public string Variante { get; set; }
         public string Artigo { get; set; }
@@ -181,7 +190,7 @@ namespace Dalutex.Models
         public int Pagina { get; set; }
         public string Cor { get; set; }
         public string RGB { get; set; }
-
+        
         public string CodStudio { get; set; }
         public string CodDal { get; set; }
         public int IDStudio { get; set; }
@@ -189,8 +198,12 @@ namespace Dalutex.Models
 
         public int IDVariante { get; set; }
         public int PedidoReserva { get; set; }
-        public int ItemPedidoReserva { get; set; }        
+        public int ItemPedidoReserva { get; set; }
 
+        [Display(Name = "COMPOSE:")]
+        public int Compose { get; set; }
+        public List<int> ComposeOpcoes { get; set; }
+        
         public int Comissao {get; set; } 
 
         [Required]
@@ -249,8 +262,6 @@ namespace Dalutex.Models
         {
             return base.GetHashCode();
         }
-
-         
     }
 
     public class AmpliacaoViewModel

@@ -27,14 +27,13 @@
                     <div class="form-group">
                         @Html.TextBoxFor(x => x.Filtro, new { @class = "form-control", placeholder = "PESQUISA COLEÇÃO" })
                     </div>
-
+                    @Html.HiddenFor(x => x.Pagina)
                     <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Localizar</button>
                 }
                 </div>
             </div>
             </div>
     </div> 
-   
     
     @if (@Model != null && @Model.Colecoes != null)
     {
@@ -60,3 +59,17 @@
         </div>
     }
             
+    <div class="row">
+        <nav>
+            <ul class="pager">
+                @if (Model.Colecoes != null)
+                {
+                    if (Model.Pagina > 1)
+                    {
+                        <li class="previous"><a href="@Url.Action("MenuColecoes", "Pedido", new { nmcolecao = Model.Filtro, pagina = Model.Pagina - 1 })"><span aria-hidden="true">&larr;</span>P&aacute;gina Anterior</a></li>
+                    }
+                    <li class="next"><a href="@Url.Action("MenuColecoes", "Pedido", new { nmcolecao = Model.Filtro, pagina = Model.Pagina + 1 })">Pr&oacute;xima P&aacute;gina <span aria-hidden="true">&rarr;</span></a></li>
+                }
+            </ul>
+        </nav>
+    </div>

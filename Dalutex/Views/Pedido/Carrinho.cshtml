@@ -41,5 +41,47 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            //API
+            scriptWrapper = (function () {
 
+                //API Attributes
+                lstCompose_Change = function () {
+                    var sequencial = $(this).data("numero-sequencial");
+                    var compose = $("option:selected", this).val();
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("AtualizaCompose", "Pedido")',
+                        data: 'compose=' + compose + '&sequencial=' + sequencial,
+                        async: false,
+                        //success: function (Image) {
+                        //    if (Image != '') {
+                        //        $img.attr('src', 'data:image/jpg;base64,' + Image.Image);
+                        //    }
+                        //},
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            alert("Erro ao salvar composê");
+                        }
+                    });
+                }
+
+                //API Methods
+
+                // public API
+                return {
+                    lstCompose_Change: lstCompose_Change
+                };
+            })();
+
+            //Init
+            (function Init() {
+                $('.lstCompose').selectpicker();
+                $('.lstCompose').on('change', scriptWrapper.lstCompose_Change);
+            })();
+        });
+    </script>
+}
 

@@ -9,7 +9,7 @@ using System.Web.Mvc;
 
 namespace Dalutex.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class BaseController : Controller
     {
         [Authorize]

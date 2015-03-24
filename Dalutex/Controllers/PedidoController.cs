@@ -65,9 +65,15 @@ namespace Dalutex.Controllers
             }
         }
 
-        public ActionResult MenuColecoes(string idcolecao)
+        public ActionResult MenuColecoes(string idcolecao, string nmcolecao, string pagina)
         {
             MenuColecoesViewModel model = new MenuColecoesViewModel();
+            model.Filtro = nmcolecao;
+
+            if (string.IsNullOrWhiteSpace(pagina))
+                model.Pagina = 1;
+            else
+                model.Pagina = int.Parse(pagina);
 
             ActionResult objValidatorResult = this.ValidarTipoPedido(model);
             if(objValidatorResult != null)
@@ -79,13 +85,21 @@ namespace Dalutex.Controllers
 
             if (int.TryParse(idcolecao, out iIDColecao))
             {
-                using (var ctx = new TIDalutexContext())
+                if(iIDColecao > 0)
                 {
-                    VW_COLECAO objColecao = ctx.VW_COLECAO.Where(x => x.ID_COLECAO == iIDColecao).First();
-                    model.Colecoes = new List<VW_COLECAO>();
-                    model.Colecoes.Add(objColecao);
-                    model.Filtro = objColecao.NOME_COLECAO;
+                    using (var ctx = new TIDalutexContext())
+                    {
+                        VW_COLECAO objColecao = ctx.VW_COLECAO.Where(x => x.ID_COLECAO == iIDColecao).First();
+                        model.Colecoes = new List<VW_COLECAO>();
+                        model.Colecoes.Add(objColecao);
+                        model.Filtro = objColecao.NOME_COLECAO;
+                        model.Pagina = 1;
+                    }
                 }
+            }
+            else if (!string.IsNullOrWhiteSpace(model.Filtro))
+            {
+                ObterColecoes(model);
             }
 
             return View(model);
@@ -95,12 +109,22 @@ namespace Dalutex.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult MenuColecoes(MenuColecoesViewModel model)
         {
-            using (var ctx = new TIDalutexContext())
-            {
-                model.Colecoes = ctx.VW_COLECAO.Where(x => x.NOME_COLECAO.ToUpper().Contains(model.Filtro.ToUpper())).OrderBy(x => x.NOME_COLECAO).ToList();
-            }
+            ObterColecoes(model);
 
             return View(model);
+        }
+
+        private void ObterColecoes(MenuColecoesViewModel model)
+        {
+            using (var ctx = new TIDalutexContext())
+            {
+                model.Colecoes = ctx.VW_COLECAO
+                                    .Where(x => x.NOME_COLECAO.ToUpper().Contains(model.Filtro.ToUpper()))
+                                    .OrderBy(x => x.NOME_COLECAO)
+                                    .Skip((model.Pagina - 1) * 10)
+                                    .Take(10)
+                                    .ToList();
+            }
         }
 
         public ActionResult EmConstrucao()
@@ -480,6 +504,7 @@ namespace Dalutex.Controllers
             model.ItemPedidoReserva = itempedidoreserva;
 
             model.Reduzido = reduzido;
+            ViewBag.POGReduzido = reduzido;
                  
             if (base.Session_Carrinho != null)
                 model.IDTipoPedido = base.Session_Carrinho.IDTipoPedido;
@@ -689,8 +714,14 @@ namespace Dalutex.Controllers
                                 model.ObterTipoPedido = true;
                                 this.CarregarTiposPedidos(model);
                             }
+
                             return View(model);
                         }
+
+                        if (base.Session_Carrinho.Itens.Count == 0)
+                            model.NumeroSequencial = 1;
+                        else
+                            model.NumeroSequencial = base.Session_Carrinho.Itens.Max(x => x.NumeroSequencial) + 1;
 
                         base.Session_Carrinho.Itens.Add(model);
 
@@ -777,6 +808,15 @@ namespace Dalutex.Controllers
             ViewBag.UrlReservas = ConfigurationManager.AppSettings["PASTA_RESERVAS"];
 
             return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public void AtualizaCompose(string compose, string sequencial)
+        {
+            int iSequencial = int.Parse(sequencial);
+            InserirNoCarrinhoViewModel objAtualizar = base.Session_Carrinho.Itens.Where(x => x.NumeroSequencial == iSequencial).First();
+            objAtualizar.Compose = int.Parse(compose);
         }
 
         public ActionResult EsvaziarCarrinho()
@@ -1208,6 +1248,7 @@ namespace Dalutex.Controllers
                                         UM = item.UnidadeMedida,
                                         VALOR_TOTAL = item.Preco * item.Quantidade,
                                         VARIANTE = item.Variante,
+                                        COMPOSE = item.Compose.ToString(),
                                         ORIGEM = origem,
                                         TROCA_TECNOLOGIA = (item.TecnologiaOriginal != item.TecnologiaPorExtenso ? "Troca de " + item.TecnologiaOriginal + " para " + item.TecnologiaPorExtenso: null)
                                     };
@@ -1477,9 +1518,22 @@ namespace Dalutex.Controllers
             return View(model);
         }
 
-        public ActionResult ValidaPedidoReserva()
+        public ActionResult ValidaPedidoReserva(
+            string filtropedidoreserva
+            , string filtrocliente
+            , string filtrorepresentante
+            , string filtrocodstudio
+            , string filtrocoddal
+            , string filtrodesenho
+            , string pagina)
         {
             ValidaPedidoReservaViewModel model = new ValidaPedidoReservaViewModel();
+            model.FiltroPedidoReserva = filtropedidoreserva;
+            model.FiltroCliente = filtrocliente;
+            model.FiltroRepresentante = filtrorepresentante;
+            model.FiltroCodStudio = filtrocodstudio;
+            model.FiltroCodDal = filtrocoddal;
+            model.FiltroDesenho = filtrodesenho;
 
             ActionResult objValidatorResult = this.ValidarTipoPedido(model);
             if (objValidatorResult != null)
@@ -1487,11 +1541,38 @@ namespace Dalutex.Controllers
                 return objValidatorResult;
             }
 
+            if (string.IsNullOrWhiteSpace(pagina))
+            {
+                model.Pagina = 1;
+
+                if (base.Session_Usuario.ID_REPRES > default(int))
+                {
+                    int IDRepresentante = base.Session_Usuario.ID_REPRES.GetValueOrDefault();
+                    using (var ctx = new DalutexContext())
+                    {
+                        model.FiltroRepresentante = ctx.REPRESENTANTES.Find(IDRepresentante).NOME.Trim();
+                    }
+                }
+            }
+            else
+            {
+                model.Pagina = int.Parse(pagina);
+            }
+
+            this.ObterItensValidacaoReserva(model);
+
             return View(model);
         }
 
         [HttpPost]
         public ActionResult ValidaPedidoReserva(ValidaPedidoReservaViewModel model)
+        {
+            this.ObterItensValidacaoReserva(model);
+
+            return View(model);
+        }
+
+        private void ObterItensValidacaoReserva(ValidaPedidoReservaViewModel model)
         {
             int PedidoReserva = 0;
             int.TryParse(model.FiltroPedidoReserva, out PedidoReserva);
@@ -1512,10 +1593,11 @@ namespace Dalutex.Controllers
                             (model.FiltroCodStudio == null || x.COD_STUDIO.StartsWith(model.FiltroCodStudio.ToUpper()))
                             &&
                             (PedidoReserva == 0 || x.PEDIDO.Equals(PedidoReserva))
-                        ).OrderByDescending(x => x.DATA_EMISSAO).ToList();
+                        ).OrderByDescending(x => x.DATA_EMISSAO)
+                        .Skip((model.Pagina - 1) * 50)
+                        .Take(50)
+                        .ToList();
             }
-
-            return View(model);
         }
 
         #endregion

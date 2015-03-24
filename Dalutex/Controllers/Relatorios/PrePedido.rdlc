@@ -697,14 +697,8 @@
                       <Style>
                         <Border>
                           <Color>LightGrey</Color>
-                          <Style>None</Style>
+                          <Style>Solid</Style>
                         </Border>
-                        <TopBorder>
-                          <Style>Solid</Style>
-                        </TopBorder>
-                        <BottomBorder>
-                          <Style>Solid</Style>
-                        </BottomBorder>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -766,7 +760,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Sum(Fields!REDUZIDO_ITEM.Value)</Value>
+                              <Value>=IIF(Fields!REDUZIDO_ITEM.Value&lt;&gt; -2,Fields!REDUZIDO_ITEM.Value,"")</Value>
                               <Style>
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
@@ -1331,7 +1325,7 @@
                         <Border>
                           <Style>None</Style>
                         </Border>
-                        <BackgroundColor>=Code.RetornaBackground(Fields!IMAGEM.Value)</BackgroundColor>
+                        <BackgroundColor>=IIF(Fields!LISO_ESTAMP.Value = "L",Code.RetornaBackground(Fields!IMAGEM.Value),"White")</BackgroundColor>
                       </Style>
                     </Rectangle>
                   </CellContents>
@@ -3571,6 +3565,10 @@
         <Field Name="VALOR_TOTAL_KG">
           <DataField>VALOR_TOTAL_KG</DataField>
           <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="OBS_TROCA_TEC">
+          <DataField>OBS_TROCA_TEC</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
       <rd:DataSetInfo>

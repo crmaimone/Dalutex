@@ -399,6 +399,8 @@ namespace Dalutex {
             
             private global::System.Data.DataColumn columnVALOR_TOTAL_KG;
             
+            private global::System.Data.DataColumn columnOBS_TROCA_TEC;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public VW_IMPRESSAO_WEBDataTable() {
@@ -914,6 +916,14 @@ namespace Dalutex {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn OBS_TROCA_TECColumn {
+                get {
+                    return this.columnOBS_TROCA_TEC;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -1009,7 +1019,8 @@ namespace Dalutex {
                         decimal TIPO_PED, 
                         string RESERVA, 
                         double VALOR_TOTAL_MT, 
-                        double VALOR_TOTAL_KG) {
+                        double VALOR_TOTAL_KG, 
+                        string OBS_TROCA_TEC) {
                 VW_IMPRESSAO_WEBRow rowVW_IMPRESSAO_WEBRow = ((VW_IMPRESSAO_WEBRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         PEDIDO,
@@ -1071,7 +1082,8 @@ namespace Dalutex {
                         TIPO_PED,
                         RESERVA,
                         VALOR_TOTAL_MT,
-                        VALOR_TOTAL_KG};
+                        VALOR_TOTAL_KG,
+                        OBS_TROCA_TEC};
                 rowVW_IMPRESSAO_WEBRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowVW_IMPRESSAO_WEBRow);
                 return rowVW_IMPRESSAO_WEBRow;
@@ -1154,6 +1166,7 @@ namespace Dalutex {
                 this.columnRESERVA = base.Columns["RESERVA"];
                 this.columnVALOR_TOTAL_MT = base.Columns["VALOR_TOTAL_MT"];
                 this.columnVALOR_TOTAL_KG = base.Columns["VALOR_TOTAL_KG"];
+                this.columnOBS_TROCA_TEC = base.Columns["OBS_TROCA_TEC"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1279,6 +1292,8 @@ namespace Dalutex {
                 base.Columns.Add(this.columnVALOR_TOTAL_MT);
                 this.columnVALOR_TOTAL_KG = new global::System.Data.DataColumn("VALOR_TOTAL_KG", typeof(double), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnVALOR_TOTAL_KG);
+                this.columnOBS_TROCA_TEC = new global::System.Data.DataColumn("OBS_TROCA_TEC", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnOBS_TROCA_TEC);
                 this.columnPEDIDO.AllowDBNull = false;
                 this.columnPEDIDO_BLOCO.AllowDBNull = false;
                 this.columnCLIENTE_NOVO.MaxLength = 1;
@@ -2408,6 +2423,22 @@ namespace Dalutex {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string OBS_TROCA_TEC {
+                get {
+                    try {
+                        return ((string)(this[this.tableVW_IMPRESSAO_WEB.OBS_TROCA_TECColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'OBS_TROCA_TEC\' in table \'VW_IMPRESSAO_WEB\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableVW_IMPRESSAO_WEB.OBS_TROCA_TECColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsDATA_EMISSAONull() {
                 return this.IsNull(this.tableVW_IMPRESSAO_WEB.DATA_EMISSAOColumn);
             }
@@ -3100,6 +3131,18 @@ namespace Dalutex {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetVALOR_TOTAL_KGNull() {
                 this[this.tableVW_IMPRESSAO_WEB.VALOR_TOTAL_KGColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsOBS_TROCA_TECNull() {
+                return this.IsNull(this.tableVW_IMPRESSAO_WEB.OBS_TROCA_TECColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetOBS_TROCA_TECNull() {
+                this[this.tableVW_IMPRESSAO_WEB.OBS_TROCA_TECColumn] = global::System.Convert.DBNull;
             }
         }
         

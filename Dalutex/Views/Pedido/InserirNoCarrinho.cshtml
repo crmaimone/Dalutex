@@ -102,7 +102,7 @@
                     <input type="hidden" name="Artigo" value="@Model.Artigo" />
                     <input type="hidden" name="TecnologiaPorExtenso" value="@Model.TecnologiaPorExtenso" />
                     <input type="hidden" name="TecnologiaOriginal" value="@Model.TecnologiaOriginal" />
-                    <input type="hidden" name="Reduzido" value="@Model.Reduzido" />
+                    <input type="hidden" name="Reduzido" value="@ViewBag.POGReduzido" />
                     <input type="hidden" name="Modo" value="@Model.Modo" />
                     <input type="hidden" name="IDColecao" value="@Model.IDColecao" />
                     <input type="hidden" name="IDTipoPedido" value="@Model.IDTipoPedido" />
@@ -173,7 +173,8 @@
             </section>
         </div>
     </div>
-</div>@section Scripts {
+</div>
+@section Scripts {
     <script>
         $(document).ready(function () {
             //API

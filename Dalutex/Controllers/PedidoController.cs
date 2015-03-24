@@ -1248,7 +1248,7 @@ namespace Dalutex.Controllers
                                         UM = item.UnidadeMedida,
                                         VALOR_TOTAL = item.Preco * item.Quantidade,
                                         VARIANTE = item.Variante,
-                                        COMPOSE = item.Compose.ToString(),
+                                        COD_COMPOSE = item.Compose,
                                         ORIGEM = origem,
                                         TROCA_TECNOLOGIA = (item.TecnologiaOriginal != item.TecnologiaPorExtenso ? "Troca de " + item.TecnologiaOriginal + " para " + item.TecnologiaPorExtenso: null)
                                     };

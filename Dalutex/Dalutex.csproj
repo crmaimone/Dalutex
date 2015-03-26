@@ -210,6 +210,7 @@
     <Compile Include="Models\DataModels\CADASTRO_MOEDAS.cs" />
     <Compile Include="Models\DataModels\VW_CONDICAO_PGTO.cs" />
     <Compile Include="Models\DataModels\VW_IMPRESSAO_WEB.cs" />
+    <Compile Include="Models\DataModels\VW_ITENS_PE.cs" />
     <Compile Include="Models\DataModels\VW_ITENS_VALIDAR_RESERVA.cs" />
     <Compile Include="Models\DataModels\VW_LISOS_POR_COLECAO.cs" />
     <Compile Include="Models\DataModels\VW_TROCA_TEC.cs" />
@@ -338,6 +339,7 @@
     <Content Include="Views\Pedido\ValidaPedidoReserva.cshtml" />
     <Content Include="Views\Pedido\DesenhosValidaReserva.cshtml" />
     <Content Include="Views\Pedido\EsvaziarCarrinho.cshtml" />
+    <Content Include="Views\Pedido\ItensProntaEntrega.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

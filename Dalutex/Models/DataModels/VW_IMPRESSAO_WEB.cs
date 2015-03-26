@@ -167,5 +167,8 @@ namespace Dalutex.Models.DataModels
 
         [StringLength(140)]
         public string RESERVA { get; set; }
+
+        [StringLength(60)]
+        public string OBS_TROCA_TEC { get; set; }
     }
 }

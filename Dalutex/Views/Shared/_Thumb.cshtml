@@ -95,4 +95,48 @@
             <p class="thumb-paragraph">Desenho:&nbsp;@Model.Desenho</p>
         </a>
     }
+    else if (Model.Tipo == Enums.ItemType.PEEstampados)
+    {
+        <a href="@Url.Content(@"ArtigosDisponiveis?" +
+                                            "&desenho=" + @Model.Desenho +
+                                            "&variante=" + @Model.Variante+
+                                            "&idcolecao="+ @Model.IDColecao+
+                                            "&nmcolecao="+ @Model.NMColecao+
+                                            "&pagina="+ @Model.Pagina+
+                                            "&pedidoreserva=" +@Model.PedidoReserva+
+                                            "&idvariante=0"+
+                                            "&itempedidoreserva=0"+
+                                            "&tipo=" + ((int)Model.Tipo).ToString()
+                                        )">
+
+            <img src="@Url.Content(Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg")" class="img-thumbnail equal-height">
+            <div class="caption">
+                <p class="thumb-paragraph">Cod. Dal:&nbsp;@Model.Reduzido</p>
+                <p class="thumb-paragraph">Cod. Studio:&nbsp;@Model.Desenho</p>
+                <p class="thumb-paragraph">Desenho:&nbsp;@Model.Variante</p>
+                <p class="thumb-paragraph">Cod. Dal:&nbsp;@Model.Artigo</p>
+                <p class="thumb-paragraph">Cod. Studio:&nbsp;@Model.Cor</p>
+                <p class="thumb-paragraph">Desenho:&nbsp;@Model.Tipo</p>
+
+                @*REDUZIDO
+                TECNOLOGIA
+                ARTIGO
+                DESENHO
+                COR
+                VARIANTE
+                COMPOSICAO
+                FAMILIA
+                COLECAO
+                PRIM_QL_KG
+                PRIM_QL_MT
+                SEG_QL_KG
+                SEG_QL_MT
+                TERC_QL_KG
+                TERC_QL_MT
+                MTS
+                KGS*@
+
+            </div>
+        </a>
+    }
 </div>

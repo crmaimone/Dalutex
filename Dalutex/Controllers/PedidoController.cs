@@ -1673,5 +1673,43 @@ namespace Dalutex.Controllers
         }
 
         #endregion
+
+        #region PE (Pronta Entrega)
+        //regras........
+
+        public ActionResult ItensProntaEntrega(bool estampados, int pagina )
+        {
+            ItensProntaEntregaViewModel model = new ItensProntaEntregaViewModel();
+            model.Pagina = pagina;
+
+            this.CarregarDesenhosPE(model, estampados);
+
+            return View(model);
+        }
+
+        public void CarregarDesenhosPE(ItensProntaEntregaViewModel model, bool Estampados)
+        {            
+            using (var ctx = new TIDalutexContext())
+            {
+                if (Estampados)
+                {
+                    model.ListaDesenhosPE = ctx.VW_ITENS_PE.Where(x => x.TECNOLOGIA != "Lisos")
+                        .OrderByDescending(x => x.DESENHO).ThenBy(x => x.VARIANTE)
+                        .Skip((model.Pagina - 1) * 24)
+                        .Take(50)
+                        .ToList();
+                }
+                else
+                {
+                    model.ListaDesenhosPE = ctx.VW_ITENS_PE.Where(x => x.TECNOLOGIA == "Lisos")
+                        .OrderByDescending(x => x.DESENHO).ThenBy(x => x.VARIANTE)
+                        .Skip((model.Pagina - 1) * 24)
+                        .Take(50)
+                        .ToList();
+                }                
+            }
+        }
+
+        #endregion
     }
 }

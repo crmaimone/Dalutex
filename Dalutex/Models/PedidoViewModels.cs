@@ -50,6 +50,18 @@ namespace Dalutex.Models
         public string FiltroDesenho { get; set; }
     }
 
+
+    public class ItensProntaEntregaViewModel
+    {
+        public int Reduzido { get; set; }
+        public int Pagina { get; set; }
+        public int TotalPaginas { get; set; }
+        public List<VW_ITENS_PE> ListaDesenhosPE { get; set; }
+        public List<VW_ITENS_PE> ListaLisosPE { get; set; }
+        public string UrlImagens { get; set; }
+        public string FiltroDesenho { get; set; }
+    }
+
     public class LisosViewModel
     {
         public int IDColecao { get; set; }

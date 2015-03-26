@@ -50,6 +50,7 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<VW_VALIDAR_RESERVA> VW_VALIDAR_RESERVA { get; set; }
         public virtual DbSet<PED_RESERVA_VENDA> PED_RESERVA_VENDA { get; set; }
         public virtual DbSet<PED_LINK_QUANTD_TIPO> PED_LINK_QUANTD_TIPO { get; set; }
+        public virtual DbSet<VW_ITENS_PE> VW_ITENS_PE { get; set; }       
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

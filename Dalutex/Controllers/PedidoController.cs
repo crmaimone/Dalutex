@@ -504,7 +504,6 @@ namespace Dalutex.Controllers
             model.ItemPedidoReserva = itempedidoreserva;
 
             model.Reduzido = reduzido;
-            ViewBag.POGReduzido = reduzido;
                  
             if (base.Session_Carrinho != null)
                 model.IDTipoPedido = base.Session_Carrinho.IDTipoPedido;
@@ -525,7 +524,7 @@ namespace Dalutex.Controllers
                 {
                     using (var ctx = new DalutexContext())
                     {
-                        string _cor = "0000000";
+                        string _cor = "0000000";//!CASSIANO: Não entendi esta parte, mas, ok.
                         if (model.Tipo == Enums.ItemType.ValidacaoReserva)
                         {
                             _cor = "E000000";
@@ -537,7 +536,7 @@ namespace Dalutex.Controllers
                                     && x.DESENHO == model.Desenho
                                     && x.VARIANTE == model.Variante
                                     && x.MAQUINA == model.Tecnologia
-                                    && x.COR == (_cor)
+                                    && x.COR == _cor
                                 ).FirstOrDefault();
 
                         if (objReduzido != null && objReduzido.CODIGO_REDUZIDO > default(int))
@@ -547,7 +546,7 @@ namespace Dalutex.Controllers
                         else
                             model.Reduzido = -2; //Deixar o JOB buscar mais tarde ou criar o reduzido?
                     }
-
+                    
                     var query =
                         from app in ctxTI.ARTIGO_PESO_PADRAO
                         where
@@ -604,14 +603,17 @@ namespace Dalutex.Controllers
                 model.ObterTipoPedido = false;
             }
 
+            ViewBag.POGReduzido = model.Reduzido;
+
             return View(model);
         }
-
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult InserirNoCarrinho(InserirNoCarrinhoViewModel model)
         {
             bool hasErrors = false;
+            ViewBag.POGReduzido = model.Reduzido;
             try
             {
                 if (ModelState.IsValid)
@@ -637,6 +639,68 @@ namespace Dalutex.Controllers
                         {
                             ModelState.AddModelError("", "CAMPO \"PREÇO\" NÃO PODE SER MENOR OU IGUAL A ZERO.");
                             hasErrors = true;
+                        }
+
+
+                        //!CASSIANO: Odair, favor validar estas regras de negócio:
+                        using (var ctx = new TIDalutexContext())
+                        {
+                            int ID_GRUPO_COL = 0;
+
+                            CONFIG_GERAL objColPocket = ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Pocket);
+                            if (model.IDColecao == objColPocket.INT1.ToString())
+                                ID_GRUPO_COL = (int)Enums.GrupoColecoes.Pocket;
+                            else if (model.IDColecao == ((int)Enums.TipoColecaoEspecial.Exclusivos).ToString())
+                                ID_GRUPO_COL = (int)Enums.GrupoColecoes.Exclusivos;
+                            else
+                                ID_GRUPO_COL = (int)Enums.GrupoColecoes.Colecao;
+
+                            var queryMinMax =
+                                from plqt in ctx.PED_LINK_QUANTD_TIPO
+                                join cdt in ctx.CONTROLE_DESENV_TECNOLOGIA on plqt.ID_TECNOLOGIA equals cdt.ID_TEC
+                                where
+                                    cdt.DESC_TEC == model.TecnologiaPorExtenso //??? É isto mesmo?
+                                    && plqt.TIPO_PEDIDO == model.IDTipoPedido
+                                    && plqt.ARTIGO == model.Artigo
+                                    && plqt.ID_GRUPO_COL == ID_GRUPO_COL
+                                select
+                                    plqt;
+
+                            PED_LINK_QUANTD_TIPO objMinMax = queryMinMax.FirstOrDefault();
+
+                            if (objMinMax == null)
+                            {
+                                objMinMax = new PED_LINK_QUANTD_TIPO();
+                                objMinMax.QTDE_MIN = 1;
+                                objMinMax.QTDE_MAX = 999999;
+                            }
+
+                            if(model.IDTipoPedido == 0)
+                            {
+                                if(model.Pecas < objMinMax.QTDE_MIN)
+                                {
+                                    ModelState.AddModelError("", "A QUANTIDADE MÍNIMA DE PEÇAS NÃO PODE SER MENOR QUE: " + objMinMax.QTDE_MIN.ToString());
+                                    hasErrors = true;
+                                }
+                                if (model.Pecas > objMinMax.QTDE_MAX)
+                                {
+                                    ModelState.AddModelError("", "A QUANTIDADE MÁXIMA DE PEÇAS NÃO PODE SER MAIOR QUE: " + objMinMax.QTDE_MAX.ToString());
+                                    hasErrors = true;
+                                }
+                            }
+                            else
+                            {
+                                if (model.Quantidade < objMinMax.QTDE_MIN)
+                                {
+                                    ModelState.AddModelError("", "A QUANTIDADE MÍNIMA NÃO PODE SER MENOR QUE: " + objMinMax.QTDE_MIN.ToString());
+                                    hasErrors = true;
+                                }
+                                if (model.Quantidade > objMinMax.QTDE_MAX)
+                                {
+                                    ModelState.AddModelError("", "A QUANTIDADE MÁXIMA NÃO PODE SER MAIOR QUE: " + objMinMax.QTDE_MAX.ToString());
+                                    hasErrors = true;
+                                }
+                            }
                         }
                     }
 
@@ -1422,6 +1486,14 @@ namespace Dalutex.Controllers
             }
         }
 
+        public JsonResult TotalCarrinho()
+        {
+            if (base.Session_Carrinho != null && base.Session_Carrinho.Itens != null && base.Session_Carrinho.Itens.Count > 0)
+                return Json(base.Session_Carrinho.Itens.Count, JsonRequestBehavior.AllowGet);
+            else
+                return Json("", JsonRequestBehavior.AllowGet);
+        }
+
         #endregion
 
         #region Pedido Reserva
@@ -1601,25 +1673,5 @@ namespace Dalutex.Controllers
         }
 
         #endregion
-
-        //[AllowAnonymous]
-        //[HttpPost]
-        //public JsonResult ObterDesenho(string desenho, string variante)
-        //{
-        //    string path = ConfigurationManager.AppSettings["PASTA_DESENHOS"] + desenho + "_" + variante + ".jpg";
-        //    if(System.IO.File.Exists(path))
-        //    {
-        //        FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
-        //        byte[] buffer = new byte[fileStream.Length];
-        //        fileStream.Read(buffer, 0, (int)fileStream.Length);
-        //        fileStream.Close();
-        //        string str = System.Convert.ToBase64String(buffer, 0, buffer.Length);
-        //        return Json(new { Image = str, JsonRequestBehavior.AllowGet });
-        //    }
-        //    else
-        //    {
-        //        return Json(new { Image = "", JsonRequestBehavior.AllowGet });
-        //    }
-        //}
     }
 }

@@ -10,7 +10,7 @@
             <li><a href="#" style="cursor:default">Olá&nbsp;@User.Identity.Name!</a></li>           
 
             <li><a href="~/Pedido/Carrinho"><span class="glyphicon glyphicon-shopping-cart">
-                </span>&nbsp;CARRINHO<span class="badge">5</span></a></li>
+                </span>&nbsp;CARRINHO<span class="badge"></span></a></li>
             
             <li><a href="javascript:document.getElementById('logoutForm').submit()"><span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp;LOG OFF</a></li>
         </ul>
@@ -24,3 +24,24 @@ else
         </li>
     </ul>
 }
+@Scripts.Render("~/bundles/jquery")
+<script>
+        $(document).ready(function () {
+
+            //Init
+            (function Init() {
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("TotalCarrinho", "Pedido")',
+                    data: '',
+                    async: false,
+                    success: function (result) {
+                        $(".badge").html(result);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert("Erro ao obter total do carrinho");
+                    }
+                });
+            })();
+        });
+</script>

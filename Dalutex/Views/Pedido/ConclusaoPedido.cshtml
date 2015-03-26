@@ -13,7 +13,7 @@
             @if (!ViewBag.CarrinhoVazio)
             {
                 <section id="ConclusaoForm">
-                    @using (Html.BeginForm("ConclusaoPedido", "Pedido", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    @using (Html.BeginForm("ConclusaoPedido", "Pedido", null, FormMethod.Post, new { @class = "form-horizontal pull-left", role = "form" }))
                     {
                         @Html.AntiForgeryToken()
 
@@ -105,19 +105,19 @@
                         <hr />
                         <div class="form-group">
                             <div class="col-md-12">
+                                @Html.HiddenFor(x => x.IDTipoPedido)
+
+                                <input type="submit" value="CONFIRMAR" class="btn btn-default pull-left" />
+
                                 @if (Model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
                                 {
-                                    @Html.ActionLink("VOLTAR", "Transportadora", "Cadastro", new { IDTransportadora = Model.IDTransportadora }, new { @class = "btn btn-default btn-warning pull-left" })
+                                    @Html.ActionLink("VOLTAR", "Transportadora", "Cadastro", new { IDTransportadora = Model.IDTransportadora }, new { @class = "btn btn-default btn-warning pull-right" })
                                 }
                                 else
                                 { 
                                     <h3>Deseja realmente concluir este pedido?</h3>
-                                    @Html.ActionLink("VOLTAR", "ClientesFatura", "Cadastro", new { IDRepresentante = Model.IDRepresentante, IDClienteFatura = Model.IDClienteFatura }, new { @class = "btn btn-default btn-warning pull-left" })
+                                    @Html.ActionLink("VOLTAR", "ClientesFatura", "Cadastro", new { IDRepresentante = Model.IDRepresentante, IDClienteFatura = Model.IDClienteFatura }, new { @class = "btn btn-default btn-warning pull-right" })
                                 }
-
-                                @Html.HiddenFor(x => x.IDTipoPedido)
-
-                                <input type="submit" value="CONFIRMAR" class="btn btn-default pull-right" />
                             </div>
                         </div>
                     }

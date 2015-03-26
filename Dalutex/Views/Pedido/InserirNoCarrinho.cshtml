@@ -40,7 +40,7 @@
                 @using (Html.BeginForm("InserirNoCarrinho", "Pedido", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                 {
                     @Html.AntiForgeryToken()
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
                     
                     if (Model.Tipo != Enums.ItemType.Reserva)
                     {
@@ -200,6 +200,24 @@
                     $txtQuantidade.val($txtPecas.val() * $hidPadrao.val());
                 }
 
+                txtQuantidade_Blur = function () {
+                    var $txtPecas = $("#txtPecas");
+                    var $txtQuantidade = $("#txtQuantidade");
+                    var $hidPadrao = $("#hidValPadrao");
+
+                    if (isNaN($txtQuantidade.val())) {
+                        $txtPecas.val(0);
+                        return;
+                    }
+
+                    if (isNaN($hidPadrao.val())) {
+                        $txtPecas.val(0);
+                        return;
+                    }
+
+                    $txtPecas.val($txtQuantidade.val() / $hidPadrao.val());
+                }
+
                 lstTiposPedido_Change = function () {
                     if ($("#lstTiposPedido > option:selected").attr("value") != "0") {
                         $("#txtPecas").val("0")
@@ -211,6 +229,8 @@
                         $("#txtPecas").prop('disabled', false);
                         $("#txtQuantidade").prop('disabled', true);
                     }
+
+                    //Buscar novos minimos e máximos
                 }
 
                 //API Methods
@@ -218,6 +238,7 @@
                 // public API
                 return {
                     txtPecas_Blur: txtPecas_Blur,
+                    txtQuantidade_Blur: txtQuantidade_Blur,
                     lstTiposPedido_Change: lstTiposPedido_Change
                 };
             })();
@@ -227,7 +248,8 @@
                 $('#lstTiposPedido').selectpicker();
                 $("#lblQuantidade").text($("#hidUM").val());
                 $("#txtPecas").blur(this.txtPecas_Blur);
-                
+                $("#txtQuantidade").blur(this.txtQuantidade_Blur);
+
                 $("#txtPecas").focus(function () {
                     this.select();
                 });

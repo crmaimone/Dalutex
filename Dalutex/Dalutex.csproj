@@ -165,6 +165,7 @@
     <Compile Include="Models\DataModels\COML_TIPOSPEDIDOS.cs" />
     <Compile Include="Models\DataModels\CRIACAO_REDUZIDOS.cs" />
     <Compile Include="Models\DataModels\DISPONIBILIDADE_MALHA.cs" />
+    <Compile Include="Models\DataModels\PED_LINK_QUANTD_TIPO.cs" />
     <Compile Include="Models\DataModels\PED_RESERVA_VENDA.cs" />
     <Compile Include="Models\DataModels\PRE_PEDIDO_ATEND.cs" />
     <Compile Include="Models\DataModels\PRE_PEDIDO_COND_PAG.cs" />

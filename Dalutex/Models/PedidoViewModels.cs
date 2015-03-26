@@ -163,8 +163,8 @@ namespace Dalutex.Models
     {
         public InserirNoCarrinhoViewModel()
         {
-            this.ComposeOpcoes = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };//Valores fixos de um a dez. verificar necessidade de mais.
-            this.Compose = 1;
+            this.ComposeOpcoes = new List<int>() { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };//Valores fixos de zero a dez. verificar necessidade de mais.
+            this.Compose = 0;
         }
 
         public int NumeroSequencial { get; set; }
@@ -287,6 +287,7 @@ namespace Dalutex.Models
             IDViasTransporte = 1; //RODOVIARIA
             IDFretes = 2; //FOB
             PorcentagemComissao = 4; //ALTERAR CONFORME O TIPO DE COLEÇÂO
+            IDMoedas = (int)Enums.Moedas.Real;
         }
 
         #region Combos

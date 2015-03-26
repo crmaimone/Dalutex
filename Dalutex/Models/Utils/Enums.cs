@@ -66,7 +66,8 @@ namespace Dalutex.Models
         public enum TipoColecaoEspecial
         {
             Atual = 5,
-            Pocket = 12
+            Pocket = 12,
+            Exclusivos = 23
         }
 
         public enum ValorPadraoUnidade
@@ -94,6 +95,21 @@ namespace Dalutex.Models
         public enum Transportadoras
         {
             NossoCarro = 1
+        }
+
+        public enum GrupoColecoes
+        {
+            Pocket=1,
+            Colecao=2,
+            Exclusivos=3
+        }
+
+        public enum Moedas
+        {
+            Real = 0,
+            Dollar = 2,
+            Euro = 3,
+            Marco = 4
         }
     }
 }

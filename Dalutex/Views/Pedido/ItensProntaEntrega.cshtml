@@ -1,0 +1,118 @@
+﻿@model Dalutex.Models.ItensProntaEntregaViewModel
+
+@using Dalutex.Models;
+@using Dalutex.Models.DataModels;
+
+@{
+    ViewBag.Title = "Itens Pronta Entrega";
+}
+
+<div class="header-title"><h3>@ViewBag.Title</h3></div>
+
+<div class="container-fluid">
+    <ul class="nav nav-tabs">
+        <li role="presentation" class="active"><a href="#">ESTAMPADOS</a></li>
+        <li role="presentation">
+            <a href="@Url.Content(@"Lisos?" +
+                    "&IDColecao=" + -1 +
+                    "&NMColecao=" + "Pronta Entrega" +
+                    "&pagina=" + @Model.Pagina)">LISOS</a>
+        </li>
+    </ul>
+
+    <div class="row-fluid" id="pesqDesenho">
+        @using (Html.BeginForm("ItensProntaEntrega", "Pedido", null, FormMethod.Post, new { role = "search" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-group">
+                <div>
+                    @Html.TextBoxFor(x => x.FiltroDesenho, new { @class = "form-control", @style = "display:inline", placeholder = "Começa com.." })
+                    <button type="submit" class="btn btn-default btn-group-sm"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Pesquisar</button>
+                    
+                    @Html.ActionLink("Mais Filtros", "PesquisaPE", "Pedido", null, new { @class = "btn btn-default right" })    
+                    
+                    <button class="btn btn-default btn-group-sm"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Pesquisar</button>                
+                </div>
+
+                @*<input type="hidden" name="IDColecao" value="@Model.IDColecao" />
+                <input type="hidden" name="NMColecao" value="@Model.NMColecao" />
+                <input type="hidden" name="Pagina" value="@Model.Pagina" />*@
+            </div>
+        }
+    </div>
+
+    <div class="row">
+        @if (Model.ListaDesenhosPE != null)
+        {
+            foreach (VW_ITENS_PE item in Model.ListaDesenhosPE)
+            {
+                <div class="col-sm-4 col-md-2">
+
+                    @Html.Partial(
+                        "_Thumb",
+                        new Dalutex.Models.ThumbViewModel()
+                        {
+                            Tipo = Enums.ItemType.Estampado,
+                            Desenho = item.DESENHO,
+                            Variante = item.VARIANTE,
+                            UrlImagens = Model.UrlImagens,
+                            Reduzido = 0,
+                            Cor = null,
+                            RGB = null,
+                            IDColecao = -1,
+                            NMColecao = "Pronta Entrega",
+                            Pagina = Model.Pagina,
+                            CodStudio = null,
+                            CodDal = null,
+                            IDStudio = 0,
+                            IDItemStudio = 0
+                        })
+
+                </div>
+            }
+        }
+    </div>
+    <div class="row">
+        <nav>
+            <ul class="pager">
+                @if (Model.ListaDesenhosPE != null)
+                {
+                    if (Model.Pagina > 1)
+                    {
+                        <li class="previous"><a href="@Url.Action("ItensProntaEntrega", "Pedido", new { estampados = true, pagina = Model.Pagina - 1 })"><span aria-hidden="true">&larr;</span>P&aacute;gina Anterior</a></li>
+                    }
+                    <li class="next"><a href="@Url.Action("ItensProntaEntrega", "Pedido", new { estampados = true, pagina = Model.Pagina + 1 })">Pr&oacute;xima P&aacute;gina <span aria-hidden="true">&rarr;</span></a></li>
+                }
+            </ul>
+        </nav>
+    </div>
+    <hr>
+    <a class="btn btn-default right" href="javascript:history.back()">VOLTAR</a>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/equalheight")
+    <script>
+        $(document).ready(function () {
+            //API
+            scriptWrapper = (function () {
+
+                //API Attributes
+
+                //API Methods
+                
+                // public API
+                return {
+                    //loadImages: loadImages
+                };
+            })();
+
+            //Init
+            (function Init() {
+                $('.equal-height').equalHeight();
+            })();
+        });
+    </script>
+}

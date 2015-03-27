@@ -23,11 +23,12 @@
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("SOBRE", "About", "Home")</li>
                     <li>@Html.ActionLink("CONTATO", "Contact", "Home")</li>
+                    <li>@Html.ActionLink("IMPRIMIR PEDIDO", "EspelhoPedido", "Pedido", new { numeropedido = 118873 }, new { @class = "btn btn-default right" })</li>
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">NEGÓCIOS<span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
+                            <ul class="dropdown-menu" role="menu">                                
                                 <li>@Html.ActionLink("COLEÇÕES", "MenuColecoes", "Pedido")</li>
                                 <li class="divider"></li>
                                 <li>@Html.ActionLink("DESENHOS", "Desenhos", "Pedido", new { idcolecao = "DESENHOS", nmcolecao = "", pagina=1 }, null)</li>
@@ -36,7 +37,7 @@
                                 <li>@Html.ActionLink("PEDIDO RESERVA", "ItensParaReserva", "Pedido")</li>
                                 <li>@Html.ActionLink("VALIDAÇÃO DE RESERVA", "ValidaPedidoReserva", "Pedido")</li>
                                 <li class="divider"></li>
-                                <li>@Html.ActionLink("PRONTA ENTREGA", "EmConstrucao", "Pedido")</li>
+                                <li>@Html.ActionLink("PRONTA ENTREGA", "ItensProntaEntrega", "Pedido", new { estampados = true, pagina = 1 }, null)</li>
                                 <li>@Html.ActionLink("RECOLORAÇÃO/ACERVO", "EmConstrucao", "Pedido")</li>
                                 <li class="divider"></li>
                                 <li>@Html.ActionLink("OUTROS", "EmConstrucao", "Pedido")</li>

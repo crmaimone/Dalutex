@@ -1308,10 +1308,10 @@
                           <Source>External</Source>
                           <Value>=Parameters!PASTA_DESENHOS.Value + Fields!DESENHO.Value + "_" + Fields!VARIANTE.Value + ".JPG"</Value>
                           <Sizing>Fit</Sizing>
-                          <Height>1.87144cm</Height>
+                          <Height>1.81852cm</Height>
                           <Width>2.0524cm</Width>
                           <Visibility>
-                            <Hidden>=IIF(Fields!LISO_ESTAMP.Value = "C",False,True)</Hidden>
+                            <Hidden>=IIF(Fields!LISO_ESTAMP.Value = "L",True,False)</Hidden>
                           </Visibility>
                           <Style>
                             <Border>
@@ -1323,8 +1323,12 @@
                       <KeepTogether>true</KeepTogether>
                       <Style>
                         <Border>
+                          <Color>Gray</Color>
                           <Style>None</Style>
                         </Border>
+                        <BottomBorder>
+                          <Style>Solid</Style>
+                        </BottomBorder>
                         <BackgroundColor>=IIF(Fields!LISO_ESTAMP.Value = "L",Code.RetornaBackground(Fields!IMAGEM.Value),"White")</BackgroundColor>
                       </Style>
                     </Rectangle>
@@ -1380,7 +1384,7 @@
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>dsPrePedido</DataSetName>
-        <Top>4.43051cm</Top>
+        <Top>4.22414cm</Top>
         <Left>0.08823cm</Left>
         <Height>2.47185cm</Height>
         <Width>27.78948cm</Width>
@@ -1396,7 +1400,7 @@
             <Source>Embedded</Source>
             <Value>dalutex</Value>
             <Sizing>FitProportional</Sizing>
-            <Left>0.44591cm</Left>
+            <Left>0.31362cm</Left>
             <Height>0.60056cm</Height>
             <Width>2.56561cm</Width>
             <Style>
@@ -1424,6 +1428,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox63</rd:DefaultName>
+            <Top>0.07938cm</Top>
             <Left>10.68476cm</Left>
             <Height>0.60056cm</Height>
             <Width>3.52308cm</Width>
@@ -1458,6 +1463,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox63</rd:DefaultName>
+            <Top>0.07938cm</Top>
             <Left>24.30702cm</Left>
             <Height>0.60056cm</Height>
             <Width>3.24083cm</Width>
@@ -1475,7 +1481,7 @@
         </ReportItems>
         <KeepTogether>true</KeepTogether>
         <Left>0.04412cm</Left>
-        <Height>0.73285cm</Height>
+        <Height>0.67994cm</Height>
         <Width>27.83359cm</Width>
         <ZIndex>1</ZIndex>
         <Style>
@@ -1505,7 +1511,7 @@
                 </Style>
               </Paragraph>
             </Paragraphs>
-            <Top>2.26507cm</Top>
+            <Top>2.01107cm</Top>
             <Left>13.44055cm</Left>
             <Height>0.45183cm</Height>
             <Width>14.16843cm</Width>
@@ -1538,7 +1544,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>ID_CLIENTE</rd:DefaultName>
-            <Top>2.26507cm</Top>
+            <Top>2.01107cm</Top>
             <Left>12.06943cm</Left>
             <Height>0.45183cm</Height>
             <Width>1.26529cm</Width>
@@ -1573,7 +1579,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox9</rd:DefaultName>
-            <Top>2.26507cm</Top>
+            <Top>2.01107cm</Top>
             <Left>10.68478cm</Left>
             <Height>0.45183cm</Height>
             <Width>1.31409cm</Width>
@@ -1608,7 +1614,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox9</rd:DefaultName>
-            <Top>0.65119cm</Top>
+            <Top>0.58769cm</Top>
             <Height>0.44125cm</Height>
             <Width>1.61572cm</Width>
             <ZIndex>3</ZIndex>
@@ -1641,7 +1647,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>ID_CLIENTE</rd:DefaultName>
-            <Top>0.65119cm</Top>
+            <Top>0.58769cm</Top>
             <Left>1.69686cm</Left>
             <Height>0.44125cm</Height>
             <Width>1.65925cm</Width>
@@ -1674,7 +1680,7 @@
                 </Style>
               </Paragraph>
             </Paragraphs>
-            <Top>0.65119cm</Top>
+            <Top>0.58769cm</Top>
             <Left>3.46193cm</Left>
             <Height>0.44125cm</Height>
             <Width>7.11702cm</Width>
@@ -1812,7 +1818,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox9</rd:DefaultName>
-            <Top>0.65119cm</Top>
+            <Top>0.58769cm</Top>
             <Left>10.68478cm</Left>
             <Height>0.44125cm</Height>
             <Width>1.31409cm</Width>
@@ -1847,7 +1853,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox9</rd:DefaultName>
-            <Top>2.80862cm</Top>
+            <Top>2.49112cm</Top>
             <Left>0.00001cm</Left>
             <Height>0.49946cm</Height>
             <Width>1.61571cm</Width>
@@ -1881,7 +1887,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>ID_CLIENTE</rd:DefaultName>
-            <Top>2.80862cm</Top>
+            <Top>2.49112cm</Top>
             <Left>1.68628cm</Left>
             <Height>0.49946cm</Height>
             <Width>25.92272cm</Width>
@@ -1914,7 +1920,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>ID_CLIENTE</rd:DefaultName>
-            <Top>0.65119cm</Top>
+            <Top>0.58769cm</Top>
             <Left>12.06943cm</Left>
             <Height>0.44125cm</Height>
             <Width>2.71166cm</Width>
@@ -2051,7 +2057,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>0.65119cm</Top>
+            <Top>0.58769cm</Top>
             <Left>14.92749cm</Left>
             <Height>0.44125cm</Height>
             <Width>1.79464cm</Width>
@@ -2084,7 +2090,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>PEDIDO</rd:DefaultName>
-            <Top>0.65119cm</Top>
+            <Top>0.58769cm</Top>
             <Left>16.88794cm</Left>
             <Height>0.44125cm</Height>
             <Width>4.38481cm</Width>
@@ -2154,7 +2160,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>0.65119cm</Top>
+            <Top>0.58769cm</Top>
             <Left>21.43856cm</Left>
             <Height>0.44125cm</Height>
             <Width>1.79302cm</Width>
@@ -2222,7 +2228,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>0.65119cm</Top>
+            <Top>0.58769cm</Top>
             <Left>23.33388cm</Left>
             <Height>0.44125cm</Height>
             <Width>1.86562cm</Width>
@@ -2254,7 +2260,7 @@
                 </Style>
               </Paragraph>
             </Paragraphs>
-            <Top>1.163cm</Top>
+            <Top>1.036cm</Top>
             <Left>3.46193cm</Left>
             <Height>0.45267cm</Height>
             <Width>7.11702cm</Width>
@@ -2287,7 +2293,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>ID_CLIENTE</rd:DefaultName>
-            <Top>1.163cm</Top>
+            <Top>1.036cm</Top>
             <Left>1.69686cm</Left>
             <Height>0.45267cm</Height>
             <Width>1.65924cm</Width>
@@ -2322,7 +2328,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox9</rd:DefaultName>
-            <Top>1.163cm</Top>
+            <Top>1.036cm</Top>
             <Left>0.00001cm</Left>
             <Height>0.45267cm</Height>
             <Width>1.61571cm</Width>
@@ -2357,7 +2363,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox9</rd:DefaultName>
-            <Top>1.163cm</Top>
+            <Top>1.036cm</Top>
             <Left>10.68478cm</Left>
             <Height>0.45267cm</Height>
             <Width>1.31409cm</Width>
@@ -2390,7 +2396,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>ID_CLIENTE</rd:DefaultName>
-            <Top>1.163cm</Top>
+            <Top>1.036cm</Top>
             <Left>12.06943cm</Left>
             <Height>0.45267cm</Height>
             <Width>2.71166cm</Width>
@@ -2425,7 +2431,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>1.163cm</Top>
+            <Top>1.036cm</Top>
             <Left>14.92749cm</Left>
             <Height>0.45267cm</Height>
             <Width>1.79464cm</Width>
@@ -2458,7 +2464,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>PEDIDO</rd:DefaultName>
-            <Top>1.163cm</Top>
+            <Top>1.036cm</Top>
             <Left>16.88794cm</Left>
             <Height>0.45267cm</Height>
             <Width>4.38481cm</Width>
@@ -2493,7 +2499,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox9</rd:DefaultName>
-            <Top>1.69328cm</Top>
+            <Top>1.50278cm</Top>
             <Left>0.00001cm</Left>
             <Height>0.473cm</Height>
             <Width>1.61571cm</Width>
@@ -2526,7 +2532,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>ID_CLIENTE</rd:DefaultName>
-            <Top>1.69328cm</Top>
+            <Top>1.50278cm</Top>
             <Left>1.69686cm</Left>
             <Height>0.473cm</Height>
             <Width>1.65924cm</Width>
@@ -2558,7 +2564,7 @@
                 </Style>
               </Paragraph>
             </Paragraphs>
-            <Top>1.69328cm</Top>
+            <Top>1.50278cm</Top>
             <Left>3.46193cm</Left>
             <Height>0.473cm</Height>
             <Width>7.11702cm</Width>
@@ -2593,7 +2599,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox9</rd:DefaultName>
-            <Top>2.26507cm</Top>
+            <Top>2.01107cm</Top>
             <Left>0.00001cm</Left>
             <Height>0.45183cm</Height>
             <Width>1.61571cm</Width>
@@ -2626,7 +2632,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>ID_CLIENTE</rd:DefaultName>
-            <Top>2.26507cm</Top>
+            <Top>2.01107cm</Top>
             <Left>1.69686cm</Left>
             <Height>0.45183cm</Height>
             <Width>8.8821cm</Width>
@@ -2661,7 +2667,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox9</rd:DefaultName>
-            <Top>1.69328cm</Top>
+            <Top>1.50278cm</Top>
             <Left>10.68479cm</Left>
             <Height>0.473cm</Height>
             <Width>1.31409cm</Width>
@@ -2694,7 +2700,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>ID_CLIENTE</rd:DefaultName>
-            <Top>1.69328cm</Top>
+            <Top>1.50278cm</Top>
             <Left>12.06943cm</Left>
             <Height>0.473cm</Height>
             <Width>2.71166cm</Width>
@@ -2729,7 +2735,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>1.69328cm</Top>
+            <Top>1.50278cm</Top>
             <Left>14.92749cm</Left>
             <Height>0.473cm</Height>
             <Width>1.79464cm</Width>
@@ -2762,7 +2768,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>PEDIDO</rd:DefaultName>
-            <Top>1.69328cm</Top>
+            <Top>1.50278cm</Top>
             <Left>16.88794cm</Left>
             <Height>0.473cm</Height>
             <Width>4.38481cm</Width>
@@ -2795,7 +2801,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>1.163cm</Top>
+            <Top>1.036cm</Top>
             <Left>23.33388cm</Left>
             <Height>0.45267cm</Height>
             <Width>1.86562cm</Width>
@@ -2830,7 +2836,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>1.163cm</Top>
+            <Top>1.036cm</Top>
             <Left>21.43856cm</Left>
             <Height>0.45267cm</Height>
             <Width>1.79302cm</Width>
@@ -2846,9 +2852,8 @@
             </Style>
           </Textbox>
           <Line Name="Line3">
-            <Top>0.13269cm</Top>
             <Left>10.69481cm</Left>
-            <Height>2.58421cm</Height>
+            <Height>2.4629cm</Height>
             <Width>0cm</Width>
             <ZIndex>40</ZIndex>
             <Style>
@@ -2858,7 +2863,6 @@
             </Style>
           </Line>
           <Line Name="Line4">
-            <Top>0.13269cm</Top>
             <Left>14.9546cm</Left>
             <Height>2.03359cm</Height>
             <Width>0cm</Width>
@@ -2870,7 +2874,6 @@
             </Style>
           </Line>
           <Line Name="Line5">
-            <Top>0.13269cm</Top>
             <Left>21.43689cm</Left>
             <Height>2.03359cm</Height>
             <Width>0cm</Width>
@@ -2883,9 +2886,9 @@
           </Line>
         </ReportItems>
         <KeepTogether>true</KeepTogether>
-        <Top>0.92247cm</Top>
+        <Top>0.93835cm</Top>
         <Left>0.0441cm</Left>
-        <Height>3.44394cm</Height>
+        <Height>3.12644cm</Height>
         <Width>27.83361cm</Width>
         <ZIndex>2</ZIndex>
         <Style>
@@ -2894,14 +2897,335 @@
           </Border>
         </Style>
       </Rectangle>
+      <Rectangle Name="Rectangle3">
+        <ReportItems>
+          <Textbox Name="Textbox156">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=Sum(Fields!VALOR_TOTAL.Value, "dsPrePedido")</Value>
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <Format>c2</Format>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Right</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox154</rd:DefaultName>
+            <Top>0.22462cm</Top>
+            <Left>24.24498cm</Left>
+            <Height>0.46771cm</Height>
+            <Width>3.31104cm</Width>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <VerticalAlign>Top</VerticalAlign>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox158">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>MTs:</Value>
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <Format>###,###,###.00</Format>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Right</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox154</rd:DefaultName>
+            <Top>0.00237cm</Top>
+            <Left>16.41185cm</Left>
+            <Height>0.46771cm</Height>
+            <Width>2.5cm</Width>
+            <ZIndex>1</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <VerticalAlign>Top</VerticalAlign>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox154">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=Sum(Fields!VALOR_TOTAL_MT.Value, "dsPrePedido")</Value>
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <Format>c2</Format>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox154</rd:DefaultName>
+            <Top>0.00237cm</Top>
+            <Left>18.9824cm</Left>
+            <Height>0.46771cm</Height>
+            <Width>2.5cm</Width>
+            <ZIndex>2</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <VerticalAlign>Top</VerticalAlign>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox155">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=Sum(Fields!VALOR_TOTAL_KG.Value, "dsPrePedido")</Value>
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <Format>c2</Format>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox154</rd:DefaultName>
+            <Top>0.41187cm</Top>
+            <Left>18.9824cm</Left>
+            <Height>0.46771cm</Height>
+            <Width>2.5cm</Width>
+            <ZIndex>3</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <VerticalAlign>Top</VerticalAlign>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox157">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>KGs:</Value>
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <Format>###,###,###.00</Format>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Right</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox154</rd:DefaultName>
+            <Top>0.41186cm</Top>
+            <Left>16.41185cm</Left>
+            <Height>0.46771cm</Height>
+            <Width>2.5cm</Width>
+            <ZIndex>4</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <VerticalAlign>Top</VerticalAlign>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox159">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Valor Total:</Value>
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <Format>###,###,###.00</Format>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Right</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox154</rd:DefaultName>
+            <Top>0.22462cm</Top>
+            <Left>21.63491cm</Left>
+            <Height>0.46771cm</Height>
+            <Width>2.5cm</Width>
+            <ZIndex>5</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <VerticalAlign>Top</VerticalAlign>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+        </ReportItems>
+        <KeepTogether>true</KeepTogether>
+        <Top>6.78771cm</Top>
+        <Left>0.11359cm</Left>
+        <Height>0.90454cm</Height>
+        <Width>27.78064cm</Width>
+        <ZIndex>3</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <BackgroundColor>LightGrey</BackgroundColor>
+        </Style>
+      </Rectangle>
+      <Textbox Name="Textbox186">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Representante</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Center</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox185</rd:DefaultName>
+        <Top>8.85824cm</Top>
+        <Left>21.7485cm</Left>
+        <Height>0.6cm</Height>
+        <Width>6.12921cm</Width>
+        <ZIndex>4</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox185">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Cliente</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Center</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox185</rd:DefaultName>
+        <Top>8.85824cm</Top>
+        <Left>14.67109cm</Left>
+        <Height>0.6cm</Height>
+        <Width>6.02697cm</Width>
+        <ZIndex>5</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Line Name="Line1">
+        <Top>8.7771cm</Top>
+        <Left>14.67109cm</Left>
+        <Height>0cm</Height>
+        <Width>6.16225cm</Width>
+        <ZIndex>6</ZIndex>
+        <Style>
+          <Border>
+            <Style>Solid</Style>
+          </Border>
+        </Style>
+      </Line>
+      <Line Name="Line2">
+        <Top>8.7771cm</Top>
+        <Left>21.73198cm</Left>
+        <Height>0cm</Height>
+        <Width>6.16225cm</Width>
+        <ZIndex>7</ZIndex>
+        <Style>
+          <Border>
+            <Style>Solid</Style>
+          </Border>
+        </Style>
+      </Line>
     </ReportItems>
-    <Height>7.07875cm</Height>
+    <Height>9.51292cm</Height>
     <Style />
   </Body>
   <Width>28.12875cm</Width>
   <Page>
     <PageFooter>
-      <Height>5.47688cm</Height>
+      <Height>0.58209cm</Height>
       <PrintOnFirstPage>true</PrintOnFirstPage>
       <PrintOnLastPage>true</PrintOnLastPage>
       <ReportItems>
@@ -2915,7 +3239,9 @@
                   <TextRuns>
                     <TextRun>
                       <Value>="Página " &amp; Globals!PageNumber</Value>
-                      <Style />
+                      <Style>
+                        <FontSize>8pt</FontSize>
+                      </Style>
                     </TextRun>
                   </TextRuns>
                   <Style>
@@ -2924,10 +3250,9 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>PageNumber</rd:DefaultName>
-              <Top>0.18362cm</Top>
               <Left>22.51379cm</Left>
-              <Height>0.6cm</Height>
-              <Width>5.0352cm</Width>
+              <Height>0.44125cm</Height>
+              <Width>5.27569cm</Width>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -2946,7 +3271,9 @@
                   <TextRuns>
                     <TextRun>
                       <Value>=Globals!ExecutionTime</Value>
-                      <Style />
+                      <Style>
+                        <FontSize>8pt</FontSize>
+                      </Style>
                     </TextRun>
                   </TextRuns>
                   <Style>
@@ -2955,8 +3282,7 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>ExecutionTime</rd:DefaultName>
-              <Top>0.18362cm</Top>
-              <Height>0.6cm</Height>
+              <Height>0.44125cm</Height>
               <Width>9.1675cm</Width>
               <ZIndex>1</ZIndex>
               <Style>
@@ -2971,9 +3297,9 @@
             </Textbox>
           </ReportItems>
           <KeepTogether>true</KeepTogether>
-          <Top>4.54025cm</Top>
+          <Top>0.08837cm</Top>
           <Left>0.08823cm</Left>
-          <Height>0.83868cm</Height>
+          <Height>0.44125cm</Height>
           <Width>27.78948cm</Width>
           <Style>
             <Border>
@@ -2982,311 +3308,6 @@
             <BackgroundColor>LightGrey</BackgroundColor>
           </Style>
         </Rectangle>
-        <Rectangle Name="Rectangle3">
-          <ReportItems>
-            <Textbox Name="Textbox156">
-              <CanGrow>true</CanGrow>
-              <KeepTogether>true</KeepTogether>
-              <Paragraphs>
-                <Paragraph>
-                  <TextRuns>
-                    <TextRun>
-                      <Value>=Sum(Fields!VALOR_TOTAL.Value, "dsPrePedido")</Value>
-                      <Style>
-                        <FontWeight>Bold</FontWeight>
-                        <Format>c2</Format>
-                      </Style>
-                    </TextRun>
-                  </TextRuns>
-                  <Style>
-                    <TextAlign>Right</TextAlign>
-                  </Style>
-                </Paragraph>
-              </Paragraphs>
-              <rd:DefaultName>Textbox154</rd:DefaultName>
-              <Top>0.44687cm</Top>
-              <Left>24.24498cm</Left>
-              <Height>0.6cm</Height>
-              <Width>3.31104cm</Width>
-              <Style>
-                <Border>
-                  <Style>None</Style>
-                </Border>
-                <PaddingLeft>2pt</PaddingLeft>
-                <PaddingRight>2pt</PaddingRight>
-                <PaddingTop>2pt</PaddingTop>
-                <PaddingBottom>2pt</PaddingBottom>
-              </Style>
-            </Textbox>
-            <Textbox Name="Textbox158">
-              <CanGrow>true</CanGrow>
-              <KeepTogether>true</KeepTogether>
-              <Paragraphs>
-                <Paragraph>
-                  <TextRuns>
-                    <TextRun>
-                      <Value>MTs:</Value>
-                      <Style>
-                        <FontWeight>Bold</FontWeight>
-                        <Format>###,###,###.00</Format>
-                      </Style>
-                    </TextRun>
-                  </TextRuns>
-                  <Style>
-                    <TextAlign>Right</TextAlign>
-                  </Style>
-                </Paragraph>
-              </Paragraphs>
-              <rd:DefaultName>Textbox154</rd:DefaultName>
-              <Top>0.12937cm</Top>
-              <Left>16.41185cm</Left>
-              <Height>0.6cm</Height>
-              <Width>2.5cm</Width>
-              <ZIndex>1</ZIndex>
-              <Style>
-                <Border>
-                  <Style>None</Style>
-                </Border>
-                <PaddingLeft>2pt</PaddingLeft>
-                <PaddingRight>2pt</PaddingRight>
-                <PaddingTop>2pt</PaddingTop>
-                <PaddingBottom>2pt</PaddingBottom>
-              </Style>
-            </Textbox>
-            <Textbox Name="Textbox154">
-              <CanGrow>true</CanGrow>
-              <KeepTogether>true</KeepTogether>
-              <Paragraphs>
-                <Paragraph>
-                  <TextRuns>
-                    <TextRun>
-                      <Value>=Sum(Fields!VALOR_TOTAL_MT.Value, "dsPrePedido")</Value>
-                      <Style>
-                        <FontWeight>Bold</FontWeight>
-                        <Format>c2</Format>
-                      </Style>
-                    </TextRun>
-                  </TextRuns>
-                  <Style />
-                </Paragraph>
-              </Paragraphs>
-              <rd:DefaultName>Textbox154</rd:DefaultName>
-              <Top>0.12937cm</Top>
-              <Left>18.9824cm</Left>
-              <Height>0.6cm</Height>
-              <Width>2.5cm</Width>
-              <ZIndex>2</ZIndex>
-              <Style>
-                <Border>
-                  <Style>None</Style>
-                </Border>
-                <PaddingLeft>2pt</PaddingLeft>
-                <PaddingRight>2pt</PaddingRight>
-                <PaddingTop>2pt</PaddingTop>
-                <PaddingBottom>2pt</PaddingBottom>
-              </Style>
-            </Textbox>
-            <Textbox Name="Textbox155">
-              <CanGrow>true</CanGrow>
-              <KeepTogether>true</KeepTogether>
-              <Paragraphs>
-                <Paragraph>
-                  <TextRuns>
-                    <TextRun>
-                      <Value>=Sum(Fields!VALOR_TOTAL_KG.Value, "dsPrePedido")</Value>
-                      <Style>
-                        <FontWeight>Bold</FontWeight>
-                        <Format>c2</Format>
-                      </Style>
-                    </TextRun>
-                  </TextRuns>
-                  <Style />
-                </Paragraph>
-              </Paragraphs>
-              <rd:DefaultName>Textbox154</rd:DefaultName>
-              <Top>0.72937cm</Top>
-              <Left>18.9824cm</Left>
-              <Height>0.6cm</Height>
-              <Width>2.5cm</Width>
-              <ZIndex>3</ZIndex>
-              <Style>
-                <Border>
-                  <Style>None</Style>
-                </Border>
-                <PaddingLeft>2pt</PaddingLeft>
-                <PaddingRight>2pt</PaddingRight>
-                <PaddingTop>2pt</PaddingTop>
-                <PaddingBottom>2pt</PaddingBottom>
-              </Style>
-            </Textbox>
-            <Textbox Name="Textbox157">
-              <CanGrow>true</CanGrow>
-              <KeepTogether>true</KeepTogether>
-              <Paragraphs>
-                <Paragraph>
-                  <TextRuns>
-                    <TextRun>
-                      <Value>KGs:</Value>
-                      <Style>
-                        <FontWeight>Bold</FontWeight>
-                        <Format>###,###,###.00</Format>
-                      </Style>
-                    </TextRun>
-                  </TextRuns>
-                  <Style>
-                    <TextAlign>Right</TextAlign>
-                  </Style>
-                </Paragraph>
-              </Paragraphs>
-              <rd:DefaultName>Textbox154</rd:DefaultName>
-              <Top>0.72936cm</Top>
-              <Left>16.41185cm</Left>
-              <Height>0.6cm</Height>
-              <Width>2.5cm</Width>
-              <ZIndex>4</ZIndex>
-              <Style>
-                <Border>
-                  <Style>None</Style>
-                </Border>
-                <PaddingLeft>2pt</PaddingLeft>
-                <PaddingRight>2pt</PaddingRight>
-                <PaddingTop>2pt</PaddingTop>
-                <PaddingBottom>2pt</PaddingBottom>
-              </Style>
-            </Textbox>
-            <Textbox Name="Textbox159">
-              <CanGrow>true</CanGrow>
-              <KeepTogether>true</KeepTogether>
-              <Paragraphs>
-                <Paragraph>
-                  <TextRuns>
-                    <TextRun>
-                      <Value>Valor Total:</Value>
-                      <Style>
-                        <FontWeight>Bold</FontWeight>
-                        <Format>###,###,###.00</Format>
-                      </Style>
-                    </TextRun>
-                  </TextRuns>
-                  <Style>
-                    <TextAlign>Right</TextAlign>
-                  </Style>
-                </Paragraph>
-              </Paragraphs>
-              <rd:DefaultName>Textbox154</rd:DefaultName>
-              <Top>0.44687cm</Top>
-              <Left>21.63491cm</Left>
-              <Height>0.6cm</Height>
-              <Width>2.5cm</Width>
-              <ZIndex>5</ZIndex>
-              <Style>
-                <Border>
-                  <Style>None</Style>
-                </Border>
-                <PaddingLeft>2pt</PaddingLeft>
-                <PaddingRight>2pt</PaddingRight>
-                <PaddingTop>2pt</PaddingTop>
-                <PaddingBottom>2pt</PaddingBottom>
-              </Style>
-            </Textbox>
-          </ReportItems>
-          <KeepTogether>true</KeepTogether>
-          <Top>0.10583cm</Top>
-          <Left>0.09707cm</Left>
-          <Height>1.48662cm</Height>
-          <Width>27.78064cm</Width>
-          <ZIndex>1</ZIndex>
-          <Style>
-            <Border>
-              <Style>None</Style>
-            </Border>
-            <BackgroundColor>LightGrey</BackgroundColor>
-          </Style>
-        </Rectangle>
-        <Textbox Name="Textbox186">
-          <CanGrow>true</CanGrow>
-          <KeepTogether>true</KeepTogether>
-          <Paragraphs>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
-                  <Value>Representante</Value>
-                  <Style />
-                </TextRun>
-              </TextRuns>
-              <Style />
-            </Paragraph>
-          </Paragraphs>
-          <rd:DefaultName>Textbox185</rd:DefaultName>
-          <Top>3.76386cm</Top>
-          <Left>23.7588cm</Left>
-          <Height>0.6cm</Height>
-          <Width>2.65875cm</Width>
-          <ZIndex>2</ZIndex>
-          <Style>
-            <Border>
-              <Style>None</Style>
-            </Border>
-            <PaddingLeft>2pt</PaddingLeft>
-            <PaddingRight>2pt</PaddingRight>
-            <PaddingTop>2pt</PaddingTop>
-            <PaddingBottom>2pt</PaddingBottom>
-          </Style>
-        </Textbox>
-        <Textbox Name="Textbox185">
-          <CanGrow>true</CanGrow>
-          <KeepTogether>true</KeepTogether>
-          <Paragraphs>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
-                  <Value>Cliente</Value>
-                  <Style />
-                </TextRun>
-              </TextRuns>
-              <Style />
-            </Paragraph>
-          </Paragraphs>
-          <rd:DefaultName>Textbox185</rd:DefaultName>
-          <Top>3.76386cm</Top>
-          <Left>16.79456cm</Left>
-          <Height>0.6cm</Height>
-          <Width>1.83854cm</Width>
-          <ZIndex>3</ZIndex>
-          <Style>
-            <Border>
-              <Style>None</Style>
-            </Border>
-            <PaddingLeft>2pt</PaddingLeft>
-            <PaddingRight>2pt</PaddingRight>
-            <PaddingTop>2pt</PaddingTop>
-            <PaddingBottom>2pt</PaddingBottom>
-          </Style>
-        </Textbox>
-        <Line Name="Line1">
-          <Top>3.68272cm</Top>
-          <Left>14.65457cm</Left>
-          <Height>0cm</Height>
-          <Width>6.16225cm</Width>
-          <ZIndex>4</ZIndex>
-          <Style>
-            <Border>
-              <Style>Solid</Style>
-            </Border>
-          </Style>
-        </Line>
-        <Line Name="Line2">
-          <Top>3.68272cm</Top>
-          <Left>21.71546cm</Left>
-          <Height>0cm</Height>
-          <Width>6.16225cm</Width>
-          <ZIndex>5</ZIndex>
-          <Style>
-            <Border>
-              <Style>Solid</Style>
-            </Border>
-          </Style>
-        </Line>
       </ReportItems>
       <Style>
         <Border>
@@ -3300,7 +3321,7 @@
     <InteractiveWidth>29.7cm</InteractiveWidth>
     <LeftMargin>1.5cm</LeftMargin>
     <RightMargin>1cm</RightMargin>
-    <TopMargin>0.5cm</TopMargin>
+    <TopMargin>0cm</TopMargin>
     <BottomMargin>0.5cm</BottomMargin>
     <ColumnSpacing>0.13cm</ColumnSpacing>
     <Style>

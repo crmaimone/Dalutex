@@ -939,11 +939,18 @@ namespace Dalutex.Controllers
         public ActionResult ConclusaoPedido(string idtransportadora, string idclienteFatura)
         {
             ConclusaoPedidoViewModel model = new ConclusaoPedidoViewModel();
-            model.IDTipoPedido = base.Session_Carrinho.IDTipoPedido;
 
             //Carrinho vazio não processar nada
             if (Session_Carrinho != null)
             {
+                model.IDTipoPedido = base.Session_Carrinho.IDTipoPedido;
+                if(base.Session_Carrinho.Itens != null)
+                {
+                    base.Session_Carrinho.Itens.ForEach(delegate(InserirNoCarrinhoViewModel item) {
+                        model.TotalPedido = base.Session_Carrinho.TotalPedido += item.ValorTotalItem;
+                    });
+                }
+
                 if (!string.IsNullOrWhiteSpace(idtransportadora))
                 {
                     Session_Carrinho.IDTransportadora = int.Parse(idtransportadora);

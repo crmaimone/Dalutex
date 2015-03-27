@@ -227,21 +227,21 @@ namespace Dalutex.Models
         {
             if(obj is InserirNoCarrinhoViewModel)
             {
-                if (this.Tipo == Enums.ItemType.Estampado)
+                if ((obj as InserirNoCarrinhoViewModel).Tipo == Enums.ItemType.Estampado)
                 {
                     return this.Artigo == (obj as InserirNoCarrinhoViewModel).Artigo
                             && this.Desenho == (obj as InserirNoCarrinhoViewModel).Desenho
                             && this.Variante == (obj as InserirNoCarrinhoViewModel).Variante; 
                 }
-                else if (this.Tipo == Enums.ItemType.Liso)
+                else if ((obj as InserirNoCarrinhoViewModel).Tipo == Enums.ItemType.Liso)
                 {
                     return this.Reduzido == (obj as InserirNoCarrinhoViewModel).Reduzido;
                 }
-                else if (this.Tipo == Enums.ItemType.Reserva)
+                else if ((obj as InserirNoCarrinhoViewModel).Tipo == Enums.ItemType.Reserva)
                 {
                     return this.CodDal == (obj as InserirNoCarrinhoViewModel).CodDal;
                 }
-                else if (this.Tipo == Enums.ItemType.ValidacaoReserva)
+                else if ((obj as InserirNoCarrinhoViewModel).Tipo == Enums.ItemType.ValidacaoReserva)
                 {
                     return this.Artigo == (obj as InserirNoCarrinhoViewModel).Artigo
                             && this.Desenho == (obj as InserirNoCarrinhoViewModel).Desenho

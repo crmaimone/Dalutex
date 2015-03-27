@@ -50,7 +50,7 @@ namespace Dalutex.Models
                   " <OutputFormat>PDF</OutputFormat>" +
                   " <PageWidth>11.69in</PageWidth>" +
                   " <PageHeight>8.27in</PageHeight>" +
-                  " <MarginTop>0.7in</MarginTop>" +
+                  " <MarginTop>0.3in</MarginTop>" +
                   " <MarginLeft>0.2in</MarginLeft>" +
                   " <MarginRight>0.2in</MarginRight>" +
                   " <MarginBottom>0.2in</MarginBottom>" +

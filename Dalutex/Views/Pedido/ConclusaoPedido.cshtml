@@ -151,7 +151,7 @@
             <tfoot>
                 <tr>
                     <th>QUANTIDADE DE ITENS:</th>
-@*                  <th>@Model.Itens.Count.ToString()</th>*@
+                    <th id="thQuantidadeItens"></th>
                     <th></th>
                     <th colspan="4"></th>
                     <th><strong>TOTAL:</strong></th>
@@ -202,7 +202,10 @@
 
                 $('#listaCarrinho').bootstrapTable({
                     url: 'ObterItensCarrinho',
-                    method: 'GET'
+                    method: 'GET',
+                    onLoadSuccess: function (data) {
+                        $("#thQuantidadeItens").html(data.length);
+                    },
                 });
             })();
         });

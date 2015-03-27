@@ -27,8 +27,17 @@ namespace Dalutex.Models
         public int IDItemStudio { get; set; }
         public int PedidoReserva { get; set; }
         public int ItemPedidoReserva { get; set; }
-        public int IDVariante { get; set; }      
+        public int IDVariante { get; set; }
 
+        //Rotina PE..
+        public string Tecnologia { get; set; }
+        public string Composicao { get; set; }
+        public decimal KGPrimeira { get; set; }
+        public decimal KGSegunda { get; set; }
+        public decimal KGTerceira { get; set; }
+        public decimal MTPrimeira { get; set; }
+        public decimal MTSegunda { get; set; }
+        public decimal MTTerceira { get; set; }        
     }
 
     public class BuscaRepresentanteViewModel

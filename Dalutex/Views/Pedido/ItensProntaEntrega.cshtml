@@ -54,20 +54,31 @@
                         "_Thumb",
                         new Dalutex.Models.ThumbViewModel()
                         {
-                            Tipo = Enums.ItemType.Estampado,
+                            Tipo = Enums.ItemType.PEEstampados,
                             Desenho = item.DESENHO,
                             Variante = item.VARIANTE,
                             UrlImagens = Model.UrlImagens,
-                            Reduzido = 0,
-                            Cor = null,
+                            Reduzido = item.REDUZIDO,
+                            Cor = item.COR,
                             RGB = null,
                             IDColecao = -1,
-                            NMColecao = "Pronta Entrega",
+                            NMColecao = item.COLECAO,
                             Pagina = Model.Pagina,
                             CodStudio = null,
                             CodDal = null,
                             IDStudio = 0,
-                            IDItemStudio = 0
+                            IDItemStudio = 0,
+                            
+                            Artigo = item.ARTIGO,
+                            Composicao = item.COMPOSICAO,                            
+                            Tecnologia = item.TECNOLOGIA,
+                            KGPrimeira = item.PRIM_QL_KG,
+                            KGSegunda = item.SEG_QL_KG,
+                            KGTerceira = item.TERC_QL_KG,
+
+                            MTPrimeira = item.PRIM_QL_MT,
+                            MTSegunda = item.SEG_QL_MT,
+                            MTTerceira = item.TERC_QL_MT
                         })
 
                 </div>

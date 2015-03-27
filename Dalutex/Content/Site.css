@@ -127,6 +127,32 @@ tr.hover-cursor {
     width:150px;
 }
 
+
+
+.thumbnailpe{
+    transition: transform 0.5s ease;
+    transition: background-color 0.5s ease;
+    margin-bottom:20px;
+    max-width: 200px; 
+    max-height: 350px;
+}
+
+.thumbnailpe:hover{
+    background-color: skyblue;
+    transform:scale(1.1);
+}
+
+.img-thumbnail#pe-estamp
+{
+    height:160px;
+}
+
+.linha{
+    /*border-bottom:solid;*/
+}
+    
+
+
 .navbar-bottom{
     background-color:rgb(31, 30, 30);
     color:white;

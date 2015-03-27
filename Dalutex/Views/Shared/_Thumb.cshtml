@@ -1,142 +1,200 @@
 ﻿@model Dalutex.Models.ThumbViewModel
 @using Dalutex.Models
 
-<div class="thumbnail">
-    @if (Model.Tipo == Enums.ItemType.Liso)
-    {
-        <a href="@Url.Content("InserirNoCarrinho?"+
-                                "&desenho=" + Model.Desenho +
-                                "&variante=" + Model.Variante +
-                                "&artigo=" + Model.Artigo +
-                                "&tecnologia=L" +
-                                "&idcolecao=" + Model.IDColecao +
-                                "&nmcolecao=" + Model.NMColecao +
-                                "&pagina=" + Model.Pagina +
-                                "&cor=" + Model.Cor +
-                                "&rgb=" + Model.RGB +
-                                "&reduzido=" + Model.Reduzido +
-                                "&modo=I"+
-                                "&tipo=" + ((int)Model.Tipo).ToString()+
-                                "&idstudio=0"+
-                                "&iditemstudio=0"+
-                                "&idvariante=0"+
-                                "&pedidoreserva=0"+
-                                "&itempedidoreserva=0"
-                                )">
-            <img style="background-color:@Model.RGB;" class="liso-thumbnail">
-            <div class="caption" style="text-decoration:none">
-                <h5>Cor: @Model.Cor</h5>
-                <p>Artigo: @Model.Artigo</p>
-                <p>Reduzido: @Model.Reduzido</p>
-            </div>
-        </a>
-    }
-    else if (Model.Tipo == Enums.ItemType.Estampado)
-    {
-        <a href="@Url.Content(@"ArtigosDisponiveis?" +
-                                            "&desenho=" + @Model.Desenho +
-                                            "&variante=" + @Model.Variante+
-                                            "&idcolecao="+ @Model.IDColecao+
-                                            "&nmcolecao="+ @Model.NMColecao+
-                                            "&pagina="+ @Model.Pagina+
-                                            "&pedidoreserva=" +@Model.PedidoReserva+ 
-                                            "&idvariante=0"+ 
-                                            "&itempedidoreserva=0"+
-                                            "&tipo=" + ((int)Model.Tipo).ToString()
+    @if (Model.Tipo != Enums.ItemType.PEEstampados)
+    { 
+        <div class="thumbnail">
+            @if (Model.Tipo == Enums.ItemType.Liso)
+            {
+                <a href="@Url.Content("InserirNoCarrinho?"+
+                                        "&desenho=" + Model.Desenho +
+                                        "&variante=" + Model.Variante +
+                                        "&artigo=" + Model.Artigo +
+                                        "&tecnologia=L" +
+                                        "&idcolecao=" + Model.IDColecao +
+                                        "&nmcolecao=" + Model.NMColecao +
+                                        "&pagina=" + Model.Pagina +
+                                        "&cor=" + Model.Cor +
+                                        "&rgb=" + Model.RGB +
+                                        "&reduzido=" + Model.Reduzido +
+                                        "&modo=I"+
+                                        "&tipo=" + ((int)Model.Tipo).ToString()+
+                                        "&idstudio=0"+
+                                        "&iditemstudio=0"+
+                                        "&idvariante=0"+
+                                        "&pedidoreserva=0"+
+                                        "&itempedidoreserva=0"
                                         )">
-            <img src="@Url.Content(Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg")" class="img-thumbnail equal-height">
-            <div class="caption">
-                <h5 style="text-decoration:none">@Model.Desenho&nbsp;@Model.Variante</h5>
-            </div>
-        </a>
-    }
-    else if (Model.Tipo == Enums.ItemType.ValidacaoReserva)
-    {
-        <a href="@Url.Content(@"ArtigosDisponiveis?" +
-                                            "&imagem=" + Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg" +
-                                            "&desenho=" + @Model.Desenho +
-                                            "&variante=" + @Model.Variante+
-                                            "&idcolecao="+ @Model.IDColecao+
-                                            "&nmcolecao="+ @Model.NMColecao+
-                                            "&pagina="+ @Model.Pagina+
-                                            "&pedidoreserva=" +@Model.PedidoReserva+
-                                            "&idvariante="+ @Model.IDVariante+
-                                            "&itempedidoreserva="+ @Model.ItemPedidoReserva+
-                                            "&tipo="+ (int)@Model.Tipo
-                                        )">
-            <img src="@Url.Content(Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg")" class="img-thumbnail equal-height">
-            <div class="caption">
-                <h5 style="text-decoration:none">@Model.Desenho&nbsp;@Model.Variante</h5>
-            </div>
-        </a>
-    }
-    else if (Model.Tipo == Enums.ItemType.Reserva)
-    {
-        <a href="@Url.Content("InserirNoCarrinho?"+
-                                "&desenho=" + Model.Desenho +
-                                "&tecnologia=C" +
-                                "&idcolecao=0"+
-                                "&pagina=" + Model.Pagina +
-                                "&reduzido=" + Model.Reduzido+
-                                "&codstudio=" + Model.CodStudio +
-                                "&coddal=" + Model.CodDal +
-                                "&modo=I" +
-                                "&tipo=" + ((int)Model.Tipo).ToString()+
-                                "&idstudio=" + Model.IDStudio.ToString()+
-                                "&iditemstudio=" + Model.IDItemStudio.ToString()+
-                                "&idvariante=0"+
-                                "&pedidoreserva=0"+
-                                "&itempedidoreserva=0"
-                                )">
-
-            <img src="@Url.Content(Model.UrlImagens + @Model.CodStudio + ".jpg")" class="img-thumbnail equal-height">
-            <p class="thumb-paragraph">Cod. Dal:&nbsp;@Model.CodDal</p>
-            <p class="thumb-paragraph">Cod. Studio:&nbsp;@Model.CodStudio</p>
-            <p class="thumb-paragraph">Desenho:&nbsp;@Model.Desenho</p>
-        </a>
-    }
-    else if (Model.Tipo == Enums.ItemType.PEEstampados)
-    {
-        <a href="@Url.Content(@"ArtigosDisponiveis?" +
-                                            "&desenho=" + @Model.Desenho +
-                                            "&variante=" + @Model.Variante+
-                                            "&idcolecao="+ @Model.IDColecao+
-                                            "&nmcolecao="+ @Model.NMColecao+
-                                            "&pagina="+ @Model.Pagina+
-                                            "&pedidoreserva=" +@Model.PedidoReserva+
-                                            "&idvariante=0"+
-                                            "&itempedidoreserva=0"+
-                                            "&tipo=" + ((int)Model.Tipo).ToString()
+                    <img style="background-color:@Model.RGB;" class="liso-thumbnail">
+                    <div class="caption" style="text-decoration:none">
+                        <h5>Cor: @Model.Cor</h5>
+                        <p>Artigo: @Model.Artigo</p>
+                        <p>Reduzido: @Model.Reduzido</p>
+                    </div>
+                </a>
+            }
+            else if (Model.Tipo == Enums.ItemType.Estampado)
+            {
+                <a href="@Url.Content(@"ArtigosDisponiveis?" +
+                                                    "&desenho=" + @Model.Desenho +
+                                                    "&variante=" + @Model.Variante+
+                                                    "&idcolecao="+ @Model.IDColecao+
+                                                    "&nmcolecao="+ @Model.NMColecao+
+                                                    "&pagina="+ @Model.Pagina+
+                                                    "&pedidoreserva=" +@Model.PedidoReserva+ 
+                                                    "&idvariante=0"+ 
+                                                    "&itempedidoreserva=0"+
+                                                    "&tipo=" + ((int)Model.Tipo).ToString()
+                                                )">
+                    <img src="@Url.Content(Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg")" class="img-thumbnail equal-height">
+                    <div class="caption">
+                        <h5 style="text-decoration:none">@Model.Desenho&nbsp;@Model.Variante</h5>
+                    </div>
+                </a>
+            }
+            else if (Model.Tipo == Enums.ItemType.ValidacaoReserva)
+            {
+                <a href="@Url.Content(@"ArtigosDisponiveis?" +
+                                                    "&imagem=" + Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg" +
+                                                    "&desenho=" + @Model.Desenho +
+                                                    "&variante=" + @Model.Variante+
+                                                    "&idcolecao="+ @Model.IDColecao+
+                                                    "&nmcolecao="+ @Model.NMColecao+
+                                                    "&pagina="+ @Model.Pagina+
+                                                    "&pedidoreserva=" +@Model.PedidoReserva+
+                                                    "&idvariante="+ @Model.IDVariante+
+                                                    "&itempedidoreserva="+ @Model.ItemPedidoReserva+
+                                                    "&tipo="+ (int)@Model.Tipo
+                                                )">
+                    <img src="@Url.Content(Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg")" class="img-thumbnail equal-height">
+                    <div class="caption">
+                        <h5 style="text-decoration:none">@Model.Desenho&nbsp;@Model.Variante</h5>
+                    </div>
+                </a>
+            }
+            else if (Model.Tipo == Enums.ItemType.Reserva)
+            {
+                <a href="@Url.Content("InserirNoCarrinho?"+
+                                        "&desenho=" + Model.Desenho +
+                                        "&tecnologia=C" +
+                                        "&idcolecao=0"+
+                                        "&pagina=" + Model.Pagina +
+                                        "&reduzido=" + Model.Reduzido+
+                                        "&codstudio=" + Model.CodStudio +
+                                        "&coddal=" + Model.CodDal +
+                                        "&modo=I" +
+                                        "&tipo=" + ((int)Model.Tipo).ToString()+
+                                        "&idstudio=" + Model.IDStudio.ToString()+
+                                        "&iditemstudio=" + Model.IDItemStudio.ToString()+
+                                        "&idvariante=0"+
+                                        "&pedidoreserva=0"+
+                                        "&itempedidoreserva=0"
                                         )">
 
-            <img src="@Url.Content(Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg")" class="img-thumbnail equal-height">
-            <div class="caption">
-                <p class="thumb-paragraph">Cod. Dal:&nbsp;@Model.Reduzido</p>
-                <p class="thumb-paragraph">Cod. Studio:&nbsp;@Model.Desenho</p>
-                <p class="thumb-paragraph">Desenho:&nbsp;@Model.Variante</p>
-                <p class="thumb-paragraph">Cod. Dal:&nbsp;@Model.Artigo</p>
-                <p class="thumb-paragraph">Cod. Studio:&nbsp;@Model.Cor</p>
-                <p class="thumb-paragraph">Desenho:&nbsp;@Model.Tipo</p>
-
-                @*REDUZIDO
-                TECNOLOGIA
-                ARTIGO
-                DESENHO
-                COR
-                VARIANTE
-                COMPOSICAO
-                FAMILIA
-                COLECAO
-                PRIM_QL_KG
-                PRIM_QL_MT
-                SEG_QL_KG
-                SEG_QL_MT
-                TERC_QL_KG
-                TERC_QL_MT
-                MTS
-                KGS*@
-
-            </div>
-        </a>
+                    <img src="@Url.Content(Model.UrlImagens + @Model.CodStudio + ".jpg")" class="img-thumbnail equal-height">
+                    <p class="thumb-paragraph">Cod. Dal:&nbsp;@Model.CodDal</p>
+                    <p class="thumb-paragraph">Cod. Studio:&nbsp;@Model.CodStudio</p>
+                    <p class="thumb-paragraph">Desenho:&nbsp;@Model.Desenho</p>
+                </a>
+            }    
+        </div>
     }
-</div>
+    else
+    { 
+        <div class="thumbnailpe">
+            <a href="@Url.Content(@"ArtigosDisponiveis?" +
+                                                        "&desenho=" + @Model.Desenho +
+                                                        "&variante=" + @Model.Variante+
+                                                        "&idcolecao="+ @Model.IDColecao+
+                                                        "&nmcolecao="+ @Model.NMColecao+
+                                                        "&pagina="+ @Model.Pagina+
+                                                        "&pedidoreserva=" +@Model.PedidoReserva+
+                                                        "&idvariante=0"+
+                                                        "&itempedidoreserva=0"+
+                                                        "&tipo=" + ((int)Model.Tipo).ToString()
+                                                    )">
+
+                <img src="@Url.Content(Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg")" class="img-thumbnail equal-height" id="pe-estamp">
+
+                <div class="panel panel-default">
+                    @*<div class="caption">*@
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="thumb-paragraph">Reduzido</th>
+                                <th class="thumb-paragraph" colspan="2">Tecnologia</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="thumb-paragraph">@Model.Reduzido</td>
+                                <td class="thumb-paragraph" colspan="2">@Model.Tecnologia</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="thumb-paragraph">Artigo</th>
+                                <th class="thumb-paragraph">Desenho</th>
+                                <th class="thumb-paragraph">Var</th>
+                                <th class="thumb-paragraph">Cor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="thumb-paragraph">@Model.Artigo</td>
+                                <td class="thumb-paragraph">@Model.Desenho</td>
+                                <td class="thumb-paragraph">@Model.Variante</td>
+                                <td class="thumb-paragraph">@Model.Cor</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table>
+                        <thead class="linha">
+                            <tr>
+                                <th class="thumb-paragraph" colspan="3">Composição:&nbsp;@Model.Composicao</th>
+                            </tr>
+                        </thead>
+                    </table>
+
+                    <table>
+                        <thead>
+                            <tr class="linha">
+                                <th class="thumb-paragraph" colspan="3">Coleção:&nbsp;@Model.NMColecao</th>
+                            </tr>
+                        </thead>
+                    </table>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="thumb-paragraph">Qualidade</th>
+                                <th class="thumb-paragraph">KGs</th>
+                                <th class="thumb-paragraph">MTs</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="thumb-paragraph">&nbsp;1&ordf;</td>
+                                <td class="thumb-paragraph">@Model.KGPrimeira</td>
+                                <td class="thumb-paragraph">@Model.MTPrimeira</td>
+                            </tr>
+                            <tr>
+                                <td class="thumb-paragraph">&nbsp;2&ordf;</td>
+                                <td class="thumb-paragraph">@Model.KGSegunda</td>
+                                <td class="thumb-paragraph">@Model.MTSegunda</td>
+                            <tr>
+                            <tr>
+                                <td class="thumb-paragraph">&nbsp;3&ordf;</td>
+                                <td class="thumb-paragraph">@Model.KGTerceira</td>
+                                <td class="thumb-paragraph">@Model.MTTerceira</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </a>
+        </div>
+     }

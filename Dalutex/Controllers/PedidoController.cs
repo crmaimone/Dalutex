@@ -1688,6 +1688,8 @@ namespace Dalutex.Controllers
         {
             ItensProntaEntregaViewModel model = new ItensProntaEntregaViewModel();
             model.Pagina = pagina;
+            model.Tipo = Enums.ItemType.PEEstampados;
+            model.UrlImagens = ConfigurationManager.AppSettings["PASTA_DESENHOS"]; 
 
             this.CarregarDesenhosPE(model, estampados);
 
@@ -1703,7 +1705,7 @@ namespace Dalutex.Controllers
                     model.ListaDesenhosPE = ctx.VW_ITENS_PE.Where(x => x.TECNOLOGIA != "Lisos")
                         .OrderByDescending(x => x.DESENHO).ThenBy(x => x.VARIANTE)
                         .Skip((model.Pagina - 1) * 24)
-                        .Take(50)
+                        .Take(24)
                         .ToList();
                 }
                 else
@@ -1711,7 +1713,7 @@ namespace Dalutex.Controllers
                     model.ListaDesenhosPE = ctx.VW_ITENS_PE.Where(x => x.TECNOLOGIA == "Lisos")
                         .OrderByDescending(x => x.DESENHO).ThenBy(x => x.VARIANTE)
                         .Skip((model.Pagina - 1) * 24)
-                        .Take(50)
+                        .Take(24)
                         .ToList();
                 }                
             }

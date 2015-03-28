@@ -85,9 +85,10 @@
                     @Html.HiddenFor(x => x.Desenho)
                     @Html.HiddenFor(x => x.Variante)
                     @Html.HiddenFor(x => x.CodDal)
+                    @Html.HiddenFor(x => x.Reduzido)
 
                     <input type="submit" value="REMOVER" class="btn btn-danger pull-left" />
-
+                    <span class="pull-left">&nbsp;</span>
                     if (Model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
                     {
                         @Html.ActionLink("ALTERAR", "InserirNoCarrinho", "Pedido",
@@ -108,7 +109,7 @@
                             pedidoreserva = Model.PedidoReserva,
                             itempedidoreserva = Model.ItemPedidoReserva
                         },
-                        new { @class = "btn btn-info pull-right" })
+                        new { @class = "btn btn-info pull-left" })
 
                     }
                 }

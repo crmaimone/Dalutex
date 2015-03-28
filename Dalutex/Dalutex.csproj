@@ -331,7 +331,6 @@
     <Content Include="Views\Pedido\Ampliacao.cshtml" />
     <Content Include="Views\Pedido\EmConstrucao.cshtml" />
     <Content Include="Views\Shared\_ItemCarrinho.cshtml" />
-    <Content Include="Views\Shared\ErrorMessage.cshtml" />
     <Content Include="Views\Home\Teste.cshtml" />
     <Content Include="Views\Pedido\Lisos.cshtml" />
     <Content Include="Views\Pedido\ItensParaReserva.cshtml" />

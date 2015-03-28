@@ -132,10 +132,11 @@ namespace Dalutex.Controllers
             return View();
         }
 
-        public ActionResult Desenhos(string idcolecao, string nmcolecao, string pagina)
+        public ActionResult Desenhos(string idcolecao, string nmcolecao, string filtro, string pagina)
         {
             DesenhosViewModel model = new DesenhosViewModel();
             model.NMColecao = nmcolecao;
+            model.FiltroDesenho = filtro;
 
             if (string.IsNullOrWhiteSpace(pagina))
                 model.Pagina = 1;
@@ -191,6 +192,7 @@ namespace Dalutex.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Desenhos(DesenhosViewModel model)
         {
+            model.Pagina = 1;
             this.ObterDesenhos(model);
             model.UrlImagens = ConfigurationManager.AppSettings["PASTA_DESENHOS"];
 
@@ -522,29 +524,32 @@ namespace Dalutex.Controllers
             {
                 using (var ctxTI = new TIDalutexContext())
                 {
-                    using (var ctx = new DalutexContext())
+                    if (model.Tipo != Enums.ItemType.Liso)
                     {
-                        string _cor = "0000000";//!CASSIANO: Não entendi esta parte, mas, ok.
-                        if (model.Tipo == Enums.ItemType.ValidacaoReserva)
+                        using (var ctx = new DalutexContext())
                         {
-                            _cor = "E000000";
-                        }
+                            string _cor = "0000000";//!CASSIANO: Não entendi esta parte, mas, ok.
+                            if (model.Tipo == Enums.ItemType.ValidacaoReserva)
+                            {
+                                _cor = "E000000";
+                            }
 
-                        VMASCARAPRODUTOACABADO objReduzido = ctx.VMASCARAPRODUTOACABADO.Where(
-                                x =>
-                                    x.ARTIGO == model.Artigo
-                                    && x.DESENHO == model.Desenho
-                                    && x.VARIANTE == model.Variante
-                                    && x.MAQUINA == model.Tecnologia
-                                    && x.COR == _cor
-                                ).FirstOrDefault();
+                            VMASCARAPRODUTOACABADO objReduzido = ctx.VMASCARAPRODUTOACABADO.Where(
+                                    x =>
+                                        x.ARTIGO == model.Artigo
+                                        && x.DESENHO == model.Desenho
+                                        && x.VARIANTE == model.Variante
+                                        && x.MAQUINA == model.Tecnologia
+                                        && x.COR == _cor
+                                    ).FirstOrDefault();
 
-                        if (objReduzido != null && objReduzido.CODIGO_REDUZIDO > default(int))
-                        {
-                            model.Reduzido = objReduzido.CODIGO_REDUZIDO;
+                            if (objReduzido != null && objReduzido.CODIGO_REDUZIDO > default(int))
+                            {
+                                model.Reduzido = objReduzido.CODIGO_REDUZIDO;
+                            }
+                            else
+                                model.Reduzido = -2; //Deixar o JOB buscar mais tarde ou criar o reduzido?
                         }
-                        else
-                            model.Reduzido = -2; //Deixar o JOB buscar mais tarde ou criar o reduzido?
                     }
                     
                     var query =
@@ -851,12 +856,12 @@ namespace Dalutex.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("ErrorMessage", new { message = "Este item não foi encontrado no carrinho para excluir.", title = "EXCLUSÃO DO CARRINHO" });
+                    return RedirectToAction("Error", new { message = "Este item não foi encontrado no carrinho para excluir.", title = "EXCLUSÃO DO CARRINHO" });
                 }
             }
             else
             {
-                return RedirectToAction("ErrorMessage", new { message = "Não há itens no carrinho para excluir.", title = "EXCLUSÃO DO CARRINHO" });
+                return RedirectToAction("Error", new { message = "Não há itens no carrinho para excluir.", title = "EXCLUSÃO DO CARRINHO" });
             }
         }
 
@@ -974,7 +979,7 @@ namespace Dalutex.Controllers
 
         public JsonResult ObterItensCarrinho()
         {
-            return Json(base.Session_Carrinho.Itens, JsonRequestBehavior.AllowGet);
+            return Json(base.Session_Carrinho.Itens.OrderBy(x => x.Compose), JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -1064,14 +1069,11 @@ namespace Dalutex.Controllers
                             hasErrors = true;
                         }
 
-
-                        //está duplicado pra tratar o erro....
                         if (hasErrors)
                         {
                             this.ConclusaoPedidoCarregarListas(model);
                             return View(model);
                         }
-
 
                         if (base.Session_Carrinho.IDTipoPedido.Equals((int)Enums.TiposPedido.VENDA)
                             && !model.IDCanaisVenda.Equals((int)Enums.CanaisVenda.TELEVENDAS)
@@ -1198,6 +1200,7 @@ namespace Dalutex.Controllers
                     }
 
                     #region Grava Pedido
+
                     PRE_PEDIDO objPrePedido = new PRE_PEDIDO()
                     {
                         NUMERO_PEDIDO_BLOCO = iNUMERO_PEDIDO_BLOCO,
@@ -1224,7 +1227,7 @@ namespace Dalutex.Controllers
                         VIATRANSPORTE = model.IDViasTransporte,
                         COMISSAO = Session_Carrinho.PorcentagemComissao,
                         ORIGEM = "PW", // APENAS PRA INFORMAR QUE ESTE PEDIDO VEIO DO PEDIDO WEB NOVO. 
-                        STATUS_PEDIDO = 1 //embora esteja definido no banco como padrão "1", esta gravando nullo, então, deixar explicito.....                                                                                                                                                                                                                                                                                                                     
+                        STATUS_PEDIDO = 1 //embora esteja definido no banco como padrão "1", esta gravando nulo, então, deixar explicito.....                                                                                                                                                                                                                                                                                                                     
                     };
                     #endregion
 
@@ -1372,12 +1375,8 @@ namespace Dalutex.Controllers
 
                                     foreach (PRE_PEDIDO_ITENS item in lstItens)
                                     {
-                                        if ( (item.REDUZIDO_ITEM != -2)//TEM REDUZIDO
-                                            && 
-                                           //TODO: apenas pra não dar erro até resolver o problema, pois o reduzido estava chagando aki como "0".
-                                           (item.REDUZIDO_ITEM != 0) )    
+                                        if (item.REDUZIDO_ITEM > 0)    
                                         {
-                                                                                                            
                                             decimal dReduzido = item.REDUZIDO_ITEM.GetValueOrDefault();
                                             using (var ctxDlx = new DalutexContext())
                                             {
@@ -1505,9 +1504,12 @@ namespace Dalutex.Controllers
 
         #region Pedido Reserva
 
-        public ActionResult ItensParaReserva(string pagina)
+        public ActionResult ItensParaReserva(string filtrocodstudio, string filtrocoddal, string filtrodesenho, string pagina)
         {
             ItensParaReservaViewModel model = new ItensParaReservaViewModel();
+            model.FiltroCodStudio = filtrocodstudio;
+            model.FiltroCodDal = filtrocoddal;
+            model.FiltroDesenho = filtrodesenho;
 
             if (string.IsNullOrWhiteSpace(pagina))
                 model.Pagina = 1;
@@ -1681,10 +1683,9 @@ namespace Dalutex.Controllers
 
         #endregion
 
-        #region PE (Pronta Entrega)
-        //regras........
+        #region Pronta Entrega
 
-        public ActionResult ItensProntaEntrega(bool estampados, int pagina )
+        public ActionResult ItensProntaEntrega(bool estampados, int pagina)
         {
             ItensProntaEntregaViewModel model = new ItensProntaEntregaViewModel();
             model.Pagina = pagina;
@@ -1703,7 +1704,7 @@ namespace Dalutex.Controllers
                     model.ListaDesenhosPE = ctx.VW_ITENS_PE.Where(x => x.TECNOLOGIA != "Lisos")
                         .OrderByDescending(x => x.DESENHO).ThenBy(x => x.VARIANTE)
                         .Skip((model.Pagina - 1) * 24)
-                        .Take(50)
+                        .Take(24)
                         .ToList();
                 }
                 else
@@ -1711,7 +1712,7 @@ namespace Dalutex.Controllers
                     model.ListaDesenhosPE = ctx.VW_ITENS_PE.Where(x => x.TECNOLOGIA == "Lisos")
                         .OrderByDescending(x => x.DESENHO).ThenBy(x => x.VARIANTE)
                         .Skip((model.Pagina - 1) * 24)
-                        .Take(50)
+                        .Take(24)
                         .ToList();
                 }                
             }

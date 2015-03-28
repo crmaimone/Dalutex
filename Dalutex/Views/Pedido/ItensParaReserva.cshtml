@@ -80,10 +80,12 @@
                 {
                     if (Model.Pagina > 1)
                     {
-                        <li class="previous"><a href="@Url.Action("ItensParaReserva", "Pedido", new { pagina = Model.Pagina - 1 })"><span aria-hidden="true">&larr;</span>P&aacute;gina Anterior</a></li>
+                        <li class="previous"><a href="@Url.Action("ItensParaReserva", "Pedido", new {filtrocodstudio = Model.FiltroCodStudio, filtrocoddal = Model.FiltroCodDal, filtrodesenho = Model.FiltroDesenho, pagina = Model.Pagina - 1 })"><span aria-hidden="true">&larr;</span>P&aacute;gina Anterior</a></li>
                     }
-                    <li class="next"><a href="@Url.Action("ItensParaReserva", "Pedido", new { pagina = Model.Pagina + 1 })">Pr&oacute;xima P&aacute;gina <span aria-hidden="true">&rarr;</span></a></li>
+                    <li class="next"><a href="@Url.Action("ItensParaReserva", "Pedido", new { filtrocodstudio = Model.FiltroCodStudio, filtrocoddal = Model.FiltroCodDal, filtrodesenho = Model.FiltroDesenho, pagina = Model.Pagina + 1 })">Pr&oacute;xima P&aacute;gina <span aria-hidden="true">&rarr;</span></a></li>
                 }
+                
+
                         </ul>
                     </nav>
                 </div>

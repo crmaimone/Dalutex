@@ -27,7 +27,7 @@ namespace Dalutex.Controllers
 
         #region ErrorHandling
 
-        public ActionResult ErrorMessage(string message, string title)
+        public ActionResult Error(string message, string title)
         {
             ViewBag.Title = title;
             ViewBag.Message = message;

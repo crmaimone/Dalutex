@@ -1689,6 +1689,8 @@ namespace Dalutex.Controllers
         {
             ItensProntaEntregaViewModel model = new ItensProntaEntregaViewModel();
             model.Pagina = pagina;
+            model.Tipo = Enums.ItemType.PEEstampados;
+            model.UrlImagens = ConfigurationManager.AppSettings["PASTA_DESENHOS"]; 
 
             this.CarregarDesenhosPE(model, estampados);
 

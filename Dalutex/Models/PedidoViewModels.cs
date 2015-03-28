@@ -60,6 +60,7 @@ namespace Dalutex.Models
         public List<VW_ITENS_PE> ListaLisosPE { get; set; }
         public string UrlImagens { get; set; }
         public string FiltroDesenho { get; set; }
+        public Enums.ItemType Tipo { get; set; }
     }
 
     public class LisosViewModel

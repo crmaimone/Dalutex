@@ -18,6 +18,9 @@
               <Width>1.07142cm</Width>
             </TablixColumn>
             <TablixColumn>
+              <Width>1.37395cm</Width>
+            </TablixColumn>
+            <TablixColumn>
               <Width>1.12847cm</Width>
             </TablixColumn>
             <TablixColumn>
@@ -30,7 +33,7 @@
               <Width>0.86388cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>7.53188cm</Width>
+              <Width>6.17445cm</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>1.50401cm</Width>
@@ -203,6 +206,47 @@
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>Textbox290</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>None</Style>
+                        </Border>
+                        <TopBorder>
+                          <Style>Solid</Style>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Style>Solid</Style>
+                        </BottomBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox1">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Troca</Value>
+                              <Style>
+                                <FontSize>8pt</FontSize>
+                                <Color>DimGray</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox1</rd:DefaultName>
                       <Style>
                         <Border>
                           <Color>LightGrey</Color>
@@ -870,6 +914,45 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
+                    <Textbox Name="OBS_TROCA_TEC">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!OBS_TROCA_TEC.Value</Value>
+                              <Style>
+                                <FontSize>8pt</FontSize>
+                                <FontWeight>Bold</FontWeight>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>OBS_TROCA_TEC</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>Gray</Color>
+                          <Style>None</Style>
+                        </Border>
+                        <BottomBorder>
+                          <Style>Solid</Style>
+                        </BottomBorder>
+                        <VerticalAlign>Top</VerticalAlign>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
                     <Textbox Name="ARTIGO">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
@@ -1356,6 +1439,7 @@
             <TablixMember />
             <TablixMember />
             <TablixMember />
+            <TablixMember />
           </TablixMembers>
         </TablixColumnHierarchy>
         <TablixRowHierarchy>
@@ -1387,7 +1471,7 @@
         <Top>4.22414cm</Top>
         <Left>0.08823cm</Left>
         <Height>2.47185cm</Height>
-        <Width>27.78948cm</Width>
+        <Width>27.806cm</Width>
         <Style>
           <Border>
             <Style>None</Style>
@@ -3222,7 +3306,7 @@
     <Height>9.51292cm</Height>
     <Style />
   </Body>
-  <Width>28.12875cm</Width>
+  <Width>27.99646cm</Width>
   <Page>
     <PageFooter>
       <Height>0.58209cm</Height>

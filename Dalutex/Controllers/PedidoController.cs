@@ -65,10 +65,15 @@ namespace Dalutex.Controllers
             }
         }
 
-        public ActionResult MenuColecoes(string idcolecao, string nmcolecao, string pagina)
+        public ActionResult MenuColecoes(string idcolecao, string nmcolecao, string pagina, string totalpaginas)
         {
             MenuColecoesViewModel model = new MenuColecoesViewModel();
             model.Filtro = nmcolecao;
+
+            if (!string.IsNullOrWhiteSpace(totalpaginas))
+            {
+                model.TotalPaginas = int.Parse(totalpaginas);
+            }
 
             if (string.IsNullOrWhiteSpace(pagina))
                 model.Pagina = 1;
@@ -109,6 +114,7 @@ namespace Dalutex.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult MenuColecoes(MenuColecoesViewModel model)
         {
+            model.Pagina = 1;
             ObterColecoes(model);
 
             return View(model);
@@ -116,14 +122,33 @@ namespace Dalutex.Controllers
 
         private void ObterColecoes(MenuColecoesViewModel model)
         {
+            int iItensPorPagina = 10;
+
             using (var ctx = new TIDalutexContext())
             {
-                model.Colecoes = ctx.VW_COLECAO
+                List<VW_COLECAO> result = null;
+
+                if(model.TotalPaginas == 0)
+                {
+                    result = ctx.VW_COLECAO
                                     .Where(x => x.NOME_COLECAO.ToUpper().Contains(model.Filtro.ToUpper()))
                                     .OrderBy(x => x.NOME_COLECAO)
-                                    .Skip((model.Pagina - 1) * 10)
-                                    .Take(10)
                                     .ToList();
+                    decimal dTotal = result.Count / (decimal)iItensPorPagina;
+                    model.TotalPaginas = (int) Decimal.Ceiling(dTotal);
+                    if (model.TotalPaginas == 0)
+                        model.TotalPaginas = 1;
+
+                    model.Colecoes = result.Skip((model.Pagina - 1) * iItensPorPagina).Take(iItensPorPagina).ToList();
+                }
+                else
+                {
+                    model.Colecoes = ctx.VW_COLECAO
+                                    .Where(x => x.NOME_COLECAO.ToUpper().Contains(model.Filtro.ToUpper()))
+                                    .OrderBy(x => x.NOME_COLECAO)
+                                    .Skip((model.Pagina - 1) * iItensPorPagina)
+                                    .Take(iItensPorPagina).ToList();
+                }
             }
         }
 
@@ -132,11 +157,16 @@ namespace Dalutex.Controllers
             return View();
         }
 
-        public ActionResult Desenhos(string idcolecao, string nmcolecao, string filtro, string pagina)
+        public ActionResult Desenhos(string idcolecao, string nmcolecao, string filtro, string pagina, string totalpaginas)
         {
             DesenhosViewModel model = new DesenhosViewModel();
             model.NMColecao = nmcolecao;
             model.FiltroDesenho = filtro;
+
+            if (!string.IsNullOrWhiteSpace(totalpaginas))
+            {
+                model.TotalPaginas = int.Parse(totalpaginas);
+            }
 
             if (string.IsNullOrWhiteSpace(pagina))
                 model.Pagina = 1;
@@ -179,7 +209,7 @@ namespace Dalutex.Controllers
                 }
             }
 
-            if (model.IDColecao != -1)
+            if (model.TotalPaginas > 0 || model.IDColecao > 0)
             {
                 ObterDesenhos(model);
             }
@@ -201,36 +231,64 @@ namespace Dalutex.Controllers
 
         private void ObterDesenhos(DesenhosViewModel model)
         {
+            int iItensPorPagina = 24;
+
             using (var ctx = new TIDalutexContext())
             {
-                IQueryable<DesenhoVariante> query = null;
+                List<DesenhoVariante> result = null;
 
-                    query =
-                        from dc in ctx.VW_DESENHOS_POR_COLECAO
-                        where
-                            ((model.IDColecao == -1) || (dc.COLECAO == model.IDColecao))
-                            && (dc.DESENHO.StartsWith(model.FiltroDesenho.ToUpper()) || model.FiltroDesenho == null)
-                        group dc by
-                            new
-                            {
-                                dc.DESENHO,
-                                dc.VARIANTE
-                            }
-                            into dv
-                            select new DesenhoVariante
-                            {
-                                Desenho = dv.Key.DESENHO,
-                                Variante = dv.Key.VARIANTE
-                            };
+                var query =
+                    from dc in ctx.VW_DESENHOS_POR_COLECAO
+                    where
+                        ((model.IDColecao == -1) || (dc.COLECAO == model.IDColecao))
+                        && (dc.DESENHO.StartsWith(model.FiltroDesenho.ToUpper()) || model.FiltroDesenho == null)
+                    group dc by
+                        new
+                        {
+                            dc.DESENHO,
+                            dc.VARIANTE
+                        }
+                        into dv
+                        select new DesenhoVariante
+                        {
+                            Desenho = dv.Key.DESENHO,
+                            Variante = dv.Key.VARIANTE
+                        };
 
-                model.Galeria = query.OrderBy(x => x.Desenho).ThenBy(x => x.Variante).Skip((model.Pagina - 1) * 24).Take(24).ToList();
+
+                if (model.TotalPaginas == 0)
+                {
+                    result = query.OrderBy(x => x.Desenho)
+                                        .ThenBy(x => x.Variante)
+                                        .ToList();
+
+                    decimal dTotal = result.Count / (decimal)iItensPorPagina;
+                    model.TotalPaginas = (int)Decimal.Ceiling(dTotal);
+                    if (model.TotalPaginas == 0)
+                        model.TotalPaginas = 1;
+
+                    model.Galeria = result.Skip((model.Pagina - 1) * iItensPorPagina).Take(iItensPorPagina).ToList();
+                }
+                else
+                {
+                    model.Galeria = query.OrderBy(x => x.Desenho)
+                                        .ThenBy(x => x.Variante)
+                                        .Skip((model.Pagina - 1) * iItensPorPagina)
+                                        .Take(iItensPorPagina)
+                                        .ToList();
+                }
             }
         }
 
-        public ActionResult Lisos(string idcolecao, string nmcolecao, string pagina)
+        public ActionResult Lisos(string idcolecao, string nmcolecao, string pagina, string totalpaginas)
         {
             LisosViewModel model = new LisosViewModel();
             model.NMColecao = nmcolecao;
+
+            if (!string.IsNullOrWhiteSpace(totalpaginas))
+            {
+                model.TotalPaginas = int.Parse(totalpaginas);
+            }
 
             if (string.IsNullOrWhiteSpace(pagina))
                 model.Pagina = 1;
@@ -274,6 +332,9 @@ namespace Dalutex.Controllers
 
                 Utilitarios utils = new Utilitarios();
 
+                int iItensPorPagina = 24;
+
+                List<Liso> result = null;
                 var query =
                     from dc in ctx.VW_LISOS_POR_COLECAO
                     where
@@ -286,7 +347,27 @@ namespace Dalutex.Controllers
                         RGB = dc.CAMINHO
                     };
 
-                model.Galeria = query.OrderBy(x => x.Cor).ThenBy(x => x.Artigo).Skip((model.Pagina - 1) * 24).Take(24).ToList();
+
+                if (model.TotalPaginas == 0)
+                {
+                    result = query.OrderBy(x => x.Cor).ThenBy(x => x.Artigo).ToList();
+
+                    decimal dTotal = result.Count / (decimal)iItensPorPagina;
+                    model.TotalPaginas = (int)Decimal.Ceiling(dTotal);
+                    if (model.TotalPaginas == 0)
+                        model.TotalPaginas = 1;
+
+                    model.Galeria = result.Skip((model.Pagina - 1) * iItensPorPagina).Take(iItensPorPagina).ToList();
+                }
+                else
+                {
+                    model.Galeria = query.OrderBy(x => x.Cor)
+                                            .ThenBy(x => x.Artigo)
+                                            .Skip((model.Pagina - 1) * iItensPorPagina)
+                                            .Take(iItensPorPagina)
+                                            .ToList();
+                }
+                
                 model.Galeria.ForEach(delegate(Liso item)
                 {
                     item.RGB = utils.RGBConverter(ColorTranslator.FromWin32(int.Parse(item.RGB)));
@@ -1324,8 +1405,15 @@ namespace Dalutex.Controllers
                                         VARIANTE = item.Variante,
                                         COD_COMPOSE = item.Compose,
                                         ORIGEM = origem,
-                                        TROCA_TECNOLOGIA = (item.TecnologiaOriginal != item.TecnologiaPorExtenso ? "Troca de " + item.TecnologiaOriginal + " para " + item.TecnologiaPorExtenso: null)
                                     };
+
+                                    if (item.Tipo == Enums.ItemType.ValidacaoReserva || item.Tipo == Enums.ItemType.Estampado)
+                                    {
+                                        if(item.TecnologiaOriginal != item.TecnologiaPorExtenso)
+                                        {
+                                            objItem.TROCA_TECNOLOGIA = "Troca de " + item.TecnologiaOriginal + " para " + item.TecnologiaPorExtenso;
+                                        }
+                                    }
 
                                     lstItens.Add(objItem);
                                 }
@@ -1504,12 +1592,17 @@ namespace Dalutex.Controllers
 
         #region Pedido Reserva
 
-        public ActionResult ItensParaReserva(string filtrocodstudio, string filtrocoddal, string filtrodesenho, string pagina)
+        public ActionResult ItensParaReserva(string filtrocodstudio, string filtrocoddal, string filtrodesenho, string pagina, string totalpaginas)
         {
             ItensParaReservaViewModel model = new ItensParaReservaViewModel();
             model.FiltroCodStudio = filtrocodstudio;
             model.FiltroCodDal = filtrocoddal;
             model.FiltroDesenho = filtrodesenho;
+
+            if (!string.IsNullOrWhiteSpace(totalpaginas))
+            {
+                model.TotalPaginas = int.Parse(totalpaginas);
+            }
 
             if (string.IsNullOrWhiteSpace(pagina))
                 model.Pagina = 1;
@@ -1542,6 +1635,7 @@ namespace Dalutex.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ItensParaReserva(ItensParaReservaViewModel model)
         {
+            model.Pagina = 1;
             this.ObterItensParaReserva(model);
             model.UrlImagens = ConfigurationManager.AppSettings["PASTA_RESERVAS"];
 
@@ -1550,8 +1644,12 @@ namespace Dalutex.Controllers
 
         private void ObterItensParaReserva(ItensParaReservaViewModel model)
         {
+            int iItensPorPagina = 24;
+
             using (var ctx = new TIDalutexContext())
             {
+                List<ItemReserva> result = null;
+
                 var query =
                         from dc in ctx.VW_DESENHOS_DISP_RESERVA
                         where
@@ -1579,21 +1677,75 @@ namespace Dalutex.Controllers
                                 IDItemStudio = (int)dv.Key.ID_ITEM_STUDIO
                             };
 
-                model.Galeria = query.OrderByDescending(x => x.CodDal).Skip((model.Pagina - 1) * 24).Take(24).ToList();
+
+                if (model.TotalPaginas == 0)
+                {
+                    result = query.OrderByDescending(x => x.CodDal).ToList();
+
+                    decimal dTotal = result.Count / (decimal)iItensPorPagina;
+                    model.TotalPaginas = (int)Decimal.Ceiling(dTotal);
+                    if (model.TotalPaginas == 0)
+                        model.TotalPaginas = 1;
+
+                    model.Galeria = result.Skip((model.Pagina - 1) * iItensPorPagina).Take(iItensPorPagina).ToList();
+                }
+                else
+                {
+                    model.Galeria = query.OrderByDescending(x => x.CodDal)
+                                            .Skip((model.Pagina - 1) * iItensPorPagina)
+                                            .Take(iItensPorPagina)
+                                            .ToList();
+                }
             }
         }
 
-        public ActionResult DesenhosValidaReserva(int pedidoreserva, int pagina)
+        public ActionResult DesenhosValidaReserva(int pedidoreserva, string pagina, string totalpaginas)
         {
             DesenhosValidaReservaViewModel model = new DesenhosValidaReservaViewModel();
-            model.Pagina = pagina;
+
+            if (!string.IsNullOrWhiteSpace(totalpaginas))
+            {
+                model.TotalPaginas = int.Parse(totalpaginas);
+            }
+
+            if (string.IsNullOrWhiteSpace(pagina))
+                model.Pagina = 1;
+            else
+                model.Pagina = int.Parse(pagina);
+
             model.UrlImagens = ConfigurationManager.AppSettings["PASTA_DESENHOS"];
 
-            using( TIDalutexContext ctx = new TIDalutexContext() )
+            int iItensPorPagina = 24;
+
+            List<VW_ITENS_VALIDAR_RESERVA> result = null;
+
+            using (TIDalutexContext ctx = new TIDalutexContext())
             {
-                model.Galeria =
-                    ctx.VW_ITENS_VALIDAR_RESERVA.Where(x => x.PEDIDO_RESERVA == pedidoreserva).
-                    OrderBy(x => x.DESENHO).ThenBy(x => x.VARIANTE).Skip((model.Pagina - 1) * 24).Take(24).ToList();    
+                if (model.TotalPaginas == 0)
+                {
+                    result = ctx.VW_ITENS_VALIDAR_RESERVA
+                                        .Where(x => x.PEDIDO_RESERVA == pedidoreserva)
+                                        .OrderBy(x => x.DESENHO)
+                                        .ThenBy(x => x.VARIANTE)
+                                        .ToList();
+
+                    decimal dTotal = result.Count / (decimal)iItensPorPagina;
+                    model.TotalPaginas = (int)Decimal.Ceiling(dTotal);
+                    if (model.TotalPaginas == 0)
+                        model.TotalPaginas = 1;
+
+                    model.Galeria = result.Skip((model.Pagina - 1) * iItensPorPagina).Take(iItensPorPagina).ToList();
+                }
+                else
+                {
+                    model.Galeria = ctx.VW_ITENS_VALIDAR_RESERVA
+                                        .Where(x => x.PEDIDO_RESERVA == pedidoreserva)
+                                        .OrderBy(x => x.DESENHO)
+                                        .ThenBy(x => x.VARIANTE)
+                                        .Skip((model.Pagina - 1) * iItensPorPagina)
+                                        .Take(iItensPorPagina)
+                                        .ToList();
+                }
             }
 
             return View(model);
@@ -1606,7 +1758,8 @@ namespace Dalutex.Controllers
             , string filtrocodstudio
             , string filtrocoddal
             , string filtrodesenho
-            , string pagina)
+            , string pagina
+            , string totalpaginas)
         {
             ValidaPedidoReservaViewModel model = new ValidaPedidoReservaViewModel();
             model.FiltroPedidoReserva = filtropedidoreserva;
@@ -1620,6 +1773,11 @@ namespace Dalutex.Controllers
             if (objValidatorResult != null)
             {
                 return objValidatorResult;
+            }
+
+            if (!string.IsNullOrWhiteSpace(totalpaginas))
+            {
+                model.TotalPaginas = int.Parse(totalpaginas);
             }
 
             if (string.IsNullOrWhiteSpace(pagina))
@@ -1648,6 +1806,7 @@ namespace Dalutex.Controllers
         [HttpPost]
         public ActionResult ValidaPedidoReserva(ValidaPedidoReservaViewModel model)
         {
+            model.Pagina = 1;
             this.ObterItensValidacaoReserva(model);
 
             return View(model);
@@ -1657,28 +1816,61 @@ namespace Dalutex.Controllers
         {
             int PedidoReserva = 0;
             int.TryParse(model.FiltroPedidoReserva, out PedidoReserva);
+            int iItensPorPagina = 50;
 
             using (var ctx = new TIDalutexContext())
             {
-                model.ListaValidaReserva =
-                        ctx.VW_VALIDAR_RESERVA.Where(
-                            x =>
-                            (model.FiltroRepresentante == null || x.REPRESENTANTE.StartsWith(model.FiltroRepresentante.ToUpper()))
-                            &&
-                            (model.FiltroCliente == null || x.CLIENTE.StartsWith(model.FiltroCliente.ToUpper()))
-                            &&
-                            (model.FiltroCodDal == null || x.COD_DAL.Contains(model.FiltroCodDal.ToUpper()))
-                            &&
-                            (model.FiltroDesenho == null || x.DESENHO.StartsWith(model.FiltroDesenho.ToUpper()))
-                            &&
-                            (model.FiltroCodStudio == null || x.COD_STUDIO.StartsWith(model.FiltroCodStudio.ToUpper()))
-                            &&
-                            (PedidoReserva == 0 || x.PEDIDO.Equals(PedidoReserva))
-                        ).OrderByDescending(x => x.DATA_EMISSAO)
-                        .Skip((model.Pagina - 1) * 50)
-                        .Take(50)
-                        .ToList();
+                List<VW_VALIDAR_RESERVA> result = null;
+
+                if (model.TotalPaginas == 0)
+                {
+                    result = ctx.VW_VALIDAR_RESERVA
+                                .Where(
+                                    x =>
+                                    (model.FiltroRepresentante == null || x.REPRESENTANTE.StartsWith(model.FiltroRepresentante.ToUpper()))
+                                    &&
+                                    (model.FiltroCliente == null || x.CLIENTE.StartsWith(model.FiltroCliente.ToUpper()))
+                                    &&
+                                    (model.FiltroCodDal == null || x.COD_DAL.Contains(model.FiltroCodDal.ToUpper()))
+                                    &&
+                                    (model.FiltroDesenho == null || x.DESENHO.StartsWith(model.FiltroDesenho.ToUpper()))
+                                    &&
+                                    (model.FiltroCodStudio == null || x.COD_STUDIO.StartsWith(model.FiltroCodStudio.ToUpper()))
+                                    &&
+                                    (PedidoReserva == 0 || x.PEDIDO.Equals(PedidoReserva))
+                                ).OrderByDescending(x => x.DATA_EMISSAO)
+                                .ToList();
+
+                    decimal dTotal = result.Count / (decimal)iItensPorPagina;
+                    model.TotalPaginas = (int)Decimal.Ceiling(dTotal);
+                    if (model.TotalPaginas == 0)
+                        model.TotalPaginas = 1;
+
+                    model.ListaValidaReserva = result.Skip((model.Pagina - 1) * iItensPorPagina).Take(iItensPorPagina).ToList();
+                }
+                else
+                {
+                    model.ListaValidaReserva = ctx.VW_VALIDAR_RESERVA
+                                .Where(
+                                    x =>
+                                    (model.FiltroRepresentante == null || x.REPRESENTANTE.StartsWith(model.FiltroRepresentante.ToUpper()))
+                                    &&
+                                    (model.FiltroCliente == null || x.CLIENTE.StartsWith(model.FiltroCliente.ToUpper()))
+                                    &&
+                                    (model.FiltroCodDal == null || x.COD_DAL.Contains(model.FiltroCodDal.ToUpper()))
+                                    &&
+                                    (model.FiltroDesenho == null || x.DESENHO.StartsWith(model.FiltroDesenho.ToUpper()))
+                                    &&
+                                    (model.FiltroCodStudio == null || x.COD_STUDIO.StartsWith(model.FiltroCodStudio.ToUpper()))
+                                    &&
+                                    (PedidoReserva == 0 || x.PEDIDO.Equals(PedidoReserva))
+                                ).OrderByDescending(x => x.DATA_EMISSAO)
+                                .Skip((model.Pagina - 1) * iItensPorPagina)
+                                .Take(iItensPorPagina)
+                                .ToList();
+                }
             }
+
         }
 
         #endregion

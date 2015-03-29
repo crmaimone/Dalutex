@@ -107,6 +107,7 @@ namespace Dalutex.Models
         public string FiltroDesenho { get; set; }
 
         public int Pagina { get; set; }
+        public int TotalPaginas { get; set; }
         public List<VW_VALIDAR_RESERVA> ListaValidaReserva { get; set; }
     }
 
@@ -137,6 +138,8 @@ namespace Dalutex.Models
 
         public int Pagina { get; set; }
 
+        public int TotalPaginas { get; set; }
+
         public string UrlImagens { get; set; }
     }
 
@@ -151,6 +154,7 @@ namespace Dalutex.Models
     {
         public string Filtro { get; set; }
         public int Pagina { get; set; }
+        public int TotalPaginas { get; set; }
         public List<VW_COLECAO> Colecoes { get; set; }
     }
 

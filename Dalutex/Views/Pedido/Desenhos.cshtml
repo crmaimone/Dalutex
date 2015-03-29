@@ -74,20 +74,62 @@
             }
         }
     </div>
-    <div class="row">
-        <nav>
-            <ul class="pager">
-                @if (Model.Galeria != null)
+
+    <nav>
+        <ul class="pagination">
+            @if (Model.Galeria != null)
+            {
+                if (Model.Pagina > 1)
                 {
-                    if(Model.Pagina > 1)
-                    { 
-                        <li class="previous"><a href="@Url.Action("Desenhos", "Pedido", new { idcolecao = Model.IDColecao, nmcolecao = Model.NMColecao, filro = Model.FiltroDesenho, pagina = Model.Pagina - 1 })"><span aria-hidden="true">&larr;</span>P&aacute;gina Anterior</a></li>
-                    }
-                    <li class="next"><a href="@Url.Action("Desenhos", "Pedido", new { idcolecao = Model.IDColecao, nmcolecao = Model.NMColecao, filro = Model.FiltroDesenho, pagina = Model.Pagina + 1 })">Pr&oacute;xima P&aacute;gina <span aria-hidden="true">&rarr;</span></a></li>
+                    <li>
+                        <a href="@Url.Action("Desenhos", "Pedido", new { idcolecao = Model.IDColecao, nmcolecao = Model.NMColecao, filtro = Model.FiltroDesenho, pagina = Model.Pagina - 1, totalpaginas = Model.TotalPaginas })" aria-label="Anterior">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
                 }
-            </ul>
-        </nav>
-    </div>
+                else
+                {
+                    <li class="disabled">
+                        <a href="#" aria-label="Anterior">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                }
+                int iComecar = Model.Pagina <= 5 ? 1 : Model.Pagina - 5;
+                for (int i = iComecar; i <= Model.TotalPaginas; i++)
+                {
+                    if (Model.Pagina == i)
+                    {
+                        <li class="active"><a href="@Url.Action("Desenhos", "Pedido", new { idcolecao = Model.IDColecao, nmcolecao = Model.NMColecao, filtro = Model.FiltroDesenho, pagina = i, totalpaginas = Model.TotalPaginas})">@i</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="@Url.Action("Desenhos", "Pedido", new { idcolecao = Model.IDColecao, nmcolecao = Model.NMColecao, filtro = Model.FiltroDesenho, pagina = i, totalpaginas = Model.TotalPaginas})">@i</a></li>
+                    }
+                    if (i == iComecar + 9)
+                    {
+                        break;
+                    }
+                }
+                if (Model.Pagina < Model.TotalPaginas)
+                {
+                    <li>
+                        <a href="@Url.Action("Desenhos", "Pedido", new { idcolecao = Model.IDColecao, nmcolecao = Model.NMColecao, filtro = Model.FiltroDesenho, pagina = Model.Pagina + 1, totalpaginas = Model.TotalPaginas})" aria-label="Próxima">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                }
+                else
+                {
+                    <li class="disabled">
+                        <a href="#" aria-label="Próxima">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                }
+            }
+        </ul>
+    </nav>
     <hr>
     <a class="btn btn-default right" href="javascript:history.back()">VOLTAR</a>
 </div>

@@ -727,8 +727,7 @@ namespace Dalutex.Controllers
                             hasErrors = true;
                         }
 
-
-                        //!CASSIANO: Odair, favor validar estas regras de negócio:
+               
                         using (var ctx = new TIDalutexContext())
                         {
                             int ID_GRUPO_COL = 0;
@@ -745,7 +744,7 @@ namespace Dalutex.Controllers
                                 from plqt in ctx.PED_LINK_QUANTD_TIPO
                                 join cdt in ctx.CONTROLE_DESENV_TECNOLOGIA on plqt.ID_TECNOLOGIA equals cdt.ID_TEC
                                 where
-                                    cdt.DESC_TEC == model.TecnologiaPorExtenso //??? É isto mesmo?
+                                    cdt.DESC_TEC == model.TecnologiaPorExtenso 
                                     && plqt.TIPO_PEDIDO == model.IDTipoPedido
                                     && plqt.ARTIGO == model.Artigo
                                     && plqt.ID_GRUPO_COL == ID_GRUPO_COL
@@ -1063,6 +1062,14 @@ namespace Dalutex.Controllers
             return Json(base.Session_Carrinho.Itens.OrderBy(x => x.Compose), JsonRequestBehavior.AllowGet);
         }
 
+        //public JsonResult GetListaPecasPE()
+        //{
+        //    DetalhesPEViewModel model;
+
+        //    return Json(model.ListaPecasPE, JsonRequestBehavior.AllowGet);
+        //}
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult ConclusaoPedido(ConclusaoPedidoViewModel model)
@@ -1365,12 +1372,6 @@ namespace Dalutex.Controllers
                                     {
                                         origem = "E";
                                         
-                                        //TODO: ESTE É O INSERT Q TEM A KEY NO BANCO E QUE EM TEORIA PRECISA DE "COMMIT" PRA SEGUIR O FLUXO
-                                        //Não consigo testar aqui por casa do mu banco. Veja que eu envolvi tudo numa transação e 
-                                        //Por isto posso chamar o save por partes
-                                        //Veja se funcionou por favor
-
-                                        //Engenharia alternativa: 
                                         int _id = ctx.Database.SqlQuery<int>("SELECT SEQ_ID_PED_RES_VENDA.NEXTVAL FROM DUAL", 1).FirstOrDefault();
 
                                         ctx.PED_RESERVA_VENDA.Add(new PED_RESERVA_VENDA()
@@ -1882,8 +1883,12 @@ namespace Dalutex.Controllers
             ItensProntaEntregaViewModel model = new ItensProntaEntregaViewModel();
             model.Pagina = pagina;
             model.Tipo = Enums.ItemType.PEEstampados;
-            model.UrlImagens = ConfigurationManager.AppSettings["PASTA_DESENHOS"]; 
 
+            if (estampados)
+                model.UrlImagens = ConfigurationManager.AppSettings["PASTA_DESENHOS"];
+            else
+                model.UrlImagens = ConfigurationManager.AppSettings["PASTA_DESENHOS"];
+	
             this.CarregarDesenhosPE(model, estampados);
 
             return View(model);
@@ -1904,12 +1909,30 @@ namespace Dalutex.Controllers
                 else
                 {
                     model.ListaDesenhosPE = ctx.VW_ITENS_PE.Where(x => x.TECNOLOGIA == "Lisos")
-                        .OrderByDescending(x => x.DESENHO).ThenBy(x => x.VARIANTE)
+                        .OrderByDescending(x => x.ARTIGO).ThenBy(x => x.COR)
                         .Skip((model.Pagina - 1) * 24)
                         .Take(24)
                         .ToList();
                 }                
             }
+        }
+
+        public ActionResult DetalhesPE(int reduzido)
+        {
+            DetalhesPEViewModel model = new DetalhesPEViewModel();
+
+            using(TIDalutexContext ctx = new TIDalutexContext())
+            {
+                model.ListaPecasPE = ctx.VW_LISTA_PECAS_PE.Where(x => x.REDUZIDO == reduzido).OrderBy(x => x.QUALIDADE).ToList();
+
+                model.DetalhesReduzido = ctx.VW_ITENS_PE.Where(x => x.REDUZIDO == reduzido).ToList();
+            }
+
+            model.UrlImagens = model.UrlImagens = ConfigurationManager.AppSettings["PASTA_DESENHOS"]; ;
+            model.Desenho = model.DetalhesReduzido.First(item => item.REDUZIDO == reduzido).DESENHO;
+            model.Variante = model.DetalhesReduzido.First(item => item.REDUZIDO == reduzido).VARIANTE;
+           
+            return View(model);
         }
 
         #endregion

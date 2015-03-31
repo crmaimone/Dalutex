@@ -1,0 +1,236 @@
+﻿@model Dalutex.Models.DetalhesPEViewModel
+
+@using Dalutex.Models.DataModels;
+@using Dalutex.Models;
+
+@{
+    ViewBag.Title = "Item Pronta Entrega";
+}
+<div class="header-title"><h3>@ViewBag.Title</h3></div>
+
+@if (Model.ListaPecasPE == null)
+{
+    <h3>REDUZIDO NÃO INFORMADO CORRETAMENTE</h3>
+}
+else
+{
+    <div class="panel panel-default">
+        @foreach(VW_ITENS_PE item in Model.DetalhesReduzido)
+        {                   
+            @*<div class="caption">*@
+            <table>
+                <thead>
+                    <tr>
+                        <th class="thumb-paragraph">Reduzido</th>
+                        <th class="thumb-paragraph" colspan="2">Tecnologia</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="thumb-paragraph">@item.REDUZIDO</td>
+                        <td class="thumb-paragraph" colspan="2">@item.TECNOLOGIA</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th class="thumb-paragraph">Artigo</th>
+                        <th class="thumb-paragraph">Desenho</th>
+                        <th class="thumb-paragraph">Var</th>
+                        <th class="thumb-paragraph">Cor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="thumb-paragraph">@item.ARTIGO</td>
+                        <td class="thumb-paragraph">@item.DESENHO</td>
+                        <td class="thumb-paragraph">@item.VARIANTE</td>
+                        <td class="thumb-paragraph">@item.COR</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table>
+                <thead class="linha">
+                    <tr>
+                        <th class="thumb-paragraph" colspan="3">Composição:&nbsp;@item.COMPOSICAO</th>
+                    </tr>
+                </thead>
+            </table>
+
+            <table>
+                <thead>
+                    <tr class="linha">
+                        <th class="thumb-paragraph" colspan="3">Coleção:&nbsp;@item.COLECAO</th>
+                    </tr>
+                </thead>
+            </table>
+
+            <table>
+                <thead>
+                    <tr class="linha">
+                        <th class="thumb-paragraph">Largura</th>
+                        <th class="thumb-paragraph">Gramatura</th>
+                        <th class="thumb-paragraph">Rendimento</th>
+                        <th class="thumb-paragraph">U.M.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="thumb-paragraph">@item.LARGURA</td>
+                        <td class="thumb-paragraph">@item.GRAMATURA</td>
+                        <td class="thumb-paragraph">@item.RENDIMENTO</td>
+                        <td class="thumb-paragraph">@item.UM</td>                    
+                    </tr>
+                </tbody>
+            </table>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th class="thumb-paragraph">Qualidade</th>
+                        <th class="thumb-paragraph">KGs</th>
+                        <th class="thumb-paragraph">MTs</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="thumb-paragraph">&nbsp;1&ordf;</td>
+                        <td class="thumb-paragraph">@item.PRIM_QL_KG</td>
+                        <td class="thumb-paragraph">@item.PRIM_QL_MT</td>
+                    </tr>
+                    <tr>
+                        <td class="thumb-paragraph">&nbsp;2&ordf;</td>
+                        <td class="thumb-paragraph">@item.SEG_QL_KG</td>
+                        <td class="thumb-paragraph">@item.SEG_QL_MT</td>
+                    <tr>
+                    <tr>
+                        <td class="thumb-paragraph">&nbsp;3&ordf;</td>
+                        <td class="thumb-paragraph">@item.TERC_QL_KG</td>
+                        <td class="thumb-paragraph">@item.TERC_QL_MT</td>
+                    </tr>
+                </tbody>
+            </table> 
+        }        
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6">
+                @if (Model.ListaPecasPE != null)
+                {
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Lista de Peças Disponiveis</div>     
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th class="thumb-paragraph">add</th>
+                                        <th class="thumb-paragraph">Numero da Peça</th>
+                                        <th class="thumb-paragraph">Sequencia</th>
+                                        <th class="thumb-paragraph">Qualidade</th>
+                                        <th class="thumb-paragraph">KGs</th>
+                                        <th class="thumb-paragraph">MTs</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        @foreach (VW_LISTA_PECAS_PE item in Model.ListaPecasPE)
+                                        {
+                                            <td><a href="#">+</a></td>
+                                            
+                                            <td class="thumb-paragraph">@item.NUMERO_PECA</td>
+                                            <td class="thumb-paragraph">@item.SEQUENCIA</td>
+                                            <td class="thumb-paragraph">@item.QUALIDADE</td>
+                                            <td class="thumb-paragraph">@item.PESO_PECA</td>
+                                            <td class="thumb-paragraph">@item.METROS_PECA</td>                                            
+                                        }                                        
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>                                               
+                        @*<table id="listaPecasPE">
+                            <thead>
+                                <tr>
+                                    <th data-field="Qualidade" data-sortable="true">Qualidade</th>
+                                    <th data-field="numero_peca" data-sortable="true">numero_peca</th>
+                                    <th data-field="sequencia" data-sortable="true">sequencia</th>
+                                    <th data-field="peso_peca" data-sortable="true">peso_peca</th>
+                                    <th data-field="metros_peca" data-sortable="true">metros_peca</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>QUANTIDADE DE ITENS:</th>
+                                    <th id="thQuantidadeItens"></th>
+                                    <th></th>
+                                    <th colspan="4"></th>
+                                    <th><strong>TOTAL:</strong></th>
+                                    <th>@Model.TotalPedido.ToString("c")</th>
+                                </tr>
+                            </tfoot>
+                        </table>*@    
+                }
+
+                <br />
+                @if (Model.Tipo == Enums.ItemType.PEEstampados)
+                {
+                    @Html.ActionLink("VOLTAR", "ItensProntaEntrega", "Pedido", new { estampados = true, pagina = 1 }, new { @class = "btn btn-default" })
+                }
+                else
+                {
+                    @Html.ActionLink("VOLTAR", "ItensProntaEntrega", "Pedido", new { estampados = false, pagina = 1 }, new { @class = "btn btn-default" })
+                }
+
+            </div>
+            <div class="col-sm-6">
+
+                <img src="@Url.Content(Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg")" class="img-thumbnail equal-height">
+
+                @* <img src="@Url.Content(Model.imImagem)" class="img-rounded" style="max-width:100%" />*@              
+            </div>
+        </div>
+    </div>
+}
+
+@*@section Scripts {
+    @Scripts.Render("~/bundles/bootstrap-table")
+    <script>
+        $(document).ready(function () {
+            //API
+            scriptWrapper = (function () {
+
+                //API Attributes
+
+                //API Methods
+                lstCanais_Change = function () {
+                    if ($("#lstCanaisVenda > option:selected").attr("value") == 4) {
+                        $('#elemGerentes').show();
+                    }
+                    else {
+                        $('#elemGerentes').hide();
+                    }
+                }
+
+                // public API
+                return {
+                    lstCanais_Change: lstCanais_Change
+                };
+            })();
+
+            //Init
+            (function Init() {                
+                $('#listaPecasPE').bootstrapTable({
+                    url: 'GetListaPecasPE',
+                    method: 'GET',
+                    onLoadSuccess: function (data) {
+                        $("#thQuantidadeItens").html(data.length);
+                    },
+                });
+            })();
+        });
+    </script>
+    }*@
+
+

@@ -63,6 +63,38 @@ namespace Dalutex.Models
         public Enums.ItemType Tipo { get; set; }
     }
 
+    public class DetalhesPEViewModel
+    {        
+        public int Pagina { get; set; }
+        public int TotalPaginas { get; set; }
+        public List<VW_LISTA_PECAS_PE> ListaPecasPE { get; set; }
+        public List<VW_ITENS_PE> DetalhesReduzido { get; set; }
+        public string UrlImagens { get; set; }
+        
+        public int Reduzido { get; set; }
+        public string Artigo { get; set; }
+        public string Desenho { get; set; }
+        public string Cor { get; set; }
+        public string Variante { get; set; }
+        public string Tecnologia { get; set; }
+        public string Composicao { get; set; }
+        public string Colecao { get; set; }
+        public decimal KGPrimeira { get; set; }
+        public decimal KGSegunda { get; set; }
+        public decimal KGTerceira { get; set; }
+        public decimal MTPrimeira { get; set; }
+        public decimal MTSegunda { get; set; }
+        public decimal MTTerceira { get; set; } 
+        public decimal Largura { get; set; } 
+        public decimal Gramatura { get; set; } 
+        public decimal Rendimento { get; set; }
+        public string UM { get; set; }
+        public int IDColecao { get; set; }
+
+        public Enums.ItemType Tipo { get; set; }
+    }
+
+
     public class LisosViewModel
     {
         public int IDColecao { get; set; }

@@ -102,17 +102,10 @@
     else
     { 
         <div class="thumbnailpe">
-            <a href="@Url.Content(@"ArtigosDisponiveis?" +
-                                                        "&desenho=" + @Model.Desenho +
-                                                        "&variante=" + @Model.Variante+
-                                                        "&idcolecao="+ @Model.IDColecao+
-                                                        "&nmcolecao="+ @Model.NMColecao+
-                                                        "&pagina="+ @Model.Pagina+
-                                                        "&pedidoreserva=" +@Model.PedidoReserva+
-                                                        "&idvariante=0"+
-                                                        "&itempedidoreserva=0"+
-                                                        "&tipo=" + ((int)Model.Tipo).ToString()
-                                                    )">
+            <a href="@Url.Content(@"DetalhesPE?&reduzido=" + @Model.Reduzido +
+                                 ""
+            
+                                 )">
 
                 <img src="@Url.Content(Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg")" class="img-thumbnail equal-height" id="pe-estamp">
 

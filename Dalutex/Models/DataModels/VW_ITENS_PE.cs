@@ -36,5 +36,11 @@
         public decimal TERC_QL_MT { get; set; }
         public decimal MTS { get; set; }
         public decimal KGS { get; set; }
+        [StringLength(2)] 
+        public string UM { get; set; }
+        public decimal LARGURA { get; set; }
+        public decimal GRAMATURA { get; set; }
+        public decimal RENDIMENTO { get; set; }
+
     }
 }

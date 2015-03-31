@@ -213,6 +213,7 @@
     <Compile Include="Models\DataModels\VW_ITENS_PE.cs" />
     <Compile Include="Models\DataModels\VW_ITENS_VALIDAR_RESERVA.cs" />
     <Compile Include="Models\DataModels\VW_LISOS_POR_COLECAO.cs" />
+    <Compile Include="Models\DataModels\VW_LISTA_PECAS_PE.cs" />
     <Compile Include="Models\DataModels\VW_TROCA_TEC.cs" />
     <Compile Include="Models\DataModels\VW_VALIDAR_RESERVA.cs" />
     <Compile Include="Models\Relatorios.cs" />
@@ -339,6 +340,7 @@
     <Content Include="Views\Pedido\DesenhosValidaReserva.cshtml" />
     <Content Include="Views\Pedido\EsvaziarCarrinho.cshtml" />
     <Content Include="Views\Pedido\ItensProntaEntrega.cshtml" />
+    <Content Include="Views\Pedido\DetalhesPE.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

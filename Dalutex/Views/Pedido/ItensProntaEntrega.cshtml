@@ -13,10 +13,13 @@
     <ul class="nav nav-tabs">
         <li role="presentation" class="active"><a href="#">ESTAMPADOS</a></li>
         <li role="presentation">
-            <a href="@Url.Content(@"Lisos?" +
+            <a href="@Url.Action("ItensProntaEntrega", "Pedido", new { estampados = false, pagina = 1 })">
+               @*"@Url.Content(@"Lisos?" +
                     "&IDColecao=" + -1 +
                     "&NMColecao=" + "Pronta Entrega" +
-                    "&pagina=" + @Model.Pagina)">LISOS</a>
+                    "&pagina=" + @Model.Pagina)"*@
+                LISOS
+            </a>
         </li>
     </ul>
 

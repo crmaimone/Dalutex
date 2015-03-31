@@ -136,12 +136,12 @@
 
         <table id="listaCarrinho">
             <thead>
-                <tr>
-                    <th data-field="Compose" data-sortable="true">Compose</th>
+                <tr>                    
                     <th data-field="Artigo" data-sortable="true">Artigo</th>
                     <th data-field="Tecnologia" data-sortable="true">Tecnologia</th>
                     <th data-field="Desenho" data-sortable="true">Desenho</th>
                     <th data-field="Variante" data-sortable="true">Variante</th>
+                    <th data-field="Compose" data-sortable="true">Compose</th>
                     <th data-field="Pecas" data-sortable="true">Peças</th>
                     <th data-field="UnidadeMedida" data-sortable="true">UM</th>
                     <th data-field="Quantidade" data-sortable="true">Qtde</th>
@@ -159,7 +159,7 @@
                     <th>@Model.TotalPedido.ToString("c")</th>
                 </tr>
             </tfoot>
-</table>
+        </table>
     }
 </div>
 @section Scripts {
@@ -211,4 +211,4 @@
             })();
         });
     </script>
-}
+    }

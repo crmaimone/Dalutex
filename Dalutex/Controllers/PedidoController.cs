@@ -1109,7 +1109,7 @@ namespace Dalutex.Controllers
                         model.TotalPedido += item.ValorTotalItem;
                     }
 
-                    if (Session_Carrinho.Itens.Exists(x => x.Reduzido == 0))
+                    if (model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA && Session_Carrinho.Itens.Exists(x => x.Reduzido == 0))
                     {
                         ModelState.AddModelError("", "Este carrinho possuem itens com o código reduzido zerado. Favor entrar em contato com o TI.");
                         this.ConclusaoPedidoCarregarListas(model);
@@ -1817,7 +1817,7 @@ namespace Dalutex.Controllers
         {
             int PedidoReserva = 0;
             int.TryParse(model.FiltroPedidoReserva, out PedidoReserva);
-            int iItensPorPagina = 50;
+            int iItensPorPagina = 6;
 
             using (var ctx = new TIDalutexContext())
             {

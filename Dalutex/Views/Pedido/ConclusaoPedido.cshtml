@@ -114,8 +114,8 @@
                                     @Html.ActionLink("VOLTAR", "Transportadora", "Cadastro", new { IDTransportadora = Model.IDTransportadora }, new { @class = "btn btn-default btn-warning pull-right" })
                                 }
                                 else
-                                { 
-                                    <h3>Deseja realmente concluir este pedido?</h3>
+                                {
+                                    <div><p>Deseja realmente concluir este pedido?</p></div>
                                     @Html.ActionLink("VOLTAR", "ClientesFatura", "Cadastro", new { IDRepresentante = Model.IDRepresentante, IDClienteFatura = Model.IDClienteFatura }, new { @class = "btn btn-default btn-warning pull-right" })
                                 }
                             </div>
@@ -145,8 +145,9 @@
                     <th data-field="Pecas" data-sortable="true">Peças</th>
                     <th data-field="UnidadeMedida" data-sortable="true">UM</th>
                     <th data-field="Quantidade" data-sortable="true">Qtde</th>
-                    <th data-field="Preco" data-sortable="true">Unit.</th>
-                    <th data-field="ValorTotalItem" data-sortable="true">Sub total</th>
+                    <th data-field="ValorPadrao" data-sortable="true" data-formatter="scriptWrapper.currencyFormatter">Preço tabela</th>
+                    <th data-field="Preco" data-sortable="true" data-formatter="scriptWrapper.currencyFormatter">Unit.</th>
+                    <th data-field="ValorTotalItem" data-sortable="true" data-formatter="scriptWrapper.currencyFormatter">Sub total</th>
                 </tr>
             </thead>
             <tfoot>
@@ -181,9 +182,14 @@
                     }
                 }
 
+                currencyFormatter = function (value) {
+                    return 'R$ ' + value.toFixed(2).replace('.', ',');
+                }
+
                 // public API
                 return {
-                    lstCanais_Change: lstCanais_Change
+                    lstCanais_Change: lstCanais_Change,
+                    currencyFormatter: currencyFormatter
                 };
             })();
 

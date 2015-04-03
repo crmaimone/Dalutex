@@ -27,6 +27,9 @@
               <Width>1.9764cm</Width>
             </TablixColumn>
             <TablixColumn>
+              <Width>8.93992cm</Width>
+            </TablixColumn>
+            <TablixColumn>
               <Width>1.52926cm</Width>
             </TablixColumn>
             <TablixColumn>
@@ -327,6 +330,47 @@
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>Textbox284</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>None</Style>
+                        </Border>
+                        <TopBorder>
+                          <Style>Solid</Style>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Style>Solid</Style>
+                        </BottomBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox14">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Reserva</Value>
+                              <Style>
+                                <FontSize>8pt</FontSize>
+                                <Color>DimGray</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Left</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox14</rd:DefaultName>
                       <Style>
                         <Border>
                           <Color>LightGrey</Color>
@@ -1031,6 +1075,45 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
+                    <Textbox Name="RESERVA">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!RESERVA.Value</Value>
+                              <Style>
+                                <FontSize>8pt</FontSize>
+                                <FontWeight>Bold</FontWeight>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Left</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>RESERVA</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>Gray</Color>
+                          <Style>None</Style>
+                        </Border>
+                        <BottomBorder>
+                          <Style>Solid</Style>
+                        </BottomBorder>
+                        <VerticalAlign>Top</VerticalAlign>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
                     <Textbox Name="DESENHO">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
@@ -1424,14 +1507,47 @@
         <TablixColumnHierarchy>
           <TablixMembers>
             <TablixMember />
+            <TablixMember>
+              <Visibility>
+                <Hidden>=iif(UCase(RTrim(Fields!TIPO_PEDIDO.Value)) = "RESERVA", True ,False)</Hidden>
+              </Visibility>
+            </TablixMember>
+            <TablixMember>
+              <Visibility>
+                <Hidden>=iif(UCase(RTrim(Fields!TIPO_PEDIDO.Value)) = "RESERVA", True ,False)</Hidden>
+              </Visibility>
+            </TablixMember>
+            <TablixMember>
+              <Visibility>
+                <Hidden>=iif(UCase(RTrim(Fields!TIPO_PEDIDO.Value)) = "RESERVA", True ,False)</Hidden>
+              </Visibility>
+            </TablixMember>
+            <TablixMember>
+              <Visibility>
+                <Hidden>=iif(UCase(RTrim(Fields!TIPO_PEDIDO.Value)) = "RESERVA", True ,False)</Hidden>
+              </Visibility>
+            </TablixMember>
+            <TablixMember>
+              <Visibility>
+                <Hidden>=iif(UCase(RTrim(Fields!TIPO_PEDIDO.Value)) = "RESERVA", True ,False)</Hidden>
+              </Visibility>
+            </TablixMember>
+            <TablixMember>
+              <Visibility>
+                <Hidden>=iif(UCase(RTrim(Fields!TIPO_PEDIDO.Value)) = "RESERVA", True ,False)</Hidden>
+              </Visibility>
+            </TablixMember>
+            <TablixMember>
+              <Visibility>
+                <Hidden>=iif(UCase(RTrim(Fields!TIPO_PEDIDO.Value)) = "RESERVA", False ,True)</Hidden>
+              </Visibility>
+            </TablixMember>
             <TablixMember />
-            <TablixMember />
-            <TablixMember />
-            <TablixMember />
-            <TablixMember />
-            <TablixMember />
-            <TablixMember />
-            <TablixMember />
+            <TablixMember>
+              <Visibility>
+                <Hidden>=iif(UCase(RTrim(Fields!TIPO_PEDIDO.Value)) = "RESERVA", True ,False)</Hidden>
+              </Visibility>
+            </TablixMember>
             <TablixMember />
             <TablixMember />
             <TablixMember />
@@ -1471,7 +1587,7 @@
         <Top>4.22414cm</Top>
         <Left>0.08823cm</Left>
         <Height>2.47185cm</Height>
-        <Width>27.806cm</Width>
+        <Width>36.74592cm</Width>
         <Style>
           <Border>
             <Style>None</Style>
@@ -3306,7 +3422,7 @@
     <Height>9.51292cm</Height>
     <Style />
   </Body>
-  <Width>27.99646cm</Width>
+  <Width>37.09873cm</Width>
   <Page>
     <PageFooter>
       <Height>0.58209cm</Height>

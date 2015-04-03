@@ -51,7 +51,14 @@
                         <div class="col-md-5">
                             @if (Model.Tipo == Enums.ItemType.Estampado || Model.Tipo == Enums.ItemType.ValidacaoReserva)
                             {
-                                <div><strong>Preço unitário:</strong>&nbsp;@Model.Preco.ToString("C")</div>
+                                if(Model.ValorPadrao != Model.Preco)
+                                {
+                                    <div><strong class="text-danger">Preço unitário:&nbsp;@Model.Preco.ToString("C")<span class="glyphicon glyphicon-exclamation-sign danger"></span></strong></div>
+                                }
+                                else
+                                {
+                                    <div><strong>Preço unitário:</strong>&nbsp;@Model.Preco.ToString("C")</div>
+                                }
                                 <div><strong>Previsão de entrega:</strong>&nbsp;@Model.DataEntregaItem.ToString("d")</div>
                                 <div><strong>Quantidade:</strong>&nbsp;@Model.Quantidade&nbsp;@Model.UnidadeMedida</div>
                                 <div><strong>Total:</strong>&nbsp;@Model.ValorTotalItem.ToString("c")</div>

@@ -1792,15 +1792,18 @@ namespace Dalutex.Controllers
                     {
                         model.FiltroRepresentante = ctx.REPRESENTANTES.Find(IDRepresentante).NOME.Trim();
                     }
+
+                    this.ObterItensValidacaoReserva(model);
                 }
             }
             else
             {
                 model.Pagina = int.Parse(pagina);
+
+                this.ObterItensValidacaoReserva(model);
             }
 
-            this.ObterItensValidacaoReserva(model);
-
+            
             return View(model);
         }
 

@@ -1874,49 +1874,63 @@ namespace Dalutex.Controllers
                                 .ToList();
                 }
             }
-
         }
 
         #endregion
 
         #region Pronta Entrega
 
-        public ActionResult ItensProntaEntrega(bool estampados, int pagina)
+        public ActionResult ItensProntaEntrega( string pagina, string totalpaginas)
         {
             ItensProntaEntregaViewModel model = new ItensProntaEntregaViewModel();
-            model.Pagina = pagina;
-            model.Tipo = Enums.ItemType.PEEstampados;
+            model.Tipo = Enums.ItemType.ProntaEntrega;
 
-            if (estampados)
-                model.UrlImagens = ConfigurationManager.AppSettings["PASTA_DESENHOS"];
+            if (!string.IsNullOrWhiteSpace(totalpaginas))
+            {
+                model.TotalPaginas = int.Parse(totalpaginas);
+            }
+
+            if (string.IsNullOrWhiteSpace(pagina))
+                model.Pagina = 1;
             else
-                model.UrlImagens = ConfigurationManager.AppSettings["PASTA_DESENHOS"];
+                model.Pagina = int.Parse(pagina);
+            
+            model.UrlImagens = ConfigurationManager.AppSettings["PASTA_DESENHOS"];
 	
-            this.CarregarDesenhosPE(model, estampados);
+            this.ObterDesenhosProntaEntrega(model);
 
             return View(model);
         }
 
-        public void CarregarDesenhosPE(ItensProntaEntregaViewModel model, bool Estampados)
+        private void ObterDesenhosProntaEntrega(ItensProntaEntregaViewModel model)
         {            
+            int iItensPorPagina = 24;
+
             using (var ctx = new TIDalutexContext())
             {
-                if (Estampados)
+                List<VW_ITENS_PE> result = null;
+
+                if (model.TotalPaginas == 0)
                 {
-                    model.ListaDesenhosPE = ctx.VW_ITENS_PE.Where(x => x.TECNOLOGIA != "Lisos")
-                        .OrderByDescending(x => x.DESENHO).ThenBy(x => x.VARIANTE)
-                        .Skip((model.Pagina - 1) * 24)
-                        .Take(24)
-                        .ToList();
+                    result = ctx.VW_ITENS_PE.OrderByDescending(x => x.DESENHO)
+                                .ThenBy(x => x.VARIANTE)
+                                .ToList();
+
+                    decimal dTotal = result.Count / (decimal)iItensPorPagina;
+                    model.TotalPaginas = (int)Decimal.Ceiling(dTotal);
+                    if (model.TotalPaginas == 0)
+                        model.TotalPaginas = 1;
+
+                    model.Galeria = result.Skip((model.Pagina - 1) * iItensPorPagina).Take(iItensPorPagina).ToList();
                 }
                 else
                 {
-                    model.ListaDesenhosPE = ctx.VW_ITENS_PE.Where(x => x.TECNOLOGIA == "Lisos")
-                        .OrderByDescending(x => x.ARTIGO).ThenBy(x => x.COR)
-                        .Skip((model.Pagina - 1) * 24)
-                        .Take(24)
-                        .ToList();
-                }                
+                    model.Galeria = ctx.VW_ITENS_PE.OrderByDescending(x => x.DESENHO)
+                                .ThenBy(x => x.VARIANTE)
+                                .Skip((model.Pagina - 1) * iItensPorPagina)
+                                .Take(iItensPorPagina)
+                                .ToList();
+                }
             }
         }
 

@@ -29,8 +29,7 @@ namespace Dalutex.Models
             Liso = 2,
             Reserva = 3,
             ValidacaoReserva = 4,
-            PEEstampados = 5,
-            PELisos = 6
+            ProntaEntrega = 5,
         }
 
         public enum CondicoesPagamento

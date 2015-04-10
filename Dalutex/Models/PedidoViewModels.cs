@@ -53,11 +53,9 @@ namespace Dalutex.Models
 
     public class ItensProntaEntregaViewModel
     {
-        public int Reduzido { get; set; }
         public int Pagina { get; set; }
         public int TotalPaginas { get; set; }
-        public List<VW_ITENS_PE> ListaDesenhosPE { get; set; }
-        public List<VW_ITENS_PE> ListaLisosPE { get; set; }
+        public List<VW_ITENS_PE> Galeria { get; set; }
         public string UrlImagens { get; set; }
         public string FiltroDesenho { get; set; }
         public Enums.ItemType Tipo { get; set; }

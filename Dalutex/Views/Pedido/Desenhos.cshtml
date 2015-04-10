@@ -144,33 +144,10 @@
                 //API Attributes
 
                 //API Methods
-                @*loadImages = function () {
-                    $(".img-thumbnail").each(function () {
-                        var $img = $(this);
-                        var data = $img.data("assigned-id").split("_");
-                        var desenho = data[0];
-                        var variante = data[1];
-
-                        $.ajax({
-                            type: 'POST',
-                            url: '@Url.Action("ObterDesenho", "Pedido")',
-                            data: 'desenho=' + desenho + '&variante=' + variante,
-                            async: false,
-                            success: function (Image) {
-                                if (Image != '') {
-                                    $img.attr('src', 'data:image/jpg;base64,' + Image.Image);
-                                }
-                            },
-                            error: function (xhr, ajaxOptions, thrownError) {
-                                $img.attr('src', 'data:image/jpg;base64,');
-                            }
-                        })
-                    });
-                }*@
 
                 // public API
                 return {
-                    //loadImages: loadImages
+
                 };
             })();
 

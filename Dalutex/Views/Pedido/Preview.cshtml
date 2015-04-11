@@ -1,0 +1,87 @@
+﻿@model Dalutex.Models.PreviewViewModel
+
+@using Dalutex.Models;
+
+@{
+    ViewBag.Title = "PREVIEW";
+}
+
+<div class="header-title"><h3>@ViewBag.Title</h3></div>
+@if (Model.Sucesso == false)
+{
+    Html.ValidationSummary(true, "Não foi possível gerar o pedido.", new { @class = "text-danger" });
+}
+<div style="border:1px solid gray; background-color: aliceblue; padding:3px">
+    <div class="row">
+        <div class="col-xs-12">
+            @using (Html.BeginForm("Preview", "Pedido", null, FormMethod.Post))
+            {
+                <h4>Deseja realmente confirmar este pedido?</h4>
+                <input type="submit" value="CONFIRMAR" class="btn btn-info pull-left" />
+                <span class="pull-left">&nbsp;</span>
+                @Html.ActionLink("VOLTAR", "ConclusaoPedido", "Pedido", null, new { @class = "btn btn-warning pull-left" })
+            }
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-xs-12">
+            <div> <strong>Representante:</strong> @Model.Representante </div>
+            <div> <strong>Cliente da entrega:</strong> @Model.ClienteEntrega </div>
+            <div> <strong>Cliente da fatura:</strong> @Model.ClienteFatura </div>
+            <div> <strong>Transportadora:</strong> @Model.Transportadora </div>
+            <div> <strong>..</strong></div>
+        </div>
+    </div>
+</div>
+<hr />
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12">
+            @if (Model.Carrinho != null && Model.Carrinho.Itens != null)
+            {
+                foreach (InserirNoCarrinhoViewModel item in Model.Carrinho.Itens)
+                {
+                    ViewDataDictionary partialViewData = new ViewDataDictionary();
+                    partialViewData.Add(new KeyValuePair<string, object>("URLDESENHOS", Model.UrlDesenhos));
+                    partialViewData.Add(new KeyValuePair<string, object>("URLRESERVAS", Model.UrlReservas));
+                    partialViewData.Add(new KeyValuePair<string, object>("ALTERARITEM", false));
+
+                    @Html.Partial(
+                        "_ItemCarrinho",
+                        item,
+                        partialViewData
+                    )
+                    <hr />
+                }
+            }
+            else
+            {
+                <p><em>SEM ITENS</em></p>
+            }
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            //API
+            scriptWrapper = (function () {
+
+                //API Attributes
+
+                //API Methods
+
+                // public API
+                return {
+                };
+            })();
+
+            //Init
+            (function Init() {
+
+            })();
+        });
+    </script>
+}
+

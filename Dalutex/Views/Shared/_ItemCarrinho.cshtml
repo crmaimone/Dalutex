@@ -49,26 +49,37 @@
                             }
                         </div>
                         <div class="col-md-5">
-                            @if (Model.Tipo == Enums.ItemType.Estampado || Model.Tipo == Enums.ItemType.ValidacaoReserva)
+                            @if (Model.PrecoTabela != null)
                             {
-                                if(Model.ValorPadrao != Model.Preco)
+                                <div><strong>Preço de tabela:</strong>&nbsp;@Model.PrecoTabela.GetValueOrDefault().ToString("C")</div>
+                                if (Model.PrecoTabela.GetValueOrDefault() != Model.Preco)
                                 {
                                     <div><strong class="text-danger">Preço unitário:&nbsp;@Model.Preco.ToString("C")<span class="glyphicon glyphicon-exclamation-sign danger"></span></strong></div>
                                 }
-                                else
-                                {
-                                    <div><strong>Preço unitário:</strong>&nbsp;@Model.Preco.ToString("C")</div>
-                                }
+                            }
+                            else
+                            {
+                                <div><strong>Preço unitário:</strong>&nbsp;@Model.Preco.ToString("C")</div>
+                            }
+                            @if (Model.Tipo == Enums.ItemType.Estampado || Model.Tipo == Enums.ItemType.ValidacaoReserva)
+                            {
                                 <div><strong>Previsão de entrega:</strong>&nbsp;@Model.DataEntregaItem.ToString("d")</div>
                                 <div><strong>Quantidade:</strong>&nbsp;@Model.Quantidade&nbsp;@Model.UnidadeMedida</div>
                                 <div><strong>Total:</strong>&nbsp;@Model.ValorTotalItem.ToString("c")</div>
                             }
-                            <div class="form-group">
-                                @Html.LabelFor(x => x.Compose)
-                                <div>
-                                    @Html.DropDownListFor(m => m.Compose, new SelectList(Model.ComposeOpcoes), "Selecione", new { @class = "lstCompose", data_numero_sequencial = Model.NumeroSequencial })
+                            @if (((bool?)ViewData["ALTERARITEM"]) == true)
+                            {
+                                <div class="form-group">
+                                    @Html.LabelFor(x => x.Compose)
+                                    <div>
+                                        @Html.DropDownListFor(m => m.Compose, new SelectList(Model.ComposeOpcoes), "Selecione", new { @class = "lstCompose", data_numero_sequencial = Model.NumeroSequencial })
+                                    </div>
                                 </div>
-                            </div>
+                            }
+                            else
+                            {
+                                <div><strong>Compose:</strong>&nbsp;@Model.Compose</div>
+                            }
                         </div>
                     }
                     else
@@ -83,45 +94,47 @@
             </div>
         </div>
     </div>
-    <div style="border:1px solid gray; background-color: ghostwhite; padding:3px">
-        <div class="row">
-            <div class="col-xs-12">
-                @using (Html.BeginForm("ExcluirItemCarrinho", "Pedido", null, FormMethod.Post))
-                {
-                    @Html.HiddenFor(x => x.Artigo)
-                    @Html.HiddenFor(x => x.Desenho)
-                    @Html.HiddenFor(x => x.Variante)
-                    @Html.HiddenFor(x => x.CodDal)
-                    @Html.HiddenFor(x => x.Reduzido)
-
-                    <input type="submit" value="REMOVER" class="btn btn-danger pull-left" />
-                    <span class="pull-left">&nbsp;</span>
-                    if (Model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
+    @if (((bool?)ViewData["ALTERARITEM"]) == true)
+    {
+        <div style="border:1px solid gray; background-color: ghostwhite; padding:3px">
+            <div class="row">
+                <div class="col-xs-12">
+                    @using (Html.BeginForm("ExcluirItemCarrinho", "Pedido", null, FormMethod.Post))
                     {
-                        @Html.ActionLink("ALTERAR", "InserirNoCarrinho", "Pedido",
-                        new
-                        {
-                            desenho = Model.Desenho,
-                            variante = Model.Variante,
-                            artigo = Model.Artigo,
-                            tecnologia = Model.Tecnologia,
-                            modo = "A",
-                            codstudio = "",
-                            coddal = "",
-                            tipo = (int)Model.Tipo,
-                            reduzido = Model.Reduzido,
-                            idstudio = Model.IDStudio,
-                            iditemstudio = Model.IDItemStudio,
-                            idvariante = Model.IDVariante,
-                            pedidoreserva = Model.PedidoReserva,
-                            itempedidoreserva = Model.ItemPedidoReserva
-                        },
-                        new { @class = "btn btn-info pull-left" })
+                        @Html.HiddenFor(x => x.Artigo)
+                        @Html.HiddenFor(x => x.Desenho)
+                        @Html.HiddenFor(x => x.Variante)
+                        @Html.HiddenFor(x => x.CodDal)
+                        @Html.HiddenFor(x => x.Reduzido)
 
+                        <input type="submit" value="REMOVER" class="btn btn-danger pull-left" />
+                        <span class="pull-left">&nbsp;</span>
+                        if (Model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
+                        {
+                            @Html.ActionLink("ALTERAR", "InserirNoCarrinho", "Pedido",
+                            new
+                            {
+                                desenho = Model.Desenho,
+                                variante = Model.Variante,
+                                artigo = Model.Artigo,
+                                tecnologia = Model.Tecnologia,
+                                modo = "A",
+                                codstudio = "",
+                                coddal = "",
+                                tipo = (int)Model.Tipo,
+                                reduzido = Model.Reduzido,
+                                idstudio = Model.IDStudio,
+                                iditemstudio = Model.IDItemStudio,
+                                idvariante = Model.IDVariante,
+                                pedidoreserva = Model.PedidoReserva,
+                                itempedidoreserva = Model.ItemPedidoReserva
+                            },
+                            new { @class = "btn btn-info pull-left" })
+                        }
                     }
-                }
+                </div>
             </div>
         </div>
-    </div>
+    }
 </div>
 

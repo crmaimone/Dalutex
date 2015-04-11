@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
   <Body>
     <ReportItems>
@@ -3778,11 +3778,11 @@
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="TOTAL_MT">
-          <DataField>VALOR_TOTAL_MT</DataField>
+          <DataField>TOTAL_MT</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="TOTAL_KG">
-          <DataField>VALOR_TOTAL_KG</DataField>
+          <DataField>TOTAL_KG</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="OBS_TROCA_TEC">

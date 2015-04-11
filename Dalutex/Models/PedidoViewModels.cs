@@ -9,6 +9,23 @@ using System.Drawing;
 
 namespace Dalutex.Models
 {
+    public class PreviewViewModel
+    {
+        public bool? Sucesso { get; set; }
+        [Display(Name = "Representante:")]
+        public string Representante { get; set; }
+        [Display(Name = "Cliente da fatura:")]
+        public string ClienteFatura { get; set; }
+        [Display(Name = "Cliente da entrega:")]
+        public string ClienteEntrega { get; set; }
+        [Display(Name = "Transportadora:")]
+        public string Transportadora { get; set; }
+
+        public ConclusaoPedidoViewModel Carrinho { get; set; }
+        public string UrlDesenhos { get; set; }
+        public string UrlReservas { get; set; }
+    }
+
     public class DesenhoVariante
     {
         public string Desenho { get; set; }
@@ -91,7 +108,6 @@ namespace Dalutex.Models
 
         public Enums.ItemType Tipo { get; set; }
     }
-
 
     public class LisosViewModel
     {
@@ -269,6 +285,7 @@ namespace Dalutex.Models
         [DataType(DataType.Currency)]
         [Display(Name = "PREÇO:")]
         public decimal Preco { get; set; }
+        public decimal? PrecoTabela { get; set; }
 
         public override bool Equals(object obj)
         {

@@ -341,6 +341,7 @@
     <Content Include="Views\Pedido\EsvaziarCarrinho.cshtml" />
     <Content Include="Views\Pedido\ItensProntaEntrega.cshtml" />
     <Content Include="Views\Pedido\DetalhesPE.cshtml" />
+    <Content Include="Views\Pedido\Preview.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

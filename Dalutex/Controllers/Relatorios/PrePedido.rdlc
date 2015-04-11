@@ -3179,11 +3179,10 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=Sum(Fields!VALOR_TOTAL_MT.Value, "dsPrePedido")</Value>
+                    <Value>=Sum(Fields!TOTAL_MT.Value, "dsPrePedido")</Value>
                     <Style>
                       <FontSize>8pt</FontSize>
                       <FontWeight>Bold</FontWeight>
-                      <Format>c2</Format>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -3214,11 +3213,10 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=Sum(Fields!VALOR_TOTAL_KG.Value, "dsPrePedido")</Value>
+                    <Value>=Sum(Fields!TOTAL_KG.Value, "dsPrePedido")</Value>
                     <Style>
                       <FontSize>8pt</FontSize>
                       <FontWeight>Bold</FontWeight>
-                      <Format>c2</Format>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -3779,13 +3777,13 @@
           <DataField>RESERVA</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="VALOR_TOTAL_MT">
+        <Field Name="TOTAL_MT">
           <DataField>VALOR_TOTAL_MT</DataField>
-          <rd:TypeName>System.Double</rd:TypeName>
+          <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
-        <Field Name="VALOR_TOTAL_KG">
+        <Field Name="TOTAL_KG">
           <DataField>VALOR_TOTAL_KG</DataField>
-          <rd:TypeName>System.Double</rd:TypeName>
+          <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="OBS_TROCA_TEC">
           <DataField>OBS_TROCA_TEC</DataField>

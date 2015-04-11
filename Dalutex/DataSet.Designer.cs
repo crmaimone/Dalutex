@@ -395,9 +395,9 @@ namespace Dalutex {
             
             private global::System.Data.DataColumn columnRESERVA;
             
-            private global::System.Data.DataColumn columnVALOR_TOTAL_MT;
+            private global::System.Data.DataColumn columnTOTAL_MT;
             
-            private global::System.Data.DataColumn columnVALOR_TOTAL_KG;
+            private global::System.Data.DataColumn columnTOTAL_KG;
             
             private global::System.Data.DataColumn columnOBS_TROCA_TEC;
             
@@ -900,17 +900,17 @@ namespace Dalutex {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn VALOR_TOTAL_MTColumn {
+            public global::System.Data.DataColumn TOTAL_MTColumn {
                 get {
-                    return this.columnVALOR_TOTAL_MT;
+                    return this.columnTOTAL_MT;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn VALOR_TOTAL_KGColumn {
+            public global::System.Data.DataColumn TOTAL_KGColumn {
                 get {
-                    return this.columnVALOR_TOTAL_KG;
+                    return this.columnTOTAL_KG;
                 }
             }
             
@@ -1018,8 +1018,8 @@ namespace Dalutex {
                         string TIPO, 
                         decimal TIPO_PED, 
                         string RESERVA, 
-                        double VALOR_TOTAL_MT, 
-                        double VALOR_TOTAL_KG, 
+                        int TOTAL_MT, 
+                        int TOTAL_KG, 
                         string OBS_TROCA_TEC) {
                 VW_IMPRESSAO_WEBRow rowVW_IMPRESSAO_WEBRow = ((VW_IMPRESSAO_WEBRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
@@ -1081,8 +1081,8 @@ namespace Dalutex {
                         TIPO,
                         TIPO_PED,
                         RESERVA,
-                        VALOR_TOTAL_MT,
-                        VALOR_TOTAL_KG,
+                        TOTAL_MT,
+                        TOTAL_KG,
                         OBS_TROCA_TEC};
                 rowVW_IMPRESSAO_WEBRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowVW_IMPRESSAO_WEBRow);
@@ -1164,8 +1164,8 @@ namespace Dalutex {
                 this.columnTIPO = base.Columns["TIPO"];
                 this.columnTIPO_PED = base.Columns["TIPO_PED"];
                 this.columnRESERVA = base.Columns["RESERVA"];
-                this.columnVALOR_TOTAL_MT = base.Columns["VALOR_TOTAL_MT"];
-                this.columnVALOR_TOTAL_KG = base.Columns["VALOR_TOTAL_KG"];
+                this.columnTOTAL_MT = base.Columns["TOTAL_MT"];
+                this.columnTOTAL_KG = base.Columns["TOTAL_KG"];
                 this.columnOBS_TROCA_TEC = base.Columns["OBS_TROCA_TEC"];
             }
             
@@ -1288,10 +1288,10 @@ namespace Dalutex {
                 base.Columns.Add(this.columnTIPO_PED);
                 this.columnRESERVA = new global::System.Data.DataColumn("RESERVA", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnRESERVA);
-                this.columnVALOR_TOTAL_MT = new global::System.Data.DataColumn("VALOR_TOTAL_MT", typeof(double), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnVALOR_TOTAL_MT);
-                this.columnVALOR_TOTAL_KG = new global::System.Data.DataColumn("VALOR_TOTAL_KG", typeof(double), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnVALOR_TOTAL_KG);
+                this.columnTOTAL_MT = new global::System.Data.DataColumn("TOTAL_MT", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnTOTAL_MT);
+                this.columnTOTAL_KG = new global::System.Data.DataColumn("TOTAL_KG", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnTOTAL_KG);
                 this.columnOBS_TROCA_TEC = new global::System.Data.DataColumn("OBS_TROCA_TEC", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnOBS_TROCA_TEC);
                 this.columnPEDIDO.AllowDBNull = false;
@@ -2391,33 +2391,33 @@ namespace Dalutex {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public double VALOR_TOTAL_MT {
+            public int TOTAL_MT {
                 get {
                     try {
-                        return ((double)(this[this.tableVW_IMPRESSAO_WEB.VALOR_TOTAL_MTColumn]));
+                        return ((int)(this[this.tableVW_IMPRESSAO_WEB.TOTAL_MTColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'VALOR_TOTAL_MT\' in table \'VW_IMPRESSAO_WEB\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'TOTAL_MT\' in table \'VW_IMPRESSAO_WEB\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableVW_IMPRESSAO_WEB.VALOR_TOTAL_MTColumn] = value;
+                    this[this.tableVW_IMPRESSAO_WEB.TOTAL_MTColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public double VALOR_TOTAL_KG {
+            public int TOTAL_KG {
                 get {
                     try {
-                        return ((double)(this[this.tableVW_IMPRESSAO_WEB.VALOR_TOTAL_KGColumn]));
+                        return ((int)(this[this.tableVW_IMPRESSAO_WEB.TOTAL_KGColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'VALOR_TOTAL_KG\' in table \'VW_IMPRESSAO_WEB\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'TOTAL_KG\' in table \'VW_IMPRESSAO_WEB\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableVW_IMPRESSAO_WEB.VALOR_TOTAL_KGColumn] = value;
+                    this[this.tableVW_IMPRESSAO_WEB.TOTAL_KGColumn] = value;
                 }
             }
             
@@ -3111,26 +3111,26 @@ namespace Dalutex {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsVALOR_TOTAL_MTNull() {
-                return this.IsNull(this.tableVW_IMPRESSAO_WEB.VALOR_TOTAL_MTColumn);
+            public bool IsTOTAL_MTNull() {
+                return this.IsNull(this.tableVW_IMPRESSAO_WEB.TOTAL_MTColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetVALOR_TOTAL_MTNull() {
-                this[this.tableVW_IMPRESSAO_WEB.VALOR_TOTAL_MTColumn] = global::System.Convert.DBNull;
+            public void SetTOTAL_MTNull() {
+                this[this.tableVW_IMPRESSAO_WEB.TOTAL_MTColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsVALOR_TOTAL_KGNull() {
-                return this.IsNull(this.tableVW_IMPRESSAO_WEB.VALOR_TOTAL_KGColumn);
+            public bool IsTOTAL_KGNull() {
+                return this.IsNull(this.tableVW_IMPRESSAO_WEB.TOTAL_KGColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetVALOR_TOTAL_KGNull() {
-                this[this.tableVW_IMPRESSAO_WEB.VALOR_TOTAL_KGColumn] = global::System.Convert.DBNull;
+            public void SetTOTAL_KGNull() {
+                this[this.tableVW_IMPRESSAO_WEB.TOTAL_KGColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -3363,8 +3363,8 @@ namespace Dalutex.DataSetTableAdapters {
             tableMapping.ColumnMappings.Add("TIPO", "TIPO");
             tableMapping.ColumnMappings.Add("TIPO_PED", "TIPO_PED");
             tableMapping.ColumnMappings.Add("RESERVA", "RESERVA");
-            tableMapping.ColumnMappings.Add("VALOR_TOTAL_MT", "VALOR_TOTAL_MT");
-            tableMapping.ColumnMappings.Add("VALOR_TOTAL_KG", "VALOR_TOTAL_KG");
+            tableMapping.ColumnMappings.Add("VALOR_TOTAL_MT", "TOTAL_MT");
+            tableMapping.ColumnMappings.Add("VALOR_TOTAL_KG", "TOTAL_KG");
             this._adapter.TableMappings.Add(tableMapping);
         }
         

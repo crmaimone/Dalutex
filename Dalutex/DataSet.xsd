@@ -77,8 +77,8 @@
               <Mapping SourceColumn="TIPO" DataSetColumn="TIPO" />
               <Mapping SourceColumn="TIPO_PED" DataSetColumn="TIPO_PED" />
               <Mapping SourceColumn="RESERVA" DataSetColumn="RESERVA" />
-              <Mapping SourceColumn="VALOR_TOTAL_MT" DataSetColumn="VALOR_TOTAL_MT" />
-              <Mapping SourceColumn="VALOR_TOTAL_KG" DataSetColumn="VALOR_TOTAL_KG" />
+              <Mapping SourceColumn="VALOR_TOTAL_MT" DataSetColumn="TOTAL_MT" />
+              <Mapping SourceColumn="VALOR_TOTAL_KG" DataSetColumn="TOTAL_KG" />
             </Mappings>
             <Sources />
           </TableAdapter>
@@ -90,7 +90,7 @@
   <xs:element name="DataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="True" msprop:Generator_DataSetName="DataSet" msprop:Generator_UserDSName="DataSet">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="VW_IMPRESSAO_WEB" msprop:Generator_TableClassName="VW_IMPRESSAO_WEBDataTable" msprop:Generator_TableVarName="tableVW_IMPRESSAO_WEB" msprop:Generator_TablePropName="VW_IMPRESSAO_WEB" msprop:Generator_RowDeletingName="VW_IMPRESSAO_WEBRowDeleting" msprop:Generator_RowChangingName="VW_IMPRESSAO_WEBRowChanging" msprop:Generator_RowEvHandlerName="VW_IMPRESSAO_WEBRowChangeEventHandler" msprop:Generator_RowDeletedName="VW_IMPRESSAO_WEBRowDeleted" msprop:Generator_UserTableName="VW_IMPRESSAO_WEB" msprop:Generator_RowChangedName="VW_IMPRESSAO_WEBRowChanged" msprop:Generator_RowEvArgName="VW_IMPRESSAO_WEBRowChangeEvent" msprop:Generator_RowClassName="VW_IMPRESSAO_WEBRow">
+        <xs:element name="VW_IMPRESSAO_WEB" msprop:Generator_TableClassName="VW_IMPRESSAO_WEBDataTable" msprop:Generator_TableVarName="tableVW_IMPRESSAO_WEB" msprop:Generator_RowChangedName="VW_IMPRESSAO_WEBRowChanged" msprop:Generator_TablePropName="VW_IMPRESSAO_WEB" msprop:Generator_RowDeletingName="VW_IMPRESSAO_WEBRowDeleting" msprop:Generator_RowChangingName="VW_IMPRESSAO_WEBRowChanging" msprop:Generator_RowEvHandlerName="VW_IMPRESSAO_WEBRowChangeEventHandler" msprop:Generator_RowDeletedName="VW_IMPRESSAO_WEBRowDeleted" msprop:Generator_RowClassName="VW_IMPRESSAO_WEBRow" msprop:Generator_UserTableName="VW_IMPRESSAO_WEB" msprop:Generator_RowEvArgName="VW_IMPRESSAO_WEBRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="PEDIDO" msprop:Generator_ColumnVarNameInTable="columnPEDIDO" msprop:Generator_ColumnPropNameInRow="PEDIDO" msprop:Generator_ColumnPropNameInTable="PEDIDOColumn" msprop:Generator_UserColumnName="PEDIDO" type="xs:decimal" />
@@ -355,8 +355,8 @@
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="VALOR_TOTAL_MT" msprop:Generator_ColumnVarNameInTable="columnVALOR_TOTAL_MT" msprop:Generator_ColumnPropNameInRow="VALOR_TOTAL_MT" msprop:Generator_ColumnPropNameInTable="VALOR_TOTAL_MTColumn" msprop:Generator_UserColumnName="VALOR_TOTAL_MT" type="xs:double" minOccurs="0" />
-              <xs:element name="VALOR_TOTAL_KG" msprop:Generator_ColumnVarNameInTable="columnVALOR_TOTAL_KG" msprop:Generator_ColumnPropNameInRow="VALOR_TOTAL_KG" msprop:Generator_ColumnPropNameInTable="VALOR_TOTAL_KGColumn" msprop:Generator_UserColumnName="VALOR_TOTAL_KG" type="xs:double" minOccurs="0" />
+              <xs:element name="TOTAL_MT" msprop:Generator_ColumnVarNameInTable="columnTOTAL_MT" msprop:Generator_ColumnPropNameInRow="TOTAL_MT" msprop:Generator_ColumnPropNameInTable="TOTAL_MTColumn" msprop:Generator_UserColumnName="TOTAL_MT" type="xs:int" minOccurs="0" />
+              <xs:element name="TOTAL_KG" msprop:Generator_ColumnVarNameInTable="columnTOTAL_KG" msprop:Generator_ColumnPropNameInRow="TOTAL_KG" msprop:Generator_ColumnPropNameInTable="TOTAL_KGColumn" msprop:Generator_UserColumnName="TOTAL_KG" type="xs:int" minOccurs="0" />
               <xs:element name="OBS_TROCA_TEC" msprop:Generator_ColumnVarNameInTable="columnOBS_TROCA_TEC" msprop:Generator_ColumnPropNameInRow="OBS_TROCA_TEC" msprop:Generator_ColumnPropNameInTable="OBS_TROCA_TECColumn" msprop:Generator_UserColumnName="OBS_TROCA_TEC" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>

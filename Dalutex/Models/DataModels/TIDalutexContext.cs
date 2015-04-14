@@ -208,11 +208,11 @@ namespace Dalutex.Models.DataModels
                 .IsUnicode(false);
 
             modelBuilder.Entity<VW_IMPRESSAO_WEB>()
-                .Property(e => e.VALOR_TOTAL_MT)
+                .Property(e => e.TOTAL_MT)
                 .HasPrecision(38, 0);
 
             modelBuilder.Entity<VW_IMPRESSAO_WEB>()
-                .Property(e => e.VALOR_TOTAL_KG)
+                .Property(e => e.TOTAL_KG)
                 .HasPrecision(38, 0);
 
             modelBuilder.Entity<VW_IMPRESSAO_WEB>()

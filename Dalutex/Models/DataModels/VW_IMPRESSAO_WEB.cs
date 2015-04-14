@@ -64,9 +64,8 @@ namespace Dalutex.Models.DataModels
 
         public decimal? VALOR_TOTAL { get; set; }
 
-        public decimal? VALOR_TOTAL_MT { get; set; }
-
-        public decimal? VALOR_TOTAL_KG { get; set; }
+        public decimal? TOTAL_MT { get; set; }
+        public decimal? TOTAL_KG { get; set; }
 
         [StringLength(2)]
         public string UM { get; set; }

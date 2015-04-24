@@ -174,21 +174,18 @@ else
                 }
 
                 <br />
-                @if (Model.Tipo == Enums.ItemType.PEEstampados)
+                @*@if (Model.Tipo == Enums.ItemType.PEEstampados)
                 {
                     @Html.ActionLink("VOLTAR", "ItensProntaEntrega", "Pedido", new { estampados = true, pagina = 1 }, new { @class = "btn btn-default" })
                 }
                 else
                 {
                     @Html.ActionLink("VOLTAR", "ItensProntaEntrega", "Pedido", new { estampados = false, pagina = 1 }, new { @class = "btn btn-default" })
-                }
+                }*@
 
             </div>
             <div class="col-sm-6">
-
-                <img src="@Url.Content(Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg")" class="img-thumbnail equal-height">
-
-                @* <img src="@Url.Content(Model.imImagem)" class="img-rounded" style="max-width:100%" />*@              
+                <img src="@Url.Content(Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg")" class="img-rounded" style="max-width:100%"/>             
             </div>
         </div>
     </div>

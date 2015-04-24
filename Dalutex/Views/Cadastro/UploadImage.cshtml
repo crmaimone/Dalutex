@@ -1,0 +1,41 @@
+﻿@{
+    ViewBag.Title = "ADICIONAR AO CARRINHO";
+}
+<div class="header-title"><h3>@ViewBag.Title</h3></div>
+<div class="container">
+    <img id="imgPreview" width="200" style="display:none" />
+    @using (Html.BeginForm("UploadImage", "Cadastro", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.ValidationSummary();
+        <input type="file" name="desenho" id="fileInput" />
+        <input type="hidden" name="cod_studio" value="@ViewBag.CodStudio" />
+        <input type="submit" name="Submit" id="Submit" value="Upload" />
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            //API
+            scriptWrapper = (function () {
+
+                //API Attributes
+
+                //API Methods
+                fileInput_Change = function (event) {
+                    $("#imgPreview").fadeIn("fast").attr('src', URL.createObjectURL(event.target.files[0]));
+                }
+
+                // public API
+                return {
+                    fileInput_Change: fileInput_Change
+                };
+            })();
+
+            //Init
+            (function Init() {
+                $('#fileInput').on('change', scriptWrapper.fileInput_Change);
+            })();
+        });
+    </script>
+}

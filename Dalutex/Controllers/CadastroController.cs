@@ -2,6 +2,8 @@
 using Dalutex.Models.DataModels;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -171,6 +173,41 @@ namespace Dalutex.Controllers
                 model.Transportadoras = ctx.TRANSPORTADORAS.Where(x => x.NOME.Contains(model.Filtro.ToUpper())).OrderBy(x => x.NOME).ToList();                              
             }
             return View(model);
+        }
+
+        [AllowAnonymous]
+        public ActionResult UploadImage(string cod_studio)
+        {
+            ViewBag.CodStudio = cod_studio;
+            return View();
+        }
+
+        [AllowAnonymous]
+        public ActionResult UploadSucess()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult UploadImage(HttpPostedFileBase desenho, string cod_studio)
+        {
+            try
+            {
+                //CASSIANO:Se não houver uma verificação aqui, o arquivo será sobrescrito. O que deseja fazer?
+                if (desenho != null && desenho.ContentLength > 0)
+                {
+                    var fileName = Path.GetFileName(desenho.FileName);//Se precisar
+                    var path = Path.Combine(Server.MapPath(ConfigurationManager.AppSettings["PASTA_UPLOAD"]), cod_studio + ".jpg");
+                    desenho.SaveAs(path);
+                }
+            }
+            catch(Exception ex)
+            {
+                ModelState.AddModelError("","Falha ao fazer upload do arquivo." + ex.Message);
+            }
+
+            return RedirectToAction("UploadSucess");
         }
     }
 }

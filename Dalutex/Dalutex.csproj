@@ -342,6 +342,8 @@
     <Content Include="Views\Pedido\ItensProntaEntrega.cshtml" />
     <Content Include="Views\Pedido\DetalhesPE.cshtml" />
     <Content Include="Views\Pedido\Preview.cshtml" />
+    <Content Include="Views\Cadastro\UploadImage.cshtml" />
+    <Content Include="Views\Cadastro\UploadSucess.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

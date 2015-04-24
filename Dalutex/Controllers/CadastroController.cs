@@ -178,8 +178,12 @@ namespace Dalutex.Controllers
         [AllowAnonymous]
         public ActionResult UploadImage(string cod_studio)
         {
-            ViewBag.CodStudio = cod_studio;
-            return View();
+            UploadImageModelView model = new UploadImageModelView();
+            
+            model.CodStudio = cod_studio;       
+            //ViewBag.CodStudio = cod_studio;
+
+            return View(model);
         }
 
         [AllowAnonymous]
@@ -197,6 +201,7 @@ namespace Dalutex.Controllers
                 //CASSIANO:Se não houver uma verificação aqui, o arquivo será sobrescrito. O que deseja fazer?
                 if (desenho != null && desenho.ContentLength > 0)
                 {
+                    var x = desenho.ContentType;
                     var fileName = Path.GetFileName(desenho.FileName);//Se precisar
                     var path = Path.Combine(Server.MapPath(ConfigurationManager.AppSettings["PASTA_UPLOAD"]), cod_studio + ".jpg");
                     desenho.SaveAs(path);
@@ -208,6 +213,96 @@ namespace Dalutex.Controllers
             }
 
             return RedirectToAction("UploadSucess");
+        }
+
+
+        public ActionResult DesenhosSemImagem(
+            string filtrocodstudio, 
+            string filtrocoddal, 
+            string filtrodesenho, 
+            string pagina, 
+            string totalpaginas,
+            string filtrostudio)
+        {
+            DesenhosSemImagemModelView model = new DesenhosSemImagemModelView();
+            model.FiltroCodStudio = filtrocodstudio;
+            model.FiltroCodDal = filtrocoddal;
+            model.FiltroDesenho = filtrodesenho;
+            model.FiltroStudio = filtrostudio;
+
+            if (!string.IsNullOrWhiteSpace(totalpaginas))
+            {
+                model.TotalPaginas = int.Parse(totalpaginas);
+            }
+
+            if (string.IsNullOrWhiteSpace(pagina))
+                model.Pagina = 1;
+            else
+                model.Pagina = int.Parse(pagina);
+
+            
+            ObterItensParaReserva(model);
+
+            model.UrlImagens = ConfigurationManager.AppSettings["PASTA_RESERVAS"];
+            return View(model);        
+        }
+
+        private void ObterItensParaReserva(DesenhosSemImagemModelView model)
+        {
+            int iItensPorPagina = 24;
+
+            using (var ctx = new TIDalutexContext())
+            {
+                List<ItemReserva> result = null;
+
+                var query =
+                        from dc in ctx.VW_DESENHOS_DISP_RESERVA
+                        where
+                            (dc.DESENHO.StartsWith(model.FiltroDesenho.ToUpper()) || model.FiltroDesenho == null)
+                            && (dc.COD_STUDIO.ToUpper().StartsWith(model.FiltroCodStudio.ToUpper()) || model.FiltroCodStudio == null)
+                            && (dc.COD_DAL.ToUpper().Contains(model.FiltroCodDal.ToUpper()) || model.FiltroCodDal == null)
+                            && (dc.NOME_STUDIO.ToUpper().Contains(model.FiltroStudio.ToUpper()) || model.FiltroStudio == null)
+                        group dc by
+                            new
+                            {
+                                dc.DESENHO,
+                                dc.COD_STUDIO,
+                                dc.COD_DAL,
+                                dc.ID_CONTROLE_DESENV,
+                                dc.ID_STUDIO,
+                                dc.ID_ITEM_STUDIO
+                            }
+                            into dv
+                            select new ItemReserva
+                            {
+                                Desenho = dv.Key.DESENHO.ToUpper(),
+                                CodStudio = dv.Key.COD_STUDIO.ToUpper(),
+                                CodDal = dv.Key.COD_DAL.ToUpper(),
+                                IDControleDesenvolvimento = dv.Key.ID_CONTROLE_DESENV,
+                                IDStudio = (int)dv.Key.ID_STUDIO,
+                                IDItemStudio = (int)dv.Key.ID_ITEM_STUDIO
+                            };
+
+
+                if (model.TotalPaginas == 0)
+                {
+                    result = query.OrderByDescending(x => x.CodDal).ToList();
+
+                    decimal dTotal = result.Count / (decimal)iItensPorPagina;
+                    model.TotalPaginas = (int)Decimal.Ceiling(dTotal);
+                    if (model.TotalPaginas == 0)
+                        model.TotalPaginas = 1;
+
+                    model.Galeria = result.Skip((model.Pagina - 1) * iItensPorPagina).Take(iItensPorPagina).ToList();
+                }
+                else
+                {
+                    model.Galeria = query.OrderByDescending(x => x.CodDal)
+                                            .Skip((model.Pagina - 1) * iItensPorPagina)
+                                            .Take(iItensPorPagina)
+                                            .ToList();
+                }
+            }
         }
     }
 }

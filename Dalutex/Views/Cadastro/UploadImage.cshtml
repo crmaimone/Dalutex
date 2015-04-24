@@ -1,17 +1,53 @@
-﻿@{
-    ViewBag.Title = "ADICIONAR AO CARRINHO";
+﻿@model Dalutex.Models.UploadImageModelView
+
+@using Dalutex.Models;
+@using Dalutex.Models.DataModels;
+
+
+@{
+    ViewBag.Title = "CADASTRAR IMAGEM ITEM STUDIO";
 }
 <div class="header-title"><h3>@ViewBag.Title</h3></div>
-<div class="container">
-    <img id="imgPreview" width="200" style="display:none" />
-    @using (Html.BeginForm("UploadImage", "Cadastro", FormMethod.Post, new { enctype = "multipart/form-data" }))
-    {
-        @Html.ValidationSummary();
-        <input type="file" name="desenho" id="fileInput" />
-        <input type="hidden" name="cod_studio" value="@ViewBag.CodStudio" />
-        <input type="submit" name="Submit" id="Submit" value="Upload" />
-    }
-</div>
+
+@if (Model.CodStudio != null)
+{
+    <div class="panel panel-default">
+        <h5>
+              <strong>STUDIO:</strong>&nbsp;@Model.Studio
+            | <strong>CÓD STUDIO:</strong>&nbsp;@Model.CodStudio
+            | <strong>CÓD. DAL:</strong>&nbsp;@Model.CodDal 
+            | <strong>DESENHO:</strong>&nbsp;@Model.Desenho
+        </h5>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="container">
+            <img id="imgPreview" width="400" style="display:none" />
+
+            @*exemplo usando bootstrap: https://github.com/kartik-v/bootstrap-fileinput*@
+
+            @using (Html.BeginForm("UploadImage", "Cadastro", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.ValidationSummary();
+                <input type="file" name="desenho" id="fileInput" />
+
+                <input type="hidden" name="cod_studio" value="@Model.CodStudio" />
+                <input type="hidden" name="studio" value="@Model.Studio" />
+                <input type="hidden" name="cod_dal" value="@Model.CodDal" />
+                <input type="hidden" name="desenho" value="@Model.Desenho" />
+
+                <input type="submit" name="Submit" id="Submit" value="Upload" />
+            }
+        </div>
+    </div>
+}
+else
+{
+    <div class="panel panel-default">
+        <h5>DESENHO NÃO SELECIONADO</h5>
+    </div>
+}
+
 
 @section Scripts {
     <script>

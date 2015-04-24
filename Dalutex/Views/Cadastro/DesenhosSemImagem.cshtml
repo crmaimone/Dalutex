@@ -1,0 +1,194 @@
+﻿@model Dalutex.Models.DesenhosSemImagemModelView
+
+@using Dalutex.Models;
+@using Dalutex.Models.DataModels;
+
+@{
+    ViewBag.Title = "Itens Studio";
+}
+
+<div class="header-title"><h3>@ViewBag.Title</h3></div>
+<div class="container-fluid">
+
+    <div class="panel panel-default">
+        <div class="row-fluid" id="pesqDesenho">
+            @using (Html.BeginForm("DesenhosSemImagem", "Cadastro", null, FormMethod.Post, new { role = "search" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-group">
+                    @Html.LabelFor(x => x.FiltroStudio, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(x => x.FiltroCodStudio, new { @class = "form-control", placeholder = "Começa com.." })
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    @Html.LabelFor(x => x.FiltroCodStudio, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(x => x.FiltroCodStudio, new { @class = "form-control", placeholder = "Começa com.." })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.FiltroCodDal, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(x => x.FiltroCodDal, new { @class = "form-control", placeholder = "Contém.." })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.FiltroDesenho, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(x => x.FiltroDesenho, new { @class = "form-control", placeholder = "Começa com.." })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="hidden" name="Pagina" value="@Model.Pagina" />
+                    <button type="submit" class="btn btn-default btn-group-sm"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Pesquisar</button>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="row">
+        @if (Model.Galeria != null)
+        {
+            foreach (ItemReserva item in Model.Galeria)
+            {
+                <div class="col-sm-4 col-md-2">
+
+                    @Html.Partial(
+                        "_Thumb",
+                        new Dalutex.Models.ThumbViewModel()
+                        {
+                            Tipo = Enums.ItemType.DesenhosSemImagem,
+                            Desenho = item.Desenho,
+                            Variante = null,
+                            UrlImagens = Model.UrlImagens,
+                            Reduzido = (int)item.IDControleDesenvolvimento.GetValueOrDefault(),
+                            Cor = null,
+                            RGB = null,
+                            IDColecao = 0,
+                            NMColecao = null,
+                            Pagina = Model.Pagina,
+                            CodStudio = item.CodStudio,
+                            CodDal = item.CodDal,
+                            IDStudio = item.IDStudio,
+                            IDItemStudio = item.IDItemStudio
+                        })
+
+                </div>
+            }
+        }
+    </div>
+
+    <nav>
+        <ul class="pagination">
+            @if (Model.Galeria != null)
+            {
+                if (Model.Pagina > 1)
+                {
+                    <li>
+                        <a href="@Url.Action("DesenhosSemImagem", "Cadastro", 
+                                                new { filtrocodstudio = Model.FiltroCodStudio, 
+                                                      filtrocoddal = Model.FiltroCodDal, 
+                                                      filtrodesenho = Model.FiltroDesenho, 
+                                                      pagina = Model.Pagina - 1, 
+                                                      totalpaginas = Model.TotalPaginas,
+                                                      filtrostudio = Model.FiltroCodStudio 
+                                                })" aria-label="Anterior">
+
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                }
+                else
+                {
+                    <li class="disabled">
+                        <a href="#" aria-label="Anterior">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                }
+                int iComecar = Model.Pagina <= 5 ? 1 : Model.Pagina - 5;
+                for (int i = iComecar; i <= Model.TotalPaginas; i++)
+                {
+                    if (Model.Pagina == i)
+                    {
+                        <li class="active"><a href="@Url.Action("DesenhosSemImagem", "Cadastro", 
+                                                                new { filtrocodstudio = Model.FiltroCodStudio, 
+                                                                      filtrocoddal = Model.FiltroCodDal, 
+                                                                      filtrodesenho = Model.FiltroDesenho, 
+                                                                      pagina = i, totalpaginas = 
+                                                                      Model.TotalPaginas,
+                                                                      filtrostudio = Model.FiltroStudio 
+                                                                })">@i</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="@Url.Action("DesenhosSemImagem", "Cadastro", 
+                                                new { filtrocodstudio = Model.FiltroCodStudio, 
+                                                      filtrocoddal = Model.FiltroCodDal, 
+                                                      filtrodesenho = Model.FiltroDesenho, 
+                                                      pagina = i, totalpaginas = Model.TotalPaginas,
+                                                      filtrostudio = Model.FiltroStudio 
+                                                })">@i</a></li>
+                    }
+
+                    if (i == iComecar + 9)
+                    {
+                        break;
+                    }
+                }
+                if (Model.Pagina < Model.TotalPaginas)
+                {
+                    <li>
+                        <a href="@Url.Action("DesenhosSemImagem", "Cadastro", 
+                                            new { filtrocodstudio = Model.FiltroCodStudio, 
+                                                  filtrocoddal = Model.FiltroCodDal, 
+                                                  filtrodesenho = Model.FiltroDesenho, 
+                                                  pagina = Model.Pagina + 1, 
+                                                  totalpaginas = Model.TotalPaginas,
+                                                  filtrostudio = Model.FiltroStudio 
+                                            })" aria-label="Próxima">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                }
+                else
+                {
+                    <li class="disabled">
+                        <a href="#" aria-label="Próxima">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                }
+            }
+        </ul>
+    </nav>
+    <hr>
+    <a class="btn btn-default right" href="javascript:history.back()">VOLTAR</a>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/equalheight")
+    <script>
+        $(document).ready(function () {
+            //API
+            scriptWrapper = (function () {
+
+                //API Attributes
+
+                //API Methods
+
+                // public API
+                return {
+
+                };
+            })();
+
+            //Init
+            (function Init() {
+                $('.equal-height').equalHeight();
+            })();
+        });
+    </script>
+}

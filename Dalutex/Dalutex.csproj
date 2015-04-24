@@ -258,6 +258,90 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Content\img_public\C324_CA.JPG" />
+    <Content Include="Content\img_public\C324_CB.JPG" />
+    <Content Include="Content\img_reserva\EXC01210.JPG" />
+    <Content Include="Content\img_reserva\EXC01211.JPG" />
+    <Content Include="Content\img_reserva\EXC01212.JPG" />
+    <Content Include="Content\img_reserva\EXC01213.JPG" />
+    <Content Include="Content\img_reserva\EXC01214.JPG" />
+    <Content Include="Content\img_reserva\EXC01215.JPG" />
+    <Content Include="Content\img_reserva\EXC01216.JPG" />
+    <Content Include="Content\img_reserva\EXC01217.JPG" />
+    <Content Include="Content\img_reserva\EXC01218.JPG" />
+    <Content Include="Content\img_reserva\EXC01220.JPG" />
+    <Content Include="Content\img_reserva\EXC01221.JPG" />
+    <Content Include="Content\img_reserva\EXC01224.JPG" />
+    <Content Include="Content\img_reserva\EXC01226.JPG" />
+    <Content Include="Content\img_reserva\EXC01227.JPG" />
+    <Content Include="Content\img_reserva\EXC01239.JPG" />
+    <Content Include="Content\img_reserva\EXC01240.JPG" />
+    <Content Include="Content\img_reserva\EXC01241.JPG" />
+    <Content Include="Content\img_reserva\EXC01242.JPG" />
+    <Content Include="Content\img_reserva\EXC01243.JPG" />
+    <Content Include="Content\img_reserva\EXC01244.JPG" />
+    <Content Include="Content\img_reserva\EXC01245.JPG" />
+    <Content Include="Content\img_reserva\EXC01246.JPG" />
+    <Content Include="Content\img_reserva\EXC01247.JPG" />
+    <Content Include="Content\img_reserva\EXC01248.JPG" />
+    <Content Include="Content\img_reserva\EXC01249.JPG" />
+    <Content Include="Content\img_reserva\EXC01250.JPG" />
+    <Content Include="Content\img_reserva\EXC01251.JPG" />
+    <Content Include="Content\img_reserva\EXC01252.JPG" />
+    <Content Include="Content\img_reserva\EXC01253.JPG" />
+    <Content Include="Content\img_reserva\EXC01254.JPG" />
+    <Content Include="Content\img_reserva\EXC01260.JPG" />
+    <Content Include="Content\img_reserva\EXC01261.JPG" />
+    <Content Include="Content\img_reserva\EXC01262.jpg" />
+    <Content Include="Content\img_reserva\EXC01282.JPG" />
+    <Content Include="Content\img_reserva\EXC01307.JPG" />
+    <Content Include="Content\img_reserva\EXC01308.JPG" />
+    <Content Include="Content\img_reserva\EXC01316.JPG" />
+    <Content Include="Content\img_reserva\EXC01317.JPG" />
+    <Content Include="Content\img_reserva\EXC01318.JPG" />
+    <Content Include="Content\img_reserva\EXC01319.JPG" />
+    <Content Include="Content\img_reserva\EXC01320.JPG" />
+    <Content Include="Content\img_reserva\EXC01321.JPG" />
+    <Content Include="Content\img_reserva\EXC01322.JPG" />
+    <Content Include="Content\img_reserva\EXC01323.JPG" />
+    <Content Include="Content\img_reserva\EXC01324.JPG" />
+    <Content Include="Content\img_reserva\EXC01331.JPG" />
+    <Content Include="Content\img_reserva\EXC01341.JPG" />
+    <Content Include="Content\img_reserva\EXC01342.JPG" />
+    <Content Include="Content\img_reserva\EXC01343.JPG" />
+    <Content Include="Content\img_reserva\EXC01344.jpg" />
+    <Content Include="Content\img_reserva\EXC01345.jpg" />
+    <Content Include="Content\img_reserva\EXC01346.jpg" />
+    <Content Include="Content\img_reserva\EXC01347.jpg" />
+    <Content Include="Content\img_reserva\EXC01348.jpg" />
+    <Content Include="Content\img_reserva\EXC01349.jpg" />
+    <Content Include="Content\img_reserva\EXC01350.jpg" />
+    <Content Include="Content\img_reserva\EXC01351.jpg" />
+    <Content Include="Content\img_reserva\EXC01352.jpg" />
+    <Content Include="Content\img_reserva\EXC01353.jpg" />
+    <Content Include="Content\img_reserva\EXC01354.jpg" />
+    <Content Include="Content\img_reserva\EXC01355.jpg" />
+    <Content Include="Content\img_reserva\EXC01356.jpg" />
+    <Content Include="Content\img_reserva\EXC01357.jpg" />
+    <Content Include="Content\img_reserva\EXC01358.jpg" />
+    <Content Include="Content\img_reserva\EXC01359.jpg" />
+    <Content Include="Content\img_reserva\EXC01367.JPG" />
+    <Content Include="Content\img_reserva\EXC01368.JPG" />
+    <Content Include="Content\img_reserva\EXC01369.JPG" />
+    <Content Include="Content\img_reserva\EXC01374.JPG" />
+    <Content Include="Content\img_reserva\EXC01375.JPG" />
+    <Content Include="Content\img_reserva\EXC01376.JPG" />
+    <Content Include="Content\img_reserva\EXC01377.JPG" />
+    <Content Include="Content\img_reserva\EXC01378.JPG" />
+    <Content Include="Content\img_reserva\EXC01379.JPG" />
+    <Content Include="Content\img_reserva\EXC01380.JPG" />
+    <Content Include="Content\img_reserva\EXC01381.JPG" />
+    <Content Include="Content\img_reserva\EXC01406.JPG" />
+    <Content Include="Content\img_reserva\EXC01407.JPG" />
+    <Content Include="Content\img_reserva\EXC01408.JPG" />
+    <Content Include="Content\img_reserva\EXC01409.JPG" />
+    <Content Include="Content\img_reserva\EXC01410.JPG" />
+    <Content Include="Content\img_reserva\EXC01685.JPG" />
     <Content Include="Scripts\bootstrap-select.js" />
     <Content Include="Scripts\bootstrap-select.min.js" />
     <Content Include="Scripts\bootstrap-table-pt-BR.js" />
@@ -344,6 +428,7 @@
     <Content Include="Views\Pedido\Preview.cshtml" />
     <Content Include="Views\Cadastro\UploadImage.cshtml" />
     <Content Include="Views\Cadastro\UploadSucess.cshtml" />
+    <Content Include="Views\Cadastro\DesenhosSemImagem.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -353,6 +438,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Controllers\Relatorios\PrePedido.rdlc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\img_upload\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

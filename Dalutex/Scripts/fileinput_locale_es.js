@@ -21,7 +21,7 @@
         cancelTitle: 'Abortar el cargue en curso',
         uploadLabel: 'Cargar Archivo',
         uploadTitle: 'Cargar archivos seleccionados',
-        msgSizeTooLarge: 'Archivo "{name}" (<b>{size} KB</b>) excede el tamaño máximo permitido de <b>{maxSize} KB</b>. Por favor reintente su cargue!',
+        msgSizeTooLarge: 'Arquivo "{name}" (<b>{size} KB</b>) excede o tamanho máximo permitido de <b>{maxSize} KB</b>. Por favor selecione outro arquivo!',
         msgFilesTooLess: 'Usted debe seleccionar al menos <b>{n}</b> {files} a cargar. Por favor reintente su cargue!',
         msgFilesTooMany: 'El número de archivos seleccionados a cargar <b>({n})</b> excede el límite máximo permitido de <b>{m}</b>. Por favor reintente su cargue!',
         msgFileNotFound: 'Archivo "{name}" no encontrado!',
@@ -29,14 +29,14 @@
         msgFileNotReadable: 'Archivo "{name}" no se puede leer.',
         msgFilePreviewAborted: 'Previsualización del archivo abortada para "{name}".',
         msgFilePreviewError: 'Ocurrió un error mientras se leía el archivo "{name}".',
-        msgInvalidFileType: 'Tipo de archivo inválido para el archivo "{name}". Sólo archivos "{types}" son permitidos.',
-        msgInvalidFileExtension: 'Extensión de archivo inválido para "{name}". Sólo archivos "{extensions}" son permitidos.',
-        msgValidationError: 'Error Cargando Archivo',
+        msgInvalidFileType: 'Tipo de arquivo inválido para o arquivo "{name}". Apenas arquivos "{types}" são permitidos.',
+        msgInvalidFileExtension: 'Extensão de arquivo inválido para "{name}". Apenas arquivos "{extensions}" são permitidos.',
+        msgValidationError: 'Erro ao Carregar Arquivo.',
         msgLoading: 'Cargando archivo {index} of {files} &hellip;',
         msgProgress: 'Cargando archivo {index} of {files} - {name} - {percent}% completado.',
         msgSelected: '{n} {files} seleccionados',
         msgFoldersNotAllowed: 'Arrastre y suelte únicamente archivos! Se omite {n} carpeta(s).',
-        dropZoneTitle: 'Arrastre y suelte los archivos aquí &hellip;'
+        dropZoneTitle: 'Arraste e solte o arquivo aqui &hellip;'
     };
 
     $.extend($.fn.fileinput.defaults, $.fn.fileinput.locales.es);

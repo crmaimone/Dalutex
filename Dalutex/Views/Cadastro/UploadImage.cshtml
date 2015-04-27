@@ -7,6 +7,8 @@
 @{
     ViewBag.Title = "CADASTRAR IMAGEM ITEM STUDIO";
 }
+@Styles.Render("~/Content/fileinput")
+
 <div class="header-title"><h3>@ViewBag.Title</h3></div>
 
 @if (Model.CodStudio != null)
@@ -22,27 +24,29 @@
 
     <div class="panel panel-default">
         <div class="container">
-            <img id="imgPreview" width="400" style="display:none" />
+            @*<img id="imgPreview" width="400" style="display:none" />*@
 
             @*exemplo usando bootstrap: https://github.com/kartik-v/bootstrap-fileinput*@
 
             @using (Html.BeginForm("UploadImage", "Cadastro", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
                 @Html.ValidationSummary();
-
-                <input id="input-id" type="file" class="file" data-preview-file-type="text">
-
-
-                @*<input type="file" name="desenho" id="fileInput" />*@
-
-                <input type="hidden" name="cod_studio" value="@Model.CodStudio" />
+                <input type="hidden" name="cod_studio" value="@Model.CodStudio" id="hidcod-stud" />
                 <input type="hidden" name="studio" value="@Model.Studio" />
                 <input type="hidden" name="cod_dal" value="@Model.CodDal" />
                 <input type="hidden" name="desenho" value="@Model.Desenho" />
 
-                <input type="submit" name="Submit" id="Submit" value="Upload" />
+
+                @*<input id="input-43" type="file" accept="image/jpeg" name="desenho">   *@
+
+                <input id="input-43" name="desenho" type="file" multiple class="file-loading" accept="image/jpeg">
+
+                <div id="errorBlock43" class="help-block"></div>
+              
+                
             }
-        </div>
+            <div><p>Tipo de arquivo suportado: ".jpg" | Tamanho máximo: 2 mb</p></div> 
+        </div>                               
     </div>
 }
 else
@@ -67,10 +71,7 @@ else
                 fileInput_Change = function (event) {
                     $("#imgPreview").fadeIn("fast").attr('src', URL.createObjectURL(event.target.files[0]));
                 }
-
-                // with plugin options --- oda
-                $("#input-id").fileinput({ 'showUpload': false, 'previewFileType': 'any' });
-
+                
                 // public API
                 return {
                     fileInput_Change: fileInput_Change
@@ -79,15 +80,48 @@ else
 
             //Init
             (function Init() {
-                $('#fileInput').on('change', scriptWrapper.fileInput_Change);
+                //$('#fileInput').on('change', scriptWrapper.fileInput_Change);
 
                 // initialize with defaults --- oda
-                $("#input-id").fileinput();                
-            })();
-         
+                //$("#input-43").fileinput();
 
-            
+                // with plugin options --- oda
+                //$("#input-43").fileinput({ 'showUpload': true, 'previewFileType': 'any' });
+
+                $("#input-43").fileinput({
+                    previewFileType: "image",
+                    browseClass: "btn btn-success",
+                    browseLabel: "Pick Image",
+                    browseIcon: '<i class="glyphicon glyphicon-picture"></i>',
+                    removeClass: "btn btn-danger",
+                    removeLabel: "Delete",
+                    removeIcon: '<i class="glyphicon glyphicon-trash"></i>',
+                    uploadClass: "btn btn-info",
+                    uploadLabel: "Upload",
+                    uploadIcon: '<i class="glyphicon glyphicon-upload"></i>',
+
+                    elErrorContainer: "#errorBlock43",
+                    maxFileSize: 2048,
+                    maxFileCount: 1,
+                    showUpload: true,
+                    allowedFileTypes: ["image"],
+                    allowedFileExtensions: ["jpg", "jpeg"],
+
+                    uploadUrl: "/cadastro/UploadImage", // server upload action
+                    uploadAsync: true,
+                    uploadExtraData: { 'codStudio': $("#hidcod-stud")[0].value }
+                    //uploadExtraData: ['cod_studio=222']
+                    //uploadExtraData: [{ "cod_studio": $("#hidcod-stud").value() }]                   
+                    //uploadExtraData: { 'request': document.getElementById('#hidcod-stud').value },
+                    //uploadExtra: {'uploadExtraData': $("#hidcod-stud").value()
+                        
+                     //uploadExtraData: {'uploadExtraData': $("#hidcod-stud").value()}
+                });
+
+                
+               
+
+            })();  
         });
-        
     </script>
 }

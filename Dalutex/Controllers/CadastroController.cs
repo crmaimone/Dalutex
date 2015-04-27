@@ -194,7 +194,7 @@ namespace Dalutex.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public ActionResult UploadImage(HttpPostedFileBase desenho, string cod_studio)
+        public ActionResult UploadImage(HttpPostedFileBase desenho, string codStudio)
         {
             try
             {
@@ -203,7 +203,7 @@ namespace Dalutex.Controllers
                 {
                     var x = desenho.ContentType;
                     var fileName = Path.GetFileName(desenho.FileName);//Se precisar
-                    var path = Path.Combine(Server.MapPath(ConfigurationManager.AppSettings["PASTA_UPLOAD"]), cod_studio + ".jpg");
+                    var path = Path.Combine(Server.MapPath(ConfigurationManager.AppSettings["PASTA_UPLOAD"]), codStudio + ".jpg");
                     desenho.SaveAs(path);
                 }
             }

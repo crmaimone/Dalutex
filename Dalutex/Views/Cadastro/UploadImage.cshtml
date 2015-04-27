@@ -29,7 +29,11 @@
             @using (Html.BeginForm("UploadImage", "Cadastro", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
                 @Html.ValidationSummary();
-                <input type="file" name="desenho" id="fileInput" />
+
+                <input id="input-id" type="file" class="file" data-preview-file-type="text">
+
+
+                @*<input type="file" name="desenho" id="fileInput" />*@
 
                 <input type="hidden" name="cod_studio" value="@Model.CodStudio" />
                 <input type="hidden" name="studio" value="@Model.Studio" />
@@ -50,6 +54,8 @@ else
 
 
 @section Scripts {
+    @Scripts.Render("~/bundles/bootstrap-table")   
+    @Scripts.Render("~/bundles/fileinput")
     <script>
         $(document).ready(function () {
             //API
@@ -62,6 +68,9 @@ else
                     $("#imgPreview").fadeIn("fast").attr('src', URL.createObjectURL(event.target.files[0]));
                 }
 
+                // with plugin options --- oda
+                $("#input-id").fileinput({ 'showUpload': false, 'previewFileType': 'any' });
+
                 // public API
                 return {
                     fileInput_Change: fileInput_Change
@@ -71,7 +80,14 @@ else
             //Init
             (function Init() {
                 $('#fileInput').on('change', scriptWrapper.fileInput_Change);
+
+                // initialize with defaults --- oda
+                $("#input-id").fileinput();                
             })();
+         
+
+            
         });
+        
     </script>
 }

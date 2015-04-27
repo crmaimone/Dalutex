@@ -44,6 +44,17 @@ namespace Dalutex
                       "~/Content/bootstrap-table.min.css",
                       "~/Content/bootstrap-table.css"));
 
+
+
+            bundles.Add(new ScriptBundle("~/bundles/fileinput").Include(
+                    "~/Scripts/fileinput.min.js",
+                    "~/Scripts/fileinput.js",
+                    "~/Scripts/fileinput_locale_es.js"));
+
+            bundles.Add(new StyleBundle("~/Content/fileinput").Include(
+                      "~/Content/fileinput.css",
+                      "~/Content/fileinput.min.css"));
+
             // Set EnableOptimizations to false for debugging. For more information,
             // visit http://go.microsoft.com/fwlink/?LinkId=301862
             BundleTable.EnableOptimizations = true;

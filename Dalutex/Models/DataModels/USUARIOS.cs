@@ -21,11 +21,11 @@ namespace Dalutex.Models.DataModels
         [StringLength(20)]
         public string SENHA_USU { get; set; }
 
-        public decimal ADMINISTRADOR { get; set; }
+        public decimal? ADMINISTRADOR { get; set; }
 
         public decimal? TIPO_USUARIO { get; set; }
 
-        public int? DATA_CADASTRO { get; set; }
+        public DateTime? DATA_CADASTRO { get; set; }
 
         public int? ID_REPRES { get; set; }
 

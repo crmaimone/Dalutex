@@ -28,6 +28,7 @@ namespace Dalutex.Models
         public int PedidoReserva { get; set; }
         public int ItemPedidoReserva { get; set; }
         public int IDVariante { get; set; }
+        public string Studio { get; set; }
 
         //Rotina PE..
         public string Tecnologia { get; set; }

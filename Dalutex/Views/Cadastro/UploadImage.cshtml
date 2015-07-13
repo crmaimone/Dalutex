@@ -30,7 +30,8 @@
 
             @using (Html.BeginForm("UploadImage", "Cadastro", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
-                @Html.ValidationSummary();
+                @*@Html.ValidationSummary();*@
+                
                 <input type="hidden" name="cod_studio" value="@Model.CodStudio" id="hidcod-stud" />
                 <input type="hidden" name="studio" value="@Model.Studio" />
                 <input type="hidden" name="cod_dal" value="@Model.CodDal" />
@@ -46,6 +47,8 @@
                 
             }
             <div><p>Tipo de arquivo suportado: ".jpg" | Tamanho máximo: 2 mb</p></div> 
+            <hr />
+            @Html.ActionLink("VOLTAR", "DesenhosSemImagem", "Cadastro", new { @class = "btn btn-default" })
         </div>                               
     </div>
 }
@@ -54,6 +57,8 @@ else
     <div class="panel panel-default">
         <h5>DESENHO NÃO SELECIONADO</h5>
     </div>
+        
+    @Html.ActionLink("CADASTRAR IMAGENS", "DesenhosSemImagem", "Cadastro", new { @class = "btn btn-default" })
 }
 
 
@@ -110,12 +115,6 @@ else
                     uploadUrl: "/cadastro/UploadImage", // server upload action
                     uploadAsync: true,
                     uploadExtraData: { 'codStudio': $("#hidcod-stud")[0].value }
-                    //uploadExtraData: ['cod_studio=222']
-                    //uploadExtraData: [{ "cod_studio": $("#hidcod-stud").value() }]                   
-                    //uploadExtraData: { 'request': document.getElementById('#hidcod-stud').value },
-                    //uploadExtra: {'uploadExtraData': $("#hidcod-stud").value()
-                        
-                     //uploadExtraData: {'uploadExtraData': $("#hidcod-stud").value()}
                 });
 
                 

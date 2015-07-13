@@ -176,11 +176,15 @@ namespace Dalutex.Controllers
         }
 
         [AllowAnonymous]
-        public ActionResult UploadImage(string cod_studio)
+        public ActionResult UploadImage(string cod_studio, string cod_dal, string studio, string desenho )
         {
             UploadImageModelView model = new UploadImageModelView();
             
-            model.CodStudio = cod_studio;       
+            model.CodStudio = cod_studio;
+            model.CodDal = cod_dal;
+            model.Studio = studio;
+            model.Desenho = desenho;
+
             //ViewBag.CodStudio = cod_studio;
 
             return View(model);
@@ -201,10 +205,12 @@ namespace Dalutex.Controllers
                 //CASSIANO:Se não houver uma verificação aqui, o arquivo será sobrescrito. O que deseja fazer?
                 if (desenho != null && desenho.ContentLength > 0)
                 {
-                    var x = desenho.ContentType;
+                    //var x = desenho.ContentType;
                     var fileName = Path.GetFileName(desenho.FileName);//Se precisar
                     var path = Path.Combine(Server.MapPath(ConfigurationManager.AppSettings["PASTA_UPLOAD"]), codStudio + ".jpg");
                     desenho.SaveAs(path);
+
+                    //var img = 
                 }
             }
             catch(Exception ex)
@@ -215,7 +221,7 @@ namespace Dalutex.Controllers
             return RedirectToAction("UploadSucess");
         }
 
-
+        [AllowAnonymous]
         public ActionResult DesenhosSemImagem(
             string filtrocodstudio, 
             string filtrocoddal, 
@@ -270,7 +276,8 @@ namespace Dalutex.Controllers
                                 dc.COD_DAL,
                                 dc.ID_CONTROLE_DESENV,
                                 dc.ID_STUDIO,
-                                dc.ID_ITEM_STUDIO
+                                dc.ID_ITEM_STUDIO,
+                                dc.NOME_STUDIO
                             }
                             into dv
                             select new ItemReserva
@@ -280,7 +287,8 @@ namespace Dalutex.Controllers
                                 CodDal = dv.Key.COD_DAL.ToUpper(),
                                 IDControleDesenvolvimento = dv.Key.ID_CONTROLE_DESENV,
                                 IDStudio = (int)dv.Key.ID_STUDIO,
-                                IDItemStudio = (int)dv.Key.ID_ITEM_STUDIO
+                                IDItemStudio = (int)dv.Key.ID_ITEM_STUDIO,
+                                Studio = dv.Key.NOME_STUDIO
                             };
 
 

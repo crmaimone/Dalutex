@@ -99,7 +99,12 @@
             }
             else if (Model.Tipo == Enums.ItemType.DesenhosSemImagem)
             {
-                <a href="@Url.Content("UploadImage?&cod_studio=" + Model.CodStudio)">
+                <a href="@Url.Content("UploadImage?&cod_studio=" + Model.CodStudio +
+                                   "&cod_dal="+Model.CodDal + 
+                                   "&studio="+Model.Studio +
+                                   "&desenho="+Model.Desenho
+                                     )">
+                    
 
                     <img src="@Url.Content(Model.UrlImagens + @Model.CodStudio + ".jpg")" class="img-thumbnail equal-height">
                     <p class="thumb-paragraph">Cod. Dal:&nbsp;@Model.CodDal</p>

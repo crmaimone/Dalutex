@@ -111,7 +111,11 @@ namespace Dalutex.Models.DataModels
 
         public decimal? ID_CLI_FACCAO { get; set; }
 
-        [StringLength(20)]
-        public string CNPJ_FACCAO { get; set; }
+        //[StringLength(20)]
+        //public string CNPJ_FACCAO { get; set; }
+
+        [StringLength(100)]
+        public string GRUPO_FACCAO { get; set; }
+        
     }
 }

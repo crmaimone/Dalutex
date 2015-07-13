@@ -1015,7 +1015,7 @@ namespace Dalutex.Models.DataModels
                 .HasPrecision(38, 0);
 
             modelBuilder.Entity<PRE_PEDIDO>()
-                .Property(e => e.CNPJ_FACCAO)
+                .Property(e => e.GRUPO_FACCAO)
                 .IsUnicode(false);
 
             modelBuilder.Entity<USUARIOS>()

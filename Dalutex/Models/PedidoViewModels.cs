@@ -40,6 +40,7 @@ namespace Dalutex.Models
         public decimal? IDControleDesenvolvimento { get; set; }
         public int IDItemStudio { get; set; }
         public int IDStudio { get; set; }
+        public string Studio { get; set; }
     }
 
     public class ArtigoTecnologia

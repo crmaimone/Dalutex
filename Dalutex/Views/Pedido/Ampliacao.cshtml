@@ -6,20 +6,20 @@
     ViewBag.Title = "VISUALIZAÇÃO DO DESENHO";
 }
 <div class="header-title"><h3>@ViewBag.Title</h3></div>
-@if (Model.Tipo == Enums.ItemType.Estampado)
+@if (Model.Tipo == (int)Enums.ItemType.Estampado)
 {
     <img src="@Model.Imagem" class="img-rounded" style="width:100%; height:100%;">
 }
-else if (Model.Tipo == Enums.ItemType.Liso)
+else if (Model.Tipo == (int)Enums.ItemType.Liso)
 {
     <img style="background-color:@Model.RGB; width:100%; height:80px;" class="img-rounded">
 }
-else if (Model.Tipo == Enums.ItemType.Reserva)
+else if (Model.Tipo == (int)Enums.ItemType.Reserva)
 {
     <img src="@Model.Imagem" class="img-rounded" style="width:100%; height:100%;">
 }
 
-@if ((Model.Tipo == Enums.ItemType.Estampado || Model.Tipo == Enums.ItemType.ValidacaoReserva))
+@if ((Model.Tipo == (int)Enums.ItemType.Estampado || Model.Tipo == (int)Enums.ItemType.ValidacaoReserva))
 {
     if (Model.Desenho == null)
     {

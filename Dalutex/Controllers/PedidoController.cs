@@ -140,11 +140,10 @@ namespace Dalutex.Controllers
 
                     var query =
                         from ar in ctx.VW_ARTIGOS_DISPONIVEIS
-                        where
-                            (ar.ID_TECNOLOGIA.Equals(null) || ar.ID_TEC != iIDTecnologia)
-                            && (ar.ID_CARAC_TEC.Equals(null) || !lstCaracteristicas.Contains(ar.ID_CARAC_TEC))
-                            && (lstTecnologias.Contains(ar.ID_TEC))
-                            && (lstTecnologias.Contains(ar.ID_TEC_ARTIGO))
+                        where (ar.ID_TECNOLOGIA.Equals(null) || ar.ID_TEC != iIDTecnologia)
+                           && (ar.ID_CARAC_TEC.Equals(null) || !lstCaracteristicas.Contains(ar.ID_CARAC_TEC))
+                           && (lstTecnologias.Contains(ar.ID_TEC))
+                           && (lstTecnologias.Contains(ar.ID_TEC_ARTIGO))
                         group ar by
                             new
                             {
@@ -206,7 +205,8 @@ namespace Dalutex.Controllers
                 Pagina = pagina,
                 RetornarPara = retornarpara,
                 CodStudio = codstudio,
-                Tipo = (Enums.ItemType)tipo
+                //Tipo = (Enums.ItemType)tipo
+                Tipo = tipo
             };
 
             if (tipo == (int)Enums.ItemType.Estampado || tipo == (int)Enums.ItemType.ValidacaoReserva)
@@ -484,7 +484,7 @@ namespace Dalutex.Controllers
                         }
 
                         return View(model);
-                    }
+                    } 
 
                     if (base.Session_Carrinho == null)
                     {

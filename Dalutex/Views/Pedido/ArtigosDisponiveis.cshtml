@@ -81,7 +81,7 @@ else
                 else
                 {
                     <h5>Desenho <strong>@Model.Desenho</strong> não possui cadastro de</h5>
-                    <h5><strong>TECNOLOGIA</strong></h5>
+                    <h5><strong>TECNOLOGIA ou CARACTERISTICAS TÉCNICAS</strong></h5>
                     <br />
                     <h5>Por favor verificar com o DESENVOLVIMENTO</h5>
                 }
@@ -101,7 +101,11 @@ else
                     <a href="@Url.Action("Ampliacao", "Pedido", 
                                         new { desenho = Model.Desenho, variante = Model.Variante, idcolecao = Model.IDColecao, 
                                               nmcolecao = Model.NMColecao, pagina = Model.Pagina, retornarpara  = "ArtigosDisponiveis", 
-                                              codstudio = "", tipo = Model.Tipo})">
+                                              codstudio = "", 
+                                              //tipo = Model.Tipo
+                                              tipo = (int)Model.Tipo
+                                            }
+                                         )">
                         <img src="@Url.Content(Model.Imagem)" class="img-rounded" style="max-width:100%" />
                     </a>
                     </div>

@@ -1711,7 +1711,7 @@
                 </Style>
               </Paragraph>
             </Paragraphs>
-            <Top>2.01107cm</Top>
+            <Top>2.05513cm</Top>
             <Left>13.44055cm</Left>
             <Height>0.45183cm</Height>
             <Width>14.16843cm</Width>
@@ -1744,7 +1744,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>ID_CLIENTE</rd:DefaultName>
-            <Top>2.01107cm</Top>
+            <Top>2.05513cm</Top>
             <Left>12.06943cm</Left>
             <Height>0.45183cm</Height>
             <Width>1.26529cm</Width>
@@ -1779,7 +1779,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox9</rd:DefaultName>
-            <Top>2.01107cm</Top>
+            <Top>2.05513cm</Top>
             <Left>10.68478cm</Left>
             <Height>0.45183cm</Height>
             <Width>1.31409cm</Width>
@@ -1814,7 +1814,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox9</rd:DefaultName>
-            <Top>0.58769cm</Top>
+            <Top>0.63175cm</Top>
             <Height>0.44125cm</Height>
             <Width>1.61572cm</Width>
             <ZIndex>3</ZIndex>
@@ -1847,7 +1847,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>ID_CLIENTE</rd:DefaultName>
-            <Top>0.58769cm</Top>
+            <Top>0.63175cm</Top>
             <Left>1.69686cm</Left>
             <Height>0.44125cm</Height>
             <Width>1.65925cm</Width>
@@ -1880,7 +1880,7 @@
                 </Style>
               </Paragraph>
             </Paragraphs>
-            <Top>0.58769cm</Top>
+            <Top>0.63175cm</Top>
             <Left>3.46193cm</Left>
             <Height>0.44125cm</Height>
             <Width>7.11702cm</Width>
@@ -1905,6 +1905,7 @@
                     <Value>=Fields!PEDIDO_BLOCO.Value</Value>
                     <Style>
                       <FontSize>7pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1914,10 +1915,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>PEDIDO</rd:DefaultName>
-            <Top>0.10411cm</Top>
+            <Top>0.14817cm</Top>
             <Left>1.69686cm</Left>
             <Height>0.45536cm</Height>
-            <Width>8.88209cm</Width>
+            <Width>3.75038cm</Width>
             <ZIndex>6</ZIndex>
             <Style>
               <Border>
@@ -1949,7 +1950,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>0.10411cm</Top>
+            <Top>0.14817cm</Top>
             <Height>0.45536cm</Height>
             <Width>1.61572cm</Width>
             <ZIndex>7</ZIndex>
@@ -1983,8 +1984,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>0.10411cm</Top>
-            <Left>10.68478cm</Left>
+            <Top>0.09525cm</Top>
+            <Left>10.6742cm</Left>
             <Height>0.45536cm</Height>
             <Width>1.31409cm</Width>
             <ZIndex>8</ZIndex>
@@ -2018,7 +2019,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox9</rd:DefaultName>
-            <Top>0.58769cm</Top>
+            <Top>0.63175cm</Top>
             <Left>10.68478cm</Left>
             <Height>0.44125cm</Height>
             <Width>1.31409cm</Width>
@@ -2053,7 +2054,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox9</rd:DefaultName>
-            <Top>2.49112cm</Top>
+            <Top>2.53518cm</Top>
             <Left>0.00001cm</Left>
             <Height>0.49946cm</Height>
             <Width>1.61571cm</Width>
@@ -2087,7 +2088,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>ID_CLIENTE</rd:DefaultName>
-            <Top>2.49112cm</Top>
+            <Top>2.53518cm</Top>
             <Left>1.68628cm</Left>
             <Height>0.49946cm</Height>
             <Width>25.92272cm</Width>
@@ -2120,7 +2121,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>ID_CLIENTE</rd:DefaultName>
-            <Top>0.58769cm</Top>
+            <Top>0.63175cm</Top>
             <Left>12.06943cm</Left>
             <Height>0.44125cm</Height>
             <Width>2.71166cm</Width>
@@ -2154,7 +2155,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>PEDIDO</rd:DefaultName>
-            <Top>0.10411cm</Top>
+            <Top>0.14817cm</Top>
             <Left>12.06943cm</Left>
             <Height>0.45536cm</Height>
             <Width>2.71166cm</Width>
@@ -2187,7 +2188,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>PEDIDO</rd:DefaultName>
-            <Top>0.10411cm</Top>
+            <Top>0.14817cm</Top>
             <Left>16.88794cm</Left>
             <Height>0.45536cm</Height>
             <Width>4.38481cm</Width>
@@ -2222,7 +2223,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>0.10411cm</Top>
+            <Top>0.14817cm</Top>
             <Left>14.92749cm</Left>
             <Height>0.45536cm</Height>
             <Width>1.79464cm</Width>
@@ -2257,7 +2258,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>0.58769cm</Top>
+            <Top>0.63175cm</Top>
             <Left>14.92749cm</Left>
             <Height>0.44125cm</Height>
             <Width>1.79464cm</Width>
@@ -2290,7 +2291,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>PEDIDO</rd:DefaultName>
-            <Top>0.58769cm</Top>
+            <Top>0.63175cm</Top>
             <Left>16.88794cm</Left>
             <Height>0.44125cm</Height>
             <Width>4.38481cm</Width>
@@ -2325,7 +2326,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>0.10411cm</Top>
+            <Top>0.14817cm</Top>
             <Left>21.43856cm</Left>
             <Height>0.45536cm</Height>
             <Width>1.79302cm</Width>
@@ -2360,7 +2361,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>0.58769cm</Top>
+            <Top>0.63175cm</Top>
             <Left>21.43856cm</Left>
             <Height>0.44125cm</Height>
             <Width>1.79302cm</Width>
@@ -2395,7 +2396,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>0.10411cm</Top>
+            <Top>0.14817cm</Top>
             <Left>23.33388cm</Left>
             <Height>0.45536cm</Height>
             <Width>1.86562cm</Width>
@@ -2428,7 +2429,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>0.58769cm</Top>
+            <Top>0.63175cm</Top>
             <Left>23.33388cm</Left>
             <Height>0.44125cm</Height>
             <Width>1.86562cm</Width>
@@ -2460,7 +2461,7 @@
                 </Style>
               </Paragraph>
             </Paragraphs>
-            <Top>1.036cm</Top>
+            <Top>1.08006cm</Top>
             <Left>3.46193cm</Left>
             <Height>0.45267cm</Height>
             <Width>7.11702cm</Width>
@@ -2493,7 +2494,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>ID_CLIENTE</rd:DefaultName>
-            <Top>1.036cm</Top>
+            <Top>1.08006cm</Top>
             <Left>1.69686cm</Left>
             <Height>0.45267cm</Height>
             <Width>1.65924cm</Width>
@@ -2528,7 +2529,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox9</rd:DefaultName>
-            <Top>1.036cm</Top>
+            <Top>1.08006cm</Top>
             <Left>0.00001cm</Left>
             <Height>0.45267cm</Height>
             <Width>1.61571cm</Width>
@@ -2563,7 +2564,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox9</rd:DefaultName>
-            <Top>1.036cm</Top>
+            <Top>1.08006cm</Top>
             <Left>10.68478cm</Left>
             <Height>0.45267cm</Height>
             <Width>1.31409cm</Width>
@@ -2596,7 +2597,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>ID_CLIENTE</rd:DefaultName>
-            <Top>1.036cm</Top>
+            <Top>1.08006cm</Top>
             <Left>12.06943cm</Left>
             <Height>0.45267cm</Height>
             <Width>2.71166cm</Width>
@@ -2631,7 +2632,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>1.036cm</Top>
+            <Top>1.08006cm</Top>
             <Left>14.92749cm</Left>
             <Height>0.45267cm</Height>
             <Width>1.79464cm</Width>
@@ -2664,7 +2665,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>PEDIDO</rd:DefaultName>
-            <Top>1.036cm</Top>
+            <Top>1.08006cm</Top>
             <Left>16.88794cm</Left>
             <Height>0.45267cm</Height>
             <Width>4.38481cm</Width>
@@ -2699,7 +2700,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox9</rd:DefaultName>
-            <Top>1.50278cm</Top>
+            <Top>1.54684cm</Top>
             <Left>0.00001cm</Left>
             <Height>0.473cm</Height>
             <Width>1.61571cm</Width>
@@ -2732,7 +2733,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>ID_CLIENTE</rd:DefaultName>
-            <Top>1.50278cm</Top>
+            <Top>1.54684cm</Top>
             <Left>1.69686cm</Left>
             <Height>0.473cm</Height>
             <Width>1.65924cm</Width>
@@ -2764,7 +2765,7 @@
                 </Style>
               </Paragraph>
             </Paragraphs>
-            <Top>1.50278cm</Top>
+            <Top>1.54684cm</Top>
             <Left>3.46193cm</Left>
             <Height>0.473cm</Height>
             <Width>7.11702cm</Width>
@@ -2799,7 +2800,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox9</rd:DefaultName>
-            <Top>2.01107cm</Top>
+            <Top>2.05513cm</Top>
             <Left>0.00001cm</Left>
             <Height>0.45183cm</Height>
             <Width>1.61571cm</Width>
@@ -2832,7 +2833,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>ID_CLIENTE</rd:DefaultName>
-            <Top>2.01107cm</Top>
+            <Top>2.05513cm</Top>
             <Left>1.69686cm</Left>
             <Height>0.45183cm</Height>
             <Width>8.8821cm</Width>
@@ -2867,7 +2868,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox9</rd:DefaultName>
-            <Top>1.50278cm</Top>
+            <Top>1.54684cm</Top>
             <Left>10.68479cm</Left>
             <Height>0.473cm</Height>
             <Width>1.31409cm</Width>
@@ -2900,7 +2901,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>ID_CLIENTE</rd:DefaultName>
-            <Top>1.50278cm</Top>
+            <Top>1.54684cm</Top>
             <Left>12.06943cm</Left>
             <Height>0.473cm</Height>
             <Width>2.71166cm</Width>
@@ -2935,7 +2936,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>1.50278cm</Top>
+            <Top>1.54684cm</Top>
             <Left>14.92749cm</Left>
             <Height>0.473cm</Height>
             <Width>1.79464cm</Width>
@@ -2968,7 +2969,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>PEDIDO</rd:DefaultName>
-            <Top>1.50278cm</Top>
+            <Top>1.54684cm</Top>
             <Left>16.88794cm</Left>
             <Height>0.473cm</Height>
             <Width>4.38481cm</Width>
@@ -3001,7 +3002,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>1.036cm</Top>
+            <Top>1.08006cm</Top>
             <Left>23.33388cm</Left>
             <Height>0.45267cm</Height>
             <Width>1.86562cm</Width>
@@ -3036,7 +3037,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>1.036cm</Top>
+            <Top>1.08006cm</Top>
             <Left>21.43856cm</Left>
             <Height>0.45267cm</Height>
             <Width>1.79302cm</Width>
@@ -3052,6 +3053,7 @@
             </Style>
           </Textbox>
           <Line Name="Line3">
+            <Top>0.04406cm</Top>
             <Left>10.69481cm</Left>
             <Height>2.4629cm</Height>
             <Width>0cm</Width>
@@ -3063,6 +3065,7 @@
             </Style>
           </Line>
           <Line Name="Line4">
+            <Top>0.04406cm</Top>
             <Left>14.9546cm</Left>
             <Height>2.03359cm</Height>
             <Width>0cm</Width>
@@ -3074,6 +3077,7 @@
             </Style>
           </Line>
           <Line Name="Line5">
+            <Top>0.04406cm</Top>
             <Left>21.43689cm</Left>
             <Height>2.03359cm</Height>
             <Width>0cm</Width>
@@ -3084,11 +3088,80 @@
               </Border>
             </Style>
           </Line>
+          <Textbox Name="Textbox16">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Pedido do Cliente:</Value>
+                    <Style>
+                      <FontSize>7pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox2</rd:DefaultName>
+            <Top>0.14464cm</Top>
+            <Left>6.26895cm</Left>
+            <Height>0.45536cm</Height>
+            <Width>2.38301cm</Width>
+            <ZIndex>43</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="ID_CLIENTE10">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=Fields!PEDIDO_CLIENTE.Value</Value>
+                    <Style>
+                      <FontSize>7pt</FontSize>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>ID_CLIENTE</rd:DefaultName>
+            <Top>0.14111cm</Top>
+            <Left>8.76918cm</Left>
+            <Height>0.44125cm</Height>
+            <Width>1.76744cm</Width>
+            <ZIndex>44</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
         </ReportItems>
         <KeepTogether>true</KeepTogether>
-        <Top>0.93835cm</Top>
+        <Top>0.89429cm</Top>
         <Left>0.0441cm</Left>
-        <Height>3.12644cm</Height>
+        <Height>3.1705cm</Height>
         <Width>27.83361cm</Width>
         <ZIndex>2</ZIndex>
         <Style>
@@ -3778,21 +3851,25 @@
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="TOTAL_MT">
-          <DataField>TOTAL_MT</DataField>
+          <DataField>VALOR_TOTAL_MT</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="TOTAL_KG">
-          <DataField>TOTAL_KG</DataField>
+          <DataField>VALOR_TOTAL_KG</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="OBS_TROCA_TEC">
           <DataField>OBS_TROCA_TEC</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="PEDIDO_CLIENTE">
+          <DataField>PEDIDO_CLIENTE</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
       </Fields>
       <rd:DataSetInfo>
         <rd:DataSetName>DataSet</rd:DataSetName>
-        <rd:SchemaPath>C:\Users\rootUser\Desktop\DALUTEX\PROJETO\Dalutex\Dalutex\DataSet.xsd</rd:SchemaPath>
+        <rd:SchemaPath>D:\Projetos Dalutex\Pedido WEB\Dalutex\Dalutex\DataSet.xsd</rd:SchemaPath>
         <rd:TableName>VW_IMPRESSAO_WEB</rd:TableName>
         <rd:TableAdapterFillMethod>Fill</rd:TableAdapterFillMethod>
         <rd:TableAdapterGetDataMethod>GetData</rd:TableAdapterGetDataMethod>

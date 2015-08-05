@@ -421,6 +421,10 @@ namespace Dalutex.Models.DataModels
                 .Property(e => e.RESERVA)
                 .IsUnicode(false);
 
+            modelBuilder.Entity<VW_IMPRESSAO_WEB>()
+                .Property(e => e.PEDIDO_CLIENTE)
+                .HasPrecision(38, 0);
+
             modelBuilder.Entity<VW_LISOS_POR_COLECAO>()
                 .Property(e => e.COR)
                 .IsUnicode(false);
@@ -1017,6 +1021,10 @@ namespace Dalutex.Models.DataModels
             modelBuilder.Entity<PRE_PEDIDO>()
                 .Property(e => e.GRUPO_FACCAO)
                 .IsUnicode(false);
+
+            modelBuilder.Entity<PRE_PEDIDO>()
+                .Property(e => e.PEDIDO_CLIENTE)
+                .HasPrecision(38, 0);
 
             modelBuilder.Entity<USUARIOS>()
                 .Property(e => e.COD_USU)

@@ -965,6 +965,7 @@ namespace Dalutex.Controllers
                     base.Session_Carrinho.IDFretes = model.IDFretes;
                     base.Session_Carrinho.IDTiposAtendimento = model.IDTiposAtendimento;
                     base.Session_Carrinho.Observacoes = model.Observacoes;
+                    base.Session_Carrinho.PedidoCliente = model.PedidoCliente;
 
                     #endregion
 
@@ -1130,7 +1131,8 @@ namespace Dalutex.Controllers
                     VIATRANSPORTE = base.Session_Carrinho.IDViasTransporte,
                     COMISSAO = Session_Carrinho.PorcentagemComissao,
                     ORIGEM = "PW", // APENAS PRA INFORMAR QUE ESTE PEDIDO VEIO DO PEDIDO WEB NOVO. 
-                    STATUS_PEDIDO = 1 //embora esteja definido no banco como padrão "1", esta gravando nulo, então, deixar explicito.....                                                                                                                                                                                                                                                                                                                     
+                    STATUS_PEDIDO = 1, //embora esteja definido no banco como padrão "1", esta gravando nulo, então, deixar explicito.....  
+                    PEDIDO_CLIENTE = base.Session_Carrinho.PedidoCliente                                                                                                                                                                                                                                                                                               
                 };
                 #endregion
 

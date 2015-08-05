@@ -169,5 +169,8 @@ namespace Dalutex.Models.DataModels
 
         [StringLength(60)]
         public string OBS_TROCA_TEC { get; set; }
+
+        //PEDIDO_CLIENTE
+        public decimal? PEDIDO_CLIENTE { get; set; }
     }
 }

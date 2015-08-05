@@ -405,6 +405,9 @@ namespace Dalutex.Models
         [Display(Name="Observações")]
         public string Observacoes { get; set; }
 
+        [Display(Name = "Pedido do Cliente")]
+        public int? PedidoCliente { get; set; }
+
         #endregion
 
         #region ValoresSelecionados
@@ -417,7 +420,7 @@ namespace Dalutex.Models
         public decimal PorcentagemComissao { get; set; }
         public DateTime DataEntrega { get; set; }
         public decimal TotalPedido { get; set; }
-
+        
         #endregion
 
         #region Itens do carrinho

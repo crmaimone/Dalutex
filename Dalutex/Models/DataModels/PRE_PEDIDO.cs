@@ -116,6 +116,8 @@ namespace Dalutex.Models.DataModels
 
         [StringLength(100)]
         public string GRUPO_FACCAO { get; set; }
+
+        public decimal? PEDIDO_CLIENTE { get; set; }
         
     }
 }

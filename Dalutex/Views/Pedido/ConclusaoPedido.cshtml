@@ -94,6 +94,13 @@
                             </div>
                         }
 
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.PedidoCliente, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(x => x.PedidoCliente, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.PedidoCliente, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
                         
                         <div class="form-group">
                             @Html.LabelFor(x => x.Observacoes, new { @class = "col-md-3 control-label" })
@@ -101,8 +108,8 @@
                                 @Html.TextAreaFor(x => x.Observacoes, 0, 0, new { @style = "width:100%; Height:90px;" })
                                 @Html.ValidationMessageFor(m => m.Observacoes, "", new { @class = "text-danger" })
                             </div>
-                        </div>
-                        <hr />
+                        </div>                                                                                                                                  
+                        <hr />                        
                         <div class="form-group">
                             <div class="col-md-12">
                                 @Html.HiddenFor(x => x.IDTipoPedido)
@@ -120,7 +127,7 @@
                                 }
                             </div>
                         </div>
-                    }
+                        }
                 </section>
             }
             else

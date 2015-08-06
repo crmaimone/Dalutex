@@ -509,6 +509,21 @@ namespace Dalutex.Controllers
 
                     model.ValorTotalItem = model.Quantidade * model.Preco;
 
+
+                    //adicionar valor para "Farol" ------------ oda -- 05/08/2015 -----------
+                    using (var ctx = new TIDalutexContext())
+                    {
+                        VW_FAROL objFarol = ctx.VW_FAROL.Where(x => x.ARTIGO == model.Artigo && x.DESENHO == model.Desenho && x.VARIANTE == model.Variante).FirstOrDefault();
+
+                        if (objFarol != null)
+                            model.Farol = objFarol.FAROL;
+                        else
+                            model.Farol = 0;
+                    }
+
+                    
+
+
                     if (model.Tipo != Enums.ItemType.Reserva)
                     {
                         using (var ctx = new TIDalutexContext())
@@ -712,8 +727,7 @@ namespace Dalutex.Controllers
         public ActionResult ConclusaoPedido(string idtransportadora, string idclienteFatura)
         {
             ConclusaoPedidoViewModel model = new ConclusaoPedidoViewModel();
-
-            //Carrinho vazio não processar nada
+           
             if (Session_Carrinho != null)
             {
                 model.IDTipoPedido = base.Session_Carrinho.IDTipoPedido;
@@ -970,54 +984,74 @@ namespace Dalutex.Controllers
                     #endregion
 
                     #region Obter Preço
+                    int? iColecaoAtual = 0;
+                    int? iCodCondPgto = 0;
+
+                    #region Pegar Código Condição de Pagto - Call Function Oracle
+                    using(var ti_ctx = new TIDalutexContext())
+                    {                                                                                                   
+                        iCodCondPgto = ti_ctx.Database.SqlQuery<int>("select ti_dalutex.pega_consicao_pgto(:p0) from dual", model.IDCondicoesPagto).FirstOrDefault();
+
+                        iColecaoAtual = int.Parse(ti_ctx.CONFIG_GERAL.Where(y => y.ID_CONFIG == (int)Enums.TipoColecaoEspecial.Atual).First().PARAMETRO1); 
+                    }
+                    #endregion
+
 
                     foreach (InserirNoCarrinhoViewModel item in base.Session_Carrinho.Itens)
                     {
-                        if (item.Reduzido > 0)
-                        {
-                            decimal dReduzido = item.Reduzido;
-                            using (var ctxDlx = new DalutexContext())
+                        using (var ctx = new TIDalutexContext())
+                        {                                                                                                                 
+                            if (item.Reduzido > 0)
                             {
-                                var queryParametros = from vw in ctxDlx.VMASCARAPRODUTOACABADO
-                                                      join co in ctxDlx.COLECOES on vw.COLECAO equals co.COLECAO
-                                                      where vw.CODIGO_REDUZIDO == dReduzido
-                                                      select new ParametrosPreco
-                                                      {
-                                                          E_Exclusivo = vw.EXCL == "E" ? true : false,
-                                                          Comissao = co.ID_COLECAO == "POCK" ? 3 : 4,
-                                                          IDColecao = vw.COLECAO
-                                                      };
-
-                                ParametrosPreco objParametro = queryParametros.First();
-
-                                using (var ctx = new TIDalutexContext())
+                                using (var ctxDlx = new DalutexContext())
                                 {
-                                    #region Call Function Oracle
-
-                                    int iCodCondPgto = 0;//TODO: BUSCAR NA FUNÇÃO DO ORACLE
-                                    iCodCondPgto = ctx.Database.SqlQuery<int>("select ti_dalutex.pega_consicao_pgto(:p0) from dual", 1).FirstOrDefault();
-
-                                    #endregion
-
-                                    int? iColecaoAtual = int.Parse(ctx.CONFIG_GERAL.Where(y => y.ID_CONFIG == (int)Enums.TipoColecaoEspecial.Atual).First().PARAMETRO1);
+                                    decimal dReduzido = item.Reduzido;
+                            
+                                    var queryParametros = from vw in ctxDlx.VMASCARAPRODUTOACABADO
+                                                            join co in ctxDlx.COLECOES on vw.COLECAO equals co.COLECAO
+                                                            where vw.CODIGO_REDUZIDO == dReduzido
+                                                            select new ParametrosPreco
+                                                            {
+                                                                E_Exclusivo = vw.EXCL == "E" ? true : false,
+                                                                Comissao = co.ID_COLECAO == "POCK" ? 3 : 4,
+                                                                IDColecao = vw.COLECAO
+                                                            };
+                                    ParametrosPreco objParametro = queryParametros.First();                                                                                                   
 
                                     TABELAPRECOITEM objPreco = ctx.TABELAPRECOITEM.Where(x =>
                                             x.COLECAO == (objParametro.E_Exclusivo ? objParametro.IDColecao : iColecaoAtual)
                                             && x.QUALIDADECOMERCIAL == Session_Carrinho.IDQualidadeComercial
                                             && x.COD_COND_PAGTO == iCodCondPgto
-                                            && x.EST_LISO == "E"
+                                            && x.EST_LISO == item.Tecnologia
                                             && x.COMISSAO == objParametro.Comissao
                                             && x.ARTIGO == item.Artigo
                                         ).FirstOrDefault();
 
 
-                                    if(objPreco != null)
+                                    if (objPreco != null)
                                     {
                                         item.PrecoTabela = decimal.Round(objPreco.VALOR.GetValueOrDefault(), 2, MidpointRounding.ToEven);
-                                    }
+                                    }                                    
                                 }
                             }
-                        }
+                            else//se não tem reduzido ----
+                            {                               
+                                TABELAPRECOITEM objPreco = ctx.TABELAPRECOITEM.Where(x =>
+                                            x.COLECAO == iColecaoAtual
+                                            && x.QUALIDADECOMERCIAL == Session_Carrinho.IDQualidadeComercial
+                                            && x.COD_COND_PAGTO == iCodCondPgto
+                                            && x.EST_LISO == item.Tecnologia
+                                            && x.COMISSAO == (item.NMColecao == "POCK" ? 3 : 4)
+                                            && x.ARTIGO == item.Artigo
+                                        ).FirstOrDefault();
+
+
+                                if (objPreco != null)
+                                {
+                                    item.PrecoTabela = decimal.Round(objPreco.VALOR.GetValueOrDefault(), 2, MidpointRounding.ToEven);
+                                }                                
+                            }                                                       
+                        }                       
                     }
 
                     #endregion
@@ -1074,14 +1108,21 @@ namespace Dalutex.Controllers
             {
                 model.Representante = ctx.REPRESENTANTES.Find(Session_Carrinho.IDRepresentante).NOME;
                 model.Transportadora = ctx.TRANSPORTADORAS.Find(Session_Carrinho.IDTransportadora).NOME;
+                model.TipoPedido = ctx.COML_TIPOSPEDIDOS.Where(x => x.TIPOPEDIDO == Session_Carrinho.IDTipoPedido).First().DESCRICAO;
+                model.CondPagto = ctx.COML_CONDICOESPAGAME.Where(x => x.CONDICAO == Session_Carrinho.IDCondicoesPagto).First().DESCRICAO;
+                model.Frete = ctx.COML_TIPOSFRETE.Where(x => x.TIPOFRETE == Session_Carrinho.IDFretes).First().DESCRICAO;
             }
 
             using (var ctx = new TIDalutexContext())
             {
                 model.ClienteEntrega = ctx.VW_CLIENTE_TRANSP.Where(x => x.ID_CLIENTE == Session_Carrinho.IDClienteEntrega).First().NOME;
                 model.ClienteFatura= ctx.VW_CLIENTE_TRANSP.Where(x => x.ID_CLIENTE == Session_Carrinho.IDClienteFatura).First().NOME;
+                model.TipoAtendimento = ctx.PRE_PEDIDO_ATEND.Where(x => x.COD_ATEND == Session_Carrinho.IDTiposAtendimento).First().DESCRI_ATEND;               
             }
 
+            model.Observacoes = Session_Carrinho.Observacoes;
+            model.QualidadeCom = Session_Carrinho.IDQualidadeComercial;
+            
             return View(model);
         }
 

@@ -33,7 +33,7 @@
                             {
                                 <div> <strong>Desenho:</strong> @Model.Desenho </div>
                                 <div> <strong>Variante:</strong> @Model.Variante </div>
-                                <div> <strong>Artigo:</strong> @Model.TecnologiaPorExtenso </div>
+                                <div> <strong>Tecnologia:</strong> @Model.TecnologiaPorExtenso </div>
 
                                 if (Model.Reduzido != -2)
                                 {
@@ -41,6 +41,16 @@
                                 }
 
                                 <div><strong>Peças:</strong>&nbsp;@Model.Pecas</div>
+
+                                if (Model.Farol < 200)
+                                {
+                                    <div> <font color="red"> <strong>Farol:</strong>&nbsp;@Model.Farol </font></div>
+                                }
+                                else
+                                {
+                                    <div><strong>Farol:</strong>&nbsp;@Model.Farol</div>
+                                }
+
                             }
                             else if (Model.Tipo == Enums.ItemType.Liso)
                             {
@@ -54,7 +64,7 @@
                                 <div><strong>Preço de tabela:</strong>&nbsp;@Model.PrecoTabela.GetValueOrDefault().ToString("C")</div>
                                 if (Model.PrecoTabela.GetValueOrDefault() != Model.Preco)
                                 {
-                                    <div><strong class="text-danger">Preço unitário:&nbsp;@Model.Preco.ToString("C")<span class="glyphicon glyphicon-exclamation-sign danger"></span></strong></div>
+                                    <div><strong class="text-danger">Preço unitário Digitado:&nbsp;@Model.Preco.ToString("C") &nbsp; <span class="glyphicon glyphicon-remove-circle"></span></strong></div>
                                 }
                             }
                             else
@@ -66,7 +76,7 @@
                                 <div><strong>Previsão de entrega:</strong>&nbsp;@Model.DataEntregaItem.ToString("d")</div>
                                 <div><strong>Quantidade:</strong>&nbsp;@Model.Quantidade&nbsp;@Model.UnidadeMedida</div>
                                 <div><strong>Total:</strong>&nbsp;@Model.ValorTotalItem.ToString("c")</div>
-                            }
+                            }                                                                                   
                             @if (((bool?)ViewData["ALTERARITEM"]) == true)
                             {
                                 <div class="form-group">

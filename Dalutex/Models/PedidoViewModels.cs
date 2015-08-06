@@ -21,6 +21,26 @@ namespace Dalutex.Models
         [Display(Name = "Transportadora:")]
         public string Transportadora { get; set; }
 
+        [Display(Name = "Pedido:")]
+        public string Pedido { get; set; }
+        [Display(Name = "Tipo Atendimento:")]
+        public string TipoAtendimento { get; set; }
+
+        [Display(Name = "Observações:")]
+        public string Observacoes { get; set; }
+        [Display(Name = "Pedido do Cliente:")]
+        public string PedidoDoCliente { get; set; }
+        [Display(Name = "Tipo de Pedido:")]
+        public string TipoPedido { get; set; }
+        [Display(Name = "Frete:")]
+        public string Frete { get; set; }
+        [Display(Name = "Condição Pagto:")]
+        public string CondPagto { get; set; }
+        [Display(Name = "Qualidade Comercial:")]
+        public string QualidadeCom { get; set; }
+
+
+
         public ConclusaoPedidoViewModel Carrinho { get; set; }
         public string UrlDesenhos { get; set; }
         public string UrlReservas { get; set; }
@@ -287,6 +307,7 @@ namespace Dalutex.Models
         [Display(Name = "PREÇO:")]
         public decimal Preco { get; set; }
         public decimal? PrecoTabela { get; set; }
+        public decimal? Farol { get; set; }
 
         public override bool Equals(object obj)
         {

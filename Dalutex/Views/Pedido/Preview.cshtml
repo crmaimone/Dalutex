@@ -3,7 +3,7 @@
 @using Dalutex.Models;
 
 @{
-    ViewBag.Title = "PREVIEW";
+    ViewBag.Title = "PREVIEW DO PEDIDO";
 }
 
 <div class="header-title"><h3>@ViewBag.Title</h3></div>
@@ -12,7 +12,7 @@
     Html.ValidationSummary(true, "Não foi possível gerar o pedido.", new { @class = "text-danger" });
 }
 <div style="border:1px solid gray; background-color: aliceblue; padding:3px">
-    <div class="row">
+    @*<div class="row">
         <div class="col-xs-12">
             @using (Html.BeginForm("Preview", "Pedido", null, FormMethod.Post))
             {
@@ -22,15 +22,31 @@
                 @Html.ActionLink("VOLTAR", "ConclusaoPedido", "Pedido", null, new { @class = "btn btn-warning pull-left" })
             }
         </div>
+    </div>*@
+    <br />
+    <div class="row">
+        <div class="col-xs-12">            
+            <div> <strong>Representante:</strong> @Model.Representante </div>
+            <div> <strong>Cliente da Entrega:</strong> @Model.ClienteEntrega </div>
+            <div> <strong>Cliente da Fatura:</strong> @Model.ClienteFatura </div>
+            <div> <strong>Transportadora:</strong> @Model.Transportadora </div>
+            <div> <strong>Tipo de Pedido:</strong> @Model.TipoPedido </div>
+            <div> <strong>Frete:</strong> @Model.Frete </div>
+            <div> <strong>Condição Pagto:</strong> @Model.CondPagto </div>
+            <div> <strong>Qualidade Comercial:</strong> @Model.QualidadeCom </div>
+            <div> <strong>Observações:</strong> @Model.Observacoes </div>                        
+        </div>
     </div>
     <br />
     <div class="row">
         <div class="col-xs-12">
-            <div> <strong>Representante:</strong> @Model.Representante </div>
-            <div> <strong>Cliente da entrega:</strong> @Model.ClienteEntrega </div>
-            <div> <strong>Cliente da fatura:</strong> @Model.ClienteFatura </div>
-            <div> <strong>Transportadora:</strong> @Model.Transportadora </div>
-            <div> <strong>..</strong></div>
+            @using (Html.BeginForm("Preview", "Pedido", null, FormMethod.Post))
+            {
+                <h3>Deseja realmente confirmar este pedido?</h3>
+                <input type="submit" value="CONFIRMAR" class="btn btn-info pull-left" />
+                <span class="pull-left">&nbsp;</span>
+                @Html.ActionLink("VOLTAR", "ConclusaoPedido", "Pedido", null, new { @class = "btn btn-warning pull-left" })
+            }
         </div>
     </div>
 </div>

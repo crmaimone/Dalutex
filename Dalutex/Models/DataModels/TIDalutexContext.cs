@@ -52,6 +52,8 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<PED_LINK_QUANTD_TIPO> PED_LINK_QUANTD_TIPO { get; set; }
         public virtual DbSet<VW_ITENS_PE> VW_ITENS_PE { get; set; }
         public virtual DbSet<VW_LISTA_PECAS_PE> VW_LISTA_PECAS_PE { get; set; }
+        public virtual DbSet<VW_FAROL> VW_FAROL { get; set; }    
+
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {            

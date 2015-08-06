@@ -161,6 +161,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CadastroViewModel.cs" />
     <Compile Include="Models\DataModels\ARTIGO_PESO_PADRAO.cs" />
+    <Compile Include="Models\DataModels\VW_FAROL.cs" />
     <Compile Include="Models\DataModels\COML_CONTATOS.cs" />
     <Compile Include="Models\DataModels\COML_TIPOSPEDIDOS.cs" />
     <Compile Include="Models\DataModels\CRIACAO_REDUZIDOS.cs" />
@@ -449,6 +450,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\img_upload\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

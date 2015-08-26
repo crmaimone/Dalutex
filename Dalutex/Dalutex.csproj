@@ -160,7 +160,7 @@
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CadastroViewModel.cs" />
-    <Compile Include="Models\DataModels\ARTIGO_PESO_PADRAO.cs" />
+    <Compile Include="fonts\ARTIGO_PESO_PADRAO.cs" />
     <Compile Include="Models\DataModels\VW_FAROL.cs" />
     <Compile Include="Models\DataModels\COML_CONTATOS.cs" />
     <Compile Include="Models\DataModels\COML_TIPOSPEDIDOS.cs" />
@@ -438,6 +438,7 @@
     <Content Include="Views\Cadastro\UploadImage.cshtml" />
     <Content Include="Views\Cadastro\UploadSucess.cshtml" />
     <Content Include="Views\Cadastro\DesenhosSemImagem.cshtml" />
+    <Content Include="Views\Cadastro\Teste.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

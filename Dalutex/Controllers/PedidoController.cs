@@ -774,10 +774,9 @@ namespace Dalutex.Controllers
                 if (model.IDTipoPedido == (int)Enums.TiposPedido.RESERVA)
                 {
                     model.IDQualidadeComercial = Enums.QualidadeComercial.A.ToString();
-                    model.IDCondicoesPagto = (int)Enums.CondicoesPagamento.CORTESIA;
+                    model.IDCondicoesPagto = (int)Enums.CondicoesPagamento.CORTESIA;                    
                 }
 
-                //Carrinho vazio não processar nada
                 if (Session_Carrinho == null)
                 {
                     ViewBag.CarrinhoVazio = true;
@@ -1035,21 +1034,23 @@ namespace Dalutex.Controllers
                                 }
                             }
                             else//se não tem reduzido ----
-                            {                               
-                                TABELAPRECOITEM objPreco = ctx.TABELAPRECOITEM.Where(x =>
-                                            x.COLECAO == iColecaoAtual
-                                            && x.QUALIDADECOMERCIAL == Session_Carrinho.IDQualidadeComercial
-                                            && x.COD_COND_PAGTO == iCodCondPgto
-                                            && x.EST_LISO == item.Tecnologia
-                                            && x.COMISSAO == (item.NMColecao == "POCK" ? 3 : 4)
-                                            && x.ARTIGO == item.Artigo
-                                        ).FirstOrDefault();
-
-
-                                if (objPreco != null)
+                            {
+                                if (model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
                                 {
-                                    item.PrecoTabela = decimal.Round(objPreco.VALOR.GetValueOrDefault(), 2, MidpointRounding.ToEven);
-                                }                                
+                                    TABELAPRECOITEM objPreco = ctx.TABELAPRECOITEM.Where(x =>
+                                                x.COLECAO == iColecaoAtual
+                                                && x.QUALIDADECOMERCIAL == Session_Carrinho.IDQualidadeComercial
+                                                && x.COD_COND_PAGTO == iCodCondPgto
+                                                && x.EST_LISO == item.Tecnologia
+                                                && x.COMISSAO == (item.NMColecao == "POCK" ? 3 : 4)
+                                                && x.ARTIGO == item.Artigo
+                                            ).FirstOrDefault();
+
+                                    if (objPreco != null)
+                                    {
+                                        item.PrecoTabela = decimal.Round(objPreco.VALOR.GetValueOrDefault(), 2, MidpointRounding.ToEven);
+                                    }
+                                }
                             }                                                       
                         }                       
                     }
@@ -1063,7 +1064,6 @@ namespace Dalutex.Controllers
             {
                 base.Handle(ex);
             }
-            // If we got this far, something failed, redisplay form
 
             this.ConclusaoPedidoCarregarListas(model);
             return View(model);
@@ -1103,26 +1103,42 @@ namespace Dalutex.Controllers
             model.Carrinho = base.Session_Carrinho;
             model.UrlDesenhos = ConfigurationManager.AppSettings["PASTA_DESENHOS"];
             model.UrlReservas = ConfigurationManager.AppSettings["PASTA_RESERVAS"];
-
-            using (var ctx = new DalutexContext())
-            {
-                model.Representante = ctx.REPRESENTANTES.Find(Session_Carrinho.IDRepresentante).NOME;
-                model.Transportadora = ctx.TRANSPORTADORAS.Find(Session_Carrinho.IDTransportadora).NOME;
-                model.TipoPedido = ctx.COML_TIPOSPEDIDOS.Where(x => x.TIPOPEDIDO == Session_Carrinho.IDTipoPedido).First().DESCRICAO;
-                model.CondPagto = ctx.COML_CONDICOESPAGAME.Where(x => x.CONDICAO == Session_Carrinho.IDCondicoesPagto).First().DESCRICAO;
-                model.Frete = ctx.COML_TIPOSFRETE.Where(x => x.TIPOFRETE == Session_Carrinho.IDFretes).First().DESCRICAO;
-            }
-
-            using (var ctx = new TIDalutexContext())
-            {
-                model.ClienteEntrega = ctx.VW_CLIENTE_TRANSP.Where(x => x.ID_CLIENTE == Session_Carrinho.IDClienteEntrega).First().NOME;
-                model.ClienteFatura= ctx.VW_CLIENTE_TRANSP.Where(x => x.ID_CLIENTE == Session_Carrinho.IDClienteFatura).First().NOME;
-                model.TipoAtendimento = ctx.PRE_PEDIDO_ATEND.Where(x => x.COD_ATEND == Session_Carrinho.IDTiposAtendimento).First().DESCRI_ATEND;               
-            }
-
             model.Observacoes = Session_Carrinho.Observacoes;
             model.QualidadeCom = Session_Carrinho.IDQualidadeComercial;
             
+            if (base.Session_Carrinho.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
+            {            
+                using (var ctx = new DalutexContext())
+                {
+                    model.Representante = ctx.REPRESENTANTES.Find(Session_Carrinho.IDRepresentante).NOME;
+                    model.TipoPedido = ctx.COML_TIPOSPEDIDOS.Where(x => x.TIPOPEDIDO == Session_Carrinho.IDTipoPedido).First().DESCRICAO;
+                              
+                    model.Transportadora = ctx.TRANSPORTADORAS.Find(Session_Carrinho.IDTransportadora).NOME;                   
+                    model.CondPagto = ctx.COML_CONDICOESPAGAME.Where(x => x.CONDICAO == Session_Carrinho.IDCondicoesPagto).First().DESCRICAO;
+                    model.Frete = ctx.COML_TIPOSFRETE.Where(x => x.TIPOFRETE == Session_Carrinho.IDFretes).First().DESCRICAO;                
+                }            
+           
+                using (var ctx = new TIDalutexContext())
+                {
+                    model.ClienteEntrega = ctx.VW_CLIENTE_TRANSP.Where(x => x.ID_CLIENTE == Session_Carrinho.IDClienteEntrega).First().NOME;
+                    model.ClienteFatura= ctx.VW_CLIENTE_TRANSP.Where(x => x.ID_CLIENTE == Session_Carrinho.IDClienteFatura).First().NOME;
+                    model.TipoAtendimento = ctx.PRE_PEDIDO_ATEND.Where(x => x.COD_ATEND == Session_Carrinho.IDTiposAtendimento).First().DESCRI_ATEND;               
+                }
+            }
+            else
+            {
+                using (var ctx = new DalutexContext())
+                {
+                    model.Representante = ctx.REPRESENTANTES.Find(Session_Carrinho.IDRepresentante).NOME;
+                    model.TipoPedido = ctx.COML_TIPOSPEDIDOS.Where(x => x.TIPOPEDIDO == Session_Carrinho.IDTipoPedido).First().DESCRICAO;
+                }
+
+                using (var ctx = new TIDalutexContext())
+                {
+                    model.ClienteFatura = ctx.VW_CLIENTE_TRANSP.Where(x => x.ID_CLIENTE == Session_Carrinho.IDClienteFatura).First().NOME;                    
+                }
+            }
+                        
             return View(model);
         }
 
@@ -1381,8 +1397,7 @@ namespace Dalutex.Controllers
             {
                 base.Handle(ex);
             }
-            // If we got this far, something failed, redisplay form
-
+            
             return View(model.Sucesso = false);
         }
 

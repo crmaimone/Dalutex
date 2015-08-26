@@ -26,15 +26,25 @@
     <br />
     <div class="row">
         <div class="col-xs-12">            
-            <div> <strong>Representante:</strong> @Model.Representante </div>
-            <div> <strong>Cliente da Entrega:</strong> @Model.ClienteEntrega </div>
-            <div> <strong>Cliente da Fatura:</strong> @Model.ClienteFatura </div>
-            <div> <strong>Transportadora:</strong> @Model.Transportadora </div>
-            <div> <strong>Tipo de Pedido:</strong> @Model.TipoPedido </div>
-            <div> <strong>Frete:</strong> @Model.Frete </div>
-            <div> <strong>Condição Pagto:</strong> @Model.CondPagto </div>
-            <div> <strong>Qualidade Comercial:</strong> @Model.QualidadeCom </div>
-            <div> <strong>Observações:</strong> @Model.Observacoes </div>                        
+            @if(Model.TipoPedido.Trim() != "Reserva")
+            { 
+                <div> <strong>Representante:</strong> @Model.Representante </div>
+                <div> <strong>Cliente da Entrega:</strong> @Model.ClienteEntrega </div>
+                <div> <strong>Cliente da Fatura:</strong> @Model.ClienteFatura </div>
+                <div> <strong>Transportadora:</strong> @Model.Transportadora </div>
+                <div> <strong>Tipo de Pedido:</strong> @Model.TipoPedido </div>
+                <div> <strong>Frete:</strong> @Model.Frete </div>
+                <div> <strong>Condição Pagto:</strong> @Model.CondPagto </div>
+                <div> <strong>Qualidade Comercial:</strong> @Model.QualidadeCom </div>
+                <div> <strong>Observações:</strong> @Model.Observacoes </div>
+            }
+            else
+            {
+                <div> <strong>Representante:</strong> @Model.Representante </div>               
+                <div> <strong>Cliente:</strong> @Model.ClienteFatura </div>                
+                <div> <strong>Tipo de Pedido:</strong> @Model.TipoPedido </div>                                                
+                <div> <strong>Observações:</strong> @Model.Observacoes </div>
+            }            
         </div>
     </div>
     <br />
@@ -50,9 +60,10 @@
         </div>
     </div>
 </div>
-<hr />
+<br />
 <div class="container-fluid">
-    <div class="row">
+    <div class="panel panel-default"> &nbsp; Itens do Pedido</div>
+    <div class="row">          
         <div class="col-xs-12">
             @if (Model.Carrinho != null && Model.Carrinho.Itens != null)
             {

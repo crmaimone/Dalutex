@@ -312,6 +312,14 @@ namespace Dalutex.Controllers
                 }
             }
         }
+
+         [AllowAnonymous]
+        public ActionResult Teste()
+        {
+            return View();
+        }
+
+        
     }
 }
                 

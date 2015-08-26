@@ -1,0 +1,97 @@
+﻿@{
+    ViewBag.Title = "Teste";
+}
+
+<h2>Teste</h2>
+
+
+<table class="table table-hover">
+    <thead>
+    <th>a</th>
+    <th>b</th>
+    <th>c</th>
+    </thead>
+
+    <tbody>
+        <tr data-toggle="collapse" data-target="#accordion" class="clickable">
+            <td>Some Stuff</td>
+            <td>Some more stuff</td>
+            <td>And some more</td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <div id="accordion" class="collapse">Hidden by default</div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<hr />
+
+<table class="table table-striped" id="account-table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Credit</th>
+            <th>Debit</th>
+            <th>Balance</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr data-toggle="collapse" data-target="#demo1" data-parent="#account-table" class="">
+            <td>1</td>
+            <td>05 May 2013</td>
+            <td>Credit Account</td>
+            <td class="text-success">$150.00</td>
+            <td class="text-error"></td>
+            <td class="text-success">$150.00</td>
+            <div id="demo1" class="demo out collapse"> Demo1 </div>
+        </tr>
+        </tbody>
+ </table>
+
+        <table class="table table-hover">
+            <tr data-toggle="collapse" data-target="#demo1" class="accordion-toggle">
+                <td>coluna 1</td>
+                <td>coluna 2</td>
+                <td>coluna 3</td>
+                <td class="text-success">coluna 4</td>
+                <td class="text-error">coluna 5</td>
+                <td class="text-success">coluna 6</td>
+            </tr>
+
+            <tr>
+                <td colspan="6" class="hiddenRow"> <div class="accordion-body collapse" id="demo1">Demo1</div> </td>
+                <td colspan="6" class="hiddenRow"> <div class="accordion-body collapse" id="demo1">Demo2</div> </td>
+                <td colspan="6" class="hiddenRow"> <div class="accordion-body collapse" id="demo1">Demo3</div> </td>
+                <td colspan="6" class="hiddenRow"> <div class="accordion-body collapse" id="demo1">Demo4</div> </td>
+            </tr>
+        </table>
+
+
+        <table class="table table-hover">
+            <thead>
+                <tr>1</tr>
+                <tr>2</tr>
+                <tr>3</tr>
+                <tr>4</tr>
+            </thead>
+
+            <tbody>
+                <tr data-toggle="collapse" data-target="#accordion" class="clickable">
+                    <td>Coluna 1</td>
+                    <td>Coluna 2</td>
+                    <td>Coluna 3</td>
+                </tr>
+                <tr>
+                    <td colspan="1">
+                        <div id="accordion" class="collapse">Hidden by default</div>
+                    </td>
+                    <td colspan="1">
+                        <div id="accordion" class="collapse"> 2 </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>

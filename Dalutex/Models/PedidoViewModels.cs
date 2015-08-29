@@ -86,6 +86,8 @@ namespace Dalutex.Models
         public List<DesenhoVariante> Galeria { get; set; }
         public string UrlImagens { get; set; }
         public string FiltroDesenho { get; set; }
+        public string FiltroArtigo { get; set; }
+        public string FiltroTecnologia { get; set; }
     }
 
 

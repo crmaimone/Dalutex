@@ -1577,6 +1577,8 @@ namespace Dalutex.Controllers
                     where
                         ((model.IDColecao == -1) || (dc.COLECAO == model.IDColecao))
                         && (dc.DESENHO.StartsWith(model.FiltroDesenho.ToUpper()) || model.FiltroDesenho == null)
+                        && (dc.TECNOLOGIA.StartsWith(model.FiltroTecnologia.ToUpper()) || model.FiltroTecnologia == null)
+                        && (dc.ARTIGO.StartsWith(model.FiltroArtigo.ToUpper()) || model.FiltroArtigo == null)
                     group dc by
                         new
                         {

@@ -29,5 +29,10 @@ namespace Dalutex.Models.DataModels
         [Column(Order = 2)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string VARIANTE { get; set; }
+
+        public string ARTIGO { get; set; }
+
+        public string TECNOLOGIA { get; set; }
+
     }
 }

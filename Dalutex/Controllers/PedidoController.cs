@@ -1722,7 +1722,8 @@ namespace Dalutex.Controllers
                 { 
                     (int)Enums.TiposPedido.AMOSTRA,
                     (int)Enums.TiposPedido.PILOTAGEM,
-                    (int)Enums.TiposPedido.VENDA,                    
+                    (int)Enums.TiposPedido.VENDA,
+                    (int)Enums.TiposPedido.MOSTRUARIO,
                 };
 
                 model.TiposPedido = ctxDalutex.COML_TIPOSPEDIDOS.Where(x => tiposPedidos.Any(tipo => x.TIPOPEDIDO.Equals(tipo))).ToList();

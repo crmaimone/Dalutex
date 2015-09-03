@@ -150,6 +150,15 @@ tr.hover-cursor {
 .linha{
     /*border-bottom:solid;*/
 }
+
+.thumbnail#imghome {
+    transition: transform 0.5s ease;
+    transition: background-color 0.5s ease;
+    margin-bottom:20px;
+    max-width: 220px; 
+    max-height: 500px;
+}
+
     
 
 

@@ -243,7 +243,10 @@
     <Content Include="Content\fileinput.min.css" />
     <Content Include="Content\images\ajax-loader.gif" />
     <Content Include="Content\images\dalutex-bg.png" />
+    <Content Include="Content\images\Dalutex-FLASH-AGOSTO2-213x300.jpg" />
     <Content Include="Content\images\dalutex.png" />
+    <Content Include="Content\images\DalutexInv16-1-223x300.jpg" />
+    <Content Include="Content\images\FlashAgosto-1-212x300.jpg" />
     <Content Include="Content\images\glyphicons-289-scissors.png" />
     <Content Include="Content\images\header-pattern-1.jpg" />
     <Content Include="Content\images\header-pattern-2.jpg" />
@@ -258,6 +261,7 @@
     <Content Include="Content\images\header-pattern-11.jpg" />
     <Content Include="Content\images\header-pattern-12.jpg" />
     <Content Include="Content\images\headerTitle.jpg" />
+    <Content Include="Content\images\JACQUARD-POWER-MOOD2-300x212.jpg" />
     <Content Include="Content\images\loading-sm.gif" />
     <Content Include="Content\images\loading.gif" />
     <Content Include="Content\images\UnderConstruction.png" />

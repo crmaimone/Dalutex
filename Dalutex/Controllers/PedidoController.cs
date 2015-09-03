@@ -1571,49 +1571,93 @@ namespace Dalutex.Controllers
             using (var ctx = new TIDalutexContext())
             {
                 List<DesenhoVariante> result = null;
-
-                var query =
-                    from dc in ctx.VW_DESENHOS_POR_COLECAO
-                    where
-                        ((model.IDColecao == -1) || (dc.COLECAO == model.IDColecao))
-                        && (dc.DESENHO.StartsWith(model.FiltroDesenho.ToUpper()) || model.FiltroDesenho == null)
-                        && (dc.TECNOLOGIA.StartsWith(model.FiltroTecnologia.ToUpper()) || model.FiltroTecnologia == null)
-                        && (dc.ARTIGO.StartsWith(model.FiltroArtigo.ToUpper()) || model.FiltroArtigo == null)
-                    group dc by
-                        new
-                        {
-                            dc.DESENHO,
-                            dc.VARIANTE
-                        }
-                        into dv
-                        select new DesenhoVariante
-                        {
-                            Desenho = dv.Key.DESENHO,
-                            Variante = dv.Key.VARIANTE
-                        };
-
-
-                if (model.TotalPaginas == 0)
-                {
-                    result = query.OrderBy(x => x.Desenho)
-                                        .ThenBy(x => x.Variante)
-                                        .ToList();
-
-                    decimal dTotal = result.Count / (decimal)iItensPorPagina;
-                    model.TotalPaginas = (int)Decimal.Ceiling(dTotal);
+                
+                if (model.IDColecao == -1) // se partiu da view de desenhos ...... (-1 é valor padrão para quando a coloção não é identificada).
+                {                
+                    var query =
+                        from dc in ctx.VW_DESENHOS_POR_COLECAO
+                        where
+                            ((model.IDColecao == -1) || (dc.COLECAO == model.IDColecao))
+                            && (dc.DESENHO.StartsWith(model.FiltroDesenho.ToUpper()) || model.FiltroDesenho == null)
+                            && (dc.TECNOLOGIA.StartsWith(model.FiltroTecnologia.ToUpper()) || model.FiltroTecnologia == null)
+                            && (dc.ARTIGO.StartsWith(model.FiltroArtigo.ToUpper()) || model.FiltroArtigo == null)
+                        group dc by
+                            new
+                            {
+                                dc.DESENHO,
+                                dc.VARIANTE
+                            }
+                            into dv
+                            select new DesenhoVariante
+                            {
+                                Desenho = dv.Key.DESENHO,
+                                Variante = dv.Key.VARIANTE
+                            };
                     if (model.TotalPaginas == 0)
-                        model.TotalPaginas = 1;
+                    {
+                        result = query.OrderBy(x => x.Desenho)
+                                            .ThenBy(x => x.Variante)
+                                            .ToList();
 
-                    model.Galeria = result.Skip((model.Pagina - 1) * iItensPorPagina).Take(iItensPorPagina).ToList();
+                        decimal dTotal = result.Count / (decimal)iItensPorPagina;
+                        model.TotalPaginas = (int)Decimal.Ceiling(dTotal);
+                        if (model.TotalPaginas == 0)
+                            model.TotalPaginas = 1;
+
+                        model.Galeria = result.Skip((model.Pagina - 1) * iItensPorPagina).Take(iItensPorPagina).ToList();
+                    }
+                    else
+                    {
+                        model.Galeria = query.OrderBy(x => x.Desenho)
+                                            .ThenBy(x => x.Variante)
+                                            .Skip((model.Pagina - 1) * iItensPorPagina)
+                                            .Take(iItensPorPagina)
+                                            .ToList();
+                    }
                 }
-                else
+                else//-- oda -- 03/09/2015 -- se for origem da view de coleções, então pega coleção do controle do desenvolvimento;
                 {
-                    model.Galeria = query.OrderBy(x => x.Desenho)
-                                        .ThenBy(x => x.Variante)
-                                        .Skip((model.Pagina - 1) * iItensPorPagina)
-                                        .Take(iItensPorPagina)
-                                        .ToList();
-                }
+                    var query =
+                        from dc in ctx.VW_DESENHOS_POR_COL_DESENV
+                        where
+                            ((model.IDColecao == -1) || (dc.COLECAO == model.IDColecao))
+                            && (dc.DESENHO.StartsWith(model.FiltroDesenho.ToUpper()) || model.FiltroDesenho == null)
+                            && (dc.TECNOLOGIA.StartsWith(model.FiltroTecnologia.ToUpper()) || model.FiltroTecnologia == null)
+                            && (dc.ARTIGO.StartsWith(model.FiltroArtigo.ToUpper()) || model.FiltroArtigo == null)
+                        group dc by
+                            new
+                            {
+                                dc.DESENHO,
+                                dc.VARIANTE
+                            }
+                            into dv
+                            select new DesenhoVariante
+                            {
+                                Desenho = dv.Key.DESENHO,
+                                Variante = dv.Key.VARIANTE
+                            };
+                    if (model.TotalPaginas == 0)
+                    {
+                        result = query.OrderBy(x => x.Desenho)
+                                            .ThenBy(x => x.Variante)
+                                            .ToList();
+
+                        decimal dTotal = result.Count / (decimal)iItensPorPagina;
+                        model.TotalPaginas = (int)Decimal.Ceiling(dTotal);
+                        if (model.TotalPaginas == 0)
+                            model.TotalPaginas = 1;
+
+                        model.Galeria = result.Skip((model.Pagina - 1) * iItensPorPagina).Take(iItensPorPagina).ToList();
+                    }
+                    else
+                    {
+                        model.Galeria = query.OrderBy(x => x.Desenho)
+                                            .ThenBy(x => x.Variante)
+                                            .Skip((model.Pagina - 1) * iItensPorPagina)
+                                            .Take(iItensPorPagina)
+                                            .ToList();
+                    }
+                }                
             }
         }
 

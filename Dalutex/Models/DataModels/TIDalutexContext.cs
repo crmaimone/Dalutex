@@ -52,11 +52,26 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<PED_LINK_QUANTD_TIPO> PED_LINK_QUANTD_TIPO { get; set; }
         public virtual DbSet<VW_ITENS_PE> VW_ITENS_PE { get; set; }
         public virtual DbSet<VW_LISTA_PECAS_PE> VW_LISTA_PECAS_PE { get; set; }
-        public virtual DbSet<VW_FAROL> VW_FAROL { get; set; }    
+        public virtual DbSet<VW_FAROL> VW_FAROL { get; set; }   
+        public virtual DbSet<VW_DESENHOS_POR_COL_DESENV> VW_DESENHOS_POR_COL_DESENV { get; set; }          
 
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {            
+        {
+            modelBuilder.Entity<VW_DESENHOS_POR_COL_DESENV>()
+                .Property(e => e.COLECAO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_DESENHOS_POR_COL_DESENV>()
+                .Property(e => e.DESENHO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_DESENHOS_POR_COL_DESENV>()
+                .Property(e => e.VARIANTE)
+                .IsUnicode(false);
+
+
+
             modelBuilder.Entity<VW_LISTA_PECAS_PE>()
                .Property(e => e.PESO_PECA)
                .HasPrecision(38, 0);

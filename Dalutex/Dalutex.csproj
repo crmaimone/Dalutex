@@ -161,6 +161,8 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CadastroViewModel.cs" />
     <Compile Include="fonts\ARTIGO_PESO_PADRAO.cs" />
+    <Compile Include="Models\DataModels\Model1.cs" />
+    <Compile Include="Models\DataModels\VW_DESENHOS_POR_COL_DESENV.cs" />
     <Compile Include="Models\DataModels\VW_FAROL.cs" />
     <Compile Include="Models\DataModels\COML_CONTATOS.cs" />
     <Compile Include="Models\DataModels\COML_TIPOSPEDIDOS.cs" />

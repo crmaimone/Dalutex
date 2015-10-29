@@ -22,20 +22,24 @@
                     @using (Html.BeginForm("MenuColecoes", "Pedido", null, FormMethod.Post, new { @class = "navbar-form navbar-left", role = "search" }))
                     {
                         @Html.AntiForgeryToken()
-                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })                      
-                        
-                        <div class="form-group" style="display:-webkit-inline-box">                                
-                            @Html.TextBoxFor(x => x.Filtro, new { @class = "form-control", placeholder = "PESQUISA COLEÇÃO" })
-                            <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Localizar</button>
-                            
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+                        <div class="form-group">
                             <div>
-                                <br />
-                                <div style="display:-webkit-inline-box">
-                                    <a href="@Url.Action("Desenhos", "Pedido", new { idcolecao = "ATUAL", nmcolecao = "ATUAL" })" class="btn btn-info">Coleção Atual</a>
-                                    <a href="@Url.Action("Desenhos", "Pedido", new { idcolecao = "POCKET", nmcolecao = "POCKET" })" class="btn btn-info">Pocket Atual</a>
-                                </div>
-                            </div>                          
-                        </div>                     
+                                @Html.TextBoxFor(x => x.Filtro, new { @class = "form-control", placeholder = "PESQUISA COLEÇÃO" })
+                                <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Localizar</button>
+                            </div>
+                        </div>
+
+
+                        <div>
+                            <br />
+                            <div style="display:-webkit-inline-box">
+                                <a href="@Url.Action("Desenhos", "Pedido", new { idcolecao = "ATUAL", nmcolecao = "ATUAL" })" class="btn btn-info">Coleção Atual</a>
+                                <a href="@Url.Action("Desenhos", "Pedido", new { idcolecao = "POCKET", nmcolecao = "POCKET" })" class="btn btn-info">Pocket Atual</a>
+                            </div>
+                        </div>
                     }
                 </div>
             </div>

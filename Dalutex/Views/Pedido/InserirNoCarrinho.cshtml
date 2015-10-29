@@ -54,7 +54,19 @@
                                 </div>
                             </div>
                         }
+                        
                         <hr />
+                    
+                                                                               
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.IDTamanhoPadrao, new { @class = "col-md-4 control-label" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(m => m.IDTamanhoPadrao, new SelectList(Model.TamanhoPadrao, "VALOR_PADRAO", "VALOR_PADRAO"), "Selecione", new { @id = "lstTamanhoPadrao" })
+                                @Html.ValidationMessageFor(m => m.IDTamanhoPadrao, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                    
                         <div class="form-group">
                             @Html.LabelFor(x => x.Pecas, new { @class = "col-md-4 control-label" })
                             <div class="col-md-8">
@@ -115,7 +127,13 @@
                     <input type="hidden" name="IDStudio" value="@Model.IDStudio" />
                     <input type="hidden" name="IDItemStudio" value="@Model.IDItemStudio" />
                     <input type="hidden" name="UnidadeMedida" id="hidUM" value="@Model.UnidadeMedida" />
+                    
+                    
                     <input type="hidden" name="ValorPadrao" id="hidValPadrao" value="@Model.ValorPadrao ">
+                    @*<input type="hidden" name="TamanhoPadrao" id="hidValPadrao" value="@Model.IDTamanhoPadrao ">*@
+                    @*<input type="hidden" name="TamanhoPadrao" id="hidValPadrao" value="@Model.TamanhoPadrao ">*@
+
+
                     <input type="hidden" name="IDVariante" value="@Model.IDVariante" />
                     <input type="hidden" name="PedidoReserva" value="@Model.PedidoReserva" />
                     <input type="hidden" name="ItemPedidoReserva" value="@Model.ItemPedidoReserva" />
@@ -189,6 +207,10 @@
                     var $txtQuantidade = $("#txtQuantidade");
                     var $hidPadrao = $("#hidValPadrao");
 
+                    var e = document.getElementById("lstTamanhoPadrao");
+                    var PPadrao = e.options[e.selectedIndex].value;
+
+
                     if (isNaN($txtPecas.val())) {
                         $txtQuantidade.val(0);
                         return;
@@ -199,13 +221,18 @@
                         return;
                     }
 
-                    $txtQuantidade.val($txtPecas.val() * $hidPadrao.val());
+                    //$txtQuantidade.val($txtPecas.val() * $hidPadrao.val());                    
+                    $txtQuantidade.val($txtPecas.val() * PPadrao);
+                    
                 }
 
                 txtQuantidade_Blur = function () {
                     var $txtPecas = $("#txtPecas");
                     var $txtQuantidade = $("#txtQuantidade");
-                    var $hidPadrao = $("#hidValPadrao");
+                    //var $hidPadrao = $("#hidValPadrao");
+
+                    var e = document.getElementById("lstTamanhoPadrao");
+                    var PPadrao = e.options[e.selectedIndex].value;
 
                     if (isNaN($txtQuantidade.val())) {
                         $txtPecas.val(0);
@@ -217,7 +244,9 @@
                         return;
                     }
 
-                    $txtPecas.val($txtQuantidade.val() / $hidPadrao.val());
+                    //$txtPecas.val($txtQuantidade.val() / $hidPadrao.val());
+                    $txtPecas.val($txtQuantidade.val() / PPadrao);
+
                 }
 
                 lstTiposPedido_Change = function () {
@@ -230,10 +259,15 @@
                         $("#txtQuantidade").val("0")
                         $("#txtPecas").prop('disabled', false);
                         $("#txtQuantidade").prop('disabled', true);
-                    }
-
+                    }               
                     //Buscar novos minimos e máximos
                 }
+
+                lstTamanhoPadrao_Change = function () {                    
+                        $("#txtPecas").val("0")                        
+                        $("#txtQuantidade").val("0");                                        
+                }
+
 
                 //API Methods
 
@@ -241,7 +275,8 @@
                 return {
                     txtPecas_Blur: txtPecas_Blur,
                     txtQuantidade_Blur: txtQuantidade_Blur,
-                    lstTiposPedido_Change: lstTiposPedido_Change
+                    lstTiposPedido_Change: lstTiposPedido_Change,
+                    lstTamanhoPadrao_Change: lstTamanhoPadrao_Change
                 };
             })();
 
@@ -251,6 +286,7 @@
                 $("#lblQuantidade").text($("#hidUM").val());
                 $("#txtPecas").blur(this.txtPecas_Blur);
                 $("#txtQuantidade").blur(this.txtQuantidade_Blur);
+                $('#lstTamanhoPadrao').selectpicker();
 
                 $("#txtPecas").focus(function () {
                     this.select();
@@ -259,6 +295,7 @@
                     this.select();
                 });
                 $('#lstTiposPedido').on('change', scriptWrapper.lstTiposPedido_Change);
+                $('#lstTamanhoPadrao').on('change', scriptWrapper.lstTamanhoPadrao_Change);
             })();
         });
     </script>

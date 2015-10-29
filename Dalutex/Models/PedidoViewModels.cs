@@ -251,6 +251,7 @@ namespace Dalutex.Models
         {
             this.ComposeOpcoes = new List<int>() { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };//Valores fixos de zero a dez. verificar necessidade de mais.
             this.Compose = 0;
+            this.IDTamanhoPadrao = 0;
         }
 
         public int NumeroSequencial { get; set; }
@@ -296,6 +297,14 @@ namespace Dalutex.Models
         [Display(Name = "TIPO DE PEDIDO:")]
         public int IDTipoPedido { get; set; }
         public List<COML_TIPOSPEDIDOS> TiposPedido { get; set; }
+
+
+        [Required]
+        [Display(Name = "TAMANHO PADRÃO:")]
+        public decimal? IDTamanhoPadrao { get; set; }
+        public List<REGRA_PADRAO> TamanhoPadrao { get; set; }
+
+
 
         [Required]
         [Display(Name="PEÇAS:")]

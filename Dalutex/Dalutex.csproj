@@ -161,7 +161,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CadastroViewModel.cs" />
     <Compile Include="fonts\ARTIGO_PESO_PADRAO.cs" />
-    <Compile Include="Models\DataModels\Model1.cs" />
+    <Compile Include="Models\DataModels\REGRA_PADRAO.cs" />
     <Compile Include="Models\DataModels\VW_DESENHOS_POR_COL_DESENV.cs" />
     <Compile Include="Models\DataModels\VW_FAROL.cs" />
     <Compile Include="Models\DataModels\COML_CONTATOS.cs" />
@@ -217,6 +217,7 @@
     <Compile Include="Models\DataModels\VW_ITENS_VALIDAR_RESERVA.cs" />
     <Compile Include="Models\DataModels\VW_LISOS_POR_COLECAO.cs" />
     <Compile Include="Models\DataModels\VW_LISTA_PECAS_PE.cs" />
+    <Compile Include="Models\DataModels\VW_PI_RED.cs" />
     <Compile Include="Models\DataModels\VW_TROCA_TEC.cs" />
     <Compile Include="Models\DataModels\VW_VALIDAR_RESERVA.cs" />
     <Compile Include="Models\Relatorios.cs" />

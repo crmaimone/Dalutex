@@ -53,11 +53,57 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<VW_ITENS_PE> VW_ITENS_PE { get; set; }
         public virtual DbSet<VW_LISTA_PECAS_PE> VW_LISTA_PECAS_PE { get; set; }
         public virtual DbSet<VW_FAROL> VW_FAROL { get; set; }   
-        public virtual DbSet<VW_DESENHOS_POR_COL_DESENV> VW_DESENHOS_POR_COL_DESENV { get; set; }          
+        public virtual DbSet<VW_DESENHOS_POR_COL_DESENV> VW_DESENHOS_POR_COL_DESENV { get; set; }
+        public virtual DbSet<REGRA_PADRAO> REGRA_PADRAO { get; set; }
+        public virtual DbSet<VW_PI_RED> VW_PI_RED { get; set; }
 
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<REGRA_PADRAO>()
+                .Property(e => e.ID_REGRA)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<REGRA_PADRAO>()
+                .Property(e => e.TIPO_PRODUTO)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<REGRA_PADRAO>()
+                .Property(e => e.TECNOLOGIA)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<REGRA_PADRAO>()
+                .Property(e => e.ARTIGO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<REGRA_PADRAO>()
+                .Property(e => e.ID_PROCESSO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<REGRA_PADRAO>()
+                .Property(e => e.REDUZIDO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<REGRA_PADRAO>()
+                .Property(e => e.VALOR_PADRAO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<REGRA_PADRAO>()
+                .Property(e => e.ID_USUARIO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<REGRA_PADRAO>()
+                .Property(e => e.UM)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<REGRA_PADRAO>()
+                .Property(e => e.ID_USUARIO_STATUS)
+                .HasPrecision(38, 0);
+            
+
+
             modelBuilder.Entity<VW_DESENHOS_POR_COL_DESENV>()
                 .Property(e => e.COLECAO)
                 .HasPrecision(38, 0);

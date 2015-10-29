@@ -127,16 +127,19 @@
                     <input type="hidden" name="IDStudio" value="@Model.IDStudio" />
                     <input type="hidden" name="IDItemStudio" value="@Model.IDItemStudio" />
                     <input type="hidden" name="UnidadeMedida" id="hidUM" value="@Model.UnidadeMedida" />
-                    
-                    
-                    <input type="hidden" name="ValorPadrao" id="hidValPadrao" value="@Model.ValorPadrao ">
-                    @*<input type="hidden" name="TamanhoPadrao" id="hidValPadrao" value="@Model.IDTamanhoPadrao ">*@
-                    @*<input type="hidden" name="TamanhoPadrao" id="hidValPadrao" value="@Model.TamanhoPadrao ">*@
-
-
                     <input type="hidden" name="IDVariante" value="@Model.IDVariante" />
                     <input type="hidden" name="PedidoReserva" value="@Model.PedidoReserva" />
                     <input type="hidden" name="ItemPedidoReserva" value="@Model.ItemPedidoReserva" />
+
+                    
+                    // TODO:
+                    // DEVOLVER O VALOR SELECIONADO NO COMBO "TAMANHO PADRÃO" PARA ESTE CAMPO
+                    @*<input type="hidden" name="ValorPadrao" id="hidValPadrao" value="@Model.ValorPadrao ">*@
+                    @*<input type="hidden" name="ValorPadrao" id="hidValPadrao" value="@Model.IDTamanhoPadrao">*@
+                    <input type="hidden" name="ValorPadrao" value="@Model.IDTamanhoPadrao" />
+                    
+                    
+
                     <div class="form-group">
                         <div class="col-xs-12">
                             @if (Model.Modo == "I")

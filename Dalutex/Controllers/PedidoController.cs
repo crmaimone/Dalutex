@@ -475,12 +475,13 @@ namespace Dalutex.Controllers
                 {
                     if (model.Tipo != Enums.ItemType.Reserva)
                     {
+                        model.Quantidade = model.IDTamanhoPadrao.GetValueOrDefault() * model.Pecas;
                         //TODO: 
                         // VERIFICAR A VALIDAÇÃO DESTE CAMPO. DE ACORDO COM A ALTERAÇÃO, AGORA EXISTEM VARIOS TAMANHOS PADROES PARA SELECIONAR UM (APENAS).
                         // ESTE É O VALOR DO COMBO QUE SERÁ UTILIZADO PARA FAZER A CONTA (TAMANHO PADRÃO * QTDE DE PEÇAS INFORMADOS .
                         // ESTE VALOR NÃO PODE SER SETADO PELO GET. NO GET, PODE SER DEFINIDO UM DEFAULT PRA SETAR O COMBO COM ESTE VALOR, POREM NO POST, O 
                         // VALOR SELECIONADO DEVE SER DEVOLVIDO PARA VALIDAÇÃO AKI.
-                        if (model.ValorPadrao <= 0)
+                        if (model.IDTamanhoPadrao <= 0)
                         {
                             ModelState.AddModelError("", "TAMANHO PADRÃO NÃO SELECIONADO."); 
                             hasErrors = true;
@@ -599,9 +600,7 @@ namespace Dalutex.Controllers
                     if (model.IDTipoPedido >= default(int))
                         base.Session_Carrinho.IDTipoPedido = model.IDTipoPedido;
 
-                    if (model.IDTipoPedido == (int)Enums.TiposPedido.VENDA)
-                        model.Quantidade = model.Pecas * model.ValorPadrao;
-                    else
+                    if (model.IDTipoPedido != (int)Enums.TiposPedido.VENDA)                        
                         model.Pecas = 1;
 
                     model.ValorTotalItem = model.Quantidade * model.Preco;
@@ -652,8 +651,9 @@ namespace Dalutex.Controllers
                             if (base.Session_Carrinho == null || base.Session_Carrinho.IDTipoPedido < 0)
                             {
                                 model.ObterTipoPedido = true;
-                                this.CarregarTiposPedidos(model);
+                                this.CarregarTiposPedidos(model);                                
                             }
+                            this.CarregarTamanhosPadrao(model);
 
                             return View(model);
                         }
@@ -700,6 +700,7 @@ namespace Dalutex.Controllers
                                 model.ObterTipoPedido = true;
                                 this.CarregarTiposPedidos(model);
                             }
+                            this.CarregarTamanhosPadrao(model);
                             return View(model);
                         }
 

@@ -136,7 +136,7 @@
                     // DEVOLVER O VALOR SELECIONADO NO COMBO "TAMANHO PADRÃO" PARA ESTE CAMPO
                     @*<input type="hidden" name="ValorPadrao" id="hidValPadrao" value="@Model.ValorPadrao ">*@
                     @*<input type="hidden" name="ValorPadrao" id="hidValPadrao" value="@Model.IDTamanhoPadrao">*@
-                    <input type="hidden" name="ValorPadrao" value="@Model.IDTamanhoPadrao" />
+                    @*@<input type="hidden" name="ValorPadrao" value="@Model.IDTamanhoPadrao" />*@
                     
                     
 
@@ -206,50 +206,18 @@
                 //API Attributes
                 txtPecas_Blur = function()
                 {
-                    var $txtPecas = $("#txtPecas");
-                    var $txtQuantidade = $("#txtQuantidade");
-                    var $hidPadrao = $("#hidValPadrao");
-
-                    var e = document.getElementById("lstTamanhoPadrao");
-                    var PPadrao = e.options[e.selectedIndex].value;
-
-
-                    if (isNaN($txtPecas.val())) {
-                        $txtQuantidade.val(0);
-                        return;
-                    }
-
-                    if (isNaN($hidPadrao.val())) {
-                        $txtQuantidade.val(0);
-                        return;
-                    }
-
-                    //$txtQuantidade.val($txtPecas.val() * $hidPadrao.val());                    
-                    $txtQuantidade.val($txtPecas.val() * PPadrao);
-                    
+                    calcularTotal();
                 }
 
-                txtQuantidade_Blur = function () {
+                calcularTotal = function()
+                {
                     var $txtPecas = $("#txtPecas");
                     var $txtQuantidade = $("#txtQuantidade");
-                    //var $hidPadrao = $("#hidValPadrao");
 
-                    var e = document.getElementById("lstTamanhoPadrao");
-                    var PPadrao = e.options[e.selectedIndex].value;
-
-                    if (isNaN($txtQuantidade.val())) {
-                        $txtPecas.val(0);
+                    if (!isNaN($txtPecas.val())) {
+                        $txtQuantidade.val($txtPecas.val() * $("#lstTamanhoPadrao > option:selected").attr("value"));
                         return;
                     }
-
-                    if (isNaN($hidPadrao.val())) {
-                        $txtPecas.val(0);
-                        return;
-                    }
-
-                    //$txtPecas.val($txtQuantidade.val() / $hidPadrao.val());
-                    $txtPecas.val($txtQuantidade.val() / PPadrao);
-
                 }
 
                 lstTiposPedido_Change = function () {
@@ -267,8 +235,7 @@
                 }
 
                 lstTamanhoPadrao_Change = function () {                    
-                        $("#txtPecas").val("0")                        
-                        $("#txtQuantidade").val("0");                                        
+                    calcularTotal();
                 }
 
 
@@ -277,7 +244,6 @@
                 // public API
                 return {
                     txtPecas_Blur: txtPecas_Blur,
-                    txtQuantidade_Blur: txtQuantidade_Blur,
                     lstTiposPedido_Change: lstTiposPedido_Change,
                     lstTamanhoPadrao_Change: lstTamanhoPadrao_Change
                 };
@@ -288,7 +254,6 @@
                 $('#lstTiposPedido').selectpicker();
                 $("#lblQuantidade").text($("#hidUM").val());
                 $("#txtPecas").blur(this.txtPecas_Blur);
-                $("#txtQuantidade").blur(this.txtQuantidade_Blur);
                 $('#lstTamanhoPadrao').selectpicker();
 
                 $("#txtPecas").focus(function () {

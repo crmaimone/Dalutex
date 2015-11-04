@@ -293,28 +293,28 @@ namespace Dalutex.Models
         
         public int Comissao {get; set; } 
 
-        [Required]
+        [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [Display(Name = "TIPO DE PEDIDO:")]
         public int IDTipoPedido { get; set; }
         public List<COML_TIPOSPEDIDOS> TiposPedido { get; set; }
 
 
-        [Required]
+        [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [Display(Name = "TAMANHO PADRÃO:")]
         public decimal? IDTamanhoPadrao { get; set; }
         public List<REGRA_PADRAO> TamanhoPadrao { get; set; }
 
 
 
-        [Required]
+        [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [Display(Name="PEÇAS:")]
         public int Pecas { get; set; }
 
         [DataType(DataType.Currency)]
         public decimal Quantidade { get; set; }
 
-        [Required]
-        [DataType(DataType.Currency)]
+        [Required(ErrorMessage = "O campo {0} é obrigatório")]
+        [DataType(DataType.Currency, ErrorMessage ="O valor {0} não é válido para {1}.")]
         [Display(Name = "PREÇO:")]
         public decimal Preco { get; set; }
         public decimal? PrecoTabela { get; set; }

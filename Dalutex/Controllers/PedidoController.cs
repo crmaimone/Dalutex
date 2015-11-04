@@ -133,17 +133,26 @@ namespace Dalutex.Controllers
                         lstTecnologias.Add(item.ID_TEC_NOVA);
                     }
 
-                    //ESTA É CONDIÇÃO CORRETA PARA FILTRAR --------------------------------------------------------
-                    //and (r.id_tecnologia is null or tn.id_tec <> 3)--tec do desenho por parametro
-                    //and (r.id_carac_tec is null or r.id_carac_tec not in (1))--carac_tec do desenho por parametro
-                    //and (x.ID_TEC  in (3)) -- tec na lista de tec
+                    //-- oda 03/11/2015 -- alteração de validação da caracteristicas e tecnologias por artigos disponiveis --- 
+                    //AND PAA.ARTIGO NOT IN (
+                    //                         SELECT RA.ARTIGO
+                    //                           FROM PED_LINK_RESTRICAO_ARTIGO RA
+                    //                          WHERE RA.ARTIGO = PAA.ARTIGO
+                    //                            AND RA.ID_CARAC_TEC IN (13,15,1)
+                    //                      )
+                    List<PED_LINK_RESTRICAO_ARTIGO> lstArtigos = ctx.PED_LINK_RESTRICAO_ARTIGO.Where(x => lstCaracteristicas.Contains(x.ID_CARAC_TEC)).ToList();
 
+                    List<string> lstArtigosStr = new List<string>();
+
+                    foreach (PED_LINK_RESTRICAO_ARTIGO item in lstArtigos)
+                    {
+                        lstArtigosStr.Add(item.ARTIGO);
+                    }
+                    
                     var query =
                         from ar in ctx.VW_ARTIGOS_DISPONIVEIS
-                        where (ar.ID_TECNOLOGIA.Equals(null) || ar.ID_TEC != iIDTecnologia)
-                           && (ar.ID_CARAC_TEC.Equals(null) || !lstCaracteristicas.Contains(ar.ID_CARAC_TEC))
+                        where (!lstArtigosStr.Contains(ar.ARTIGO))
                            && (lstTecnologias.Contains(ar.ID_TEC))
-                           && (lstTecnologias.Contains(ar.ID_TEC_ARTIGO))
                         group ar by
                             new
                             {
@@ -156,6 +165,27 @@ namespace Dalutex.Controllers
                                 Artigo = grp.Key.ARTIGO,
                                 Tecnologia = grp.Key.TECNOLOGIA
                             };
+
+                                                                                                                                                                                                        
+                    //forma anterior. a estrutura da view mudou --------------------------------------------------
+                    //var query =
+                    //    from ar in ctx.VW_ARTIGOS_DISPONIVEIS
+                    //    where (ar.ID_TECNOLOGIA.Equals(null) || ar.ID_TEC != iIDTecnologia)
+                    //       && (ar.ID_CARAC_TEC.Equals(null) || !lstCaracteristicas.Contains(ar.ID_CARAC_TEC))
+                    //       && (lstTecnologias.Contains(ar.ID_TEC))
+                    //       && (lstTecnologias.Contains(ar.ID_TEC_ARTIGO))
+                    //    group ar by
+                    //        new
+                    //        {
+                    //            ar.ARTIGO,
+                    //            ar.TECNOLOGIA,
+                    //        }
+                    //        into grp
+                    //        select new ArtigoTecnologia
+                    //        {
+                    //            Artigo = grp.Key.ARTIGO,
+                    //            Tecnologia = grp.Key.TECNOLOGIA
+                    //        };
 
                     string _sql = query.ToString();//apenas para pegar o SQL que esta sendo passado
 
@@ -384,7 +414,8 @@ namespace Dalutex.Controllers
                     //Se não encontrou, tenta encontar apenas pelo reduzido
                     if (model.TamanhoPadrao == null || model.TamanhoPadrao.Count() == 0)
                     {
-                        model.TamanhoPadrao = ctxTI.REGRA_PADRAO.Where(x => x.STATUS == true && x.REDUZIDO == model.Reduzido).OrderByDescending(x => x.PADRAO).ToList();
+                        model.TamanhoPadrao = ctxTI.REGRA_PADRAO.Where(x => x.STATUS == true && x.REDUZIDO == model.Reduzido &&
+                                                                            x.ID_PROCESSO == null).OrderByDescending(x => x.PADRAO).ToList();
                     }
 
                     //Não encontrou na tabela, tentar encontar sem o reduzido - [Tipo prod, Tec, Artigo e PI]
@@ -430,34 +461,41 @@ namespace Dalutex.Controllers
                         }
                     }
 
-                    //Se Não encontrou na tabela ainda, tentar encontar sem o reduzido na combinação - [Tipo prod, Tec, Artigo]
+                    //Se Não encontrou na tabela ainda, tentar encontar sem o reduzido na combinação - [Tipo prod, Tecnologia, Artigo e UM]
                     if (model.TamanhoPadrao == null || model.TamanhoPadrao.Count() == 0)
                     {
                         model.TamanhoPadrao = ctxTI.REGRA_PADRAO.Where(x => x.STATUS == true && x.TIPO_PRODUTO == "A" &&
                                                                             x.ARTIGO == model.Artigo &&
-                                                                            x.TECNOLOGIA == model.Tecnologia
+                                                                            x.TECNOLOGIA == model.Tecnologia && 
+                                                                            x.UM == model.UnidadeMedida
                                                                     ).OrderByDescending(x => x.PADRAO).ToList();
                     }
 
-                    //Se Não encontrou na tabela ainda, tentar encontar sem o reduzido na combinação - [Tipo prod, Tec, Artigo]
+                    //Se Não encontrou na tabela ainda, tentar encontar sem o reduzido na combinação - [Tipo prod, Tecnologia e UM]
+                    if (model.TamanhoPadrao == null || model.TamanhoPadrao.Count() == 0)
+                    {
+                        model.TamanhoPadrao = ctxTI.REGRA_PADRAO.Where(x => x.STATUS == true && x.TIPO_PRODUTO == "A" &&                                                                            
+                                                                            x.TECNOLOGIA == model.Tecnologia && 
+                                                                            x.UM == model.UnidadeMedida &&
+                                                                            x.ARTIGO == null
+                                                                    ).OrderByDescending(x => x.PADRAO).ToList();
+                    }
+
+                    //Se Não encontrou na tabela ainda, tentar encontar sem o reduzido na combinação - [Tipo prod, UM]
                     if (model.TamanhoPadrao == null || model.TamanhoPadrao.Count() == 0)
                     {
                         model.TamanhoPadrao = ctxTI.REGRA_PADRAO.Where(x => x.STATUS == true && x.TIPO_PRODUTO == "A" &&
-                                                                            x.ARTIGO == model.Artigo &&
-                                                                            x.TECNOLOGIA == model.Tecnologia
-                                                                    ).OrderByDescending(x => x.PADRAO).ToList();
-                    }
-
-                    //Se Não encontrou na tabela ainda, tentar encontar sem o reduzido na combinação - [Tipo prod, Tecnologia, UM]
-                    if (model.TamanhoPadrao == null || model.TamanhoPadrao.Count() == 0)
-                    {
-                        model.TamanhoPadrao = ctxTI.REGRA_PADRAO.Where(x => x.STATUS == true && x.TIPO_PRODUTO == "A" && x.TECNOLOGIA == model.Tecnologia && x.UM == model.UnidadeMedida).OrderByDescending(x => x.PADRAO).ToList();
+                                                                            x.UM == model.UnidadeMedida &&
+                                                                            x.ARTIGO == null).OrderByDescending(x => x.PADRAO).ToList();
                     }
 
                     //Se Não encontrou AINDA na tabela, PEGA O PRIMEIRO VALOR APENAS DO TIPO DE PRODUTO e mesma UM
                     if (model.TamanhoPadrao == null || model.TamanhoPadrao.Count() == 0)
                     {
-                        model.TamanhoPadrao = ctxTI.REGRA_PADRAO.Where(x => x.STATUS == true && x.TIPO_PRODUTO == "A" && x.UM == model.UnidadeMedida).OrderByDescending(x => x.PADRAO).ToList();
+                        model.TamanhoPadrao = ctxTI.REGRA_PADRAO.Where(x => x.STATUS == true && x.TIPO_PRODUTO == "A" && 
+                                                                            x.TECNOLOGIA == "X" &&
+                                                                            x.ARTIGO == null &&
+                                                                            x.UM == model.UnidadeMedida).OrderByDescending(x => x.PADRAO).ToList();
                     }
                 }
             }
@@ -606,15 +644,18 @@ namespace Dalutex.Controllers
                     model.ValorTotalItem = model.Quantidade * model.Preco;
 
 
-                    //adicionar valor para "Farol" ------------ oda -- 05/08/2015 -----------
-                    using (var ctx = new TIDalutexContext())
+                    if (model.Tipo != Enums.ItemType.Reserva)
                     {
-                        VW_FAROL objFarol = ctx.VW_FAROL.Where(x => x.ARTIGO == model.Artigo && x.DESENHO == model.Desenho && x.VARIANTE == model.Variante).FirstOrDefault();
+                        //adicionar valor para "Farol" ------------ oda -- 05/08/2015 -----------
+                        using (var ctx = new TIDalutexContext())
+                        {
+                            VW_FAROL objFarol = ctx.VW_FAROL.Where(x => x.ARTIGO == model.Artigo && x.DESENHO == model.Desenho && x.VARIANTE == model.Variante).FirstOrDefault();
 
-                        if (objFarol != null)
-                            model.Farol = objFarol.FAROL;
-                        else
-                            model.Farol = 0;
+                            if (objFarol != null)
+                                model.Farol = objFarol.FAROL;
+                            else
+                                model.Farol = 0;
+                        }
                     }
 
                     
@@ -707,6 +748,12 @@ namespace Dalutex.Controllers
                         base.Session_Carrinho.Itens[index] = model;
                         return RedirectToAction("Carrinho", "Pedido");
                     }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Formato de número digitado não é correto. Não Utilizar '.' (ponto) como separador ");
+                    CarregarTamanhosPadrao(model);
+                    return View(model);
                 }
             }
             catch (Exception ex)
@@ -2135,6 +2182,11 @@ namespace Dalutex.Controllers
                         model.TotalPaginas = 1;
 
                     model.ListaValidaReserva = result.Skip((model.Pagina - 1) * iItensPorPagina).Take(iItensPorPagina).ToList();
+
+                    if ((PedidoReserva != 0) && (result.Count() == 0))
+                    {
+                        ModelState.AddModelError("", "Pedido informado não tem VARIANTES (coloração) cadastradas no Desenvolvimento");
+                    }
                 }
                 else
                 {
@@ -2156,6 +2208,11 @@ namespace Dalutex.Controllers
                                 .Skip((model.Pagina - 1) * iItensPorPagina)
                                 .Take(iItensPorPagina)
                                 .ToList();
+
+                    if ((PedidoReserva != 0) && (result.Count() == 0))
+                    {
+                        ModelState.AddModelError("", "Pedido informado não tem VARIANTES (coloração) cadastrada no Desenvolvimento.");
+                    }
                 }
             }
         }

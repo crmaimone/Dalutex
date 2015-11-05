@@ -56,10 +56,64 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<VW_DESENHOS_POR_COL_DESENV> VW_DESENHOS_POR_COL_DESENV { get; set; }
         public virtual DbSet<REGRA_PADRAO> REGRA_PADRAO { get; set; }
         public virtual DbSet<VW_PI_RED> VW_PI_RED { get; set; }
-
+        public virtual DbSet<REGRAS_QTD_PEDIDO> REGRAS_QTD_PEDIDO { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<REGRAS_QTD_PEDIDO>()
+                .Property(e => e.ID_REGRAS_QTD_PEDIDO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<REGRAS_QTD_PEDIDO>()
+                .Property(e => e.TECNOLOGIA)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<REGRAS_QTD_PEDIDO>()
+                .Property(e => e.PROCESSO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<REGRAS_QTD_PEDIDO>()
+                .Property(e => e.TECNOLOGIA_DESTINO)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<REGRAS_QTD_PEDIDO>()
+                .Property(e => e.PROCESSO_DESTINO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<REGRAS_QTD_PEDIDO>()
+                .Property(e => e.GRUPO_COLECAO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<REGRAS_QTD_PEDIDO>()
+                .Property(e => e.TIPO_PEDIDO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<REGRAS_QTD_PEDIDO>()
+                .Property(e => e.UM)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<REGRAS_QTD_PEDIDO>()
+                .Property(e => e.QTD_MIN_VAR)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<REGRAS_QTD_PEDIDO>()
+                .Property(e => e.QTD_MAX_VAR)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<REGRAS_QTD_PEDIDO>()
+                .Property(e => e.QTD_MIN_DES)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<REGRAS_QTD_PEDIDO>()
+                .Property(e => e.QTD_MAX_DES)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<REGRAS_QTD_PEDIDO>()
+                .Property(e => e.USUARIO_EXCLUSAO)
+                .HasPrecision(38, 0);
+
             modelBuilder.Entity<REGRA_PADRAO>()
                 .Property(e => e.ID_REGRA)
                 .HasPrecision(38, 0);

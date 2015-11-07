@@ -238,6 +238,11 @@
                     calcularTotal();
                 }
 
+                txtPecas_Input = function(e)
+                {
+                    $(this).val($(this).val().replace(",", "").replace(".", ""));
+                }
+
 
                 //API Methods
 
@@ -245,7 +250,8 @@
                 return {
                     txtPecas_Blur: txtPecas_Blur,
                     lstTiposPedido_Change: lstTiposPedido_Change,
-                    lstTamanhoPadrao_Change: lstTamanhoPadrao_Change
+                    lstTamanhoPadrao_Change: lstTamanhoPadrao_Change,
+                    txtPecas_Input: txtPecas_Input
                 };
             })();
 
@@ -255,6 +261,7 @@
                 $("#lblQuantidade").text($("#hidUM").val());
                 $("#txtPecas").blur(this.txtPecas_Blur);
                 $('#lstTamanhoPadrao').selectpicker();
+                $('#txtPecas').on("input", scriptWrapper.txtPecas_Input)
 
                 $("#txtPecas").focus(function () {
                     this.select();

@@ -541,8 +541,7 @@ namespace Dalutex.Controllers
                             decimal QtdeMaxima = 0;
                             decimal QtdeMinima = 0;
 
-                            REGRAS_QTD_PEDIDO objMinMax = new REGRAS_QTD_PEDIDO();
-                            objMinMax = null;
+                            REGRAS_QTD_PEDIDO objMinMax=null;
 
                             int ID_GRUPO_COL = 0;
 
@@ -556,7 +555,9 @@ namespace Dalutex.Controllers
                                 ID_GRUPO_COL = (int)Enums.GrupoColecoes.Colecao;
 
 
-                            // -- oda -- 04/11/2015 -- nova regra de tamanho Min e Max -------------------------------------------------------------------------------------                            
+                            // -- oda -- 04/11/2015 -- nova regra de tamanho Min e Max -------------------------------------------------------------------------------------
+                            model.IDGrupoColecao = ID_GRUPO_COL;
+
                             int _piOld = 0;
 
                             //se for troca de tecnologia, então tento pegar o reduzido do item na tecnologia original pelo artigo selecionado
@@ -996,7 +997,6 @@ namespace Dalutex.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Formato de número digitado não é correto. Não Utilizar '.' (ponto) como separador ");
                     CarregarTamanhosPadrao(model);
                     return View(model);
                 }
@@ -1350,34 +1350,73 @@ namespace Dalutex.Controllers
                         }
 
 // -- oda -- 05/112015 --- regra de validação de qtde por desenho ------------------------------------------------------------------------------------------------------------------
-                        foreach (InserirNoCarrinhoViewModel item in base.Session_Carrinho.Itens)
+                        using (var ctx = new TIDalutexContext())
                         {
-
-                        }
-
-                        List<KeyValuePair<string, decimal>> lstGrupoDesenho = base.Session_Carrinho.Itens
-                            .GroupBy(g => g.Desenho + g.UnidadeMedida)
-                            .Select(consolidado => new KeyValuePair<string, decimal>(consolidado.First().Desenho + consolidado.First().UnidadeMedida, consolidado.Sum(s => s.Quantidade)))
-                            .ToList();
-
-                        bool isValidDes = true;
-
-                        decimal MinValue = 1000;
-
-                        foreach (KeyValuePair<string, decimal> item in lstGrupoDesenho)
-                        {
-                            if (item.Value < MinValue)
+                            if (model.IDTipoPedido == (int)Enums.TiposPedido.VENDA)
                             {
-                                ModelState.AddModelError("", "Quantidade mínima em ''" + item.Key.Substring(4,2) + "'' para o desenho '"+ item.Key.Substring(0,4) + " é " + MinValue.ToString());
-                                isValidDes = false;
-                            }
-                        }
+                                //foreach (InserirNoCarrinhoViewModel item in base.Session_Carrinho.Itens)
+                                List<KeyValuePair<string, decimal>> lstGrupoDesenho = base.Session_Carrinho.Itens
+                                  .GroupBy(g => g.Desenho + g.UnidadeMedida + g.Tecnologia.Substring(0, 1) + g.IDGrupoColecao)
+                                  .Select(consolidado => new KeyValuePair<string, decimal>(
+                                      consolidado.First().Desenho + consolidado.First().UnidadeMedida + consolidado.First().Tecnologia.Substring(0, 1) + consolidado.First().IDGrupoColecao, 
+                                      consolidado.Sum(s => s.Quantidade))).ToList();
 
-                        if (!isValidDes)
-                        {
-                            hasErrors = true;
-                        }
-                        
+                                //Desenho       = 0,4    A664MTC2, 400
+                                //UnidadeMedida = 4,2 
+                                //Tecnologia    = 6,1  
+                                //IDColecao     = 7,1
+
+                                bool isValidDes = true;
+
+                                decimal MinValue = 0;
+                                decimal MaxValue = 999999;
+
+                                REGRAS_QTD_PEDIDO objMinMax = new REGRAS_QTD_PEDIDO();
+                                objMinMax = null;
+
+                                decimal idGrCol = 0;
+
+                                foreach (KeyValuePair<string, decimal> item in lstGrupoDesenho)
+                                {
+                                    idGrCol = decimal.Parse(item.Key.Substring(7, 1));
+    
+                                    var qryQtdeMinMax =
+                                        from Qtde in ctx.REGRAS_QTD_PEDIDO
+                                        where
+                                               Qtde.TECNOLOGIA == item.Key.Substring(6, 1) 
+                                                && Qtde.GRUPO_COLECAO == idGrCol
+                                                && Qtde.TIPO_PEDIDO == model.IDTipoPedido
+                                                && Qtde.UM == item.Key.Substring(4, 2)  
+                                        select
+                                            Qtde;
+
+                                            objMinMax = qryQtdeMinMax.FirstOrDefault();
+                                        
+                                        if (objMinMax != null)
+                                        {
+                                            MaxValue = objMinMax.QTD_MAX_DES;
+                                            MinValue = objMinMax.QTD_MIN_DES;
+                                        }
+
+                                    if (item.Value < MinValue)
+                                    {
+                                        ModelState.AddModelError("", "Quantidade mínima em ''" + item.Key.Substring(4, 2) + "'' para o desenho '" + item.Key.Substring(0, 4) + " é " + MinValue.ToString());
+                                        isValidDes = false;
+                                    }
+                                    else
+                                        if (item.Value > MaxValue)
+                                        {
+                                            ModelState.AddModelError("", "Quantidade Máxima em ''" + item.Key.Substring(4, 2) + "'' para o desenho '" + item.Key.Substring(0, 4) + " é " + MinValue.ToString());
+                                            isValidDes = false;
+                                        }
+                                }
+
+                                if (!isValidDes)
+                                {
+                                    hasErrors = true;
+                                }  
+                            }
+                        }                                                                       
 // -- oda -- 05/112015 --- regra de validação de qtde por desenho ------------------------------------------------------------------------------------------------------------------
 
 

@@ -222,6 +222,7 @@
     <Compile Include="Models\DataModels\VW_TROCA_TEC.cs" />
     <Compile Include="Models\DataModels\VW_VALIDAR_RESERVA.cs" />
     <Compile Include="Models\Relatorios.cs" />
+    <Compile Include="Models\Utils\ModelBinders.cs" />
     <Compile Include="Models\Utils\PdfResult.cs" />
     <Compile Include="Models\Utils\Enums.cs" />
     <Compile Include="Models\PedidoViewModels.cs" />

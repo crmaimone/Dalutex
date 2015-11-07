@@ -320,6 +320,8 @@ namespace Dalutex.Models
         public decimal? PrecoTabela { get; set; }
         public decimal? Farol { get; set; }
 
+        public int IDGrupoColecao { get; set; }
+
         public override bool Equals(object obj)
         {
             if(obj is InserirNoCarrinhoViewModel)

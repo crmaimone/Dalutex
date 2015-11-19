@@ -57,14 +57,17 @@
                         
                         <hr />
                     
-                                                                               
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.IDTamanhoPadrao, new { @class = "col-md-4 control-label" })
-                            <div class="col-md-8">
-                                @Html.DropDownListFor(m => m.IDTamanhoPadrao, new SelectList(Model.TamanhoPadrao, "VALOR_PADRAO", "VALOR_PADRAO"), "Selecione", new { @id = "lstTamanhoPadrao" })
-                                @Html.ValidationMessageFor(m => m.IDTamanhoPadrao, "", new { @class = "text-danger" })
+                         
+                        if ( (Model.IDTipoPedido != (int)Enums.TiposPedido.PILOTAGEM) || (Model.IDTipoPedido != (int)Enums.TiposPedido.AMOSTRA) )
+                        {                                                      
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.IDTamanhoPadrao, new { @class = "col-md-4 control-label" })
+                                <div class="col-md-8">
+                                    @Html.DropDownListFor(m => m.IDTamanhoPadrao, new SelectList(Model.TamanhoPadrao, "VALOR_PADRAO", "VALOR_PADRAO"), "Selecione", new { @id = "lstTamanhoPadrao" })
+                                    @Html.ValidationMessageFor(m => m.IDTamanhoPadrao, "", new { @class = "text-danger" })
+                                </div>
                             </div>
-                        </div>
+                        }
 
                     
                         <div class="form-group">
@@ -225,11 +228,16 @@
                         $("#txtPecas").val("0")
                         $("#txtPecas").prop('disabled', true);
                         $("#txtQuantidade").prop('disabled', false);
+
+                        $("#lstTamanhoPadrao").prop('disabled', true);
+                        
                     }
                     else {
                         $("#txtQuantidade").val("0")
                         $("#txtPecas").prop('disabled', false);
                         $("#txtQuantidade").prop('disabled', true);
+
+                        $("#lstTamanhoPadrao").prop('disabled', false);
                     }               
                     //Buscar novos minimos e máximos
                 }

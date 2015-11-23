@@ -44,12 +44,13 @@
                     
                     if (Model.Tipo != Enums.ItemType.Reserva)
                     {
-                        if (Model.ObterTipoPedido)
+                        if (Model.ObterTipoPedido =="S")
                         {
                             <div class="form-group">
                                 @Html.LabelFor(x => x.IDTipoPedido, new { @class = "col-md-4 control-label" })
                                 <div class="col-md-8">
-                                    @Html.DropDownListFor(m => m.IDTipoPedido, new SelectList(Model.TiposPedido, "TIPOPEDIDO", "DESCRICAO"), "Selecione", new { @id = "lstTiposPedido" })
+                                    @Html.DropDownListFor(m => m.IDTipoPedido, new SelectList(Model.TiposPedido, "TIPOPEDIDO", "DESCRICAO"), "Selecione", new { @id = "lstTiposPedido" })                                   
+                                    @*@Html.DropDownListFor(m => m.IDTipoPedido, Model.TiposPedido, "Selecione", new { @id = "lstTiposPedido" })*@
                                     @Html.ValidationMessageFor(m => m.IDTipoPedido, "", new { @class = "text-danger" })
                                 </div>
                             </div>
@@ -58,7 +59,7 @@
                         <hr />
                     
                          
-                        if ( (Model.IDTipoPedido != (int)Enums.TiposPedido.PILOTAGEM) || (Model.IDTipoPedido != (int)Enums.TiposPedido.AMOSTRA) )
+                        if ( (Model.IDTipoPedido != (int)Enums.TiposPedido.PILOTAGEM) && (Model.IDTipoPedido != (int)Enums.TiposPedido.AMOSTRA) )
                         {                                                      
                             <div class="form-group">
                                 @Html.LabelFor(x => x.IDTamanhoPadrao, new { @class = "col-md-4 control-label" })
@@ -133,8 +134,9 @@
                     <input type="hidden" name="IDVariante" value="@Model.IDVariante" />
                     <input type="hidden" name="PedidoReserva" value="@Model.PedidoReserva" />
                     <input type="hidden" name="ItemPedidoReserva" value="@Model.ItemPedidoReserva" />
+                    <input type="hidden" name="ObterTipoPedido" value="@Model.ObterTipoPedido" />
 
-                    
+
                     // TODO:
                     // DEVOLVER O VALOR SELECIONADO NO COMBO "TAMANHO PADRÃO" PARA ESTE CAMPO
                     @*<input type="hidden" name="ValorPadrao" id="hidValPadrao" value="@Model.ValorPadrao ">*@
@@ -228,16 +230,15 @@
                         $("#txtPecas").val("0")
                         $("#txtPecas").prop('disabled', true);
                         $("#txtQuantidade").prop('disabled', false);
-
-                        $("#lstTamanhoPadrao").prop('disabled', true);
-                        
+                        $("label[for=IDTamanhoPadrao]").hide();
+                        $("#lstTamanhoPadrao").selectpicker('hide');
                     }
                     else {
                         $("#txtQuantidade").val("0")
                         $("#txtPecas").prop('disabled', false);
                         $("#txtQuantidade").prop('disabled', true);
-
-                        $("#lstTamanhoPadrao").prop('disabled', false);
+                        $("label[for=IDTamanhoPadrao]").show();
+                        $("#lstTamanhoPadrao").selectpicker('show');
                     }               
                     //Buscar novos minimos e máximos
                 }

@@ -6,6 +6,7 @@ using Dalutex.Models.DataModels;
 using System.ComponentModel.DataAnnotations;
 using Dalutex.Models.Utils;
 using System.Drawing;
+using System.Web.Mvc;
 
 namespace Dalutex.Models
 {
@@ -265,7 +266,7 @@ namespace Dalutex.Models
         public string UnidadeMedida { get; set; }
         public decimal ValorPadrao { get; set; }
         public decimal ValorTotalItem { get; set; }
-        public bool ObterTipoPedido { get; set; }
+        public string ObterTipoPedido { get; set; }
         public int Reduzido { get; set; }
 
         public DateTime DataEntregaItem { get; set; }

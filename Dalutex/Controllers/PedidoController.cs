@@ -377,11 +377,11 @@ namespace Dalutex.Controllers
 
                 this.CarregarTiposPedidos(model);
 
-                model.ObterTipoPedido = base.Session_Carrinho == null || base.Session_Carrinho.IDTipoPedido < 0;
+                model.ObterTipoPedido = (base.Session_Carrinho == null || base.Session_Carrinho.IDTipoPedido < 0)? "S" : "N";
             }
             else
             {
-                model.ObterTipoPedido = false;
+                model.ObterTipoPedido = "N";
             }
 
             ViewBag.POGReduzido = model.Reduzido;
@@ -509,17 +509,25 @@ namespace Dalutex.Controllers
                 {
                     if (model.Tipo != Enums.ItemType.Reserva)
                     {
-                        model.Quantidade = model.IDTamanhoPadrao.GetValueOrDefault() * model.Pecas;
+                        if ((model.IDTipoPedido != (int)Enums.TiposPedido.AMOSTRA) && (model.IDTipoPedido != (int)Enums.TiposPedido.PILOTAGEM))
+                        {
+                            model.Quantidade = model.IDTamanhoPadrao.GetValueOrDefault() * model.Pecas;
+                        }
+                        
                         #region Validação dos campos qtde
                         //TODO: 
                         // VERIFICAR A VALIDAÇÃO DESTE CAMPO. DE ACORDO COM A ALTERAÇÃO, AGORA EXISTEM VARIOS TAMANHOS PADROES PARA SELECIONAR UM (APENAS).
                         // ESTE É O VALOR DO COMBO QUE SERÁ UTILIZADO PARA FAZER A CONTA (TAMANHO PADRÃO * QTDE DE PEÇAS INFORMADOS .
                         // ESTE VALOR NÃO PODE SER SETADO PELO GET. NO GET, PODE SER DEFINIDO UM DEFAULT PRA SETAR O COMBO COM ESTE VALOR, POREM NO POST, O 
                         // VALOR SELECIONADO DEVE SER DEVOLVIDO PARA VALIDAÇÃO AKI.
-                        if (model.IDTamanhoPadrao <= 0)
+
+                        if ((model.IDTipoPedido != (int)Enums.TiposPedido.AMOSTRA) && (model.IDTipoPedido != (int)Enums.TiposPedido.PILOTAGEM))
                         {
-                            ModelState.AddModelError("", "TAMANHO PADRÃO NÃO SELECIONADO."); 
-                            hasErrors = true;
+                            if (model.IDTamanhoPadrao <= 0)
+                            {
+                                ModelState.AddModelError("", "TAMANHO PADRÃO NÃO SELECIONADO.");
+                                hasErrors = true;
+                            }
                         }
                         if (model.IDTipoPedido == 0 && model.Pecas <= 0)
                         {
@@ -861,13 +869,13 @@ namespace Dalutex.Controllers
                         {
                             if (base.Session_Carrinho == null || base.Session_Carrinho.IDTipoPedido < 0)
                             {
-                                model.ObterTipoPedido = true;
+                                model.ObterTipoPedido = "S";
                                 this.CarregarTiposPedidos(model);
                             }
                         }
                         else
                         {
-                            model.ObterTipoPedido = false;
+                            model.ObterTipoPedido = "N";
                         }
 
                         CarregarTamanhosPadrao(model);
@@ -942,7 +950,7 @@ namespace Dalutex.Controllers
                             ModelState.AddModelError("", "Este item já foi incluído no carrinho.");
                             if (base.Session_Carrinho == null || base.Session_Carrinho.IDTipoPedido < 0)
                             {
-                                model.ObterTipoPedido = true;
+                                model.ObterTipoPedido = "S";
                                 this.CarregarTiposPedidos(model);                                
                             }
                             this.CarregarTamanhosPadrao(model);
@@ -986,7 +994,7 @@ namespace Dalutex.Controllers
                             ModelState.AddModelError("", "Este item não foi encontrado no carrinho para alteração.");
                             if (base.Session_Carrinho == null || base.Session_Carrinho.IDTipoPedido < 0)
                             {
-                                model.ObterTipoPedido = true;
+                                model.ObterTipoPedido = "S";
                                 this.CarregarTiposPedidos(model);
                             }
                             this.CarregarTamanhosPadrao(model);
@@ -999,6 +1007,11 @@ namespace Dalutex.Controllers
                 }
                 else
                 {
+                    if (base.Session_Carrinho == null || base.Session_Carrinho.IDTipoPedido < 0)
+                    {
+                        model.ObterTipoPedido = "S";
+                        this.CarregarTiposPedidos(model);
+                    }
                     CarregarTamanhosPadrao(model);
                     return View(model);
                 }
@@ -1010,7 +1023,7 @@ namespace Dalutex.Controllers
             
             if (base.Session_Carrinho == null || base.Session_Carrinho.IDTipoPedido < 0)
             {
-                model.ObterTipoPedido = true;
+                model.ObterTipoPedido = "S";
                 this.CarregarTiposPedidos(model);
             }
             return View(model);
@@ -2283,6 +2296,7 @@ namespace Dalutex.Controllers
                     (int)Enums.TiposPedido.MOSTRUARIO,
                 };
 
+                //model.TiposPedido = new SelectList(ctxDalutex.COML_TIPOSPEDIDOS.Where(x => tiposPedidos.Any(tipo => x.TIPOPEDIDO.Equals(tipo))).ToList().Select(x => new SelectListItem() { Text = x.DESCRICAO, Value = x.TIPOPEDIDO.ToString() }));
                 model.TiposPedido = ctxDalutex.COML_TIPOSPEDIDOS.Where(x => tiposPedidos.Any(tipo => x.TIPOPEDIDO.Equals(tipo))).ToList();
             }
         }

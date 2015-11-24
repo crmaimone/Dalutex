@@ -160,27 +160,6 @@ namespace Dalutex.Controllers
                                 Tecnologia = grp.Key.TECNOLOGIA
                             };
 
-                                                                                                                                                                                                        
-                    //forma anterior. a estrutura da view mudou --------------------------------------------------
-                    //var query =
-                    //    from ar in ctx.VW_ARTIGOS_DISPONIVEIS
-                    //    where (ar.ID_TECNOLOGIA.Equals(null) || ar.ID_TEC != iIDTecnologia)
-                    //       && (ar.ID_CARAC_TEC.Equals(null) || !lstCaracteristicas.Contains(ar.ID_CARAC_TEC))
-                    //       && (lstTecnologias.Contains(ar.ID_TEC))
-                    //       && (lstTecnologias.Contains(ar.ID_TEC_ARTIGO))
-                    //    group ar by
-                    //        new
-                    //        {
-                    //            ar.ARTIGO,
-                    //            ar.TECNOLOGIA,
-                    //        }
-                    //        into grp
-                    //        select new ArtigoTecnologia
-                    //        {
-                    //            Artigo = grp.Key.ARTIGO,
-                    //            Tecnologia = grp.Key.TECNOLOGIA
-                    //        };
-
                     string _sql = query.ToString();//apenas para pegar o SQL que esta sendo passado
 
                     model.Artigos = query.OrderBy(x => x.Tecnologia).ThenBy(x => x.Artigo).ToList();
@@ -314,65 +293,9 @@ namespace Dalutex.Controllers
                                 model.Reduzido = -2; //reduzido criado por JOB posteriormente
                         }
                     }                 
-                    //int[] tiposPedidos = new int[] 
-                    //{ 
-                    //    (int)Enums.TiposPedido.AMOSTRA,
-                    //    (int)Enums.TiposPedido.PILOTAGEM,
-                    //    (int)Enums.TiposPedido.VENDA,
-                    //    (int)Enums.TiposPedido.MOSTRUARIO,
-                    //};
-                    //model.TamanhoPadrao = ctxTIDalutex.REGRA_PADRAO.Where(x => tiposPedidos.Any(tipo => x.TIPOPEDIDO.Equals(tipo))).ToList();
-                    //ctx.VW_FAROL.Where(x => x.ARTIGO == model.Artigo && x.DESENHO == model.Desenho && x.VARIANTE == model.Variante).FirstOrDefault();
-
                     CarregarTamanhosPadrao(model);
 
-                    model.IDTamanhoPadrao = model.TamanhoPadrao[0].VALOR_PADRAO;
-                   
-                    //var query =
-                    //    from app in ctxTI.ARTIGO_PESO_PADRAO
-                    //    where
-                    //        (
-                    //            app.ATIVO == true
-                    //            && app.ARTIGO == artigo
-                    //            && app.TECNOLOGIA == tecnologia.Substring(0, 1)
-                    //        )
-                    //    select app;                
-                    //ARTIGO_PESO_PADRAO objValorPadrao = query.FirstOrDefault();
-
-                    //if (objValorPadrao != null)
-                    //{
-                    //    model.UnidadeMedida = objValorPadrao.UM;
-                    //    model.ValorPadrao = objValorPadrao.VALOR;
-                    //}                    
-                    //else
-                    //{
-                    //    VMASCARAPRODUTOACABADO objValorPadraoView = null;
-
-                    //    using (var ctx = new DalutexContext())
-                    //    {
-                    //        objValorPadraoView = ctx.VMASCARAPRODUTOACABADO.Where(x => x.ARTIGO == model.Artigo).FirstOrDefault();
-                    //        if (objValorPadraoView != null)
-                    //        {
-                    //            model.UnidadeMedida = objValorPadraoView.UM;
-                    //            if (model.UnidadeMedida.ToUpper() == "KG")
-                    //            {
-                    //                model.ValorPadrao = (decimal)Enums.ValorPadraoUnidade.Quilo;
-                    //            }
-                    //            else if (model.UnidadeMedida.ToUpper() == "MT")
-                    //            {
-                    //                model.ValorPadrao = (decimal)Enums.ValorPadraoUnidade.Metro;
-                    //            }
-                    //            else
-                    //            {
-                    //                ModelState.AddModelError("", "UNIDADE DE MEDIDA INVÁLIDA.");
-                    //            }
-                    //        }
-                    //        else
-                    //        {
-                    //            ModelState.AddModelError("", "UNIDADE DE MEDIDA NÃO ENCONTRADA.");
-                    //        }
-                    //    }
-                    //}
+                    model.IDTamanhoPadrao = model.TamanhoPadrao[0].VALOR_PADRAO;                                       
                 }
 
                 this.CarregarTiposPedidos(model);
@@ -515,11 +438,6 @@ namespace Dalutex.Controllers
                         }
                         
                         #region Validação dos campos qtde
-                        //TODO: 
-                        // VERIFICAR A VALIDAÇÃO DESTE CAMPO. DE ACORDO COM A ALTERAÇÃO, AGORA EXISTEM VARIOS TAMANHOS PADROES PARA SELECIONAR UM (APENAS).
-                        // ESTE É O VALOR DO COMBO QUE SERÁ UTILIZADO PARA FAZER A CONTA (TAMANHO PADRÃO * QTDE DE PEÇAS INFORMADOS .
-                        // ESTE VALOR NÃO PODE SER SETADO PELO GET. NO GET, PODE SER DEFINIDO UM DEFAULT PRA SETAR O COMBO COM ESTE VALOR, POREM NO POST, O 
-                        // VALOR SELECIONADO DEVE SER DEVOLVIDO PARA VALIDAÇÃO AKI.
 
                         if ((model.IDTipoPedido != (int)Enums.TiposPedido.AMOSTRA) && (model.IDTipoPedido != (int)Enums.TiposPedido.PILOTAGEM))
                         {
@@ -810,56 +728,7 @@ namespace Dalutex.Controllers
                                     hasErrors = true;
                                 }
                             }
-                            // -- oda -- 04/11/2015 -- nova regra de tamanho Min e Max -------------------------------------------------------------------------------------
-
-
-
-                            //regra OLD -------------------------------------------------------------------------------------------------------------
-                            //var queryMinMax =
-                            //    from plqt in ctx.PED_LINK_QUANTD_TIPO
-                            //    join cdt in ctx.CONTROLE_DESENV_TECNOLOGIA on plqt.ID_TECNOLOGIA equals cdt.ID_TEC
-                            //    where
-                            //        cdt.DESC_TEC == model.TecnologiaPorExtenso
-                            //        && plqt.TIPO_PEDIDO == model.IDTipoPedido
-                            //        && plqt.ARTIGO == model.Artigo
-                            //        && plqt.ID_GRUPO_COL == ID_GRUPO_COL
-                            //    select
-                            //        plqt;
-                            //PED_LINK_QUANTD_TIPO objMinMax = queryMinMax.FirstOrDefault();
-
-                            //if (objMinMax == null)
-                            //{
-                            //    objMinMax = new PED_LINK_QUANTD_TIPO();
-                            //    objMinMax.QTDE_MIN = 1;
-                            //    objMinMax.QTDE_MAX = 999999;
-                            //}
-
-                            //if (model.IDTipoPedido == 0)
-                            //{
-                            //    if (model.Pecas < objMinMax.QTDE_MIN)
-                            //    {
-                            //        ModelState.AddModelError("", "A QUANTIDADE MÍNIMA DE PEÇAS NÃO PODE SER MENOR QUE: " + objMinMax.QTDE_MIN.ToString());
-                            //        hasErrors = true;
-                            //    }
-                            //    if (model.Pecas > objMinMax.QTDE_MAX)
-                            //    {
-                            //        ModelState.AddModelError("", "A QUANTIDADE MÁXIMA DE PEÇAS NÃO PODE SER MAIOR QUE: " + objMinMax.QTDE_MAX.ToString());
-                            //        hasErrors = true;
-                            //    }
-                            //}
-                            //else
-                            //{
-                            //    if (model.Quantidade < objMinMax.QTDE_MIN)
-                            //    {
-                            //        ModelState.AddModelError("", "A QUANTIDADE MÍNIMA NÃO PODE SER MENOR QUE: " + objMinMax.QTDE_MIN.ToString());
-                            //        hasErrors = true;
-                            //    }
-                            //    if (model.Quantidade > objMinMax.QTDE_MAX)
-                            //    {
-                            //        ModelState.AddModelError("", "A QUANTIDADE MÁXIMA NÃO PODE SER MAIOR QUE: " + objMinMax.QTDE_MAX.ToString());
-                            //        hasErrors = true;
-                            //    }
-                            //}
+                            // -- oda -- 04/11/2015 -- nova regra de tamanho Min e Max -------------------------------------------------------------------------------------                            
                         }
                     }
 
@@ -1129,7 +998,7 @@ namespace Dalutex.Controllers
             return model;
         }
 
-        public ActionResult ConclusaoPedido(string idtransportadora, string idclienteFatura)
+        public ActionResult ConclusaoPedido()
         {
             ConclusaoPedidoViewModel model = new ConclusaoPedidoViewModel();
            
@@ -1144,15 +1013,10 @@ namespace Dalutex.Controllers
                     });
                 }
 
-                if (!string.IsNullOrWhiteSpace(idtransportadora))
-                {
-                    Session_Carrinho.IDTransportadora = int.Parse(idtransportadora);
-                }
-
-                if (!string.IsNullOrWhiteSpace(idclienteFatura))
-                {
-                    Session_Carrinho.IDClienteFatura = int.Parse(idclienteFatura);
-                }
+                model.Representante = base.Session_Carrinho.Representante;
+                model.ClienteFatura = base.Session_Carrinho.ClienteFatura;
+                model.ClienteEntrega = base.Session_Carrinho.ClienteEntrega;
+                model.Transportadora = base.Session_Carrinho.Transportadora;
 
                 ConclusaoPedidoCarregarListas(model);
                 ViewBag.CarrinhoVazio = false;
@@ -1473,8 +1337,7 @@ namespace Dalutex.Controllers
                                                 isValidDes = false;
                                          }
                                 }
-
-
+                                
                                 if (!isValidDes)
                                 {
                                     hasErrors = true;
@@ -1636,18 +1499,18 @@ namespace Dalutex.Controllers
             {            
                 using (var ctx = new DalutexContext())
                 {
-                    model.Representante = ctx.REPRESENTANTES.Find(Session_Carrinho.IDRepresentante).NOME;
+                    model.Representante = ctx.REPRESENTANTES.Find(base.Session_Carrinho.Representante.IDREPRESENTANTE).NOME;
                     model.TipoPedido = ctx.COML_TIPOSPEDIDOS.Where(x => x.TIPOPEDIDO == Session_Carrinho.IDTipoPedido).First().DESCRICAO;
                               
-                    model.Transportadora = ctx.TRANSPORTADORAS.Find(Session_Carrinho.IDTransportadora).NOME;                   
+                    model.Transportadora = ctx.TRANSPORTADORAS.Find(Session_Carrinho.Transportadora.IDTRANSPORTADORA).NOME;                   
                     model.CondPagto = ctx.COML_CONDICOESPAGAME.Where(x => x.CONDICAO == Session_Carrinho.IDCondicoesPagto).First().DESCRICAO;
                     model.Frete = ctx.COML_TIPOSFRETE.Where(x => x.TIPOFRETE == Session_Carrinho.IDFretes).First().DESCRICAO;                
                 }            
            
                 using (var ctx = new TIDalutexContext())
                 {
-                    model.ClienteEntrega = ctx.VW_CLIENTE_TRANSP.Where(x => x.ID_CLIENTE == Session_Carrinho.IDClienteEntrega).First().NOME;
-                    model.ClienteFatura= ctx.VW_CLIENTE_TRANSP.Where(x => x.ID_CLIENTE == Session_Carrinho.IDClienteFatura).First().NOME;
+                    model.ClienteEntrega = ctx.VW_CLIENTE_TRANSP.Where(x => x.ID_CLIENTE == Session_Carrinho.ClienteEntrega.ID_CLIENTE).First().NOME;
+                    model.ClienteFatura= ctx.VW_CLIENTE_TRANSP.Where(x => x.ID_CLIENTE == Session_Carrinho.ClienteFatura.ID_CLIENTE).First().NOME;
                     model.TipoAtendimento = ctx.PRE_PEDIDO_ATEND.Where(x => x.COD_ATEND == Session_Carrinho.IDTiposAtendimento).First().DESCRI_ATEND;               
                 }
             }
@@ -1655,13 +1518,13 @@ namespace Dalutex.Controllers
             {
                 using (var ctx = new DalutexContext())
                 {
-                    model.Representante = ctx.REPRESENTANTES.Find(Session_Carrinho.IDRepresentante).NOME;
+                    model.Representante = ctx.REPRESENTANTES.Find(Session_Carrinho.Representante.IDREPRESENTANTE).NOME;
                     model.TipoPedido = ctx.COML_TIPOSPEDIDOS.Where(x => x.TIPOPEDIDO == Session_Carrinho.IDTipoPedido).First().DESCRICAO;
                 }
 
                 using (var ctx = new TIDalutexContext())
                 {
-                    model.ClienteFatura = ctx.VW_CLIENTE_TRANSP.Where(x => x.ID_CLIENTE == Session_Carrinho.IDClienteFatura).First().NOME;                    
+                    model.ClienteFatura = ctx.VW_CLIENTE_TRANSP.Where(x => x.ID_CLIENTE == Session_Carrinho.ClienteFatura.ID_CLIENTE).First().NOME;                    
                 }
             }
                         
@@ -1692,16 +1555,16 @@ namespace Dalutex.Controllers
                 {
                     NUMERO_PEDIDO_BLOCO = iNUMERO_PEDIDO_BLOCO,
                     TIPO_PEDIDO = base.Session_Carrinho.IDTipoPedido,
-                    ID_REPRESENTANTE = base.Session_Carrinho.IDRepresentante,
-                    ID_CLIENTE = base.Session_Carrinho.IDClienteFatura,
+                    ID_REPRESENTANTE = base.Session_Carrinho.Representante.IDREPRESENTANTE,
+                    ID_CLIENTE = base.Session_Carrinho.ClienteFatura.ID_CLIENTE,
                     QUALIDADE_COM = base.Session_Carrinho.IDQualidadeComercial,
                     COD_COND_PGTO = base.Session_Carrinho.IDCondicoesPagto,
                     OBSERVACOES = base.Session_Carrinho.Observacoes,
                     DATA_ENTREGA = base.Session_Carrinho.DataEntrega,
                     DATA_EMISSAO = DateTime.Now,
                     DATA_EMISSAO_DT = DateTime.Today,
-                    ID_CLIENTE_ENTREGA = base.Session_Carrinho.IDClienteEntrega,
-                    ID_TRANSPORTADORA = base.Session_Carrinho.IDTransportadora,
+                    ID_CLIENTE_ENTREGA = base.Session_Carrinho.ClienteEntrega.ID_CLIENTE,
+                    ID_TRANSPORTADORA = base.Session_Carrinho.Transportadora.IDTRANSPORTADORA,
                     USUARIO_INICIO = base.Session_Usuario.NOME_USU,
                     DATA_INICIO = DateTime.Now,
                     DATA_FINAL = DateTime.Now,
@@ -1748,8 +1611,8 @@ namespace Dalutex.Controllers
                                             ID_CONTROLE_DESENV = item.Reduzido,
                                             DT_ENT_ATEND = DateTime.Now,
                                             ID_USUARIO = base.Session_Usuario.COD_USU,
-                                            ID_CLIENTE = base.Session_Carrinho.IDClienteFatura.ToString("000000"),
-                                            ID_REP = base.Session_Carrinho.IDRepresentante,
+                                            ID_CLIENTE = base.Session_Carrinho.ClienteFatura.ID_CLIENTE.ToString("000000"),
+                                            ID_REP = base.Session_Carrinho.Representante.IDREPRESENTANTE,
                                             ID_STUDIO = item.IDStudio,
                                             ID_ITEM_STUDIO = item.IDItemStudio,
                                             STATUS_GERAL = 1

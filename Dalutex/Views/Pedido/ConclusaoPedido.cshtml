@@ -12,6 +12,26 @@
         <div class="col-md-12">
             @if (!ViewBag.CarrinhoVazio)
             {
+                <div>
+                    @Html.LabelFor(x => x.Representante)
+                    @Model.Representante.NOME
+                    <a href="@Url.Action("Representantes", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a>
+                </div>
+                <div>
+                    @Html.LabelFor(x => x.ClienteFatura)
+                    @Model.ClienteFatura.NOME
+                    <a href="@Url.Action("ClientesFatura", "Cadastro", )" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a>
+                </div>
+                <div>
+                    @Html.LabelFor(x => x.ClienteEntrega)
+                    @Model.ClienteEntrega.NOME
+                    <a href="@Url.Action("ClientesEntrega", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a>
+                </div>
+                <div>
+                    @Html.LabelFor(x => x.Transportadora)
+                    @Model.Transportadora.NOME
+                    <a href="@Url.Action("Transportadora", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a>
+                </div>
                 <section id="ConclusaoForm">
                     @using (Html.BeginForm("ConclusaoPedido", "Pedido", null, FormMethod.Post, new { @class = "form-horizontal pull-left", role = "form" }))
                     {
@@ -118,12 +138,12 @@
                                 <span class="pull-left">&nbsp;</span>
                                 @if (Model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
                                 {
-                                    @Html.ActionLink("VOLTAR", "Transportadora", "Cadastro", new { IDTransportadora = Model.IDTransportadora }, new { @class = "btn btn-default btn-warning pull-left" })
+                                    @Html.ActionLink("VOLTAR", "Transportadora", "Cadastro", new { IDTransportadora = Model.Transportadora.IDTRANSPORTADORA }, new { @class = "btn btn-default btn-warning pull-left" })
                                 }
                                 else
                                 {
                                     <div><p>Deseja realmente concluir este pedido?</p></div>
-                                    @Html.ActionLink("VOLTAR", "ClientesFatura", "Cadastro", new { IDRepresentante = Model.IDRepresentante, IDClienteFatura = Model.IDClienteFatura }, new { @class = "btn btn-default btn-warning pull-left" })
+                                    @Html.ActionLink("VOLTAR", "ClientesFatura", "Cadastro", new { IDRepresentante = Model.Representante.IDREPRESENTANTE, IDClienteFatura = Model.ClienteFatura.ID_CLIENTE }, new { @class = "btn btn-default btn-warning pull-left" })
                                 }
                             </div>
                         </div>

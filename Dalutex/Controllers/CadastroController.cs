@@ -12,15 +12,78 @@ namespace Dalutex.Controllers
 {
     public class CadastroController : BaseController
     {
+        public ActionResult ProximoPasso(
+            string IDRepresentante,
+            string IDClienteFatura,
+            string IDClienteEntrega,
+            string IDTransportadora
+        )
+        {
+           
+            if (IDRepresentante != null)
+            {
+                using (var ctx = new DalutexContext())
+                {
+                    Session_Carrinho.Representante = ctx.REPRESENTANTES.Find(int.Parse(IDRepresentante));
+                }
+            }
+            else if (IDClienteFatura != null)
+            {
+                using (var ctx = new TIDalutexContext())
+                {
+                    int iIDClienteFatura = int.Parse(IDClienteFatura);
+                    Session_Carrinho.ClienteFatura = ctx.VW_CLIENTE_TRANSP.Where(x => x.ID_CLIENTE == iIDClienteFatura).First();
+                }
+            }
+            else if (IDClienteEntrega != null)
+            {
+                using (var ctx = new TIDalutexContext())
+                {
+                    int iIDClienteEntrega = int.Parse(IDClienteEntrega);
+                    Session_Carrinho.ClienteEntrega = ctx.VW_CLIENTE_TRANSP.Where(x => x.ID_CLIENTE == iIDClienteEntrega).First(); 
+                }
+            }
+            if (IDTransportadora != null) /*Não é ELSE pq os dois parâmetros são passados*/
+            {
+                using (var ctx = new DalutexContext())
+                {
+                    Session_Carrinho.Transportadora = ctx.TRANSPORTADORAS.Find(int.Parse(IDTransportadora));
+                }
+            }
+            
+
+            if (base.Session_Carrinho.Representante == null || base.Session_Carrinho.Representante.IDREPRESENTANTE <= 0)
+            {
+                return RedirectToAction("Representantes");
+            }
+            else if (base.Session_Carrinho.ClienteFatura == null || base.Session_Carrinho.ClienteFatura.ID_CLIENTE <= 0)
+            {
+                return RedirectToAction("ClientesFatura");
+            }
+            else if (base.Session_Carrinho.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
+            {
+                if (base.Session_Carrinho.ClienteEntrega == null || base.Session_Carrinho.ClienteEntrega.ID_CLIENTE <= 0)
+                {
+                    return RedirectToAction("ClientesEntrega", new { IDClienteEntrega = base.Session_Carrinho.ClienteFatura.ID_CLIENTE /*É isto mesmo. Fatura!*/});
+                }
+                else if (base.Session_Carrinho.Transportadora == null || base.Session_Carrinho.Transportadora.IDTRANSPORTADORA <= 0)
+                {
+                    return RedirectToAction("Transportadora");
+                }
+            }
+
+            return RedirectToAction("ConclusaoPedido", "Pedido");
+        }
+
         public ActionResult Representantes()
         {
             PesquisaRepresentantesViewModel model = new PesquisaRepresentantesViewModel();
             model.Representantes = new List<REPRESENTANTES>();
             int IDRepresentante  = 0;
 
-            if (base.Session_Carrinho.IDRepresentante > default(int))
+            if (base.Session_Carrinho.Representante != null && base.Session_Carrinho.Representante.IDREPRESENTANTE > default(int))
             {
-                IDRepresentante = base.Session_Carrinho.IDRepresentante;
+                IDRepresentante = base.Session_Carrinho.Representante.IDREPRESENTANTE;
             }
             else
             {
@@ -62,26 +125,27 @@ namespace Dalutex.Controllers
         }
 
 
-        public ActionResult ClientesFatura(string IDRepresentante, string IDClienteFatura)
+        public ActionResult ClientesFatura(string IDClienteFatura)
         {
             PesquisaClientesFaturaViewModel model = new PesquisaClientesFaturaViewModel();
             model.IDTipoPedido = Session_Carrinho.IDTipoPedido;
 
+            if (IDClienteFatura == null && base.Session_Carrinho.ClienteFatura != null)
+                IDClienteFatura = base.Session_Carrinho.ClienteFatura.ID_CLIENTE.ToString();
+
             int iIDClienteFatura;
 
-            if (int.TryParse(IDClienteFatura, out iIDClienteFatura))
+            if (int.TryParse(IDClienteFatura, out iIDClienteFatura) && iIDClienteFatura > 0)
             {
                 using (var ctx = new TIDalutexContext())
                 {
-                    int idRepresentante = base.Session_Carrinho.IDRepresentante;
+                    int idRepresentante = base.Session_Carrinho.Representante.IDREPRESENTANTE;
                     VW_CLIENTE_TRANSP objCliente = ctx.VW_CLIENTE_TRANSP.Where(x => x.ID_CLIENTE == iIDClienteFatura && x.ID_REP == idRepresentante).First();
                     model.ClientesFatura = new List<VW_CLIENTE_TRANSP>();
                     model.ClientesFatura.Add(objCliente);
                     model.Filtro = objCliente.NOME;
                 }
             }
-
-            Session_Carrinho.IDRepresentante = int.Parse(IDRepresentante);
 
             return View(model);
         }
@@ -94,7 +158,7 @@ namespace Dalutex.Controllers
 
             using (var ctx = new TIDalutexContext())
             {
-                int idRepresentante = base.Session_Carrinho.IDRepresentante;
+                int idRepresentante = base.Session_Carrinho.Representante.IDREPRESENTANTE;
                 model.ClientesFatura = ctx.VW_CLIENTE_TRANSP.Where(x => x.NOME.Contains(model.Filtro.ToUpper()) && x.ID_REP == idRepresentante).OrderBy(x => x.NOME).ToList();
             }
 
@@ -102,13 +166,16 @@ namespace Dalutex.Controllers
         }
 
 
-        public ActionResult ClientesEntrega(string IDClienteFatura, string IDClienteEntrega)
+        public ActionResult ClientesEntrega(string IDClienteEntrega)
         {
             PesquisaClientesEntregaViewModel model = new PesquisaClientesEntregaViewModel();
 
+            if (IDClienteEntrega== null && base.Session_Carrinho.ClienteEntrega != null)
+                IDClienteEntrega = base.Session_Carrinho.ClienteEntrega.ID_CLIENTE.ToString();
+
             int iIDClienteEntrega;
 
-            if (int.TryParse(IDClienteEntrega, out iIDClienteEntrega))
+            if (int.TryParse(IDClienteEntrega, out iIDClienteEntrega) && iIDClienteEntrega > 0)
             {
                 using (var ctx = new TIDalutexContext())
                 {
@@ -122,8 +189,6 @@ namespace Dalutex.Controllers
                 }
             }
 
-            Session_Carrinho.IDClienteFatura = int.Parse(IDClienteFatura);
-
             return View(model);
         }
 
@@ -133,20 +198,23 @@ namespace Dalutex.Controllers
         {
             using (var ctx = new TIDalutexContext())
             {
-                int idRepresentante = base.Session_Carrinho.IDRepresentante;
+                int idRepresentante = base.Session_Carrinho.Representante.IDREPRESENTANTE;
                 model.ClientesEntrega = ctx.VW_CLIENTE_TRANSP.Where(x => x.NOME.Contains(model.Filtro.ToUpper()) && x.ID_REP == idRepresentante).OrderBy(x => x.NOME).ToList();
             }
 
             return View(model);
         }
 
-        public ActionResult Transportadora(string IDClienteEntrega, string IDTransportadora)
+        public ActionResult Transportadora(string IDTransportadora)
         {
             PesquisaTransportadoraViewModel model = new PesquisaTransportadoraViewModel();
 
+            if (IDTransportadora == null && base.Session_Carrinho.Transportadora != null)
+                IDTransportadora = base.Session_Carrinho.Transportadora.IDTRANSPORTADORA.ToString();
+
             int iIDTransportadora;
 
-            if (int.TryParse(IDTransportadora, out iIDTransportadora))
+            if (int.TryParse(IDTransportadora, out iIDTransportadora) && iIDTransportadora > 0)
             {
                 using (var ctx = new DalutexContext())
                 {
@@ -159,8 +227,6 @@ namespace Dalutex.Controllers
                 }
             }
 
-            Session_Carrinho.IDClienteEntrega = int.Parse(IDClienteEntrega);
-
             return View(model);
         }
 
@@ -170,6 +236,7 @@ namespace Dalutex.Controllers
         {
             using (var ctx = new DalutexContext())
             {
+                //int iIDTransportadora = base.Session_Carrinho.Transportadora.IDTRANSPORTADORA;
                 model.Transportadoras = ctx.TRANSPORTADORAS.Where(x => x.NOME.Contains(model.Filtro.ToUpper())).OrderBy(x => x.NOME).ToList();                              
             }
             return View(model);
@@ -318,8 +385,6 @@ namespace Dalutex.Controllers
         {
             return View();
         }
-
-        
     }
 }
                 

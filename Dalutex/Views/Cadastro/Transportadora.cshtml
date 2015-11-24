@@ -37,7 +37,7 @@
                     {
                         foreach (TRANSPORTADORAS item in Model.Transportadoras)
                         {
-                            <a href="@Url.Action("ConclusaoPedido", "Pedido", new { idtransportadora = item.IDTRANSPORTADORA })" class="list-group-item"><strong>@item.IDTRANSPORTADORA</strong> | @item.NOME</a>   
+                            <a href="@Url.Action("ProximoPasso", "Cadastro", new { IDTransportadora = item.IDTRANSPORTADORA })" class="list-group-item"><strong>@item.IDTRANSPORTADORA</strong> | @item.NOME</a>   
                         }
                     }
                     else

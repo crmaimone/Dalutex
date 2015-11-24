@@ -37,7 +37,7 @@
                     {
                         foreach (REPRESENTANTES item in Model.Representantes)
                         {
-                            <a href="@Url.Action("ClientesFatura", "Cadastro", new { IDRepresentante = item.IDREPRESENTANTE })" class="list-group-item"><strong>@item.IDREPRESENTANTE</strong> | @item.NOME</a>
+                            <a href="@Url.Action("ProximoPasso", "Cadastro", new { IDRepresentante = item.IDREPRESENTANTE })" class="list-group-item"><strong>@item.IDREPRESENTANTE</strong> | @item.NOME</a>
                         }
                     }
                     else

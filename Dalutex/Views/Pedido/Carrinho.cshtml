@@ -5,6 +5,7 @@
 }
 
 <div class="header-title"><h3>@ViewBag.Title</h3></div>
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-xs-12">
@@ -35,7 +36,7 @@
         <div class="col-xs-12">
             @if (ViewBag.Carrinho != null && ViewBag.Carrinho.Itens != null)
             {
-                @Html.ActionLink("PROSSEGUIR", "Representantes", "Cadastro", null, new { @class = "btn btn-success pull-left", style="margin-left:5px;" })
+                @Html.ActionLink("PROSSEGUIR", "ProximoPasso", "Cadastro", null, new { @class = "btn btn-success pull-left", style = "margin-left:5px;" })
                 <span class="pull-left">&nbsp;</span>
             }
             @Html.ActionLink("ESVAZIAR", "EsvaziarCarrinho", "Pedido", null, new { @class = "btn btn-danger pull-left", style = "margin-left:5px;" })

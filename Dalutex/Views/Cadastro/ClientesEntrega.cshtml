@@ -37,7 +37,7 @@
                     {
                         foreach (VW_CLIENTE_TRANSP item in Model.ClientesEntrega)
                         {
-                            <a href="@Url.Action("Transportadora", "Cadastro", new { IDClienteEntrega = item.ID_CLIENTE, IDTransportadora = item.ID_TRANSP })" class="list-group-item"><strong>@item.CNPJ.Trim()</strong> | @item.NOME.Trim() | @item.ENDERECO</a>
+                            <a href="@Url.Action("ProximoPasso", "Cadastro", new { IDClienteEntrega = item.ID_CLIENTE, IDTransportadora = item.ID_TRANSP })" class="list-group-item"><strong>@item.CNPJ.Trim()</strong> | @item.NOME.Trim() | @item.ENDERECO</a>
                         }
                     }
                     else

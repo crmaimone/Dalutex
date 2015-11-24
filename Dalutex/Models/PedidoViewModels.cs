@@ -448,10 +448,14 @@ namespace Dalutex.Models
         #region ValoresSelecionados
 
         public int IDTipoPedido { get; set; }
-        public int IDRepresentante { get; set; }
-        public int IDClienteFatura { get; set; }
-        public int? IDClienteEntrega { get; set; }
-        public int? IDTransportadora { get; set; }
+        [Display(Name="REPRESENTANTE")]
+        public REPRESENTANTES Representante { get; set; }
+        [Display(Name = "FATURA")]
+        public VW_CLIENTE_TRANSP ClienteFatura { get; set; }
+        [Display(Name = "ENTREGA")]
+        public VW_CLIENTE_TRANSP ClienteEntrega { get; set; }
+        [Display(Name = "TRANSPORTADORA")]
+        public TRANSPORTADORAS Transportadora { get; set; }
         public decimal PorcentagemComissao { get; set; }
         public DateTime DataEntrega { get; set; }
         public decimal TotalPedido { get; set; }

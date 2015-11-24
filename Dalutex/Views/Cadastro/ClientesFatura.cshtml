@@ -37,14 +37,7 @@
                     {
                         foreach (Dalutex.Models.DataModels.VW_CLIENTE_TRANSP item in Model.ClientesFatura)
                         {
-                            if (Model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
-                            {
-                                <a href="@Url.Action("ClientesEntrega", "Cadastro", new { IDClienteFatura = item.ID_CLIENTE, IDClienteEntrega = item.ID_CLIENTE })" class="list-group-item"><strong> @item.CNPJ.Trim()</strong> | @item.NOME.Trim() | @item.ENDERECO</a>
-                            }
-                            else
-                            {
-                                <a href="@Url.Action("ConclusaoPedido", "Pedido", new { idtransportadora = "", idclienteFatura = item.ID_CLIENTE })" class="list-group-item"><strong> @item.CNPJ.Trim()</strong> | @item.NOME.Trim() | @item.ENDERECO</a>
-                            }
+                            <a href="@Url.Action("ProximoPasso", "Cadastro", new { IDClienteFatura = item.ID_CLIENTE, IDClienteEntrega = item.ID_CLIENTE })" class="list-group-item"><strong> @item.CNPJ.Trim()</strong> | @item.NOME.Trim() | @item.ENDERECO</a>
                         }
                     }
                     else

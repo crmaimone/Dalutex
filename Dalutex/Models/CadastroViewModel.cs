@@ -31,6 +31,11 @@ namespace Dalutex.Models
         public List<TRANSPORTADORAS> Transportadoras { get; set; }
     }
 
+    public class PesquisaQualidadeComercialViewModel
+    {
+        public string QualidadeSelecionada { get; set; }
+        public List<KeyValuePair<string,string>> Qualidades { get; set; }
+    }
 
     public class DesenhosSemImagemModelView
     {

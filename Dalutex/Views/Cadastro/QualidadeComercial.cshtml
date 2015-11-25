@@ -1,0 +1,40 @@
+﻿@using Dalutex.Models.DataModels
+
+@model Dalutex.Models.PesquisaQualidadeComercialViewModel
+
+@{
+    ViewBag.Title = "QUALIDADE COMERCIAL";
+}
+
+<div class="header-title"><h3>@ViewBag.Title</h3></div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <section id="ResultadoQualidades">
+                <div class="list-group" id="lstQualidades">
+                    <a href="#" class="list-group-item active">QUALIDADES</a>
+                    @if (@Model != null && @Model.Qualidades != null)
+                    {
+                        foreach (var item in Model.Qualidades)
+                        {
+                            if(@item.Key == @Model.QualidadeSelecionada)
+                            {
+                                <a href="@Url.Action("ProximoPasso", "Cadastro", new { IDQualidadeComercial = item.Key })" class="list-group-item"><i class="glyphicon glyphicon-ok"></i>&nbsp;@item.Value</a>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("ProximoPasso", "Cadastro", new { IDQualidadeComercial = item.Key })" class="list-group-item">@item.Value</a>
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        <p class="list-group-item"><em>LISTA DE QUALIDADES NÃO CARREGADA</em></p>
+                    }
+                </div>
+            </section>
+        </div>
+    </div>
+</div>

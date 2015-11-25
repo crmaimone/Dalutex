@@ -448,6 +448,7 @@
     <Content Include="Views\Cadastro\UploadSucess.cshtml" />
     <Content Include="Views\Cadastro\DesenhosSemImagem.cshtml" />
     <Content Include="Views\Cadastro\Teste.cshtml" />
+    <Content Include="Views\Cadastro\QualidadeComercial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

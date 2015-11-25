@@ -962,11 +962,6 @@ namespace Dalutex.Controllers
         {
             if (model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
             {
-                model.QualidadeComercial = new List<KeyValuePair<string, string>>();
-                model.QualidadeComercial.Add(new KeyValuePair<string, string>(Enums.QualidadeComercial.A.ToString(), Enums.QualidadeComercial.A.ToString()));
-                model.QualidadeComercial.Add(new KeyValuePair<string, string>(Enums.QualidadeComercial.B.ToString(), Enums.QualidadeComercial.B.ToString()));
-                model.QualidadeComercial.Add(new KeyValuePair<string, string>(Enums.QualidadeComercial.C.ToString(), Enums.QualidadeComercial.C.ToString()));
-
                 using (DalutexContext ctxDalutex = new DalutexContext())
                 {
                     model.Moedas = ctxDalutex.CADASTRO_MOEDAS.ToList();
@@ -1017,6 +1012,7 @@ namespace Dalutex.Controllers
                 model.ClienteFatura = base.Session_Carrinho.ClienteFatura;
                 model.ClienteEntrega = base.Session_Carrinho.ClienteEntrega;
                 model.Transportadora = base.Session_Carrinho.Transportadora;
+                model.QualidadeComercial = base.Session_Carrinho.QualidadeComercial;
 
                 ConclusaoPedidoCarregarListas(model);
                 ViewBag.CarrinhoVazio = false;
@@ -1040,9 +1036,16 @@ namespace Dalutex.Controllers
         {
             try
             {
+                model.Representante = base.Session_Carrinho.Representante;
+                model.ClienteFatura = base.Session_Carrinho.ClienteFatura;
+                model.ClienteEntrega = base.Session_Carrinho.ClienteEntrega;
+                model.Transportadora = base.Session_Carrinho.Transportadora;
+                model.QualidadeComercial = base.Session_Carrinho.QualidadeComercial;
+
+
                 if (model.IDTipoPedido == (int)Enums.TiposPedido.RESERVA)
                 {
-                    model.IDQualidadeComercial = Enums.QualidadeComercial.A.ToString();
+                    model.QualidadeComercial = new KeyValuePair<string,string>(Enums.QualidadeComercial.A.ToString(), Enums.QualidadeComercial.A.ToString());
                     model.IDCondicoesPagto = (int)Enums.CondicoesPagamento.CORTESIA;                    
                 }
 
@@ -1114,11 +1117,11 @@ namespace Dalutex.Controllers
                             ModelState.AddModelError("", "Por favor informe o tipo de atendimento.");
                             hasErrors = true;
                         }
-                        if (string.IsNullOrWhiteSpace(model.IDQualidadeComercial))
-                        {
-                            ModelState.AddModelError("", "Por favor informe a qualidade comercial.");
-                            hasErrors = true;
-                        }
+                        //if (string.IsNullOrWhiteSpace(model.QualidadeComercial))
+                        //{
+                        //    ModelState.AddModelError("", "Por favor informe a qualidade comercial.");
+                        //    hasErrors = true;
+                        //}
 
                         if (hasErrors)
                         {
@@ -1140,15 +1143,15 @@ namespace Dalutex.Controllers
                             int fatorMultiplicacao = 0;
                             decimal valorMinimoParcelas = decimal.Parse(ConfigurationManager.AppSettings["VALOR_PARCELA_MINIMA"]);
 
-                            if (model.IDQualidadeComercial == Enums.QualidadeComercial.A.ToString())
+                            if (model.QualidadeComercial.Key == Enums.QualidadeComercial.A.ToString())
                             {
                                 fatorMultiplicacao = (int)Enums.FatorMultiplicacaoQualidadeComercial.A;
                             }
-                            else if (model.IDQualidadeComercial == Enums.QualidadeComercial.B.ToString())
+                            else if (model.QualidadeComercial.Key == Enums.QualidadeComercial.B.ToString())
                             {
                                 fatorMultiplicacao = (int)Enums.FatorMultiplicacaoQualidadeComercial.B;
                             }
-                            else if (model.IDQualidadeComercial == Enums.QualidadeComercial.C.ToString())
+                            else if (model.QualidadeComercial.Key == Enums.QualidadeComercial.C.ToString())
                             {
                                 fatorMultiplicacao = (int)Enums.FatorMultiplicacaoQualidadeComercial.C;
                             }
@@ -1358,7 +1361,6 @@ namespace Dalutex.Controllers
 
                     #region Persistir na sessão
 
-                    base.Session_Carrinho.IDQualidadeComercial = model.IDQualidadeComercial;
                     base.Session_Carrinho.IDMoedas = model.IDMoedas;
                     base.Session_Carrinho.IDCondicoesPagto = model.IDCondicoesPagto;
                     base.Session_Carrinho.IDCanaisVenda = model.IDCanaisVenda;
@@ -1409,7 +1411,7 @@ namespace Dalutex.Controllers
 
                                         TABELAPRECOITEM objPreco = ctx.TABELAPRECOITEM.Where(x =>
                                                 x.COLECAO == (objParametro.E_Exclusivo ? objParametro.IDColecao : iColecaoAtual)
-                                                && x.QUALIDADECOMERCIAL == Session_Carrinho.IDQualidadeComercial
+                                                && x.QUALIDADECOMERCIAL == Session_Carrinho.QualidadeComercial.Key
                                                 && x.COD_COND_PAGTO == iCodCondPgto
                                                 && x.EST_LISO == item.Tecnologia
                                                 && x.COMISSAO == objParametro.Comissao
@@ -1429,7 +1431,7 @@ namespace Dalutex.Controllers
                                     {
                                         TABELAPRECOITEM objPreco = ctx.TABELAPRECOITEM.Where(x =>
                                                     x.COLECAO == iColecaoAtual
-                                                    && x.QUALIDADECOMERCIAL == Session_Carrinho.IDQualidadeComercial
+                                                    && x.QUALIDADECOMERCIAL == Session_Carrinho.QualidadeComercial.Key
                                                     && x.COD_COND_PAGTO == iCodCondPgto
                                                     && x.EST_LISO == item.Tecnologia
                                                     && x.COMISSAO == (item.NMColecao == "POCK" ? 3 : 4)
@@ -1493,7 +1495,7 @@ namespace Dalutex.Controllers
             model.UrlDesenhos = ConfigurationManager.AppSettings["PASTA_DESENHOS"];
             model.UrlReservas = ConfigurationManager.AppSettings["PASTA_RESERVAS"];
             model.Observacoes = Session_Carrinho.Observacoes;
-            model.QualidadeCom = Session_Carrinho.IDQualidadeComercial;
+            model.QualidadeCom = Session_Carrinho.QualidadeComercial.Key;
             
             if (base.Session_Carrinho.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
             {            
@@ -1557,7 +1559,7 @@ namespace Dalutex.Controllers
                     TIPO_PEDIDO = base.Session_Carrinho.IDTipoPedido,
                     ID_REPRESENTANTE = base.Session_Carrinho.Representante.IDREPRESENTANTE,
                     ID_CLIENTE = base.Session_Carrinho.ClienteFatura.ID_CLIENTE,
-                    QUALIDADE_COM = base.Session_Carrinho.IDQualidadeComercial,
+                    QUALIDADE_COM = base.Session_Carrinho.QualidadeComercial.Key,
                     COD_COND_PGTO = base.Session_Carrinho.IDCondicoesPagto,
                     OBSERVACOES = base.Session_Carrinho.Observacoes,
                     DATA_ENTREGA = base.Session_Carrinho.DataEntrega,

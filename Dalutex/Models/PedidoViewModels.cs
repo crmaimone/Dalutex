@@ -433,8 +433,7 @@ namespace Dalutex.Models
         public int? IDTiposAtendimento { get; set; }
 
         [Display(Name = "Qualidade comercial")]
-        public List<KeyValuePair<string, string>> QualidadeComercial { get; set; }
-        public string IDQualidadeComercial { get; set; }
+        public KeyValuePair<string,string> QualidadeComercial { get; set; }
 
         [StringLength(1000)]
         [Display(Name="Observações")]
@@ -448,13 +447,13 @@ namespace Dalutex.Models
         #region ValoresSelecionados
 
         public int IDTipoPedido { get; set; }
-        [Display(Name="REPRESENTANTE")]
+        [Display(Name="Representante")]
         public REPRESENTANTES Representante { get; set; }
-        [Display(Name = "FATURA")]
+        [Display(Name = "Cliente Fatura")]
         public VW_CLIENTE_TRANSP ClienteFatura { get; set; }
-        [Display(Name = "ENTREGA")]
+        [Display(Name = "Cliente Entrega")]
         public VW_CLIENTE_TRANSP ClienteEntrega { get; set; }
-        [Display(Name = "TRANSPORTADORA")]
+        [Display(Name = "Transportadora")]
         public TRANSPORTADORAS Transportadora { get; set; }
         public decimal PorcentagemComissao { get; set; }
         public DateTime DataEntrega { get; set; }

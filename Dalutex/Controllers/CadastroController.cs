@@ -16,7 +16,8 @@ namespace Dalutex.Controllers
             string IDRepresentante,
             string IDClienteFatura,
             string IDClienteEntrega,
-            string IDTransportadora
+            string IDTransportadora,
+            string IDQualidadeComercial
         )
         {
            
@@ -50,6 +51,10 @@ namespace Dalutex.Controllers
                     Session_Carrinho.Transportadora = ctx.TRANSPORTADORAS.Find(int.Parse(IDTransportadora));
                 }
             }
+            else if (IDQualidadeComercial != null)
+            {
+                Session_Carrinho.QualidadeComercial = new KeyValuePair<string, string>(IDQualidadeComercial, IDQualidadeComercial);
+            }
             
 
             if (base.Session_Carrinho.Representante == null || base.Session_Carrinho.Representante.IDREPRESENTANTE <= 0)
@@ -69,6 +74,10 @@ namespace Dalutex.Controllers
                 else if (base.Session_Carrinho.Transportadora == null || base.Session_Carrinho.Transportadora.IDTRANSPORTADORA <= 0)
                 {
                     return RedirectToAction("Transportadora");
+                }
+                else if (base.Session_Carrinho.QualidadeComercial.Key == null)
+                {
+                    return RedirectToAction("QualidadeComercial");
                 }
             }
 
@@ -239,6 +248,24 @@ namespace Dalutex.Controllers
                 //int iIDTransportadora = base.Session_Carrinho.Transportadora.IDTRANSPORTADORA;
                 model.Transportadoras = ctx.TRANSPORTADORAS.Where(x => x.NOME.Contains(model.Filtro.ToUpper())).OrderBy(x => x.NOME).ToList();                              
             }
+            return View(model);
+        }
+
+
+        public ActionResult QualidadeComercial(string Qualidade)
+        {
+            PesquisaQualidadeComercialViewModel model = new PesquisaQualidadeComercialViewModel();
+
+            model.Qualidades = new List<KeyValuePair<string, string>>();
+            model.Qualidades.Add(new KeyValuePair<string, string>(Enums.QualidadeComercial.A.ToString(), Enums.QualidadeComercial.A.ToString()));
+            model.Qualidades.Add(new KeyValuePair<string, string>(Enums.QualidadeComercial.B.ToString(), Enums.QualidadeComercial.B.ToString()));
+            model.Qualidades.Add(new KeyValuePair<string, string>(Enums.QualidadeComercial.C.ToString(), Enums.QualidadeComercial.C.ToString()));
+
+            if (Qualidade == null && base.Session_Carrinho.QualidadeComercial.Key != null)
+                model.QualidadeSelecionada = base.Session_Carrinho.QualidadeComercial.Key.ToString();
+            else
+                model.QualidadeSelecionada = Qualidade;
+
             return View(model);
         }
 

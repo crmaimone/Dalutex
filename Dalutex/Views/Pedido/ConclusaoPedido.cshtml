@@ -13,25 +13,32 @@
             @if (!ViewBag.CarrinhoVazio)
             {
                 <div>
-                    @Html.LabelFor(x => x.Representante)
-                    @Model.Representante.NOME
+                    @Html.LabelFor(x => x.Representante):&nbsp;
                     <a href="@Url.Action("Representantes", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a>
+                    @Model.Representante.NOME
+                    
                 </div>
                 <div>
-                    @Html.LabelFor(x => x.ClienteFatura)
-                    @Model.ClienteFatura.NOME
-                    <a href="@Url.Action("ClientesFatura", "Cadastro", )" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a>
+                    @Html.LabelFor(x => x.ClienteFatura):&nbsp;
+                    <a href="@Url.Action("ClientesFatura", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a>
+                    @Model.ClienteFatura.NOME                    
                 </div>
                 <div>
-                    @Html.LabelFor(x => x.ClienteEntrega)
-                    @Model.ClienteEntrega.NOME
+                    @Html.LabelFor(x => x.ClienteEntrega):&nbsp;
                     <a href="@Url.Action("ClientesEntrega", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a>
+                    @Model.ClienteEntrega.NOME                    
                 </div>
                 <div>
-                    @Html.LabelFor(x => x.Transportadora)
-                    @Model.Transportadora.NOME
+                    @Html.LabelFor(x => x.Transportadora):&nbsp;
                     <a href="@Url.Action("Transportadora", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a>
+                    @Model.Transportadora.NOME                    
                 </div>
+                <div>
+                    @Html.LabelFor(x => x.QualidadeComercial):&nbsp;
+                    <a href="@Url.Action("QualidadeComercial", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a>
+                    @Model.QualidadeComercial.Key
+                </div>
+                
                 <section id="ConclusaoForm">
                     @using (Html.BeginForm("ConclusaoPedido", "Pedido", null, FormMethod.Post, new { @class = "form-horizontal pull-left", role = "form" }))
                     {
@@ -41,14 +48,6 @@
 
                         if (Model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
                         {
-                            <div class="form-group">
-                                @Html.LabelFor(x => x.QualidadeComercial, new { @class = "col-md-3 control-label" })
-                                <div class="col-md-9">
-                                    @Html.DropDownListFor(m => m.IDQualidadeComercial, new SelectList(Model.QualidadeComercial, "key", "Value"), "Selecione", new { @id = "lstQualidades" })
-                                    @Html.ValidationMessageFor(m => m.IDQualidadeComercial, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-
                             <div class="form-group">
                                 @Html.LabelFor(x => x.Moedas, new { @class = "col-md-3 control-label" })
                                 <div class="col-md-9">

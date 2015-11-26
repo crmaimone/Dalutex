@@ -449,6 +449,12 @@
     <Content Include="Views\Cadastro\DesenhosSemImagem.cshtml" />
     <Content Include="Views\Cadastro\Teste.cshtml" />
     <Content Include="Views\Cadastro\QualidadeComercial.cshtml" />
+    <Content Include="Views\Cadastro\Moeda.cshtml" />
+    <Content Include="Views\Cadastro\CondicaoPgto.cshtml" />
+    <Content Include="Views\Cadastro\CanalVendas.cshtml" />
+    <Content Include="Views\Cadastro\ViaTransporte.cshtml" />
+    <Content Include="Views\Cadastro\Frete.cshtml" />
+    <Content Include="Views\Cadastro\TipoAtendimento.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

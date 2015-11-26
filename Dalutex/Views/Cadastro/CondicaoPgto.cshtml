@@ -1,0 +1,40 @@
+﻿@using Dalutex.Models.DataModels
+
+@model Dalutex.Models.PesquisaCondicaoPagamentoViewModel
+
+@{
+    ViewBag.Title = "CONDIÇÃO DE PAGAMENTO";
+}
+
+<div class="header-title"><h3>@ViewBag.Title</h3></div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <section id="Resultado">
+                <div class="list-group" id="lstItens">
+                    <a href="#" class="list-group-item active">CONDIÇÕES</a>
+                    @if (@Model != null && @Model.Condicoes != null)
+                    {
+                        foreach (var item in Model.Condicoes)
+                        {
+                            if (@item.ID_COND.ToString() == @Model.CondicaoSelecionada)
+                            {
+                                <a href="@Url.Action("ProximoPasso", "Cadastro", new { IDCondicao = item.ID_COND })" class="list-group-item"><i class="glyphicon glyphicon-ok"></i>&nbsp;@item.DESCRI_COND</a>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("ProximoPasso", "Cadastro", new { IDCondicao = item.ID_COND })" class="list-group-item">@item.DESCRI_COND</a>
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        <p class="list-group-item"><em>LISTA DE CONDIÇÕES NÃO CARREGADA</em></p>
+                    }
+                </div>
+            </section>
+        </div>
+    </div>
+</div>

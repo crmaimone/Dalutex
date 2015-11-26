@@ -17,7 +17,13 @@ namespace Dalutex.Controllers
             string IDClienteFatura,
             string IDClienteEntrega,
             string IDTransportadora,
-            string IDQualidadeComercial
+            string IDQualidadeComercial,
+            string IDMoeda,
+            string IDCondicao,
+            string IDCanal,
+            string IDVia,
+            string IDFrete,
+            string IDTipo
         )
         {
            
@@ -55,7 +61,49 @@ namespace Dalutex.Controllers
             {
                 Session_Carrinho.QualidadeComercial = new KeyValuePair<string, string>(IDQualidadeComercial, IDQualidadeComercial);
             }
-            
+            else if (IDMoeda != null)
+            {
+                using (DalutexContext ctxDalutex = new DalutexContext())
+                {
+                    Session_Carrinho.Moeda = ctxDalutex.CADASTRO_MOEDAS.Find(int.Parse(IDMoeda));
+                }
+            }
+            else if (IDCondicao != null)
+            {
+                int iIDCondicao = int.Parse(IDCondicao);
+                using (TIDalutexContext ctxTI = new TIDalutexContext())
+                {
+                    Session_Carrinho.CondicaoPagto = ctxTI.VW_CONDICAO_PGTO.Where(x => x.ID_COND == iIDCondicao).First();
+                }
+            }
+            else if (IDCanal != null)
+            {
+                using (DalutexContext ctxDalutex = new DalutexContext())
+                {
+                    Session_Carrinho.CanailVenda = ctxDalutex.CANAIS_VENDA.Find(int.Parse(IDCanal));
+                }
+            }
+            else if (IDVia != null)
+            {
+                using (DalutexContext ctxDalutex = new DalutexContext())
+                {
+                    Session_Carrinho.ViaTransporte = ctxDalutex.COML_VIASTRANSPORTE.Find(int.Parse(IDVia));
+                }
+            }
+            else if (IDFrete != null)
+            {
+                using (DalutexContext ctxDalutex = new DalutexContext())
+                {
+                    Session_Carrinho.Frete = ctxDalutex.COML_TIPOSFRETE.Find(int.Parse(IDFrete));
+                }
+            }
+            else if (IDTipo != null)
+            {
+                using (TIDalutexContext ctxTI = new TIDalutexContext())
+                {
+                    Session_Carrinho.TipoAtendimento = ctxTI.PRE_PEDIDO_ATEND.Find(int.Parse(IDTipo));
+                }
+            }
 
             if (base.Session_Carrinho.Representante == null || base.Session_Carrinho.Representante.IDREPRESENTANTE <= 0)
             {
@@ -69,7 +117,7 @@ namespace Dalutex.Controllers
             {
                 if (base.Session_Carrinho.ClienteEntrega == null || base.Session_Carrinho.ClienteEntrega.ID_CLIENTE <= 0)
                 {
-                    return RedirectToAction("ClientesEntrega", new { IDClienteEntrega = base.Session_Carrinho.ClienteFatura.ID_CLIENTE /*É isto mesmo. Fatura!*/});
+                    return RedirectToAction("ClientesEntrega");
                 }
                 else if (base.Session_Carrinho.Transportadora == null || base.Session_Carrinho.Transportadora.IDTRANSPORTADORA <= 0)
                 {
@@ -78,6 +126,30 @@ namespace Dalutex.Controllers
                 else if (base.Session_Carrinho.QualidadeComercial.Key == null)
                 {
                     return RedirectToAction("QualidadeComercial");
+                }
+                else if (base.Session_Carrinho.Moeda == null || base.Session_Carrinho.Moeda.CODIGOMOEDA < 0 )
+                {
+                    return RedirectToAction("Moeda");
+                }
+                else if (base.Session_Carrinho.CondicaoPagto == null || base.Session_Carrinho.CondicaoPagto.ID_COND <= 0 )
+                {
+                    return RedirectToAction("CondicaoPgto");
+                }
+                else if (base.Session_Carrinho.CanailVenda == null || base.Session_Carrinho.CanailVenda.CANAL_VENDA <= 0 )
+                {
+                    return RedirectToAction("CanalVendas");
+                }
+                else if (base.Session_Carrinho.ViaTransporte == null || base.Session_Carrinho.ViaTransporte.VIATRANSPORTE <= 0 )
+                {
+                    return RedirectToAction("ViaTransporte");
+                }
+                else if (base.Session_Carrinho.Frete == null || base.Session_Carrinho.Frete.TIPOFRETE <= 0 )
+                {
+                    return RedirectToAction("Frete");
+                }
+                else if (base.Session_Carrinho.TipoAtendimento == null || base.Session_Carrinho.TipoAtendimento.COD_ATEND <= 0 )
+                {
+                    return RedirectToAction("TipoAtendimento");
                 }
             }
 
@@ -88,7 +160,7 @@ namespace Dalutex.Controllers
         {
             PesquisaRepresentantesViewModel model = new PesquisaRepresentantesViewModel();
             model.Representantes = new List<REPRESENTANTES>();
-            int IDRepresentante  = 0;
+            int IDRepresentante = 0;
 
             if (base.Session_Carrinho.Representante != null && base.Session_Carrinho.Representante.IDREPRESENTANTE > default(int))
             {
@@ -96,7 +168,7 @@ namespace Dalutex.Controllers
             }
             else
             {
-                if(base.Session_Usuario.ID_REPRES > default(int))
+                if (base.Session_Usuario.ID_REPRES > default(int))
                 {
                     IDRepresentante = base.Session_Usuario.ID_REPRES.GetValueOrDefault();
                 }
@@ -125,7 +197,7 @@ namespace Dalutex.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Representantes(PesquisaRepresentantesViewModel model)
         {
-            using(var ctx = new DalutexContext())
+            using (var ctx = new DalutexContext())
             {
                 model.Representantes = ctx.REPRESENTANTES.Where(x => x.NOME.Contains(model.Filtro.ToUpper())).OrderBy(x => x.NOME).ToList();
             }
@@ -174,12 +246,11 @@ namespace Dalutex.Controllers
             return View(model);
         }
 
-
         public ActionResult ClientesEntrega(string IDClienteEntrega)
         {
             PesquisaClientesEntregaViewModel model = new PesquisaClientesEntregaViewModel();
 
-            if (IDClienteEntrega== null && base.Session_Carrinho.ClienteEntrega != null)
+            if (IDClienteEntrega == null && base.Session_Carrinho.ClienteEntrega != null)
                 IDClienteEntrega = base.Session_Carrinho.ClienteEntrega.ID_CLIENTE.ToString();
 
             int iIDClienteEntrega;
@@ -246,11 +317,10 @@ namespace Dalutex.Controllers
             using (var ctx = new DalutexContext())
             {
                 //int iIDTransportadora = base.Session_Carrinho.Transportadora.IDTRANSPORTADORA;
-                model.Transportadoras = ctx.TRANSPORTADORAS.Where(x => x.NOME.Contains(model.Filtro.ToUpper())).OrderBy(x => x.NOME).ToList();                              
+                model.Transportadoras = ctx.TRANSPORTADORAS.Where(x => x.NOME.Contains(model.Filtro.ToUpper())).OrderBy(x => x.NOME).ToList();
             }
             return View(model);
         }
-
 
         public ActionResult QualidadeComercial(string Qualidade)
         {
@@ -269,11 +339,113 @@ namespace Dalutex.Controllers
             return View(model);
         }
 
+        public ActionResult Moeda(string Moeda)
+        {
+            PesquisaMoedaViewModel model = new PesquisaMoedaViewModel();
+
+            using (DalutexContext ctxDalutex = new DalutexContext())
+            {
+                model.Moedas = ctxDalutex.CADASTRO_MOEDAS.ToList();
+            }
+
+            if (Moeda == null && base.Session_Carrinho.Moeda != null)
+                model.MoedaSelecionada = base.Session_Carrinho.Moeda.CODIGOMOEDA.ToString();
+            else
+                model.MoedaSelecionada = Moeda;
+
+            return View(model);
+        }
+
+        public ActionResult CondicaoPgto(string Condicao)
+        {
+            PesquisaCondicaoPagamentoViewModel model = new PesquisaCondicaoPagamentoViewModel();
+
+            using (TIDalutexContext ctxTI = new TIDalutexContext())
+            {
+                model.Condicoes = ctxTI.VW_CONDICAO_PGTO.ToList();
+            }
+
+            if (Condicao == null && base.Session_Carrinho.CondicaoPagto != null)
+                model.CondicaoSelecionada = base.Session_Carrinho.CondicaoPagto.ID_COND.ToString();
+            else
+                model.CondicaoSelecionada = Condicao;
+
+            return View(model);
+        }
+
+        public ActionResult CanalVendas(string Canal)
+        {
+            PesquisaCanalVendasViewModel model = new PesquisaCanalVendasViewModel();
+
+            using (DalutexContext ctxDalutex = new DalutexContext())
+            {
+                model.Canais = ctxDalutex.CANAIS_VENDA.ToList();
+            }
+
+            if (Canal == null && base.Session_Carrinho.CanailVenda != null)
+                model.CanalSelecionado = base.Session_Carrinho.CanailVenda.CANAL_VENDA.ToString();
+            else
+                model.CanalSelecionado = Canal;
+
+            return View(model);
+        }
+
+        public ActionResult ViaTransporte(string Via)
+        {
+            PesquisaViaTransporteViewModel model = new PesquisaViaTransporteViewModel();
+
+            using (DalutexContext ctxDalutex = new DalutexContext())
+            {
+                model.ViasTransporte = ctxDalutex.COML_VIASTRANSPORTE.ToList();
+            }
+
+            if (Via == null && base.Session_Carrinho.ViaTransporte != null)
+                model.ViaSelecionada = base.Session_Carrinho.ViaTransporte.VIATRANSPORTE.ToString();
+            else
+                model.ViaSelecionada = Via;
+
+            return View(model);
+        }
+
+        public ActionResult Frete(string Frete)
+        {
+            PesquisaFreteViewModel model = new PesquisaFreteViewModel();
+
+            using (DalutexContext ctxDalutex = new DalutexContext())
+            {
+                model.Fretes = ctxDalutex.COML_TIPOSFRETE.ToList();
+            }
+
+            if (Frete == null && base.Session_Carrinho.Frete != null)
+                model.FreteSelecionado = base.Session_Carrinho.Frete.TIPOFRETE.ToString();
+            else
+                model.FreteSelecionado = Frete;
+
+            return View(model);
+        }
+
+        public ActionResult TipoAtendimento(string Tipo)
+        {
+            PesquisaTipoAtendimentoViewModel model = new PesquisaTipoAtendimentoViewModel();
+
+            using (TIDalutexContext ctxTI = new TIDalutexContext())
+            {
+                model.TiposAtendimento = ctxTI.PRE_PEDIDO_ATEND.ToList();
+            }
+
+            if (Tipo == null && base.Session_Carrinho.TipoAtendimento != null)
+                model.TipoSelecionado = base.Session_Carrinho.TipoAtendimento.COD_ATEND.ToString();
+            else
+                model.TipoSelecionado = Tipo;
+
+            return View(model);
+        }
+
         [AllowAnonymous]
-        public ActionResult UploadImage(string cod_studio, string cod_dal, string studio, string desenho )
+        public ActionResult UploadImage(string cod_studio, string cod_dal, string studio, string desenho)
         {
             UploadImageModelView model = new UploadImageModelView();
-            
+
             model.CodStudio = cod_studio;
             model.CodDal = cod_dal;
             model.Studio = studio;
@@ -307,9 +479,9 @@ namespace Dalutex.Controllers
                     //var img = 
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                ModelState.AddModelError("","Falha ao fazer upload do arquivo." + ex.Message);
+                ModelState.AddModelError("", "Falha ao fazer upload do arquivo." + ex.Message);
             }
 
             return RedirectToAction("UploadSucess");
@@ -317,10 +489,10 @@ namespace Dalutex.Controllers
 
         [AllowAnonymous]
         public ActionResult DesenhosSemImagem(
-            string filtrocodstudio, 
-            string filtrocoddal, 
-            string filtrodesenho, 
-            string pagina, 
+            string filtrocodstudio,
+            string filtrocoddal,
+            string filtrodesenho,
+            string pagina,
             string totalpaginas,
             string filtrostudio)
         {
@@ -340,11 +512,11 @@ namespace Dalutex.Controllers
             else
                 model.Pagina = int.Parse(pagina);
 
-            
+
             ObterItensParaReserva(model);
 
             model.UrlImagens = ConfigurationManager.AppSettings["PASTA_RESERVAS"];
-            return View(model);        
+            return View(model);
         }
 
         private void ObterItensParaReserva(DesenhosSemImagemModelView model)
@@ -407,11 +579,10 @@ namespace Dalutex.Controllers
             }
         }
 
-         [AllowAnonymous]
+        [AllowAnonymous]
         public ActionResult Teste()
         {
             return View();
         }
     }
 }
-                

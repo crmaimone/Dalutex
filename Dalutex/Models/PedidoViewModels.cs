@@ -140,6 +140,9 @@ namespace Dalutex.Models
         public int Pagina { get; set; }
         public int TotalPaginas { get; set; }
         public List<Liso> Galeria { get; set; }
+        public string FiltroCor { get; set; }
+        public string FiltroArtigo { get; set; }
+        public string FiltroReduzido { get; set; }
     }
 
     public class ItensParaReservaViewModel
@@ -373,7 +376,6 @@ namespace Dalutex.Models
         public string NMColecao { get; set; }
         public int Pagina { get; set; }
         public string RetornarPara { get; set; }
-        //public Enums.ItemType Tipo { get; set; }
         public int Tipo { get; set; }
         public string CodStudio { get; set; }
         public string RGB { get; set; }
@@ -384,34 +386,30 @@ namespace Dalutex.Models
         public ConclusaoPedidoViewModel()
         {
             IDTipoPedido = -1;
-            IDCanaisVenda = 1; //MERCADO INTERNO
-            IDViasTransporte = 1; //RODOVIARIA
-            IDFretes = 2; //FOB
+            using (DalutexContext ctxDalutex = new DalutexContext())
+            {
+                CanailVenda = ctxDalutex.CANAIS_VENDA.Find(1);//MERCADO INTERNO
+                ViaTransporte = ctxDalutex.COML_VIASTRANSPORTE.Find(1);//RODOVIARIA
+                Frete = ctxDalutex.COML_TIPOSFRETE.Find(2);//FOB;
+                Moeda = ctxDalutex.CADASTRO_MOEDAS.Find((int)Enums.Moedas.Real);
+            }
+
             PorcentagemComissao = 4; //ALTERAR CONFORME O TIPO DE COLEÇÂO
-            IDMoedas = (int)Enums.Moedas.Real;
         }
 
         #region Combos
 
         [Display(Name = "Condição de pagto")]
-        public List<VW_CONDICAO_PGTO> CondicoesPagto { get; set; }
-        [Display(Name = "Condição de pagto")]
-        public int? IDCondicoesPagto { get; set; }
+        public VW_CONDICAO_PGTO CondicaoPagto { get; set; }
 
         [Display(Name = "Moeda")]
-        public List<CADASTRO_MOEDAS> Moedas { get; set; }
-        [Display(Name = "Moeda")]
-        public int? IDMoedas { get; set; }
+        public CADASTRO_MOEDAS Moeda { get; set; }
 
         [Display(Name = "Via transporte")]
-        public List<COML_VIASTRANSPORTE> ViasTransporte { get; set; }
-        [Display(Name = "Via transporte")]
-        public int? IDViasTransporte { get; set; }
-
+        public COML_VIASTRANSPORTE ViaTransporte { get; set; }
+       
         [Display(Name = "Frete")]
-        public List<COML_TIPOSFRETE> Fretes { get; set; }
-        [Display(Name = "Frete")]
-        public int? IDFretes { get; set; }
+        public COML_TIPOSFRETE Frete { get; set; }
 
         [Display(Name = "Local de vendas")]
         public List<LOCALVENDA> LocaisVenda { get; set; }
@@ -419,9 +417,7 @@ namespace Dalutex.Models
         public int? IDLocaisVenda { get; set; }
 
         [Display(Name = "Canal de vendas")]
-        public List<CANAIS_VENDA> CanaisVenda { get; set; }
-        [Display(Name = "Canal de vendas")]
-        public int? IDCanaisVenda { get; set; }
+        public CANAIS_VENDA CanailVenda { get; set; }
 
         [Display(Name = "Gerente de vendas")]
         public List<COML_GERENCIAS> GerentesVenda { get; set; }
@@ -429,8 +425,7 @@ namespace Dalutex.Models
         public int IDGerentesVenda { get; set; }
 
         [Display(Name = "Tipo de atendimento")]
-        public List<PRE_PEDIDO_ATEND> TiposAtendimento { get; set; }
-        public int? IDTiposAtendimento { get; set; }
+        public PRE_PEDIDO_ATEND TipoAtendimento { get; set; }
 
         [Display(Name = "Qualidade comercial")]
         public KeyValuePair<string,string> QualidadeComercial { get; set; }

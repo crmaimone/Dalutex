@@ -37,6 +37,37 @@ namespace Dalutex.Models
         public List<KeyValuePair<string,string>> Qualidades { get; set; }
     }
 
+    public class PesquisaMoedaViewModel
+    {
+        public string MoedaSelecionada { get; set; }
+        public List<CADASTRO_MOEDAS> Moedas { get; set; }
+    }
+    public class PesquisaCondicaoPagamentoViewModel
+    {
+        public string CondicaoSelecionada { get; set; }
+        public List<VW_CONDICAO_PGTO> Condicoes { get; set; }
+    }
+    public class PesquisaCanalVendasViewModel
+    {
+        public string CanalSelecionado { get; set; }
+        public List<CANAIS_VENDA> Canais { get; set; }
+    }
+    public class PesquisaViaTransporteViewModel
+    {
+        public string ViaSelecionada { get; set; }
+        public List<COML_VIASTRANSPORTE> ViasTransporte { get; set; }
+    }
+    public class PesquisaFreteViewModel
+    {
+        public string FreteSelecionado { get; set; }
+        public List<COML_TIPOSFRETE> Fretes { get; set; }
+    }
+    public class PesquisaTipoAtendimentoViewModel
+    {
+        public string TipoSelecionado { get; set; }
+        public List<PRE_PEDIDO_ATEND> TiposAtendimento { get; set; }
+    }
+
     public class DesenhosSemImagemModelView
     {
         public int Pagina { get; set; }

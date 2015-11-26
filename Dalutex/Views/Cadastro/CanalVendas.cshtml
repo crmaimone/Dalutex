@@ -1,0 +1,40 @@
+﻿@using Dalutex.Models.DataModels
+
+@model Dalutex.Models.PesquisaCanalVendasViewModel
+
+@{
+    ViewBag.Title = "CANAL DE VENDAS";
+}
+
+<div class="header-title"><h3>@ViewBag.Title</h3></div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <section id="Resultado">
+                <div class="list-group" id="lstItens">
+                    <a href="#" class="list-group-item active">CANAIS</a>
+                    @if (@Model != null && @Model.Canais != null)
+                    {
+                        foreach (var item in Model.Canais)
+                        {
+                            if (@item.CANAL_VENDA.ToString() == @Model.CanalSelecionado)
+                            {
+                                <a href="@Url.Action("ProximoPasso", "Cadastro", new { IDCanal = item.CANAL_VENDA })" class="list-group-item"><i class="glyphicon glyphicon-ok"></i>&nbsp;@item.DESCRICAO</a>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("ProximoPasso", "Cadastro", new { IDCanal = item.CANAL_VENDA })" class="list-group-item">@item.DESCRICAO</a>
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        <p class="list-group-item"><em>LISTA DE CANAIS NÃO CARREGADA</em></p>
+                    }
+                </div>
+            </section>
+        </div>
+    </div>
+</div>

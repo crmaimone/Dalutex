@@ -25,14 +25,35 @@
                     "&pagina=" + @Model.Pagina)">ESTAMPADOS</a></li>
         <li role="presentation" class="active"><a href="#">LISOS</a></li>
     </ul>
-    <div class="row">
-        @if (Model.Galeria != null)
-        {
-            foreach (Liso item in Model.Galeria)
-            {
-                <div class="col-sm-4 col-md-2">
 
-                    @Html.Partial(
+    <div class="row-fluid" id="pesqLisos">
+        @using (Html.BeginForm("Lisos", "Pedido", null, FormMethod.Post, new { role = "search" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-group">
+                <div>
+                    @Html.TextBoxFor(x => x.FiltroCor, new { @class = "form-control", @style = "display:inline", placeholder = "Cor" })
+                    @Html.TextBoxFor(x => x.FiltroArtigo, new { @class = "form-control", @style = "display:inline", placeholder = "Artigo" })
+                    @Html.TextBoxFor(x => x.FiltroReduzido, new { @class = "form-control", @style = "display:inline", placeholder = "Reduzido" })
+                    <button type="submit" class="btn btn-default btn-group-sm"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Pesquisar</button>
+                </div>
+
+                <input type="hidden" name="IDColecao" value="@Model.IDColecao" />
+                <input type="hidden" name="NMColecao" value="@Model.NMColecao" />
+                <input type="hidden" name="Pagina" value="@Model.Pagina" />
+            </div>
+        }
+    </div>
+        <div class="row">
+            @if (Model.Galeria != null)
+            {
+                foreach (Liso item in Model.Galeria)
+                {
+                    <div class="col-sm-4 col-md-2">
+
+                        @Html.Partial(
                         "_Thumb",
                         new Dalutex.Models.ThumbViewModel()
                         {
@@ -52,69 +73,69 @@
                             IDStudio = 0,
                             IDItemStudio = 0
                         })
-                </div>
+                    </div>
+                }
             }
-        }
-    </div>
-    <nav>
-        <ul class="pagination">
-            @if (Model.Galeria != null)
-            {
-                if (Model.Pagina > 1)
+        </div>
+        <nav>
+            <ul class="pagination">
+                @if (Model.Galeria != null)
                 {
-                    <li>
-                        <a href="@Url.Action("Lisos", "Pedido", new { idcolecao = Model.IDColecao, nmcolecao = Model.NMColecao, pagina = Model.Pagina - 1, totalpaginas = Model.TotalPaginas })" aria-label="Anterior">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                }
-                else
-                {
-                    <li class="disabled">
-                        <a href="#" aria-label="Anterior">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                }
-
-                int iComecar = Model.Pagina <= 5 ? 1 : Model.Pagina - 5;
-                for (int i = iComecar; i <= Model.TotalPaginas; i++)
-                {
-                    if (Model.Pagina == i)
+                    if (Model.Pagina > 1)
                     {
-                        <li class="active"><a href="@Url.Action("Lisos", "Pedido", new { idcolecao = Model.IDColecao, nmcolecao = Model.NMColecao, pagina = i, totalpaginas = Model.TotalPaginas })">@i</a></li>
+                        <li>
+                            <a href="@Url.Action("Lisos", "Pedido", new { idcolecao = Model.IDColecao, nmcolecao = Model.NMColecao, pagina = Model.Pagina - 1, totalpaginas = Model.TotalPaginas })" aria-label="Anterior">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
                     }
                     else
                     {
-                        <li><a href="@Url.Action("Lisos", "Pedido", new { idcolecao = Model.IDColecao, nmcolecao = Model.NMColecao, pagina = i, totalpaginas = Model.TotalPaginas })">@i</a></li>
+                        <li class="disabled">
+                            <a href="#" aria-label="Anterior">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
                     }
-                    if (i == iComecar + 9)
+
+                    int iComecar = Model.Pagina <= 5 ? 1 : Model.Pagina - 5;
+                    for (int i = iComecar; i <= Model.TotalPaginas; i++)
                     {
-                        break;
+                        if (Model.Pagina == i)
+                        {
+                            <li class="active"><a href="@Url.Action("Lisos", "Pedido", new { idcolecao = Model.IDColecao, nmcolecao = Model.NMColecao, pagina = i, totalpaginas = Model.TotalPaginas })">@i</a></li>
+                        }
+                        else
+                        {
+                            <li><a href="@Url.Action("Lisos", "Pedido", new { idcolecao = Model.IDColecao, nmcolecao = Model.NMColecao, pagina = i, totalpaginas = Model.TotalPaginas })">@i</a></li>
+                        }
+                        if (i == iComecar + 9)
+                        {
+                            break;
+                        }
+                    }
+                    if (Model.Pagina < Model.TotalPaginas)
+                    {
+                        <li>
+                            <a href="@Url.Action("Lisos", "Pedido", new { idcolecao = Model.IDColecao, nmcolecao = Model.NMColecao, pagina = Model.Pagina + 1, totalpaginas = Model.TotalPaginas })" aria-label="Próxima">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="disabled">
+                            <a href="#" aria-label="Próxima">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
                     }
                 }
-                if (Model.Pagina < Model.TotalPaginas)
-                {
-                    <li>
-                        <a href="@Url.Action("Lisos", "Pedido", new { idcolecao = Model.IDColecao, nmcolecao = Model.NMColecao, pagina = Model.Pagina + 1, totalpaginas = Model.TotalPaginas })" aria-label="Próxima">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                }
-                else
-                {
-                    <li class="disabled">
-                        <a href="#" aria-label="Próxima">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                }
-            }
-        </ul>
-    </nav>
-    <hr>
-    <a class="btn btn-default right" href="javascript:history.back()">VOLTAR</a>
-</div>
+            </ul>
+        </nav>
+        <hr>
+        <a class="btn btn-default right" href="javascript:history.back()">VOLTAR</a>
+    </div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/equalheight")

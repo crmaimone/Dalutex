@@ -12,33 +12,6 @@
         <div class="col-md-12">
             @if (!ViewBag.CarrinhoVazio)
             {
-                <div>
-                    @Html.LabelFor(x => x.Representante):&nbsp;
-                    <a href="@Url.Action("Representantes", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a>
-                    @Model.Representante.NOME
-                    
-                </div>
-                <div>
-                    @Html.LabelFor(x => x.ClienteFatura):&nbsp;
-                    <a href="@Url.Action("ClientesFatura", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a>
-                    @Model.ClienteFatura.NOME                    
-                </div>
-                <div>
-                    @Html.LabelFor(x => x.ClienteEntrega):&nbsp;
-                    <a href="@Url.Action("ClientesEntrega", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a>
-                    @Model.ClienteEntrega.NOME                    
-                </div>
-                <div>
-                    @Html.LabelFor(x => x.Transportadora):&nbsp;
-                    <a href="@Url.Action("Transportadora", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a>
-                    @Model.Transportadora.NOME                    
-                </div>
-                <div>
-                    @Html.LabelFor(x => x.QualidadeComercial):&nbsp;
-                    <a href="@Url.Action("QualidadeComercial", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a>
-                    @Model.QualidadeComercial.Key
-                </div>
-                
                 <section id="ConclusaoForm">
                     @using (Html.BeginForm("ConclusaoPedido", "Pedido", null, FormMethod.Post, new { @class = "form-horizontal pull-left", role = "form" }))
                     {
@@ -46,88 +19,88 @@
 
                         @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
-                        if (Model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
-                        {
-                            <div class="form-group">
-                                @Html.LabelFor(x => x.Moedas, new { @class = "col-md-3 control-label" })
-                                <div class="col-md-9">
-                                    @Html.DropDownListFor(m => m.IDMoedas, new SelectList(Model.Moedas, "CODIGOMOEDA", "NOMEMOEDA"), "Selecione", new { @id = "lstMoedas" })
-                                    @Html.ValidationMessageFor(m => m.IDMoedas, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                @Html.LabelFor(x => x.CondicoesPagto, new { @class = "col-md-3 control-label" })
-                                <div class="col-md-9">
-                                    @Html.DropDownListFor(m => m.IDCondicoesPagto, new SelectList(Model.CondicoesPagto, "ID_COND", "DESCRI_COND"), "Selecione", new { @id = "lstTiposPgto" })
-                                    @Html.ValidationMessageFor(m => m.IDCondicoesPagto, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                @Html.LabelFor(x => x.CanaisVenda, new { @class = "col-md-3 control-label" })
-                                <div class="col-md-9">
-                                    @Html.DropDownListFor(m => m.IDCanaisVenda, new SelectList(Model.CanaisVenda, "CANAL_VENDA", "DESCRICAO"), "Selecione", new { @id = "lstCanaisVenda" })
-                                    @Html.ValidationMessageFor(m => m.IDCanaisVenda, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                @Html.LabelFor(x => x.ViasTransporte, new { @class = "col-md-3 control-label" })
-                                <div class="col-md-9">
-                                    @Html.DropDownListFor(m => m.IDViasTransporte, new SelectList(Model.ViasTransporte, "VIATRANSPORTE", "DESCRICAO"), "Selecione", new { @id = "lstViasTransp" })
-                                    @Html.ValidationMessageFor(m => m.IDViasTransporte, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                @Html.LabelFor(x => x.Fretes, new { @class = "col-md-3 control-label" })
-                                <div class="col-md-9">
-                                    @Html.DropDownListFor(m => m.IDFretes, new SelectList(Model.Fretes, "TIPOFRETE", "DESCRICAO"), "Selecione", new { @id = "lstFretes" })
-                                    @Html.ValidationMessageFor(m => m.IDFretes, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-
-                            @*<div class="form-group">
-                                    @Html.LabelFor(x => x.LocaisVenda, new { @class = "col-md-3 control-label" })
-                                    <div class="col-md-9">
-                                        @Html.DropDownListFor(m => m.IDLocaisVenda, new SelectList(Model.LocaisVenda, "CODIGO", "DESCRICAO"), "Selecione", new { @id = "lstLocaisVenda" })
-                                        @Html.ValidationMessageFor(m => m.IDLocaisVenda, "", new { @class = "text-danger" })
-                                    </div>
-                                </div>*@
-
-                            @*<div class="form-group" id="elemGerentes">
-                                    @Html.LabelFor(x => x.GerentesVenda, new { @class = "col-md-3 control-label" })
-                                    <div class="col-md-9">
-                                        @Html.DropDownListFor(m => m.IDGerentesVenda, new SelectList(Model.GerentesVenda, "GERENTE", "DESCRICAO"), "Selecione", new { @id = "lstGerentes" })
-                                        @Html.ValidationMessageFor(m => m.IDGerentesVenda, "", new { @class = "text-danger" })
-                                    </div>
-                                </div>*@
-
-                            <div class="form-group">
-                                @Html.LabelFor(x => x.TiposAtendimento, new { @class = "col-md-3 control-label" })
-                                <div class="col-md-9">
-                                    @Html.DropDownListFor(m => m.IDTiposAtendimento, new SelectList(Model.TiposAtendimento, "COD_ATEND", "DESCRI_ATEND"), "Selecione", new { @id = "lstTiposAtendimento" })
-                                    @Html.ValidationMessageFor(m => m.IDTiposAtendimento, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-                        }
-
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.PedidoCliente, new { @class = "col-md-3 control-label" })
-                            <div class="col-md-9">
-                                @Html.TextBoxFor(x => x.PedidoCliente, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(x => x.PedidoCliente, "", new { @class = "text-danger" })
-                            </div>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>@Html.LabelFor(x => x.Representante):&nbsp;</td>
+                                        <td><a href="@Url.Action("Representantes", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a></td>
+                                        <td>@Model.Representante.NOME</td>
+                                    </tr>
+                                    <tr>
+                                        <td>@Html.LabelFor(x => x.ClienteFatura):&nbsp;</td>
+                                        <td><a href="@Url.Action("ClientesFatura", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a></td>
+                                        <td>@Model.ClienteFatura.NOME</td>
+                                    </tr>
+                                    <tr>
+                                        <td>@Html.LabelFor(x => x.ClienteEntrega):&nbsp;</td>
+                                        <td><a href="@Url.Action("ClientesEntrega", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a></td>
+                                        <td>@Model.ClienteEntrega.NOME</td>
+                                    </tr>
+                                    <tr>
+                                        <td>@Html.LabelFor(x => x.Transportadora):&nbsp;</td>
+                                        <td><a href="@Url.Action("Transportadora", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a></td>
+                                        <td>@Model.Transportadora.NOME</td>
+                                    </tr>
+                                    <tr>
+                                        <td>@Html.LabelFor(x => x.QualidadeComercial):&nbsp;</td>
+                                        <td><a href="@Url.Action("QualidadeComercial", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a></td>
+                                        <td>@Model.QualidadeComercial.Value</td>
+                                    </tr>
+                                    <tr>
+                                        <td>@Html.LabelFor(x => x.Moeda):&nbsp;</td>
+                                        <td><a href="@Url.Action("Moeda", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a></td>
+                                        <td>@Model.Moeda.NOMEMOEDA</td>
+                                    </tr>
+                                    <tr>
+                                        <td>@Html.LabelFor(x => x.CondicaoPagto):&nbsp;</td>
+                                        <td><a href="@Url.Action("CondicaoPgto", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a></td>
+                                        <td>@Model.CondicaoPagto.DESCRI_COND</td>
+                                    </tr>
+                                    <tr>
+                                        <td>@Html.LabelFor(x => x.CanailVenda):&nbsp;</td>
+                                        <td><a href="@Url.Action("CanalVendas", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a></td>
+                                        <td>@Model.CanailVenda.DESCRICAO</td>
+                                    </tr>
+                                    <tr>
+                                        <td>@Html.LabelFor(x => x.ViaTransporte):&nbsp;</td>
+                                        <td><a href="@Url.Action("ViaTransporte", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a></td>
+                                        <td>@Model.ViaTransporte.DESCRICAO</td>
+                                    </tr>
+                                    <tr>
+                                        <td>@Html.LabelFor(x => x.Frete):&nbsp;</td>
+                                        <td><a href="@Url.Action("Frete", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a></td>
+                                        <td>@Model.Frete.DESCRICAO</td>
+                                    </tr>
+                                    <tr>
+                                        <td>@Html.LabelFor(x => x.TipoAtendimento):&nbsp;</td>
+                                        <td><a href="@Url.Action("TipoAtendimento", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a></td>
+                                        <td>@Model.TipoAtendimento.DESCRI_ATEND</td>
+                                    </tr>
+                                    <tr>
+                                        <td>@Html.LabelFor(x => x.PedidoCliente, new { @class = "control-label" }):&nbsp;</td>
+                                        <td colspan ="2">
+                                            @Html.TextBoxFor(x => x.PedidoCliente, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(x => x.PedidoCliente, "", new { @class = "text-danger" })
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>@Html.LabelFor(x => x.Observacoes, new { @class = "control-label" }):&nbsp;</td>
+                                        <td colspan="2">
+                                            @Html.TextAreaFor(x => x.Observacoes, 0, 0, new { @style = "width:100%; Height:90px;" })
+                                            @Html.ValidationMessageFor(m => m.Observacoes, "", new { @class = "text-danger" })
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.Observacoes, new { @class = "col-md-3 control-label" })
-                            <div class="col-md-9">
-                                @Html.TextAreaFor(x => x.Observacoes, 0, 0, new { @style = "width:100%; Height:90px;" })
-                                @Html.ValidationMessageFor(m => m.Observacoes, "", new { @class = "text-danger" })
-                            </div>
-                        </div>                                                                                                                                  
                         <hr />                        
                         <div class="form-group">
                             <div class="col-md-12">

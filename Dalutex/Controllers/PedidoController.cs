@@ -958,37 +958,19 @@ namespace Dalutex.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        private ConclusaoPedidoViewModel ConclusaoPedidoCarregarListas(ConclusaoPedidoViewModel model)
+        private ConclusaoPedidoViewModel ConclusaoPedidoCarregarEscolhas(ConclusaoPedidoViewModel model)
         {
-            if (model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
-            {
-                using (DalutexContext ctxDalutex = new DalutexContext())
-                {
-                    model.Moedas = ctxDalutex.CADASTRO_MOEDAS.ToList();
-                    model.ViasTransporte = ctxDalutex.COML_VIASTRANSPORTE.ToList();
-                    model.Fretes = ctxDalutex.COML_TIPOSFRETE.ToList();
-                    model.CanaisVenda = ctxDalutex.CANAIS_VENDA.ToList();
-                    model.GerentesVenda = ctxDalutex.COML_GERENCIAS.Where(x => x.CANALVENDA == (int)Enums.CanaisVenda.TELEVENDAS).ToList();
-                }
-
-                using (TIDalutexContext ctxTI = new TIDalutexContext())
-                {
-                    model.LocaisVenda = ctxTI.LOCALVENDA.ToList();
-                    model.TiposAtendimento = ctxTI.PRE_PEDIDO_ATEND.ToList();
-                    model.CondicoesPagto = ctxTI.VW_CONDICAO_PGTO.ToList();
-                }
-
-                //if (base.Session_Carrinho != null)
-                //    model.Itens = base.Session_Carrinho.Itens;
-
-
-                //TODO: ver com cassiano alterações na forma de calcular o total do item:::::
-
-                //foreach (InserirNoCarrinhoViewModel item in model.Itens)
-                //{
-                //    model.TotalPedido += item.ValorTotalItem;
-                //}
-            }
+            model.Representante = base.Session_Carrinho.Representante;
+            model.ClienteFatura = base.Session_Carrinho.ClienteFatura;
+            model.ClienteEntrega = base.Session_Carrinho.ClienteEntrega;
+            model.Transportadora = base.Session_Carrinho.Transportadora;
+            model.QualidadeComercial = base.Session_Carrinho.QualidadeComercial;
+            model.Moeda = base.Session_Carrinho.Moeda;
+            model.CondicaoPagto = base.Session_Carrinho.CondicaoPagto;
+            model.CanailVenda = base.Session_Carrinho.CanailVenda;
+            model.ViaTransporte = base.Session_Carrinho.ViaTransporte;
+            model.Frete = base.Session_Carrinho.Frete;
+            model.TipoAtendimento = base.Session_Carrinho.TipoAtendimento;
 
             return model;
         }
@@ -1008,13 +990,7 @@ namespace Dalutex.Controllers
                     });
                 }
 
-                model.Representante = base.Session_Carrinho.Representante;
-                model.ClienteFatura = base.Session_Carrinho.ClienteFatura;
-                model.ClienteEntrega = base.Session_Carrinho.ClienteEntrega;
-                model.Transportadora = base.Session_Carrinho.Transportadora;
-                model.QualidadeComercial = base.Session_Carrinho.QualidadeComercial;
-
-                ConclusaoPedidoCarregarListas(model);
+                ConclusaoPedidoCarregarEscolhas(model);
                 ViewBag.CarrinhoVazio = false;
             }
             else
@@ -1036,17 +1012,12 @@ namespace Dalutex.Controllers
         {
             try
             {
-                model.Representante = base.Session_Carrinho.Representante;
-                model.ClienteFatura = base.Session_Carrinho.ClienteFatura;
-                model.ClienteEntrega = base.Session_Carrinho.ClienteEntrega;
-                model.Transportadora = base.Session_Carrinho.Transportadora;
-                model.QualidadeComercial = base.Session_Carrinho.QualidadeComercial;
-
+                ConclusaoPedidoCarregarEscolhas(model);
 
                 if (model.IDTipoPedido == (int)Enums.TiposPedido.RESERVA)
                 {
                     model.QualidadeComercial = new KeyValuePair<string,string>(Enums.QualidadeComercial.A.ToString(), Enums.QualidadeComercial.A.ToString());
-                    model.IDCondicoesPagto = (int)Enums.CondicoesPagamento.CORTESIA;                    
+                    model.CondicaoPagto = new VW_CONDICAO_PGTO() { ID_COND = (int)Enums.CondicoesPagamento.CORTESIA };                    
                 }
 
                 if (Session_Carrinho == null)
@@ -1066,7 +1037,7 @@ namespace Dalutex.Controllers
                     if (Session_Carrinho.Itens == null || Session_Carrinho.Itens.Count == 0)
                     {
                         ModelState.AddModelError("", "Não é permitido concluir o pedido sem itens.");
-                        this.ConclusaoPedidoCarregarListas(model);
+                        this.ConclusaoPedidoCarregarEscolhas(model);
                         return View(model);
                     }
 
@@ -1078,7 +1049,7 @@ namespace Dalutex.Controllers
                     if (model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA && Session_Carrinho.Itens.Exists(x => x.Reduzido == 0))
                     {
                         ModelState.AddModelError("", "Este carrinho possuem itens com o código reduzido zerado. Favor entrar em contato com o TI.");
-                        this.ConclusaoPedidoCarregarListas(model);
+                        this.ConclusaoPedidoCarregarEscolhas(model);
                         return View(model);
                     }
 
@@ -1087,36 +1058,37 @@ namespace Dalutex.Controllers
                     if (model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
                     {
 
-                        if (model.IDCondicoesPagto <= 0 || model.IDCondicoesPagto == null)
-                        {
-                            ModelState.AddModelError("", "Por favor informe a condição de pagamento.");
-                            hasErrors = true;
-                        }
-                        if (model.IDMoedas < 0 || model.IDMoedas == null)
-                        {
-                            ModelState.AddModelError("", "Por favor informe a moeda.");
-                            hasErrors = true;
-                        }
-                        if (model.IDViasTransporte <= 0 || model.IDViasTransporte == null)
-                        {
-                            ModelState.AddModelError("", "Por favor informe a via de transporte.");
-                            hasErrors = true;
-                        }
-                        if (model.IDFretes <= 0)
-                        {
-                            ModelState.AddModelError("", "Por favor informe o tipo de frete.");
-                            hasErrors = true;
-                        }
-                        if (model.IDCanaisVenda <= 0)
-                        {
-                            ModelState.AddModelError("", "Por favor informe o canal de venda.");
-                            hasErrors = true;
-                        }
-                        if (model.IDTiposAtendimento <= 0 || model.IDTiposAtendimento == null)
-                        {
-                            ModelState.AddModelError("", "Por favor informe o tipo de atendimento.");
-                            hasErrors = true;
-                        }
+                        //if (model.IDCondicoesPagto <= 0 || model.IDCondicoesPagto == null)
+                        //{
+                        //    ModelState.AddModelError("", "Por favor informe a condição de pagamento.");
+                        //    hasErrors = true;
+                        //}
+                        //if (model.IDMoedas < 0 || model.IDMoedas == null)
+                        //{
+                        //    ModelState.AddModelError("", "Por favor informe a moeda.");
+                        //    hasErrors = true;
+                        //}
+                        //if (model.IDViasTransporte <= 0 || model.IDViasTransporte == null)
+                        //{
+                        //    ModelState.AddModelError("", "Por favor informe a via de transporte.");
+                        //    hasErrors = true;
+                        //}
+                        //if (model.IDFretes <= 0)
+                        //{
+                        //    ModelState.AddModelError("", "Por favor informe o tipo de frete.");
+                        //    hasErrors = true;
+                        //}
+                        //if (model.IDCanaisVenda <= 0)
+                        //{
+                        //    ModelState.AddModelError("", "Por favor informe o canal de venda.");
+                        //    hasErrors = true;
+                        //}
+                        //if (model.IDTiposAtendimento <= 0 || model.IDTiposAtendimento == null)
+                        //{
+                        //    ModelState.AddModelError("", "Por favor informe o tipo de atendimento.");
+                        //    hasErrors = true;
+                        //}
+
                         //if (string.IsNullOrWhiteSpace(model.QualidadeComercial))
                         //{
                         //    ModelState.AddModelError("", "Por favor informe a qualidade comercial.");
@@ -1125,19 +1097,19 @@ namespace Dalutex.Controllers
 
                         if (hasErrors)
                         {
-                            this.ConclusaoPedidoCarregarListas(model);
+                            this.ConclusaoPedidoCarregarEscolhas(model);
                             return View(model);
                         }
 
                         if (base.Session_Carrinho.IDTipoPedido.Equals((int)Enums.TiposPedido.VENDA)
-                            && !model.IDCanaisVenda.Equals((int)Enums.CanaisVenda.TELEVENDAS)
-                            && !model.IDCondicoesPagto.Equals((int)Enums.CondicoesPagamento.CORTESIA))
+                            && !model.CanailVenda.CANAL_VENDA.Equals((int)Enums.CanaisVenda.TELEVENDAS)
+                            && !model.CondicaoPagto.ID_COND.Equals((int)Enums.CondicoesPagamento.CORTESIA))
                         {
 
                             int numParcelas = 0;
                             using (var ctx = new TIDalutexContext())
                             {
-                                numParcelas = ctx.VW_CONDICAO_PGTO.Find(model.IDCondicoesPagto).PARCELAS;
+                                numParcelas = ctx.VW_CONDICAO_PGTO.Find(model.CondicaoPagto.ID_COND).PARCELAS;
                             }
 
                             int fatorMultiplicacao = 0;
@@ -1156,7 +1128,7 @@ namespace Dalutex.Controllers
                                 fatorMultiplicacao = (int)Enums.FatorMultiplicacaoQualidadeComercial.C;
                             }
 
-                            if (model.IDTiposAtendimento.Equals((int)Enums.TiposAtendimento.EstampaCompleta))
+                            if (model.TipoAtendimento.COD_ATEND.Equals((int)Enums.TiposAtendimento.EstampaCompleta))
                             {
                                 List<KeyValuePair<string, decimal>> lstConsolidada = base.Session_Carrinho.Itens
                                     .GroupBy(g => g.Desenho)
@@ -1179,7 +1151,7 @@ namespace Dalutex.Controllers
                                     hasErrors = true;
                                 }
                             }
-                            else if (model.IDTiposAtendimento.Equals((int)Enums.TiposAtendimento.PedidoCompleto))
+                            else if (model.TipoAtendimento.COD_ATEND.Equals((int)Enums.TiposAtendimento.PedidoCompleto))
                             {
                                 if (((model.TotalPedido / fatorMultiplicacao) / numParcelas) < valorMinimoParcelas)
                                 {
@@ -1187,7 +1159,7 @@ namespace Dalutex.Controllers
                                     hasErrors = true;
                                 }
                             }
-                            else if (model.IDTiposAtendimento.Equals((int)Enums.TiposAtendimento.CompletoPorArtigo))
+                            else if (model.TipoAtendimento.COD_ATEND.Equals((int)Enums.TiposAtendimento.CompletoPorArtigo))
                             {
                                 List<KeyValuePair<string, decimal>> lstConsolidada = base.Session_Carrinho.Itens
                                     .GroupBy(g => g.Artigo)
@@ -1210,7 +1182,7 @@ namespace Dalutex.Controllers
                                     hasErrors = true;
                                 }
                             }
-                            else if (model.IDTiposAtendimento.Equals((int)Enums.TiposAtendimento.PedidoIncompleto))
+                            else if (model.TipoAtendimento.COD_ATEND.Equals((int)Enums.TiposAtendimento.PedidoIncompleto))
                             {
                                 bool isValid = true;
 
@@ -1231,7 +1203,7 @@ namespace Dalutex.Controllers
 
                         }
 
-// -- oda -- 05/112015 --- regra de validação de qtde por desenho ------------------------------------------------------------------------------------------------------------------
+                        // -- oda -- 05/112015 --- regra de validação de qtde por desenho ------------------------------------------------------------------------------------------------------------------
                         using (var ctx = new TIDalutexContext())
                         {
                             if (model.IDTipoPedido == (int)Enums.TiposPedido.VENDA)
@@ -1347,13 +1319,13 @@ namespace Dalutex.Controllers
                                 }  
                             }
                         }                                                                       
-// -- oda -- 05/112015 --- regra de validação de qtde por desenho ------------------------------------------------------------------------------------------------------------------
+                    // -- oda -- 05/112015 --- regra de validação de qtde por desenho ------------------------------------------------------------------------------------------------------------------
 
                     }
 
                     if (hasErrors)
                     {
-                        this.ConclusaoPedidoCarregarListas(model);
+                        this.ConclusaoPedidoCarregarEscolhas(model);
                         return View(model);
                     }
 
@@ -1361,12 +1333,12 @@ namespace Dalutex.Controllers
 
                     #region Persistir na sessão
 
-                    base.Session_Carrinho.IDMoedas = model.IDMoedas;
-                    base.Session_Carrinho.IDCondicoesPagto = model.IDCondicoesPagto;
-                    base.Session_Carrinho.IDCanaisVenda = model.IDCanaisVenda;
-                    base.Session_Carrinho.IDViasTransporte = model.IDViasTransporte;
-                    base.Session_Carrinho.IDFretes = model.IDFretes;
-                    base.Session_Carrinho.IDTiposAtendimento = model.IDTiposAtendimento;
+                    base.Session_Carrinho.Moeda = model.Moeda;
+                    base.Session_Carrinho.CondicaoPagto = model.CondicaoPagto;
+                    base.Session_Carrinho.CanailVenda = model.CanailVenda;
+                    base.Session_Carrinho.ViaTransporte = model.ViaTransporte;
+                    base.Session_Carrinho.Frete = model.Frete;
+                    base.Session_Carrinho.TipoAtendimento = model.TipoAtendimento;
                     base.Session_Carrinho.Observacoes = model.Observacoes;
                     base.Session_Carrinho.PedidoCliente = model.PedidoCliente;
 
@@ -1381,7 +1353,7 @@ namespace Dalutex.Controllers
                         #region Pegar Código Condição de Pagto - Call Function Oracle
                         using(var ti_ctx = new TIDalutexContext())
                         {                                                                                                   
-                            iCodCondPgto = ti_ctx.Database.SqlQuery<int>("select ti_dalutex.pega_consicao_pgto(:p0) from dual", model.IDCondicoesPagto).FirstOrDefault();
+                            iCodCondPgto = ti_ctx.Database.SqlQuery<int>("select ti_dalutex.pega_consicao_pgto(:p0) from dual", model.CondicaoPagto.ID_COND).FirstOrDefault();
 
                             iColecaoAtual = int.Parse(ti_ctx.CONFIG_GERAL.Where(y => y.ID_CONFIG == (int)Enums.TipoColecaoEspecial.Atual).First().PARAMETRO1); 
                         }
@@ -1456,7 +1428,7 @@ namespace Dalutex.Controllers
                 base.Handle(ex);
             }
 
-            this.ConclusaoPedidoCarregarListas(model);
+            this.ConclusaoPedidoCarregarEscolhas(model);
             return View(model);
         }
 
@@ -1505,15 +1477,15 @@ namespace Dalutex.Controllers
                     model.TipoPedido = ctx.COML_TIPOSPEDIDOS.Where(x => x.TIPOPEDIDO == Session_Carrinho.IDTipoPedido).First().DESCRICAO;
                               
                     model.Transportadora = ctx.TRANSPORTADORAS.Find(Session_Carrinho.Transportadora.IDTRANSPORTADORA).NOME;                   
-                    model.CondPagto = ctx.COML_CONDICOESPAGAME.Where(x => x.CONDICAO == Session_Carrinho.IDCondicoesPagto).First().DESCRICAO;
-                    model.Frete = ctx.COML_TIPOSFRETE.Where(x => x.TIPOFRETE == Session_Carrinho.IDFretes).First().DESCRICAO;                
+                    model.CondPagto = ctx.COML_CONDICOESPAGAME.Where(x => x.CONDICAO == Session_Carrinho.CondicaoPagto.ID_COND).First().DESCRICAO;
+                    model.Frete = ctx.COML_TIPOSFRETE.Where(x => x.TIPOFRETE == Session_Carrinho.Frete.TIPOFRETE).First().DESCRICAO;                
                 }            
            
                 using (var ctx = new TIDalutexContext())
                 {
                     model.ClienteEntrega = ctx.VW_CLIENTE_TRANSP.Where(x => x.ID_CLIENTE == Session_Carrinho.ClienteEntrega.ID_CLIENTE).First().NOME;
                     model.ClienteFatura= ctx.VW_CLIENTE_TRANSP.Where(x => x.ID_CLIENTE == Session_Carrinho.ClienteFatura.ID_CLIENTE).First().NOME;
-                    model.TipoAtendimento = ctx.PRE_PEDIDO_ATEND.Where(x => x.COD_ATEND == Session_Carrinho.IDTiposAtendimento).First().DESCRI_ATEND;               
+                    model.TipoAtendimento = ctx.PRE_PEDIDO_ATEND.Where(x => x.COD_ATEND == Session_Carrinho.TipoAtendimento.COD_ATEND).First().DESCRI_ATEND;               
                 }
             }
             else
@@ -1560,7 +1532,7 @@ namespace Dalutex.Controllers
                     ID_REPRESENTANTE = base.Session_Carrinho.Representante.IDREPRESENTANTE,
                     ID_CLIENTE = base.Session_Carrinho.ClienteFatura.ID_CLIENTE,
                     QUALIDADE_COM = base.Session_Carrinho.QualidadeComercial.Key,
-                    COD_COND_PGTO = base.Session_Carrinho.IDCondicoesPagto,
+                    COD_COND_PGTO = base.Session_Carrinho.CondicaoPagto.ID_COND,
                     OBSERVACOES = base.Session_Carrinho.Observacoes,
                     DATA_ENTREGA = base.Session_Carrinho.DataEntrega,
                     DATA_EMISSAO = DateTime.Now,
@@ -1571,12 +1543,12 @@ namespace Dalutex.Controllers
                     DATA_INICIO = DateTime.Now,
                     DATA_FINAL = DateTime.Now,
                     ID_LOCAL = base.Session_Carrinho.IDLocaisVenda,
-                    COD_MOEDA = base.Session_Carrinho.IDMoedas,
-                    CANAL_VENDAS = base.Session_Carrinho.IDCanaisVenda,
-                    ATENDIMENTO = base.Session_Carrinho.IDTiposAtendimento,
-                    TIPOFRETE = base.Session_Carrinho.IDFretes,
+                    COD_MOEDA = base.Session_Carrinho.Moeda.CODIGOMOEDA,
+                    CANAL_VENDAS = base.Session_Carrinho.CanailVenda.CANAL_VENDA,
+                    ATENDIMENTO = base.Session_Carrinho.TipoAtendimento.COD_ATEND,
+                    TIPOFRETE = base.Session_Carrinho.Frete.TIPOFRETE,
                     //GERENTE = model.IDGerentesVenda,// não é necessario gravar neste campo para pedidos <> de PE
-                    VIATRANSPORTE = base.Session_Carrinho.IDViasTransporte,
+                    VIATRANSPORTE = base.Session_Carrinho.ViaTransporte.VIATRANSPORTE,
                     COMISSAO = Session_Carrinho.PorcentagemComissao,
                     ORIGEM = "PW", // APENAS PRA INFORMAR QUE ESTE PEDIDO VEIO DO PEDIDO WEB NOVO. 
                     STATUS_PEDIDO = 1, //embora esteja definido no banco como padrão "1", esta gravando nulo, então, deixar explicito.....  
@@ -2101,16 +2073,45 @@ namespace Dalutex.Controllers
                 {
                     model.IDColecao = int.Parse(idcolecao);
                 }
+            }
 
-                Utilitarios utils = new Utilitarios();
+            if (model.TotalPaginas > 0 || model.IDColecao > 0)
+            {
+                ObterLisos(model);
+            }
 
-                int iItensPorPagina = 24;
+            return View(model);
+        }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Lisos(LisosViewModel model)
+        {
+            model.Pagina = 1;
+            this.ObterLisos(model);
+
+            return View(model);
+        }
+
+        private void ObterLisos(LisosViewModel model)
+        {
+            Utilitarios utils = new Utilitarios();
+
+            int iItensPorPagina = 24;
+
+            using (TIDalutexContext ctx = new TIDalutexContext())
+            {
+                int iFiltroReduzido = -1;
+                int.TryParse(model.FiltroReduzido, out iFiltroReduzido);
+ 
                 List<Liso> result = null;
                 var query =
                     from dc in ctx.VW_LISOS_POR_COLECAO
                     where
                         (dc.COLECAO == model.IDColecao || model.IDColecao == -1)
+                        && (dc.COR.Contains(model.FiltroCor) || model.FiltroCor == null)
+                        && (dc.ARTIGO.Contains(model.FiltroArtigo) || model.FiltroArtigo == null)
+                        && (dc.CODIGO_REDUZIDO == iFiltroReduzido || iFiltroReduzido <= 0)
                     select new Liso
                     {
                         Reduzido = dc.CODIGO_REDUZIDO,
@@ -2139,14 +2140,12 @@ namespace Dalutex.Controllers
                                             .Take(iItensPorPagina)
                                             .ToList();
                 }
-                
+
                 model.Galeria.ForEach(delegate(Liso item)
                 {
                     item.RGB = utils.RGBConverter(ColorTranslator.FromWin32(int.Parse(item.RGB)));
                 });
             }
-
-            return View(model);
         }
 
         private void CarregarTiposPedidos(InserirNoCarrinhoViewModel model)

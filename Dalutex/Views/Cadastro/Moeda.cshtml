@@ -1,0 +1,40 @@
+﻿@using Dalutex.Models.DataModels
+
+@model Dalutex.Models.PesquisaMoedaViewModel
+
+@{
+    ViewBag.Title = "MOEDA";
+}
+
+<div class="header-title"><h3>@ViewBag.Title</h3></div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <section id="Resultado">
+                <div class="list-group" id="lstItens">
+                    <a href="#" class="list-group-item active">MOEDAS</a>
+                    @if (@Model != null && @Model.Moedas != null)
+                    {
+                        foreach (var item in Model.Moedas)
+                        {
+                            if (@item.CODIGOMOEDA.ToString() == @Model.MoedaSelecionada)
+                            {
+                                <a href="@Url.Action("ProximoPasso", "Cadastro", new { IDMoeda = item.CODIGOMOEDA })" class="list-group-item"><i class="glyphicon glyphicon-ok"></i>&nbsp;@item.NOMEMOEDA</a>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("ProximoPasso", "Cadastro", new { IDMoeda = item.CODIGOMOEDA })" class="list-group-item">@item.NOMEMOEDA</a>
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        <p class="list-group-item"><em>LISTA DE MOEDAS NÃO CARREGADA</em></p>
+                    }
+                </div>
+            </section>
+        </div>
+    </div>
+</div>

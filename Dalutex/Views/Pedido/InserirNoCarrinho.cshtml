@@ -4,6 +4,7 @@
 @{
     ViewBag.Title = "ADICIONAR AO CARRINHO";
 }
+@Styles.Render("~/Content/datepicker")
 <div class="header-title"><h3>@ViewBag.Title</h3></div>
 <div>
     @if (Model.Tipo == Enums.ItemType.Estampado || Model.Tipo == Enums.ItemType.ValidacaoReserva)
@@ -50,7 +51,6 @@
                                 @Html.LabelFor(x => x.IDTipoPedido, new { @class = "col-md-4 control-label" })
                                 <div class="col-md-8">
                                     @Html.DropDownListFor(m => m.IDTipoPedido, new SelectList(Model.TiposPedido, "TIPOPEDIDO", "DESCRICAO"), "Selecione", new { @id = "lstTiposPedido" })                                   
-                                    @*@Html.DropDownListFor(m => m.IDTipoPedido, Model.TiposPedido, "Selecione", new { @id = "lstTiposPedido" })*@
                                     @Html.ValidationMessageFor(m => m.IDTipoPedido, "", new { @class = "text-danger" })
                                 </div>
                             </div>
@@ -105,6 +105,22 @@
                             <div class="col-md-8">
                                 @Html.TextBoxFor(x => x.Preco, new { id = "txtPreco", @class = "form-control" })
                                 @Html.ValidationMessageFor(m => m.Preco, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.DataEntregaItem, new { @class = "col-md-4 control-label"})
+                            <div class='col-md-8'>
+                                @Html.Label(Model.DataEntregaItem.ToString("dd/MM/yyyy"), new { @class = "control-label" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.DtItemSolicitada, new { @class = "col-md-4 control-label" })
+                            <div class='input-group date col-md-8' style="width:258px">
+                                <input type='text' class="form-control" name="DtItemSolicitada" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
                             </div>
                         </div>
                     }
@@ -203,84 +219,96 @@
     </div>
 </div>
 @section Scripts {
+    @Scripts.Render("~/bundles/datepicker")
     <script>
-        $(document).ready(function () {
-            //API
-            scriptWrapper = (function () {
+    $(document).ready(function () {
+        //API
+        scriptWrapper = (function () {
 
-                //API Attributes
-                txtPecas_Blur = function()
-                {
-                    calcularTotal();
+            //API Attributes
+            txtPecas_Blur = function()
+            {
+                calcularTotal();
+            }
+
+            calcularTotal = function()
+            {
+                var $txtPecas = $("#txtPecas");
+                var $txtQuantidade = $("#txtQuantidade");
+
+                if (!isNaN($txtPecas.val())) {
+                    $txtQuantidade.val($txtPecas.val() * $("#lstTamanhoPadrao > option:selected").attr("value"));
+                    return;
                 }
+            }
 
-                calcularTotal = function()
-                {
-                    var $txtPecas = $("#txtPecas");
-                    var $txtQuantidade = $("#txtQuantidade");
-
-                    if (!isNaN($txtPecas.val())) {
-                        $txtQuantidade.val($txtPecas.val() * $("#lstTamanhoPadrao > option:selected").attr("value"));
-                        return;
-                    }
+            lstTiposPedido_Change = function () {
+                if ($("#lstTiposPedido > option:selected").attr("value") != "0") {
+                    $("#txtPecas").val("0")
+                    $("#txtPecas").prop('disabled', true);
+                    $("#txtQuantidade").prop('disabled', false);
+                    $("label[for=IDTamanhoPadrao]").hide();
+                    $("#lstTamanhoPadrao").selectpicker('hide');
                 }
-
-                lstTiposPedido_Change = function () {
-                    if ($("#lstTiposPedido > option:selected").attr("value") != "0") {
-                        $("#txtPecas").val("0")
-                        $("#txtPecas").prop('disabled', true);
-                        $("#txtQuantidade").prop('disabled', false);
-                        $("label[for=IDTamanhoPadrao]").hide();
-                        $("#lstTamanhoPadrao").selectpicker('hide');
-                    }
-                    else {
-                        $("#txtQuantidade").val("0")
-                        $("#txtPecas").prop('disabled', false);
-                        $("#txtQuantidade").prop('disabled', true);
-                        $("label[for=IDTamanhoPadrao]").show();
-                        $("#lstTamanhoPadrao").selectpicker('show');
-                    }               
-                    //Buscar novos minimos e máximos
+                else {
+                    $("#txtQuantidade").val("0")
+                    $("#txtPecas").prop('disabled', false);
+                    $("#txtQuantidade").prop('disabled', true);
+                    $("label[for=IDTamanhoPadrao]").show();
+                    $("#lstTamanhoPadrao").selectpicker('show');
                 }
+                //Buscar novos minimos e máximos
+            }
 
-                lstTamanhoPadrao_Change = function () {                    
-                    calcularTotal();
-                }
+            lstTamanhoPadrao_Change = function () {
+                calcularTotal();
+            }
 
-                txtPecas_Input = function(e)
-                {
-                    $(this).val($(this).val().replace(",", "").replace(".", ""));
-                }
+            txtPecas_Input = function(e)
+            {
+                $(this).val($(this).val().replace(",", "").replace(".", ""));
+            }
 
 
-                //API Methods
+            //API Methods
 
-                // public API
-                return {
-                    txtPecas_Blur: txtPecas_Blur,
-                    lstTiposPedido_Change: lstTiposPedido_Change,
-                    lstTamanhoPadrao_Change: lstTamanhoPadrao_Change,
-                    txtPecas_Input: txtPecas_Input
-                };
-            })();
+            // public API
+            return {
+                txtPecas_Blur: txtPecas_Blur,
+                lstTiposPedido_Change: lstTiposPedido_Change,
+                lstTamanhoPadrao_Change: lstTamanhoPadrao_Change,
+                txtPecas_Input: txtPecas_Input
+            };
+        })();
 
-            //Init
-            (function Init() {
-                $('#lstTiposPedido').selectpicker();
-                $("#lblQuantidade").text($("#hidUM").val());
-                $("#txtPecas").blur(this.txtPecas_Blur);
-                $('#lstTamanhoPadrao').selectpicker();
-                $('#txtPecas').on("input", scriptWrapper.txtPecas_Input)
+        //Init
+        (function Init() {
+            $('.input-group.date').datepicker({
+                startDate: "@Model.DataEntregaItem.ToString("dd/MM/yyyy")",
+                endDate: "@Model.DataEntregaItem.AddDays(Model.NumeroMaximoDiasDataSolicitacao).ToString("dd/MM/yyyy")",
+                format: "dd/mm/yyyy",
+                todayBtn: true,
+                clearBtn: true,
+                language: "pt-BR"
+            });
 
-                $("#txtPecas").focus(function () {
-                    this.select();
-                });
-                $("#txtPreco").focus(function () {
-                    this.select();
-                });
-                $('#lstTiposPedido').on('change', scriptWrapper.lstTiposPedido_Change);
-                $('#lstTamanhoPadrao').on('change', scriptWrapper.lstTamanhoPadrao_Change);
-            })();
-        });
+            $('.input-group.date').datepicker('update', '@Model.DtItemSolicitada.ToString("dd/MM/yyyy")');
+
+            $('#lstTiposPedido').selectpicker();
+            $("#lblQuantidade").text($("#hidUM").val());
+            $("#txtPecas").blur(this.txtPecas_Blur);
+            $('#lstTamanhoPadrao').selectpicker();
+            $('#txtPecas').on("input", scriptWrapper.txtPecas_Input)
+
+            $("#txtPecas").focus(function () {
+                this.select();
+            });
+            $("#txtPreco").focus(function () {
+                this.select();
+            });
+            $('#lstTiposPedido').on('change', scriptWrapper.lstTiposPedido_Change);
+            $('#lstTamanhoPadrao').on('change', scriptWrapper.lstTamanhoPadrao_Change);
+    })();
+    });
     </script>
 }

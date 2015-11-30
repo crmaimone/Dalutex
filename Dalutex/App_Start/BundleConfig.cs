@@ -30,6 +30,10 @@ namespace Dalutex
             bundles.Add(new ScriptBundle("~/bundles/prePageFunctions").Include(
             "~/Scripts/prePageFunctions.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/datepicker").Include(
+            "~/Scripts/bootstrap-datepicker*",
+            "~/Scripts/locales/bootstrap-datepicker*"));
+
             bundles.Add(new ScriptBundle("~/bundles/bootstrap-table").Include(
                     "~/Scripts/bootstrap-table.min.js",
                     "~/Scripts/bootstrap-table.js",
@@ -55,6 +59,8 @@ namespace Dalutex
                       "~/Content/fileinput.css",
                       "~/Content/fileinput.min.css"));
 
+
+            bundles.Add(new StyleBundle("~/Content/datepicker").Include("~/Content/bootstrap-datepicker*"));
             // Set EnableOptimizations to false for debugging. For more information,
             // visit http://go.microsoft.com/fwlink/?LinkId=301862
             BundleTable.EnableOptimizations = true;

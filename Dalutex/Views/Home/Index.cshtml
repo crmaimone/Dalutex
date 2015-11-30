@@ -68,6 +68,15 @@
             //Init
             (function Init() {
                 $('.jumbotron').css("background-image", "url(" + getRandomImageUrl() + ")")
+
+                $('#sandbox-container .input-group.date').datepicker({
+                    format: "dd/mm/yyyy",
+                    startDate: "12/11/2015",
+                    endDate: "10/12/2015",
+                    todayBtn: "linked",
+                    clearBtn: true
+                });
+
             })();
         });
     </script>

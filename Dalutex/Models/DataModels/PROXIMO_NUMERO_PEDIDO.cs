@@ -17,5 +17,7 @@ namespace Dalutex.Models.DataModels
         public DateTime? DATA_RESERVA_SID { get; set; }
 
         public DateTime? DATA_RESERVA_SGT { get; set; }
+
+        public int? ROTINA { get; set; }
     }
 }

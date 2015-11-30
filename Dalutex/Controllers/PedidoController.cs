@@ -299,6 +299,8 @@ namespace Dalutex.Controllers
                 }
 
                 this.CarregarTiposPedidos(model);
+                this.ObterPrevisaoEntrega(model);
+                model.DtItemSolicitada = model.DataEntregaItem;
 
                 model.ObterTipoPedido = (base.Session_Carrinho == null || base.Session_Carrinho.IDTipoPedido < 0)? "S" : "N";
             }
@@ -312,120 +314,14 @@ namespace Dalutex.Controllers
             return View(model);
         }
 
-        private void CarregarTamanhosPadrao(InserirNoCarrinhoViewModel model)
-        {
-            using(var ctxTI = new TIDalutexContext())
-            {
-                if (model.Reduzido > -2) //se tem reduzido
-                {
-                    int _pi = 0;
-
-                    model.UnidadeMedida = ctxTI.VW_PI_RED.Where(x => x.REDUZIDO == model.Reduzido).FirstOrDefault().UM;
-
-                    // pega o PI do cadastro do SGT para o reduzido.
-                    _pi = ctxTI.VW_PI_RED.Where(x => x.REDUZIDO == model.Reduzido).FirstOrDefault().PI;
-
-                    //Tenta pegar agora a combinação do reduzido + PI na tabela de padrões
-                    model.TamanhoPadrao = ctxTI.REGRA_PADRAO.Where(x => x.STATUS == true && x.REDUZIDO == model.Reduzido && x.ID_PROCESSO == _pi).OrderByDescending(x => x.PADRAO).ToList();
-
-                    //Se não encontrou, tenta encontar apenas pelo reduzido
-                    if (model.TamanhoPadrao == null || model.TamanhoPadrao.Count() == 0)
-                    {
-                        model.TamanhoPadrao = ctxTI.REGRA_PADRAO.Where(x => x.STATUS == true && x.REDUZIDO == model.Reduzido &&
-                                                                            x.ID_PROCESSO == null).OrderByDescending(x => x.PADRAO).ToList();
-                    }
-
-                    //Não encontrou na tabela, tentar encontar sem o reduzido - [Tipo prod, Tec, Artigo e PI]
-                    if (model.TamanhoPadrao == null || model.TamanhoPadrao.Count() == 0)
-                    {
-                        model.TamanhoPadrao = ctxTI.REGRA_PADRAO.Where(x => x.STATUS == true && x.TIPO_PRODUTO == "A" &&
-                                                                            x.ARTIGO == model.Artigo &&
-                                                                            x.TECNOLOGIA == model.Tecnologia &&
-                                                                            x.ID_PROCESSO == _pi
-                                                                    ).OrderByDescending(x => x.PADRAO).ToList();
-                    }
-                }
-                if ((model.Reduzido == -2) || (model.TamanhoPadrao == null) || (model.TamanhoPadrao.Count() == 0))
-                {
-                    //Verifica se pegou a UM, se não procura a Unoida de Medida do itens estoque-----
-                    if (model.UnidadeMedida == null)
-                    {
-                        VMASCARAPRODUTOACABADO objValorPadraoView = null;
-
-                        using (var ctx = new DalutexContext())
-                        {
-                            objValorPadraoView = ctx.VMASCARAPRODUTOACABADO.Where(x => x.ARTIGO == model.Artigo).FirstOrDefault();
-                            if (objValorPadraoView != null)
-                            {
-                                model.UnidadeMedida = objValorPadraoView.UM;
-                                if (model.UnidadeMedida.ToUpper() == "KG")
-                                {
-                                    model.ValorPadrao = (decimal)Enums.ValorPadraoUnidade.Quilo;
-                                }
-                                else if (model.UnidadeMedida.ToUpper() == "MT")
-                                {
-                                    model.ValorPadrao = (decimal)Enums.ValorPadraoUnidade.Metro;
-                                }
-                                else
-                                {
-                                    ModelState.AddModelError("", "UNIDADE DE MEDIDA INVÁLIDA.");
-                                }
-                            }
-                            else
-                            {
-                                ModelState.AddModelError("", "UNIDADE DE MEDIDA NÃO ENCONTRADA.");
-                            }
-                        }
-                    }
-
-                    //Se Não encontrou na tabela ainda, tentar encontar sem o reduzido na combinação - [Tipo prod, Tecnologia, Artigo e UM]
-                    if (model.TamanhoPadrao == null || model.TamanhoPadrao.Count() == 0)
-                    {
-                        model.TamanhoPadrao = ctxTI.REGRA_PADRAO.Where(x => x.STATUS == true && x.TIPO_PRODUTO == "A" &&
-                                                                            x.ARTIGO == model.Artigo &&
-                                                                            x.TECNOLOGIA == model.Tecnologia && 
-                                                                            x.UM == model.UnidadeMedida
-                                                                    ).OrderByDescending(x => x.PADRAO).ToList();
-                    }
-
-                    //Se Não encontrou na tabela ainda, tentar encontar sem o reduzido na combinação - [Tipo prod, Tecnologia e UM]
-                    if (model.TamanhoPadrao == null || model.TamanhoPadrao.Count() == 0)
-                    {
-                        model.TamanhoPadrao = ctxTI.REGRA_PADRAO.Where(x => x.STATUS == true && x.TIPO_PRODUTO == "A" &&                                                                            
-                                                                            x.TECNOLOGIA == model.Tecnologia && 
-                                                                            x.UM == model.UnidadeMedida &&
-                                                                            x.ARTIGO == null
-                                                                    ).OrderByDescending(x => x.PADRAO).ToList();
-                    }
-
-                    //Se Não encontrou na tabela ainda, tentar encontar sem o reduzido na combinação - [Tipo prod, UM]
-                    if (model.TamanhoPadrao == null || model.TamanhoPadrao.Count() == 0)
-                    {
-                        model.TamanhoPadrao = ctxTI.REGRA_PADRAO.Where(x => x.STATUS == true && x.TIPO_PRODUTO == "A" &&
-                                                                            x.UM == model.UnidadeMedida &&
-                                                                            x.ARTIGO == null
-                                                                      ).OrderByDescending(x => x.PADRAO).ToList();
-                    }
-
-                    //Se Não encontrou AINDA na tabela, PEGA O PRIMEIRO VALOR APENAS DO TIPO DE PRODUTO e mesma UM
-                    if (model.TamanhoPadrao == null || model.TamanhoPadrao.Count() == 0)
-                    {
-                        model.TamanhoPadrao = ctxTI.REGRA_PADRAO.Where(x => x.STATUS == true && x.TIPO_PRODUTO == "A" && 
-                                                                            //x.TECNOLOGIA == "X" &&  
-                                                                            //x.ARTIGO == null &&
-                                                                            x.UM == model.UnidadeMedida
-                                                                       ).OrderByDescending(x => x.PADRAO).ToList();
-                    }
-                }
-            }
-        }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult InserirNoCarrinho(InserirNoCarrinhoViewModel model)
         {
             bool hasErrors = false;
             ViewBag.POGReduzido = model.Reduzido;
+
+
             try
             {
                 if (ModelState.IsValid)
@@ -748,6 +644,8 @@ namespace Dalutex.Controllers
                         }
 
                         CarregarTamanhosPadrao(model);
+                        ObterPrevisaoEntrega(model);
+                        model.NumeroMaximoDiasDataSolicitacao = int.Parse(ConfigurationManager.AppSettings["DIAS_DATA_SOLICITACAO"]);
 
                         return View(model);
                     } 
@@ -788,28 +686,20 @@ namespace Dalutex.Controllers
                         }
                     }
 
-                    
-                    if (model.Tipo != Enums.ItemType.Reserva)
+
+                    ObterPrevisaoEntrega(model);
+
+                    if (model.DtItemSolicitada < model.DataEntregaItem || model.DataEntregaItem.AddDays(int.Parse(ConfigurationManager.AppSettings["DIAS_DATA_SOLICITACAO"])) < model.DtItemSolicitada)
                     {
-                        using (var ctx = new TIDalutexContext())
+                        ModelState.AddModelError("", "Data de entrega solicitada inválida.");
+                        if (base.Session_Carrinho == null || base.Session_Carrinho.IDTipoPedido < 0)
                         {
-                            int iID_DISP = ctx.DISPONIBILIDADE_MALHA
-                                                    .OrderByDescending(x => x.ID_DISP)
-                                                    .First()
-                                                    .ID_DISP;
-
-                            DISPONIBILIDADE_MALHA objDisponibilidade = ctx.DISPONIBILIDADE_MALHA
-                                                    .Where(x => x.ARTIGO == model.Artigo && x.MAQUINA == model.Tecnologia && x.ID_DISP == iID_DISP)
-                                                    .FirstOrDefault();
-
-                            if (objDisponibilidade != null && objDisponibilidade.DISPONIBILIDADE_PCP != null)
-                                model.DataEntregaItem = (DateTime)objDisponibilidade.DISPONIBILIDADE_PCP;
-                            else
-                                model.DataEntregaItem = DateTime.Today.AddYears(1);
-
-                            if (base.Session_Carrinho.DataEntrega < model.DataEntregaItem)
-                                base.Session_Carrinho.DataEntrega = model.DataEntregaItem;
+                            model.ObterTipoPedido = "S";
+                            this.CarregarTiposPedidos(model);
                         }
+                        this.CarregarTamanhosPadrao(model);
+
+                        return View(model);
                     }
 
                     if (model.Modo == "I")//Inclusão
@@ -896,6 +786,142 @@ namespace Dalutex.Controllers
                 this.CarregarTiposPedidos(model);
             }
             return View(model);
+        }
+
+        private void CarregarTamanhosPadrao(InserirNoCarrinhoViewModel model)
+        {
+            using (var ctxTI = new TIDalutexContext())
+            {
+                if (model.Reduzido > -2) //se tem reduzido
+                {
+                    int _pi = 0;
+
+                    model.UnidadeMedida = ctxTI.VW_PI_RED.Where(x => x.REDUZIDO == model.Reduzido).FirstOrDefault().UM;
+
+                    // pega o PI do cadastro do SGT para o reduzido.
+                    _pi = ctxTI.VW_PI_RED.Where(x => x.REDUZIDO == model.Reduzido).FirstOrDefault().PI;
+
+                    //Tenta pegar agora a combinação do reduzido + PI na tabela de padrões
+                    model.TamanhoPadrao = ctxTI.REGRA_PADRAO.Where(x => x.STATUS == true && x.REDUZIDO == model.Reduzido && x.ID_PROCESSO == _pi).OrderByDescending(x => x.PADRAO).ToList();
+
+                    //Se não encontrou, tenta encontar apenas pelo reduzido
+                    if (model.TamanhoPadrao == null || model.TamanhoPadrao.Count() == 0)
+                    {
+                        model.TamanhoPadrao = ctxTI.REGRA_PADRAO.Where(x => x.STATUS == true && x.REDUZIDO == model.Reduzido &&
+                                                                            x.ID_PROCESSO == null).OrderByDescending(x => x.PADRAO).ToList();
+                    }
+
+                    //Não encontrou na tabela, tentar encontar sem o reduzido - [Tipo prod, Tec, Artigo e PI]
+                    if (model.TamanhoPadrao == null || model.TamanhoPadrao.Count() == 0)
+                    {
+                        model.TamanhoPadrao = ctxTI.REGRA_PADRAO.Where(x => x.STATUS == true && x.TIPO_PRODUTO == "A" &&
+                                                                            x.ARTIGO == model.Artigo &&
+                                                                            x.TECNOLOGIA == model.Tecnologia &&
+                                                                            x.ID_PROCESSO == _pi
+                                                                    ).OrderByDescending(x => x.PADRAO).ToList();
+                    }
+                }
+                if ((model.Reduzido == -2) || (model.TamanhoPadrao == null) || (model.TamanhoPadrao.Count() == 0))
+                {
+                    //Verifica se pegou a UM, se não procura a Unoida de Medida do itens estoque-----
+                    if (model.UnidadeMedida == null)
+                    {
+                        VMASCARAPRODUTOACABADO objValorPadraoView = null;
+
+                        using (var ctx = new DalutexContext())
+                        {
+                            objValorPadraoView = ctx.VMASCARAPRODUTOACABADO.Where(x => x.ARTIGO == model.Artigo).FirstOrDefault();
+                            if (objValorPadraoView != null)
+                            {
+                                model.UnidadeMedida = objValorPadraoView.UM;
+                                if (model.UnidadeMedida.ToUpper() == "KG")
+                                {
+                                    model.ValorPadrao = (decimal)Enums.ValorPadraoUnidade.Quilo;
+                                }
+                                else if (model.UnidadeMedida.ToUpper() == "MT")
+                                {
+                                    model.ValorPadrao = (decimal)Enums.ValorPadraoUnidade.Metro;
+                                }
+                                else
+                                {
+                                    ModelState.AddModelError("", "UNIDADE DE MEDIDA INVÁLIDA.");
+                                }
+                            }
+                            else
+                            {
+                                ModelState.AddModelError("", "UNIDADE DE MEDIDA NÃO ENCONTRADA.");
+                            }
+                        }
+                    }
+
+                    //Se Não encontrou na tabela ainda, tentar encontar sem o reduzido na combinação - [Tipo prod, Tecnologia, Artigo e UM]
+                    if (model.TamanhoPadrao == null || model.TamanhoPadrao.Count() == 0)
+                    {
+                        model.TamanhoPadrao = ctxTI.REGRA_PADRAO.Where(x => x.STATUS == true && x.TIPO_PRODUTO == "A" &&
+                                                                            x.ARTIGO == model.Artigo &&
+                                                                            x.TECNOLOGIA == model.Tecnologia &&
+                                                                            x.UM == model.UnidadeMedida
+                                                                    ).OrderByDescending(x => x.PADRAO).ToList();
+                    }
+
+                    //Se Não encontrou na tabela ainda, tentar encontar sem o reduzido na combinação - [Tipo prod, Tecnologia e UM]
+                    if (model.TamanhoPadrao == null || model.TamanhoPadrao.Count() == 0)
+                    {
+                        model.TamanhoPadrao = ctxTI.REGRA_PADRAO.Where(x => x.STATUS == true && x.TIPO_PRODUTO == "A" &&
+                                                                            x.TECNOLOGIA == model.Tecnologia &&
+                                                                            x.UM == model.UnidadeMedida &&
+                                                                            x.ARTIGO == null
+                                                                    ).OrderByDescending(x => x.PADRAO).ToList();
+                    }
+
+                    //Se Não encontrou na tabela ainda, tentar encontar sem o reduzido na combinação - [Tipo prod, UM]
+                    if (model.TamanhoPadrao == null || model.TamanhoPadrao.Count() == 0)
+                    {
+                        model.TamanhoPadrao = ctxTI.REGRA_PADRAO.Where(x => x.STATUS == true && x.TIPO_PRODUTO == "A" &&
+                                                                            x.UM == model.UnidadeMedida &&
+                                                                            x.ARTIGO == null
+                                                                      ).OrderByDescending(x => x.PADRAO).ToList();
+                    }
+
+                    //Se Não encontrou AINDA na tabela, PEGA O PRIMEIRO VALOR APENAS DO TIPO DE PRODUTO e mesma UM
+                    if (model.TamanhoPadrao == null || model.TamanhoPadrao.Count() == 0)
+                    {
+                        model.TamanhoPadrao = ctxTI.REGRA_PADRAO.Where(x => x.STATUS == true && x.TIPO_PRODUTO == "A" &&
+                            //x.TECNOLOGIA == "X" &&  
+                            //x.ARTIGO == null &&
+                                                                            x.UM == model.UnidadeMedida
+                                                                       ).OrderByDescending(x => x.PADRAO).ToList();
+                    }
+                }
+            }
+        }
+
+        private void ObterPrevisaoEntrega(InserirNoCarrinhoViewModel model)
+        {
+            if (model.Tipo != Enums.ItemType.Reserva)
+            {
+                model.NumeroMaximoDiasDataSolicitacao = int.Parse(ConfigurationManager.AppSettings["DIAS_DATA_SOLICITACAO"]);
+
+                using (var ctx = new TIDalutexContext())
+                {
+                    int iID_DISP = ctx.DISPONIBILIDADE_MALHA
+                                            .OrderByDescending(x => x.ID_DISP)
+                                            .First()
+                                            .ID_DISP;
+
+                    DISPONIBILIDADE_MALHA objDisponibilidade = ctx.DISPONIBILIDADE_MALHA
+                                            .Where(x => x.ARTIGO == model.Artigo && x.MAQUINA == model.Tecnologia && x.ID_DISP == iID_DISP)
+                                            .FirstOrDefault();
+
+                    if (objDisponibilidade != null && objDisponibilidade.DISPONIBILIDADE_PCP != null)
+                        model.DataEntregaItem = (DateTime)objDisponibilidade.DISPONIBILIDADE_PCP;
+                    else
+                        model.DataEntregaItem = DateTime.Today.AddYears(1);
+
+                    if (base.Session_Carrinho != null && base.Session_Carrinho.DataEntrega < model.DataEntregaItem)
+                        base.Session_Carrinho.DataEntrega = model.DataEntregaItem;
+                }
+            }
         }
 
         [HttpPost]
@@ -1517,8 +1543,12 @@ namespace Dalutex.Controllers
                     using (var ctx = new TIDalutexContext())
                     {
                         PROXIMO_NUMERO_PEDIDO reservar = ctx.PROXIMO_NUMERO_PEDIDO.Where(x => x.DISPONIVEL == 0).OrderBy(x => x.NUMERO_PEDIDO).First();
+                        
                         iNUMERO_PEDIDO_BLOCO = reservar.NUMERO_PEDIDO;
+
                         reservar.DISPONIVEL = 1;
+                        reservar.ROTINA = 2;                        
+                        reservar.DATA_RESERVA_SID = DateTime.Today;
                         ctx.SaveChanges();
                     }
                 }
@@ -1628,7 +1658,7 @@ namespace Dalutex.Controllers
                                 PRE_PEDIDO_ITENS objItem = new PRE_PEDIDO_ITENS()
                                 {
                                     ARTIGO = item.Artigo,
-                                    COR = item.Cor,
+                                    COR = item.Cor,                         //todo: verificar se qdo for exclusivo (validação de reserva), gravar o "E";
                                     DATA_ENTREGA = item.DataEntregaItem,
                                     DESENHO = item.Desenho,
                                     ITEM = i,
@@ -1636,7 +1666,7 @@ namespace Dalutex.Controllers
                                     NUMERO_PEDIDO_BLOCO = iNUMERO_PEDIDO_BLOCO,
                                     PE = "N",
                                     PRECO_UNIT = item.Preco,
-                                    PRECOLISTA = item.PrecoTabela,
+                                    PRECOLISTA = item.PrecoTabela, //todo: verificar pq não esta chegando valor aki; 0 se for nulo
                                     QTDEPC = item.Pecas,
                                     QUANTIDADE = item.Quantidade,
                                     REDUZIDO_ITEM = item.Reduzido,
@@ -1645,6 +1675,13 @@ namespace Dalutex.Controllers
                                     VARIANTE = item.Variante,
                                     COD_COMPOSE = item.Compose,
                                     ORIGEM = origem,
+
+                                    // oda -- 26/11/2015 ---- gravar informações faltando dos itens ------
+                                    MALHA_PLANO = item.UnidadeMedida == "MT"? "P": "M",
+                                    MODA_DECORACAO = "M",
+                                    DATA_ENTREGA_DIGI = item.DtItemSolicitada, 
+                                    ID_TAB_PRECO = -1, //todo: apontar este campo para ID correto em caso de este existir
+                                    PRECODIGITADOMOEDA = 0, //todo: apontar este campo para preco correto em caso de este existir                                    
                                 };
 
                                 if (item.Tipo == Enums.ItemType.ValidacaoReserva || item.Tipo == Enums.ItemType.Estampado)
@@ -2409,7 +2446,7 @@ namespace Dalutex.Controllers
                                     x =>
                                     (model.FiltroRepresentante == null || x.REPRESENTANTE.StartsWith(model.FiltroRepresentante.ToUpper()))
                                     &&
-                                    (model.FiltroCliente == null || x.CLIENTE.StartsWith(model.FiltroCliente.ToUpper()))
+                                    (model.FiltroCliente == null || x.CLIENTE.Contains(model.FiltroCliente.ToUpper()))
                                     &&
                                     (model.FiltroCodDal == null || x.COD_DAL.Contains(model.FiltroCodDal.ToUpper()))
                                     &&

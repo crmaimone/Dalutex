@@ -272,7 +272,14 @@ namespace Dalutex.Models
         public string ObterTipoPedido { get; set; }
         public int Reduzido { get; set; }
 
+        [Display(Name = "DATA DISP.")]
         public DateTime DataEntregaItem { get; set; }
+
+        [Display(Name = "DATA SOL.")]
+        public DateTime DtItemSolicitada { get; set; }
+
+        public int NumeroMaximoDiasDataSolicitacao { get; set; }
+
         public string Modo { get; set; } //I= Inclusão A=Alteração
         public Enums.ItemType Tipo { get; set; }
 

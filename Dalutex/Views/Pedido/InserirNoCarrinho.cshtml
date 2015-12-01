@@ -286,6 +286,7 @@
             $('.input-group.date').datepicker({
                 startDate: "@Model.DataEntregaItem.ToString("dd/MM/yyyy")",
                 endDate: "@Model.DataEntregaItem.AddDays(Model.NumeroMaximoDiasDataSolicitacao).ToString("dd/MM/yyyy")",
+                @*endDate: Date().AddDays(@Model.NumeroMaximoDiasDataSolicitacao).ToString("dd/MM/yyyy"),*@
                 format: "dd/mm/yyyy",
                 todayBtn: true,
                 clearBtn: true,

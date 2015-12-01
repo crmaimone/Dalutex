@@ -74,6 +74,10 @@
                             @if (Model.Tipo == Enums.ItemType.Estampado || Model.Tipo == Enums.ItemType.ValidacaoReserva)
                             {
                                 <div><strong>Previsão de entrega:</strong>&nbsp;@Model.DataEntregaItem.ToString("d")</div>
+
+                                <div><strong>Data Solicitada:</strong>&nbsp;@Model.DtItemSolicitada.ToString("d")</div>
+                                <div><strong>Coleção:</strong>&nbsp;@Model.NMColecao</div>
+
                                 <div><strong>Quantidade:</strong>&nbsp;@Model.Quantidade&nbsp;@Model.UnidadeMedida</div>
                                 <div><strong>Total:</strong>&nbsp;@Model.ValorTotalItem.ToString("c")</div>
                             }                                                                                   

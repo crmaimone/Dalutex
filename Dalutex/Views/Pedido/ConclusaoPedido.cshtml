@@ -2,7 +2,7 @@
 @using Dalutex.Models;
 
 @{
-    ViewBag.Title = "CONCLUSÃO DE PEDIDO";
+    ViewBag.Title = "CONCLUSÃO DE PEDIDO" ;
 }
 @Styles.Render("~/Content/bootstrap-table")
 
@@ -17,7 +17,7 @@
                     {
                         @Html.AntiForgeryToken()
 
-                        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                        @Html.ValidationSummary(false, "", new { @class = "text-danger" })                                                
 
                         <div class="table-responsive">
                             <table class="table">
@@ -29,6 +29,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <tr>
+                                        <td style="padding-top:0px">@Html.LabelFor(x => x.DescTipoPedido, new { @class = "control-label" }):&nbsp;</td>
+                                        <td colspan="2"> @Model.DescTipoPedido </td>
+                                    </tr>
+
                                     <tr>
                                         <td>@Html.LabelFor(x => x.Representante):&nbsp;</td>
                                         <td><a href="@Url.Action("Representantes", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a></td>

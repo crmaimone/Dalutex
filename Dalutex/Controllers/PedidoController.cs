@@ -996,7 +996,7 @@ namespace Dalutex.Controllers
             model.CanailVenda = base.Session_Carrinho.CanailVenda;
             model.ViaTransporte = base.Session_Carrinho.ViaTransporte;
             model.Frete = base.Session_Carrinho.Frete;
-            model.TipoAtendimento = base.Session_Carrinho.TipoAtendimento;
+            model.TipoAtendimento = base.Session_Carrinho.TipoAtendimento;            
 
             return model;
         }
@@ -1010,10 +1010,17 @@ namespace Dalutex.Controllers
                 model.IDTipoPedido = base.Session_Carrinho.IDTipoPedido;
                 if (base.Session_Carrinho.Itens != null)
                 {
+                    decimal totalPedido = 0;
                     base.Session_Carrinho.Itens.ForEach(delegate(InserirNoCarrinhoViewModel item)
                     {
-                        model.TotalPedido = base.Session_Carrinho.TotalPedido += item.ValorTotalItem;
+                        totalPedido += item.ValorTotalItem;
                     });
+                    model.TotalPedido = base.Session_Carrinho.TotalPedido = totalPedido;
+                }
+
+                using (var ctx = new DalutexContext())
+                {
+                    model.DescTipoPedido = ctx.COML_TIPOSPEDIDOS.Find(model.IDTipoPedido).DESCRICAO.Trim();
                 }
 
                 ConclusaoPedidoCarregarEscolhas(model);
@@ -1572,12 +1579,16 @@ namespace Dalutex.Controllers
                     USUARIO_INICIO = base.Session_Usuario.NOME_USU,
                     DATA_INICIO = DateTime.Now,
                     DATA_FINAL = DateTime.Now,
-                    ID_LOCAL = base.Session_Carrinho.IDLocaisVenda,
+
+                    ID_LOCAL = (base.Session_Carrinho.IDLocaisVenda == null ? 5 : base.Session_Carrinho.IDLocaisVenda),//todo: verificar com marcio se precisa de uma view para este tipo
+                    
                     COD_MOEDA = base.Session_Carrinho.Moeda.CODIGOMOEDA,
                     CANAL_VENDAS = base.Session_Carrinho.CanailVenda.CANAL_VENDA,
                     ATENDIMENTO = base.Session_Carrinho.TipoAtendimento.COD_ATEND,
                     TIPOFRETE = base.Session_Carrinho.Frete.TIPOFRETE,
+
                     //GERENTE = model.IDGerentesVenda,// não é necessario gravar neste campo para pedidos <> de PE
+                    
                     VIATRANSPORTE = base.Session_Carrinho.ViaTransporte.VIATRANSPORTE,
                     COMISSAO = Session_Carrinho.PorcentagemComissao,
                     ORIGEM = "PW", // APENAS PRA INFORMAR QUE ESTE PEDIDO VEIO DO PEDIDO WEB NOVO. 
@@ -1655,10 +1666,25 @@ namespace Dalutex.Controllers
                                     ctx.SaveChanges();
                                 }
 
+
+                                string _cor ;
+                                if (item.Tipo == Enums.ItemType.ValidacaoReserva)
+                                {
+                                    _cor = "E000000";
+                                }
+                                else if (item.Cor == null) 
+                                {
+                                     _cor = "0000000";
+                                }
+                                else
+                                {
+                                    _cor = item.Cor;
+                                }
+
                                 PRE_PEDIDO_ITENS objItem = new PRE_PEDIDO_ITENS()
                                 {
                                     ARTIGO = item.Artigo,
-                                    COR = item.Cor,                         //todo: verificar se qdo for exclusivo (validação de reserva), gravar o "E";
+                                    COR = _cor,                         
                                     DATA_ENTREGA = item.DataEntregaItem,
                                     DESENHO = item.Desenho,
                                     ITEM = i,
@@ -1666,7 +1692,7 @@ namespace Dalutex.Controllers
                                     NUMERO_PEDIDO_BLOCO = iNUMERO_PEDIDO_BLOCO,
                                     PE = "N",
                                     PRECO_UNIT = item.Preco,
-                                    PRECOLISTA = item.PrecoTabela, //todo: verificar pq não esta chegando valor aki; 0 se for nulo
+                                    PRECOLISTA = (item.PrecoTabela == null ? 0 : item.PrecoTabela), 
                                     QTDEPC = item.Pecas,
                                     QUANTIDADE = item.Quantidade,
                                     REDUZIDO_ITEM = item.Reduzido,
@@ -1679,8 +1705,8 @@ namespace Dalutex.Controllers
                                     // oda -- 26/11/2015 ---- gravar informações faltando dos itens ------
                                     MALHA_PLANO = item.UnidadeMedida == "MT"? "P": "M",
                                     MODA_DECORACAO = "M",
-                                    DATA_ENTREGA_DIGI = item.DtItemSolicitada, 
-                                    ID_TAB_PRECO = -1, //todo: apontar este campo para ID correto em caso de este existir
+                                    DATA_ENTREGA_DIGI = item.DtItemSolicitada,
+                                    ID_TAB_PRECO = -1,      //todo: se nulop, -1
                                     PRECODIGITADOMOEDA = 0, //todo: apontar este campo para preco correto em caso de este existir                                    
                                 };
 

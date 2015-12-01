@@ -398,7 +398,7 @@ namespace Dalutex.Models
                 CanailVenda = ctxDalutex.CANAIS_VENDA.Find(1);//MERCADO INTERNO
                 ViaTransporte = ctxDalutex.COML_VIASTRANSPORTE.Find(1);//RODOVIARIA
                 Frete = ctxDalutex.COML_TIPOSFRETE.Find(2);//FOB;
-                Moeda = ctxDalutex.CADASTRO_MOEDAS.Find((int)Enums.Moedas.Real);
+                Moeda = ctxDalutex.CADASTRO_MOEDAS.Find((int)Enums.Moedas.Real);                              
             }
 
             PorcentagemComissao = 4; //ALTERAR CONFORME O TIPO DE COLEÇÂO
@@ -443,6 +443,9 @@ namespace Dalutex.Models
 
         [Display(Name = "Pedido do Cliente")]
         public int? PedidoCliente { get; set; }
+
+        [Display(Name = "Tipo de Pedido")]
+        public string DescTipoPedido { get; set; }
 
         #endregion
 

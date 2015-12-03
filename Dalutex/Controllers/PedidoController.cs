@@ -1031,6 +1031,75 @@ namespace Dalutex.Controllers
                 ViewBag.CarrinhoVazio = true;
             }
 
+
+            //oda-- 03/12/2015 --- acertar a data dos itens pelo tipo de atendimento ---------------------------
+            
+
+            if (model.TipoAtendimento.COD_ATEND.Equals((int)Enums.TiposAtendimento.EstampaCompleta))
+            {
+                List<KeyValuePair<string, DateTime>> lstConsolidada = base.Session_Carrinho.Itens
+                                    .GroupBy(g => g.Desenho)
+                                    .Select(consolidado => new KeyValuePair<string, DateTime>(consolidado.First().Desenho, consolidado.Max(s => s.DtItemSolicitada)))
+                                    .ToList();
+    
+                foreach (KeyValuePair<string, DateTime> item in lstConsolidada)
+                {
+                    foreach (InserirNoCarrinhoViewModel it in Session_Carrinho.Itens)
+                    {   
+                        if (it.Desenho == item.Key)
+                        {
+                            it.DtItemSolicitada = item.Value;
+                        }                        
+                    }
+                }                
+            }
+            else if (model.TipoAtendimento.COD_ATEND.Equals((int)Enums.TiposAtendimento.PedidoCompleto))
+            {
+                List<KeyValuePair<string, DateTime>> lstConsolidada = base.Session_Carrinho.Itens
+                     .GroupBy(g => g.Artigo).Select(consolidado => new KeyValuePair<string, DateTime>(consolidado.First().Artigo, consolidado.Max(s => s.DtItemSolicitada))).ToList();
+
+                foreach (KeyValuePair<string, DateTime> item in lstConsolidada)
+                {
+                    foreach (InserirNoCarrinhoViewModel it in Session_Carrinho.Itens)
+                    {                        
+                        it.DtItemSolicitada = item.Value;                        
+                    }
+                } 
+            }
+            else if (model.TipoAtendimento.COD_ATEND.Equals((int)Enums.TiposAtendimento.CompletoPorArtigo))
+            {
+                List<KeyValuePair<string, DateTime>> lstConsolidada = base.Session_Carrinho.Itens
+                     .GroupBy(g => g.Artigo).Select(consolidado => new KeyValuePair<string, DateTime>(consolidado.First().Artigo, consolidado.Max(s => s.DtItemSolicitada))).ToList();
+
+                foreach (KeyValuePair<string, DateTime> item in lstConsolidada)
+                {
+                    foreach (InserirNoCarrinhoViewModel it in Session_Carrinho.Itens)
+                    {
+                        if (it.Artigo == item.Key)
+                        {
+                            it.DtItemSolicitada = item.Value;
+                        }
+                    }
+                }
+            }
+            else if (model.TipoAtendimento.COD_ATEND.Equals((int)Enums.TiposAtendimento.ArtigoCompose))
+            {
+                List<KeyValuePair<int, DateTime>> lstConsolidada = base.Session_Carrinho.Itens
+                     .GroupBy(g => g.Compose).Select(consolidado => new KeyValuePair<int, DateTime>(consolidado.First().Compose, consolidado.Max(s => s.DtItemSolicitada))).ToList();
+
+                foreach (KeyValuePair<int, DateTime> item in lstConsolidada)
+                {
+                    foreach (InserirNoCarrinhoViewModel it in Session_Carrinho.Itens)
+                    {
+                        if (it.Compose == item.Key)
+                        {
+                            it.DtItemSolicitada = item.Value;
+                        }
+                    }
+                }
+            }
+
+            
             return View(model);
         }
 
@@ -1089,45 +1158,7 @@ namespace Dalutex.Controllers
                     bool hasErrors = false;
 
                     if (model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
-                    {
-
-                        //if (model.IDCondicoesPagto <= 0 || model.IDCondicoesPagto == null)
-                        //{
-                        //    ModelState.AddModelError("", "Por favor informe a condição de pagamento.");
-                        //    hasErrors = true;
-                        //}
-                        //if (model.IDMoedas < 0 || model.IDMoedas == null)
-                        //{
-                        //    ModelState.AddModelError("", "Por favor informe a moeda.");
-                        //    hasErrors = true;
-                        //}
-                        //if (model.IDViasTransporte <= 0 || model.IDViasTransporte == null)
-                        //{
-                        //    ModelState.AddModelError("", "Por favor informe a via de transporte.");
-                        //    hasErrors = true;
-                        //}
-                        //if (model.IDFretes <= 0)
-                        //{
-                        //    ModelState.AddModelError("", "Por favor informe o tipo de frete.");
-                        //    hasErrors = true;
-                        //}
-                        //if (model.IDCanaisVenda <= 0)
-                        //{
-                        //    ModelState.AddModelError("", "Por favor informe o canal de venda.");
-                        //    hasErrors = true;
-                        //}
-                        //if (model.IDTiposAtendimento <= 0 || model.IDTiposAtendimento == null)
-                        //{
-                        //    ModelState.AddModelError("", "Por favor informe o tipo de atendimento.");
-                        //    hasErrors = true;
-                        //}
-
-                        //if (string.IsNullOrWhiteSpace(model.QualidadeComercial))
-                        //{
-                        //    ModelState.AddModelError("", "Por favor informe a qualidade comercial.");
-                        //    hasErrors = true;
-                        //}
-
+                    {                        
                         if (hasErrors)
                         {
                             this.ConclusaoPedidoCarregarEscolhas(model);

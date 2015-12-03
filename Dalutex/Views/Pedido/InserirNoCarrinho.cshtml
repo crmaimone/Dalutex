@@ -151,6 +151,9 @@
                     <input type="hidden" name="PedidoReserva" value="@Model.PedidoReserva" />
                     <input type="hidden" name="ItemPedidoReserva" value="@Model.ItemPedidoReserva" />
                     <input type="hidden" name="ObterTipoPedido" value="@Model.ObterTipoPedido" />
+                    <input type="hidden" name="DataEntregaItem" value="@Model.DataEntregaItem" />
+                    <input type="hidden" name="NumeroMaximoDiasDataSolicitacao" value="@Model.NumeroMaximoDiasDataSolicitacao" />
+
 
 
                     // TODO:
@@ -285,8 +288,7 @@
         (function Init() {
             $('.input-group.date').datepicker({
                 startDate: "@Model.DataEntregaItem.ToString("dd/MM/yyyy")",
-                endDate: "@Model.DataEntregaItem.AddDays(Model.NumeroMaximoDiasDataSolicitacao).ToString("dd/MM/yyyy")",
-                @*endDate: Date().AddDays(@Model.NumeroMaximoDiasDataSolicitacao).ToString("dd/MM/yyyy"),*@
+                endDate: "@DateTime.Today.AddDays(Model.NumeroMaximoDiasDataSolicitacao).ToString("dd/MM/yyyy")",                
                 format: "dd/mm/yyyy",
                 todayBtn: true,
                 clearBtn: true,

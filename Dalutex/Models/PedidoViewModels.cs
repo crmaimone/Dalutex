@@ -276,6 +276,7 @@ namespace Dalutex.Models
         public DateTime DataEntregaItem { get; set; }
 
         [Display(Name = "DATA SOL.")]
+        [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public DateTime DtItemSolicitada { get; set; }
 
         public int NumeroMaximoDiasDataSolicitacao { get; set; }

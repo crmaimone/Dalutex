@@ -153,8 +153,8 @@
                     <th data-field="Preco" data-sortable="true" data-formatter="scriptWrapper.currencyFormatter">Unit.</th>
                     <th data-field="ValorTotalItem" data-sortable="true" data-formatter="scriptWrapper.currencyFormatter">Sub total</th>
 
-                    <th data-field="DataEntregaItem" data-sortable="true">Prev. entrega</th>                   
-                    <th data-field="DtItemSolicitada" data-sortable="true">Data Solicitada</th> 
+                    <th data-field="DataEntregaItem" data-sortable="true" data-formatter="scriptWrapper.dateFormatter">Prev. entrega</th>                   
+                    <th data-field="DtItemSolicitada" data-sortable="true" data-formatter="scriptWrapper.dateFormatter">Data Solicitada</th>                                         
                 </tr>
             </thead>
             <tfoot>
@@ -200,10 +200,22 @@
                     }
                 }
 
+                dateFormatter = function (value) {
+                    if (value != null) {
+                        var data = new Date(value.match(/\d+/)[0] * 1);
+
+                        return data.getDate() + "/" + (data.getMonth() + 1) + "/" + data.getFullYear();
+                    }
+                    else {
+                        return '-';
+                    }
+                }
+
                 // public API
                 return {
                     lstCanais_Change: lstCanais_Change,
-                    currencyFormatter: currencyFormatter
+                    currencyFormatter: currencyFormatter,
+                    dateFormatter: dateFormatter
                 };
             })();
 

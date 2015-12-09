@@ -796,29 +796,41 @@ namespace Dalutex.Controllers
                 {
                     int _pi = 0;
 
-                    model.UnidadeMedida = ctxTI.VW_PI_RED.Where(x => x.REDUZIDO == model.Reduzido).FirstOrDefault().UM;
+                    VW_PI_RED objvw_pi_red = null;
 
-                    // pega o PI do cadastro do SGT para o reduzido.
-                    _pi = ctxTI.VW_PI_RED.Where(x => x.REDUZIDO == model.Reduzido).FirstOrDefault().PI;
+                    objvw_pi_red = ctxTI.VW_PI_RED.Where(x => x.REDUZIDO == model.Reduzido).FirstOrDefault();
 
-                    //Tenta pegar agora a combinação do reduzido + PI na tabela de padrões
-                    model.TamanhoPadrao = ctxTI.REGRA_PADRAO.Where(x => x.STATUS == true && x.REDUZIDO == model.Reduzido && x.ID_PROCESSO == _pi).OrderByDescending(x => x.PADRAO).ToList();
-
-                    //Se não encontrou, tenta encontar apenas pelo reduzido
-                    if (model.TamanhoPadrao == null || model.TamanhoPadrao.Count() == 0)
+                    if (objvw_pi_red == null)
                     {
-                        model.TamanhoPadrao = ctxTI.REGRA_PADRAO.Where(x => x.STATUS == true && x.REDUZIDO == model.Reduzido &&
-                                                                            x.ID_PROCESSO == null).OrderByDescending(x => x.PADRAO).ToList();
+                        //ModelState.AddModelError("", "PI NÃO CADSATRADO PARA O REDUZIDO. FAVOR VERIFICAR COM A ENGENHARIA DE PRODUTOS.");
                     }
-
-                    //Não encontrou na tabela, tentar encontar sem o reduzido - [Tipo prod, Tec, Artigo e PI]
-                    if (model.TamanhoPadrao == null || model.TamanhoPadrao.Count() == 0)
+                    else
                     {
-                        model.TamanhoPadrao = ctxTI.REGRA_PADRAO.Where(x => x.STATUS == true && x.TIPO_PRODUTO == "A" &&
-                                                                            x.ARTIGO == model.Artigo &&
-                                                                            x.TECNOLOGIA == model.Tecnologia &&
-                                                                            x.ID_PROCESSO == _pi
-                                                                    ).OrderByDescending(x => x.PADRAO).ToList();
+                        //model.UnidadeMedida = ctxTI.VW_PI_RED.Where(x => x.REDUZIDO == model.Reduzido).FirstOrDefault().UM; 
+                        model.UnidadeMedida = objvw_pi_red.UM;
+
+                        // pega o PI do cadastro do SGT para o reduzido.
+                        _pi = ctxTI.VW_PI_RED.Where(x => x.REDUZIDO == model.Reduzido).FirstOrDefault().PI;
+
+                        //Tenta pegar agora a combinação do reduzido + PI na tabela de padrões
+                        model.TamanhoPadrao = ctxTI.REGRA_PADRAO.Where(x => x.STATUS == true && x.REDUZIDO == model.Reduzido && x.ID_PROCESSO == _pi).OrderByDescending(x => x.PADRAO).ToList();
+
+                        //Se não encontrou, tenta encontar apenas pelo reduzido
+                        if (model.TamanhoPadrao == null || model.TamanhoPadrao.Count() == 0)
+                        {
+                            model.TamanhoPadrao = ctxTI.REGRA_PADRAO.Where(x => x.STATUS == true && x.REDUZIDO == model.Reduzido &&
+                                                                                x.ID_PROCESSO == null).OrderByDescending(x => x.PADRAO).ToList();
+                        }
+
+                        //Não encontrou na tabela, tentar encontar sem o reduzido - [Tipo prod, Tec, Artigo e PI]
+                        if (model.TamanhoPadrao == null || model.TamanhoPadrao.Count() == 0)
+                        {
+                            model.TamanhoPadrao = ctxTI.REGRA_PADRAO.Where(x => x.STATUS == true && x.TIPO_PRODUTO == "A" &&
+                                                                                x.ARTIGO == model.Artigo &&
+                                                                                x.TECNOLOGIA == model.Tecnologia &&
+                                                                                x.ID_PROCESSO == _pi
+                                                                        ).OrderByDescending(x => x.PADRAO).ToList();
+                        }
                     }
                 }
                 if ((model.Reduzido == -2) || (model.TamanhoPadrao == null) || (model.TamanhoPadrao.Count() == 0))
@@ -1272,14 +1284,25 @@ namespace Dalutex.Controllers
                         {
                             if (model.IDTipoPedido == (int)Enums.TiposPedido.VENDA)
                             {
-                                //foreach (InserirNoCarrinhoViewModel item in base.Session_Carrinho.Itens)
-                                List<KeyValuePair<string, decimal>> lstGrupoDesenho = base.Session_Carrinho.Itens
-                                  .GroupBy(g => g.Desenho + g.UnidadeMedida + g.Tecnologia.Substring(0, 1) + g.IDGrupoColecao + g.TecnologiaOriginal)
-                                  .Select(consolidado => new KeyValuePair<string, decimal>(
-                                      consolidado.First().Desenho + consolidado.First().UnidadeMedida + consolidado.First().Tecnologia.Substring(0, 1) + consolidado.First().IDGrupoColecao + consolidado.First().TecnologiaOriginal, 
-                                      consolidado.Sum(s => s.Quantidade))).ToList();
+                                foreach (InserirNoCarrinhoViewModel item in base.Session_Carrinho.Itens)
+                                {
+                                    if(item.Desenho == null)
+                                    {
+                                        item.Desenho = "0000";
+                                    }
+                                }
 
-                                //Desenho       = 0,4    A616MTD2CILINDRO, 400
+                                List<KeyValuePair<string, decimal>> lstGrupoDesenho = base.Session_Carrinho.Itens
+                                    .GroupBy(g => g.Desenho + g.UnidadeMedida + g.Tecnologia.Substring(0, 1) + g.IDGrupoColecao + g.TecnologiaOriginal)
+                                    .Select(consolidado => new KeyValuePair<string, decimal>(consolidado.First().Desenho + 
+                                                                                             consolidado.First().UnidadeMedida + 
+                                                                                             consolidado.First().Tecnologia.Substring(0, 1) + 
+                                                                                             consolidado.First().IDGrupoColecao + 
+                                                                                             consolidado.First().TecnologiaOriginal, 
+                                                                                             consolidado.Sum(s => s.Quantidade))
+                                                                                             ).ToList();
+
+                                //Desenho       = 0,4    A616MTD2C, 400
                                 //UnidadeMedida = 4,2 
                                 //Tecnologia    = 6,1  
                                 //IDColecao     = 7,1
@@ -1297,86 +1320,90 @@ namespace Dalutex.Controllers
 
                                 foreach (KeyValuePair<string, decimal> item in lstGrupoDesenho)
                                 {
-                                    idGrCol = decimal.Parse(item.Key.Substring(7, 1));
+                                    if (item.Key.Substring(6, 1) != "L")
+                                    {                                    
+                                        idGrCol = decimal.Parse(item.Key.Substring(7, 1));
 
-                                    //procura as qtdes max e min, pela regra 2.1: [TEC_ORIGEM + TEC_DESTI + GRUPO_COL + TIPO_PED + UM]
-                                    var qryQtdeMinMax =
-                                        from Qtde in ctx.REGRAS_QTD_PEDIDO
-                                        where
-                                               Qtde.TECNOLOGIA_DESTINO == item.Key.Substring(6, 1)
-                                            && Qtde.TECNOLOGIA == item.Key.Substring(8, 1) 
-                                            && Qtde.GRUPO_COLECAO == idGrCol
-                                            && Qtde.TIPO_PEDIDO == model.IDTipoPedido
-                                            && Qtde.UM == item.Key.Substring(4, 2)
-                                            && Qtde.EXCLUIDO == false
-                                        select
-                                            Qtde;
+                                        //procura as qtdes max e min, pela regra 2.1: [TEC_ORIGEM + TEC_DESTI + GRUPO_COL + TIPO_PED + UM]
+                                        var qryQtdeMinMax =
+                                            from Qtde in ctx.REGRAS_QTD_PEDIDO
+                                            where
+                                                   Qtde.TECNOLOGIA_DESTINO == item.Key.Substring(6, 1)
+                                                && Qtde.TECNOLOGIA == item.Key.Substring(8, 1) 
+                                                && Qtde.GRUPO_COLECAO == idGrCol
+                                                && Qtde.TIPO_PEDIDO == model.IDTipoPedido
+                                                && Qtde.UM == item.Key.Substring(4, 2)
+                                                && Qtde.EXCLUIDO == false
+                                            select
+                                                Qtde;
 
-                                     objMinMax = qryQtdeMinMax.FirstOrDefault();
+                                         objMinMax = qryQtdeMinMax.FirstOrDefault();
                                         
-                                     if (objMinMax != null)
-                                     {
-                                         MaxValue = objMinMax.QTD_MAX_DES;
-                                         MinValue = objMinMax.QTD_MIN_DES;
-                                     }
-                                     else
-                                     {
-                                         //procura as qtdes max e min, pela regra 2.2: [TEC_DESTI + TEC_DESTI+ TIPO_PED + UM]
-                                         var qryQtdeMinMax2 =
-                                             from Qtde in ctx.REGRAS_QTD_PEDIDO
-                                             where
-                                                    Qtde.TECNOLOGIA_DESTINO == item.Key.Substring(6, 1)
-                                                 && Qtde.TECNOLOGIA == item.Key.Substring(8, 1)   
-                                                 && Qtde.GRUPO_COLECAO == 0
-                                                 && Qtde.TIPO_PEDIDO == model.IDTipoPedido
-                                                 && Qtde.UM == item.Key.Substring(4, 2)
-                                                 && Qtde.EXCLUIDO == false
-                                             select
-                                                 Qtde;
-
-                                            objMinMax = qryQtdeMinMax2.FirstOrDefault();
-
-                                            if (objMinMax != null)
-                                            {
-                                                MaxValue = objMinMax.QTD_MAX_DES;
-                                                MinValue = objMinMax.QTD_MIN_DES;
-                                            }
-                                            else
-                                            {
-                                                    //procura as qtdes max e min, pela regra 2.3: [TEC_DESTI + TIPO_PED + UM]
-                                                    var qryQtdeMinMax3 =
-                                                        from Qtde in ctx.REGRAS_QTD_PEDIDO
-                                                        where
-                                                            Qtde.TECNOLOGIA_DESTINO == item.Key.Substring(6, 1)
-                                                            && Qtde.TIPO_PEDIDO == model.IDTipoPedido
-                                                            && Qtde.UM == item.Key.Substring(4, 2)
-                                                            && Qtde.EXCLUIDO == false
-                                                        select
-                                                            Qtde;
-
-                                                    objMinMax = qryQtdeMinMax3.FirstOrDefault();
-
-                                                    if (objMinMax != null)
-                                                    {
-                                                        MaxValue = objMinMax.QTD_MAX_DES;
-                                                        MinValue = objMinMax.QTD_MIN_DES;
-                                                    }
-                                            }
-                                    }                                                                      
-
-                                    //CONCLUSÃO DE VALIDAÇÃO POR DESENHO ----------
-                                    if (item.Value < MinValue)
-                                    {
-                                        ModelState.AddModelError("", "Quantidade mínima em [" + item.Key.Substring(4, 2) + "] para o desenho [ " + item.Key.Substring(0, 4) + "] em tec. [ "  + item.Key.Substring(6, 1) + " ] é " + MinValue.ToString());
-                                        isValidDes = false;
-                                    }
-                                    else if (item.Value > MaxValue)
+                                         if (objMinMax != null)
                                          {
-                                             ModelState.AddModelError("", "Quantidade Máxima em [" + item.Key.Substring(4, 2) + "] para o desenho [" + item.Key.Substring(0, 4) + "] em tec. [ " + item.Key.Substring(6, 1) + " ] é " + MinValue.ToString());
-                                                isValidDes = false;
+                                             MaxValue = objMinMax.QTD_MAX_DES;
+                                             MinValue = objMinMax.QTD_MIN_DES;
                                          }
-                                }
+                                         else
+                                         {
+                                             //procura as qtdes max e min, pela regra 2.2: [TEC_DESTI + TEC_DESTI+ TIPO_PED + UM]
+                                             var qryQtdeMinMax2 =
+                                                 from Qtde in ctx.REGRAS_QTD_PEDIDO
+                                                 where
+                                                        Qtde.TECNOLOGIA_DESTINO == item.Key.Substring(6, 1)
+                                                     && Qtde.TECNOLOGIA == item.Key.Substring(8, 1)   
+                                                     && Qtde.GRUPO_COLECAO == 0
+                                                     && Qtde.TIPO_PEDIDO == model.IDTipoPedido
+                                                     && Qtde.UM == item.Key.Substring(4, 2)
+                                                     && Qtde.EXCLUIDO == false
+                                                 select
+                                                     Qtde;
+
+                                                objMinMax = qryQtdeMinMax2.FirstOrDefault();
+
+                                                if (objMinMax != null)
+                                                {
+                                                    MaxValue = objMinMax.QTD_MAX_DES;
+                                                    MinValue = objMinMax.QTD_MIN_DES;
+                                                }
+                                                else
+                                                {
+                                                        //procura as qtdes max e min, pela regra 2.3: [TEC_DESTI + TIPO_PED + UM]
+                                                        var qryQtdeMinMax3 =
+                                                            from Qtde in ctx.REGRAS_QTD_PEDIDO
+                                                            where
+                                                                Qtde.TECNOLOGIA_DESTINO == item.Key.Substring(6, 1)
+                                                                && Qtde.TIPO_PEDIDO == model.IDTipoPedido
+                                                                && Qtde.UM == item.Key.Substring(4, 2)
+                                                                && Qtde.EXCLUIDO == false
+                                                            select
+                                                                Qtde;
+
+                                                        objMinMax = qryQtdeMinMax3.FirstOrDefault();
+
+                                                        if (objMinMax != null)
+                                                        {
+                                                            MaxValue = objMinMax.QTD_MAX_DES;
+                                                            MinValue = objMinMax.QTD_MIN_DES;
+                                                        }
+                                                }
+                                        }                                                                      
+
+                                        //CONCLUSÃO DE VALIDAÇÃO POR DESENHO ----------
+                                        if (item.Value < MinValue)
+                                        {
+                                            ModelState.AddModelError("", "Quantidade mínima em [" + item.Key.Substring(4, 2) + "] para o desenho [ " + item.Key.Substring(0, 4) + "] em tec. [ "  + item.Key.Substring(6, 1) + " ] é " + MinValue.ToString());
+                                            isValidDes = false;
+                                        }
+                                        else if (item.Value > MaxValue)
+                                             {
+                                                 ModelState.AddModelError("", "Quantidade Máxima em [" + item.Key.Substring(4, 2) + "] para o desenho [" + item.Key.Substring(0, 4) + "] em tec. [ " + item.Key.Substring(6, 1) + " ] é " + MinValue.ToString());
+                                                    isValidDes = false;
+                                             }
+                                    }
                                 
+                                }
+
                                 if (!isValidDes)
                                 {
                                     hasErrors = true;

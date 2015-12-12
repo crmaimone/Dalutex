@@ -172,5 +172,11 @@ namespace Dalutex.Models.DataModels
 
         //PEDIDO_CLIENTE
         public decimal? PEDIDO_CLIENTE { get; set; }
+
+        public decimal? IDTRANSPORTADORA { get; set; }
+
+        public string GRUPO_FACCAO { get; set; }
+
+        public decimal?  ID_CLI_FACCAO { get; set; }
     }
 }

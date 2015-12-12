@@ -94,19 +94,19 @@
               <Width>1.4466cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1.85163cm</Width>
+              <Width>1.95746cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1.54604cm</Width>
+              <Width>1.73779cm</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>0.21875cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.69927cm</Width>
+              <Width>0.58348cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1.19073cm</Width>
+              <Width>1.00552cm</Width>
             </TablixColumn>
           </TablixColumns>
           <TablixRows>
@@ -1774,18 +1774,17 @@
                 <TablixCell />
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Textbox202">
+                    <Textbox Name="ID_CLI_FACCAO">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>??????</Value>
+                              <Value>=Fields!ID_CLI_FACCAO.Value</Value>
                               <Style>
                                 <FontFamily>Verdana</FontFamily>
                                 <FontSize>7pt</FontSize>
-                                <Color>Red</Color>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -1794,7 +1793,7 @@
                           </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>Textbox202</rd:DefaultName>
+                      <rd:DefaultName>ID_CLI_FACCAO</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>Solid</Style>
@@ -1831,18 +1830,17 @@
                 <TablixCell />
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Textbox204">
+                    <Textbox Name="GRUPO_FACCAO">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>??????</Value>
+                              <Value>=Fields!GRUPO_FACCAO.Value</Value>
                               <Style>
                                 <FontFamily>Verdana</FontFamily>
                                 <FontSize>7pt</FontSize>
-                                <Color>Red</Color>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -1851,7 +1849,7 @@
                           </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>Textbox204</rd:DefaultName>
+                      <rd:DefaultName>GRUPO_FACCAO</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>Solid</Style>
@@ -2299,18 +2297,17 @@
                 <TablixCell />
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Textbox225">
+                    <Textbox Name="IDTRANSPORTADORA">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>?????</Value>
+                              <Value>=Fields!IDTRANSPORTADORA.Value</Value>
                               <Style>
                                 <FontFamily>Verdana</FontFamily>
                                 <FontSize>7pt</FontSize>
-                                <Color>Red</Color>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -2319,7 +2316,7 @@
                           </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>Textbox225</rd:DefaultName>
+                      <rd:DefaultName>IDTRANSPORTADORA</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>Solid</Style>
@@ -3174,7 +3171,6 @@
                       </Style>
                     </Textbox>
                     <ColSpan>20</ColSpan>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell />
@@ -3997,7 +3993,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Imagem</Value>
+                              <Value />
                               <Style>
                                 <FontFamily>Verdana</FontFamily>
                                 <FontSize>6pt</FontSize>
@@ -4457,6 +4453,7 @@
                       </Style>
                     </Textbox>
                     <ColSpan>3</ColSpan>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell />
@@ -4702,18 +4699,18 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Textbox244">
+                    <Textbox Name="DT_ENT_DISP_IT">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>??????</Value>
+                              <Value>=Fields!DT_ENT_DISP_IT.Value</Value>
                               <Style>
                                 <FontFamily>Verdana</FontFamily>
                                 <FontSize>6pt</FontSize>
-                                <Color>Red</Color>
+                                <Format>dd/MM/yyyy</Format>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -4722,7 +4719,7 @@
                           </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>Textbox244</rd:DefaultName>
+                      <rd:DefaultName>DT_ENT_DISP_IT</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>Solid</Style>
@@ -4750,28 +4747,28 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Textbox235">
+                    <Textbox Name="COMPOSE">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>???????</Value>
+                              <Value>=Fields!COMPOSE.Value</Value>
                               <Style>
                                 <FontFamily>Verdana</FontFamily>
-                                <FontSize>6pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
-                                <Color>Red</Color>
+                                <Color>MidnightBlue</Color>
                               </Style>
                             </TextRun>
                           </TextRuns>
                           <Style>
-                            <TextAlign>Right</TextAlign>
+                            <TextAlign>Center</TextAlign>
                           </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>Textbox235</rd:DefaultName>
+                      <rd:DefaultName>COMPOSE</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>Solid</Style>
@@ -4805,12 +4802,14 @@
                           <Source>External</Source>
                           <Value>=Parameters!PASTA_DESENHOS.Value + Fields!DESENHO.Value + "_" + Fields!VARIANTE.Value + ".JPG"</Value>
                           <Sizing>Fit</Sizing>
-                          <Left>0.02971cm</Left>
+                          <Top>0.0635cm</Top>
+                          <Left>0.06146cm</Left>
                           <Height>1.45896cm</Height>
-                          <Width>1.96325cm</Width>
+                          <Width>1.67221cm</Width>
                           <Visibility>
                             <Hidden>=IIF(Fields!LISO_ESTAMP.Value = "L",True,False)</Hidden>
                           </Visibility>
+                          <ToolTip>=Parameters!PASTA_DESENHOS.Value + Fields!DESENHO.Value + "_" + Fields!VARIANTE.Value + ".JPG"</ToolTip>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -4823,12 +4822,6 @@
                         <Border>
                           <Style>Solid</Style>
                         </Border>
-                        <TopBorder>
-                          <Style>None</Style>
-                        </TopBorder>
-                        <BottomBorder>
-                          <Style>Dashed</Style>
-                        </BottomBorder>
                         <BackgroundColor>=IIF(Fields!LISO_ESTAMP.Value = "L",Code.RetornaBackground(Fields!IMAGEM.Value),"White")</BackgroundColor>
                       </Style>
                     </Rectangle>
@@ -5194,6 +5187,7 @@
                                 <FontFamily>Verdana</FontFamily>
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
+                                <Format>###,###,##0.00</Format>
                                 <Color>MidnightBlue</Color>
                               </Style>
                             </TextRun>
@@ -5389,8 +5383,8 @@
         <DataSetName>dsPrePedido</DataSetName>
         <Top>0.83984cm</Top>
         <Left>0.12cm</Left>
-        <Height>6.90493cm</Height>
-        <Width>27.85354cm</Width>
+        <Height>6.90495cm</Height>
+        <Width>27.85012cm</Width>
         <ZIndex>1</ZIndex>
         <Style>
           <Border>
@@ -5527,7 +5521,7 @@
     <Height>9.72282cm</Height>
     <Style />
   </Body>
-  <Width>28.14848cm</Width>
+  <Width>28.17494cm</Width>
   <Page>
     <PageFooter>
       <Height>1.87267cm</Height>
@@ -5603,6 +5597,7 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox185</rd:DefaultName>
+          <Top>0cm</Top>
           <Left>0.18626cm</Left>
           <Height>0.44125cm</Height>
           <Width>27.78387cm</Width>
@@ -5628,7 +5623,13 @@
                   <Style>
                     <FontFamily>Verdana</FontFamily>
                     <FontSize>7pt</FontSize>
-                    <Color>Red</Color>
+                  </Style>
+                </TextRun>
+                <TextRun>
+                  <Value>=First(Fields!USUARIO_INICIO.Value, "dsPrePedido")</Value>
+                  <Style>
+                    <FontFamily>Verdana</FontFamily>
+                    <FontSize>7pt</FontSize>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -5660,11 +5661,17 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>Ini:??/??/???? ??:??:??</Value>
+                  <Value>Ini:</Value>
                   <Style>
                     <FontFamily>Verdana</FontFamily>
                     <FontSize>7pt</FontSize>
-                    <Color>Red</Color>
+                  </Style>
+                </TextRun>
+                <TextRun>
+                  <Value>=First(Fields!DATA_INICIO.Value, "dsPrePedido")</Value>
+                  <Style>
+                    <FontFamily>Verdana</FontFamily>
+                    <FontSize>7pt</FontSize>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -5696,11 +5703,17 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>Fim:??/??/???? ??:??:??</Value>
+                  <Value>Fim:</Value>
                   <Style>
                     <FontFamily>Verdana</FontFamily>
                     <FontSize>7pt</FontSize>
-                    <Color>Red</Color>
+                  </Style>
+                </TextRun>
+                <TextRun>
+                  <Value>=First(Fields!DATA_FINAL.Value, "dsPrePedido")</Value>
+                  <Style>
+                    <FontFamily>Verdana</FontFamily>
+                    <FontSize>7pt</FontSize>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -6032,12 +6045,12 @@
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="TOTAL_MT">
-          <DataField>VALOR_TOTAL_MT</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
+          <DataField>TOTAL_MT</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
         <Field Name="TOTAL_KG">
-          <DataField>VALOR_TOTAL_KG</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
+          <DataField>TOTAL_KG</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
         <Field Name="OBS_TROCA_TEC">
           <DataField>OBS_TROCA_TEC</DataField>
@@ -6047,10 +6060,22 @@
           <DataField>PEDIDO_CLIENTE</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
+        <Field Name="IDTRANSPORTADORA">
+          <DataField>IDTRANSPORTADORA</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="GRUPO_FACCAO">
+          <DataField>GRUPO_FACCAO</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ID_CLI_FACCAO">
+          <DataField>ID_CLI_FACCAO</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
       </Fields>
       <rd:DataSetInfo>
         <rd:DataSetName>DataSet</rd:DataSetName>
-        <rd:SchemaPath>D:\Projetos Dalutex\Pedido WEB\Dalutex\Dalutex\DataSet.xsd</rd:SchemaPath>
+        <rd:SchemaPath>C:\Users\Cassiano\Desktop\Projeto Pedido WEB\Dalutex\Dalutex\DataSet.xsd</rd:SchemaPath>
         <rd:TableName>VW_IMPRESSAO_WEB</rd:TableName>
         <rd:TableAdapterFillMethod>Fill</rd:TableAdapterFillMethod>
         <rd:TableAdapterGetDataMethod>GetData</rd:TableAdapterGetDataMethod>

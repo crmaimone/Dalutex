@@ -31,12 +31,16 @@ namespace Dalutex.Models
 
                 Uri url = context.RequestContext.HttpContext.Request.Url;
 
-                string strImagens = url.AbsoluteUri.Replace(url.AbsolutePath, "").Replace(url.Query, "") + ConfigurationManager.AppSettings["PASTA_DESENHOS"].Replace("~", "").Replace("\\", "/");
+                //Caso as imagens estejam na mesma pasta da aplicação
+                //string strImagens = url.AbsoluteUri.Replace(url.AbsolutePath, "").Replace(url.Query, "") + ConfigurationManager.AppSettings["PASTA_DESENHOS"].Replace("~", "").Replace("\\", "/");
+                //Caso as imagens estejam publicadas em outro site.
+                string strImagens = ConfigurationManager.AppSettings["PASTA_DESENHOS"].Replace("~", "").Replace("\\", "/");
                 relatorio.SetParameters(new ReportParameter("PASTA_DESENHOS", strImagens));
 
                 using (var ctx = new TIDalutexContext())
                 {
                     //Define o nome do nosso DataSource e qual rotina irá preenche-lo, no caso, nosso método criado anteriormente
+                    relatorio.DataSources.Clear();
                     relatorio.DataSources.Add(new ReportDataSource("dsPrePedido", ctx.VW_IMPRESSAO_WEB.Where(x => x.PEDIDO_BLOCO == IDPedidoBloco).ToList()));
                 }
 

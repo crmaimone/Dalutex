@@ -91,7 +91,6 @@ namespace Dalutex.Models
         public string FiltroTecnologia { get; set; }
     }
 
-
     public class ItensProntaEntregaViewModel
     {
         public int Pagina { get; set; }
@@ -183,7 +182,6 @@ namespace Dalutex.Models
         public int TotalPaginas { get; set; }
         public List<VW_VALIDAR_RESERVA> ListaValidaReserva { get; set; }
     }
-
 
     public class DesenhosValidaReservaViewModel
     {    
@@ -387,6 +385,31 @@ namespace Dalutex.Models
         public int Tipo { get; set; }
         public string CodStudio { get; set; }
         public string RGB { get; set; }
+    }
+
+    public class PesquisaPedidoViewModel
+    {
+        [Display(Name="Pedido")]
+        public string FiltroPedido { get; set; }
+        [Display(Name = "Cliente")]
+        public string FiltroCliente { get; set; }
+        [Display(Name = "Representante")]
+        public string FiltroRepresentante { get; set; }
+
+        public List<VW_PESQUISA_PEDIDO> Pedidos { get; set; }
+
+        public int Pagina { get; set; }
+        public int TotalPaginas { get; set; }
+    }
+
+    public class ManterPedidoViewModel
+    {
+        [Display(Name = "Pedido")]
+        public decimal Pedido { get; set; }
+        [Display(Name = "Cliente")]
+        public string Cliente { get; set; }
+        [Display(Name = "Representante")]
+        public string Representante { get; set; }
     }
 
     public class ConclusaoPedidoViewModel

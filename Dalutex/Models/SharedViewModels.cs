@@ -52,4 +52,14 @@ namespace Dalutex.Models
         [Display(Name = "Email")]
         public string Email { get; set; }
     }
+
+    public class EnviarEmailViewModel
+    {
+        public string De { get; set; }
+        public string Para { get; set; }
+        public string Titulo { get; set; }
+        public string Conteudo { get; set; }
+
+        public string ChaveAnexo { get; set; }
+    }
 }

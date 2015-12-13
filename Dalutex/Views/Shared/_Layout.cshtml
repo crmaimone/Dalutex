@@ -23,9 +23,6 @@
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("SOBRE", "About", "Home")</li>
                     <li>@Html.ActionLink("CONTATO", "Contact", "Home")</li>
-                    @*<li>@Html.ActionLink("CADASTRAR IMAGENS", "DesenhosSemImagem", "Cadastro")</li>*@
-                    @*<li>@Html.ActionLink("IMPRIMIR PEDIDO", "EspelhoPedido", "Pedido", new { numeropedido = 118873 }, new { @class = "btn btn-default right" })</li>*@
-                    @*<li>@Html.ActionLink("UPLOAD TESTE", "UploadImage", "Cadastro", new { cod_studio = "118873" }, null)</li>*@
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li class="dropdown">
@@ -39,11 +36,8 @@
                                 <li>@Html.ActionLink("PEDIDO RESERVA", "ItensParaReserva", "Pedido")</li>
                                 <li>@Html.ActionLink("VALIDAÇÃO DE RESERVA", "ValidaPedidoReserva", "Pedido")</li>
                                 <li class="divider"></li>
-                                @*<li>@Html.ActionLink("PRONTA ENTREGA", "ItensProntaEntrega", "Pedido", new { estampados = true, pagina = 1 }, null)</li>*@
-                                @*<li>@Html.ActionLink("PRONTA ENTREGA", "EmConstrucao", "Pedido")</li>*@
-                                @*<li>@Html.ActionLink("RECOLORAÇÃO/ACERVO", "EmConstrucao", "Pedido")</li>*@
+                                <li>@Html.ActionLink("PESQ. PEDIDOS", "PesquisaPedido", "Pedido")</li>
                                 <li class="divider"></li>
-                                @*<li>@Html.ActionLink("OUTROS", "EmConstrucao", "Pedido")</li>*@
                                 <li>@Html.ActionLink("CADASTRAR IMAGENS", "DesenhosSemImagem", "Cadastro")</li> 
                                 @*http://192.168.100.7:8097/Pedido/EspelhoPedido?numeropedido=166115*@                               
                             </ul>

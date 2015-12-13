@@ -218,6 +218,7 @@
     <Compile Include="Models\DataModels\VW_ITENS_VALIDAR_RESERVA.cs" />
     <Compile Include="Models\DataModels\VW_LISOS_POR_COLECAO.cs" />
     <Compile Include="Models\DataModels\VW_LISTA_PECAS_PE.cs" />
+    <Compile Include="Models\DataModels\VW_PESQUISA_PEDIDO.cs" />
     <Compile Include="Models\DataModels\VW_PI_RED.cs" />
     <Compile Include="Models\DataModels\VW_TROCA_TEC.cs" />
     <Compile Include="Models\DataModels\VW_VALIDAR_RESERVA.cs" />
@@ -526,6 +527,9 @@
     <Content Include="Views\Cadastro\ViaTransporte.cshtml" />
     <Content Include="Views\Cadastro\Frete.cshtml" />
     <Content Include="Views\Cadastro\TipoAtendimento.cshtml" />
+    <Content Include="Views\Pedido\PesquisaPedido.cshtml" />
+    <Content Include="Views\Pedido\ManterPedido.cshtml" />
+    <Content Include="Views\Pedido\EnviarEmail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

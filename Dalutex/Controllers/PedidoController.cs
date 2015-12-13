@@ -1542,6 +1542,50 @@ namespace Dalutex.Controllers
             }
         }
 
+        [HttpGet]
+        public ActionResult EnviarEmail(string numeropedido)
+        {
+            EnviarEmailViewModel model = new EnviarEmailViewModel();
+            model.ChaveAnexo = numeropedido;
+            model.Titulo = "Pedido Nº " + numeropedido;
+            if (DateTime.Now.Hour < 12)
+                model.Conteudo += "Bom dia." + Environment.NewLine;
+            else if (DateTime.Now.Hour < 19)
+                model.Conteudo += "Boa tarde." + Environment.NewLine;
+            else 
+                model.Conteudo += "Boa noite." + Environment.NewLine;
+
+            model.De = "Onde eu encontro o e-mail do representante (Banco.Tabela.Campo)?";
+            model.Para = "Onde eu encontro o e-mail do cliente?";
+
+            model.Conteudo += "Segue anexo o pedido Nº: " + model.ChaveAnexo + Environment.NewLine;
+            model.Conteudo += Environment.NewLine;
+            model.Conteudo += "AVISO LEGAL: Esta mensagem (incluindo qualquer anexo) e os arquivos nela contidos é confidencial e legalmente protegida, somente podendo ser usada pelo indivíduo ou entidade a quem foi endereçada. Caso você a tenha recebido por engano, deverá devolvê-la ao remetente e, posteriormente, apagá-la, pois, a disseminação, encaminhamento, uso, impressão ou cópia do conteúdo desta mensagem são expressamente proibidos.";
+
+            using (var ctxTI = new TIDalutexContext())
+            {
+
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult EnviarEmail(EnviarEmailViewModel model)
+        {
+            try
+            {
+                Utilitarios utils = new Utilitarios();
+                utils.EnviaEmail(model.Para, model.Titulo, model.Conteudo, null);
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                base.Handle(ex);
+                return null;
+            }
+        }
+
         public JsonResult TotalCarrinho()
         {
             if (base.Session_Carrinho != null && base.Session_Carrinho.Itens != null && base.Session_Carrinho.Itens.Count > 0)
@@ -1883,6 +1927,99 @@ namespace Dalutex.Controllers
             }
             
             return View(model.Sucesso = false);
+        }
+
+        [HttpGet]
+        public ActionResult PesquisaPedido(string pedido, string cliente, string representante, string pagina, string totalpaginas)
+        {
+            PesquisaPedidoViewModel model = new PesquisaPedidoViewModel();
+
+            if (pagina != null)
+            {
+                int iIDPedido;
+
+                if (int.TryParse(pedido, out iIDPedido) && iIDPedido > 0)
+                {
+                    model.FiltroPedido = iIDPedido.ToString();
+                }
+
+                model.FiltroCliente = cliente;
+                model.FiltroRepresentante = representante;
+
+                int iPagina;
+                if (int.TryParse(pagina, out iPagina) && iPagina > 0)
+                {
+                    model.Pagina = iPagina;
+                }
+
+                int iTotalPaginas;
+                if (int.TryParse(totalpaginas, out iTotalPaginas) && iTotalPaginas > 0)
+                {
+                    model.TotalPaginas = iTotalPaginas;
+                }
+
+                ObterPedidos(model);
+            }
+
+            return View(model);
+        }
+
+        public void ObterPedidos(PesquisaPedidoViewModel model)
+        {
+            int iItensPorPagina = 10;
+
+            using(var ctxTI = new TIDalutexContext())
+            {
+                decimal dFiltroPedido = 0;
+                decimal.TryParse(model.FiltroPedido, out dFiltroPedido);
+
+                var result = (from p in ctxTI.VW_PESQUISA_PEDIDO
+                                where (p.PEDIDO == dFiltroPedido || dFiltroPedido <= 0)
+                                        && (p.CLIENTE.ToUpper().Contains(model.FiltroCliente.ToUpper()) || model.FiltroCliente == null)
+                                        && (p.REPRESENTANTE.ToUpper().Contains(model.FiltroRepresentante.ToUpper()) || model.FiltroRepresentante == null)
+                                orderby p.PEDIDO descending  
+                                select p).ToList();
+
+                decimal dTotal = result.Count / (decimal)iItensPorPagina;
+                model.TotalPaginas = (int)Decimal.Ceiling(dTotal);
+                if (model.TotalPaginas == 0)
+                    model.TotalPaginas = 1;
+
+                model.Pedidos = result.Skip((model.Pagina - 1) * iItensPorPagina).Take(iItensPorPagina).ToList();
+            }
+        }
+
+        [HttpPost]
+        public ActionResult PesquisaPedido(PesquisaPedidoViewModel model)
+        {
+            model.Pagina = 1;
+            ObterPedidos(model);
+
+            return View(model);
+        }
+
+        public ActionResult ManterPedido(string IDPedido)
+        {
+            if(!string.IsNullOrWhiteSpace(IDPedido))
+            {
+                ManterPedidoViewModel model = new ManterPedidoViewModel();
+                using (var ctxTI = new TIDalutexContext())
+                {
+                    int iIDPedido = int.Parse(IDPedido);
+
+                    VW_PESQUISA_PEDIDO objPedido = ctxTI.VW_PESQUISA_PEDIDO.Find(iIDPedido);
+
+                    model.Pedido = objPedido.PEDIDO;
+                    model.Cliente = objPedido.CLIENTE;
+                    model.Representante = objPedido.REPRESENTANTE;
+                }
+
+                return View(model);
+            }
+            else
+            {
+                return RedirectToAction("PesquisaPedido");
+            }
         }
 
         #endregion

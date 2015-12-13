@@ -1,0 +1,23 @@
+﻿@model Dalutex.Models.EnviarEmailViewModel
+@using Dalutex.Models;
+
+@{
+    ViewBag.Title = "ENVIAR E-MAIL";
+}
+
+<div class="header-title"><h3>@ViewBag.Title</h3></div>
+<div class="container">
+    <div class="row">
+        @using (Html.BeginForm("EnviarEmail", "Pedido", FormMethod.Post, new { id = "contact-form" }))
+        {
+            <fieldset>
+                @Html.TextBoxFor(model => model.De, new { placeholder = "De" })
+                @Html.TextBoxFor(model => model.Para, new { placeholder = "Para" })
+                @Html.TextBoxFor(model => model.Titulo, new { placeholder = "Título" })
+                @Html.TextAreaFor(model => model.Conteudo, new { @class = "img-shadow", placeholder="Mensagem" })
+                <input class="form-button" data-type="reset" value="Limpar" />
+                <input class="form-button" data-type="submit" type="submit" value="Enviar" />
+            </fieldset>
+        }
+    </div>
+</div>

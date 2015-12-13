@@ -1,0 +1,34 @@
+﻿@model Dalutex.Models.ManterPedidoViewModel
+@using Dalutex.Models;
+
+@{
+    ViewBag.Title = "MANTER PEDIDO";
+}
+
+<div class="header-title"><h3>@ViewBag.Title</h3></div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            @Html.LabelFor(x => x.Pedido):&nbsp;
+            @Model.Pedido
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            @Html.LabelFor(x => x.Representante):&nbsp;
+            @Model.Representante
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            @Html.LabelFor(x => x.Cliente):&nbsp;
+            @Model.Cliente
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            @Html.ActionLink("IMPRIMIR", "EspelhoPedido", "Pedido", new { numeropedido=@Model.Pedido }, new { @class = "btn btn-default pull-left" })
+            @Html.ActionLink("ENVIAR", "EnviarEmail", "Pedido", new { numeropedido = @Model.Pedido }, new { @class = "btn btn-default pull-left" })
+        </div>
+    </div>
+</div>

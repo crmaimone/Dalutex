@@ -42,5 +42,27 @@ namespace Dalutex.Models.Utils
         {
             return "rgb(" +c.R.ToString() + "," + c.G.ToString() + "," + c.B.ToString() + ")";
         }
+
+        public static string PreencheComChar(string pSource, string pChar, int pMaxLenght)
+        {
+            if (pSource == null)
+                pSource = string.Empty;
+
+            pSource = pSource.Trim();
+
+            if(pSource.Length >= pMaxLenght)
+            {
+                return pSource.Substring(0, pMaxLenght);
+            }
+            else
+            {
+                for (int i = pSource.Length; i < pMaxLenght; i++)
+                {
+                    pSource += pChar;
+                }
+
+                return pSource;
+            }
+        }
     }
 }

@@ -57,6 +57,7 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<REGRA_PADRAO> REGRA_PADRAO { get; set; }
         public virtual DbSet<VW_PI_RED> VW_PI_RED { get; set; }
         public virtual DbSet<REGRAS_QTD_PEDIDO> REGRAS_QTD_PEDIDO { get; set; }
+        public virtual DbSet<VW_PESQUISA_PEDIDO> VW_PESQUISA_PEDIDO { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

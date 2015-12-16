@@ -6,18 +6,58 @@
 }
 
 <div class="header-title"><h3>@ViewBag.Title</h3></div>
-<div class="container">
-    <div class="row">
-        @using (Html.BeginForm("EnviarEmail", "Pedido", FormMethod.Post, new { id = "contact-form" }))
-        {
-            <fieldset>
-                @Html.TextBoxFor(model => model.De, new { placeholder = "De" })
-                @Html.TextBoxFor(model => model.Para, new { placeholder = "Para" })
-                @Html.TextBoxFor(model => model.Titulo, new { placeholder = "Título" })
-                @Html.TextAreaFor(model => model.Conteudo, new { @class = "img-shadow", placeholder="Mensagem" })
-                <input class="form-button" data-type="reset" value="Limpar" />
-                <input class="form-button" data-type="submit" type="submit" value="Enviar" />
-            </fieldset>
-        }
+@if (ViewBag.SendResult == null)
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                @using (Html.BeginForm("EnviarEmail", "Pedido", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    <fieldset>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.De, new { @class = "col-md-4 control-label" })
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.De, new { @class = "form-control", placeholder = "dalutex@dalutex.com.br" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.Para, new { @class = "col-md-4 control-label" })
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.Para, new { @class = "form-control", placeholder = "" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.Titulo, new { @class = "col-md-4 control-label" })
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.Titulo, new { @class = "form-control", placeholder = "" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.Conteudo, new { @class = "col-md-4 control-label" })
+                            <div class="col-md-8">
+                                @Html.TextAreaFor(model => model.Conteudo, new { @class = "form-control", placeholder = "" })
+                            </div>
+                        </div>
+                        @Html.HiddenFor(model => model.ChaveAnexo)
+                        <div class="form-group col-md-8">
+                            <input class="btn btn-default pull-right" data-type="reset" type="button" value="Limpar" />
+                            <input class="btn btn-default pull-right" data-type=" submit" type="submit" value="Enviar" />
+                        </div>
+                    </fieldset>
+            }
+            </div>
+        </div>
     </div>
-</div>
+}
+else
+{
+    <div class="container">
+        <div class="row warning">
+            @ViewBag.SendResult
+        </div>
+        <div class="row">
+            @Html.ActionLink("Ir para a página inicial", "Index", "Home", null, new { @class = "btn btn-default btn-info pull-left" })
+            @Html.ActionLink("Pedidos", "PesquisaPedido", "Pedido", null, new { @class = "btn btn-default btn-info pull-left" })
+        </div>
+    </div>
+}

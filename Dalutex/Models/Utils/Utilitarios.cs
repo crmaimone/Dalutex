@@ -9,13 +9,18 @@ namespace Dalutex.Models.Utils
 {
     public class Utilitarios
     {
-        public void EnviaEmail(string para, string assunto, string corpo, Attachment anexo)
+        public void EnviaEmail(string de, string para, string assunto, string corpo, Attachment anexo)
         {
             try
             {
                 MailMessage mail = new MailMessage();
-                mail.To.Add(para);
-                mail.From = new MailAddress(ConfigurationManager.AppSettings["EMAIL_USUARIO"]);
+                char separator = ';';
+                string[] destinatarios = para.Split(separator);
+
+                foreach(var destinatario in destinatarios)
+                    mail.To.Add(destinatario);
+
+                mail.From = new MailAddress(de);
                 mail.Subject = assunto;
                 mail.Body = corpo;
                 if (anexo != null)

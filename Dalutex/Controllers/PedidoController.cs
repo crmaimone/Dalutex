@@ -1555,8 +1555,8 @@ namespace Dalutex.Controllers
             else 
                 model.Conteudo += "Boa noite." + Environment.NewLine;
 
-            model.De = "Onde eu encontro o e-mail do representante (Banco.Tabela.Campo)?";
-            model.Para = "Onde eu encontro o e-mail do cliente?";
+            model.De = "e-mail do representante?";
+            model.Para = "e-mail do cliente?";
 
             model.Conteudo += "Segue anexo o pedido Nº: " + model.ChaveAnexo + Environment.NewLine;
             model.Conteudo += Environment.NewLine;
@@ -1576,11 +1576,25 @@ namespace Dalutex.Controllers
             try
             {
                 Utilitarios utils = new Utilitarios();
-                utils.EnviaEmail(model.Para, model.Titulo, model.Conteudo, null);
+ 
+
+                byte[] buffer;
+                MemoryStream pdfStream;
+
+                EspelhoPedidoPdf espelho = new EspelhoPedidoPdf();
+                espelho.IDPedidoBloco = decimal.Parse(model.ChaveAnexo);
+                espelho.CreatePdfStream(out buffer, out pdfStream);
+
+                Attachment anexo = new Attachment(pdfStream, "Pedido_" + model.ChaveAnexo, "application/pdf");
+                utils.EnviaEmail(model.De, model.Para, model.Titulo, model.Conteudo, anexo);
+                pdfStream.Close();
+
+                ViewBag.SendResult = "E-mail enviado com sucesso!.";
                 return View(model);
             }
             catch (Exception ex)
             {
+                ViewBag.SendResult = "Houve uma falha aoo enviar o e-mail." + Environment.NewLine + ex.Message;
                 base.Handle(ex);
                 return null;
             }

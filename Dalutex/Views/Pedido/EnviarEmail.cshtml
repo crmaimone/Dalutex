@@ -39,9 +39,9 @@
                             </div>
                         </div>
                         @Html.HiddenFor(model => model.ChaveAnexo)
-                        <div class="form-group col-md-8">
-                            <input class="btn btn-default pull-right" data-type="reset" type="button" value="Limpar" />
-                            <input class="btn btn-default pull-right" data-type=" submit" type="submit" value="Enviar" />
+                        <div class="form-group col-md-9">
+                            <button class="btn btn-default pull-right" style="margin-left:5px;" data-type="submit"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> ENVIAR</button>
+                            <button class="btn btn-default pull-right" onclick="javascript: history.back()"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> VOLTAR</button>
                         </div>
                     </fieldset>
             }

@@ -61,7 +61,8 @@ tr.hover-cursor {
 }
 .jumbotron
 {
-    background-repeat:round;
+    background-repeat:no-repeat;
+    background-size:cover;
 }
 
 .jumbotron p

@@ -1546,26 +1546,7 @@ namespace Dalutex.Controllers
         public ActionResult EnviarEmail(string numeropedido)
         {
             EnviarEmailViewModel model = new EnviarEmailViewModel();
-            model.ChaveAnexo = numeropedido;
-            model.Titulo = "Pedido Nº " + numeropedido;
-            if (DateTime.Now.Hour < 12)
-                model.Conteudo += "Bom dia." + Environment.NewLine;
-            else if (DateTime.Now.Hour < 19)
-                model.Conteudo += "Boa tarde." + Environment.NewLine;
-            else 
-                model.Conteudo += "Boa noite." + Environment.NewLine;
-
-            model.De = "Onde eu encontro o e-mail do representante (Banco.Tabela.Campo)?";
-            model.Para = "Onde eu encontro o e-mail do cliente?";
-
-            model.Conteudo += "Segue anexo o pedido Nº: " + model.ChaveAnexo + Environment.NewLine;
-            model.Conteudo += Environment.NewLine;
-            model.Conteudo += "AVISO LEGAL: Esta mensagem (incluindo qualquer anexo) e os arquivos nela contidos é confidencial e legalmente protegida, somente podendo ser usada pelo indivíduo ou entidade a quem foi endereçada. Caso você a tenha recebido por engano, deverá devolvê-la ao remetente e, posteriormente, apagá-la, pois, a disseminação, encaminhamento, uso, impressão ou cópia do conteúdo desta mensagem são expressamente proibidos.";
-
-            using (var ctxTI = new TIDalutexContext())
-            {
-
-            }
+            PrepararModelEmailPedido(numeropedido, model);
 
             return View(model);
         }
@@ -1576,11 +1557,25 @@ namespace Dalutex.Controllers
             try
             {
                 Utilitarios utils = new Utilitarios();
-                utils.EnviaEmail(model.Para, model.Titulo, model.Conteudo, null);
+ 
+
+                byte[] buffer;
+                MemoryStream pdfStream;
+
+                EspelhoPedidoPdf espelho = new EspelhoPedidoPdf();
+                espelho.IDPedidoBloco = decimal.Parse(model.ChaveAnexo);
+                espelho.CreatePdfStream(out buffer, out pdfStream);
+
+                Attachment anexo = new Attachment(pdfStream, "Pedido_" + model.ChaveAnexo, "application/pdf");
+                utils.EnviaEmail(model.De, model.Para, model.Titulo, model.Conteudo, anexo);
+                pdfStream.Close();
+
+                ViewBag.SendResult = "E-mail enviado com sucesso!";
                 return View(model);
             }
             catch (Exception ex)
             {
+                ViewBag.SendResult = "Houve uma falha aoo enviar o e-mail." + Environment.NewLine + ex.Message;
                 base.Handle(ex);
                 return null;
             }
@@ -1910,10 +1905,9 @@ namespace Dalutex.Controllers
 
                 #region EnviarPDF
 
-                //MemoryStream ms = new MemoryStream(new Relatorios().GerarEspelhoPedido());
-                //Attachment anexo = new Attachment(ms, "Pedido_" + iNUMERO_PEDIDO_BLOCO.ToString() + ".pdf", "application/pdf");
-                //Utilitarios util = new Utilitarios();
-                //util.EnviaEmail("crmaimone@gmail.com", "Novo pedido", "Segue novo pedido", anexo);
+                EnviarEmailViewModel emailModel = new EnviarEmailViewModel();
+                PrepararModelEmailPedido(iNUMERO_PEDIDO_BLOCO.ToString(), emailModel);
+                EnviarEmail(emailModel);
 
                 #endregion
 
@@ -1927,6 +1921,29 @@ namespace Dalutex.Controllers
             }
             
             return View(model.Sucesso = false);
+        }
+
+        private void PrepararModelEmailPedido(string chave, EnviarEmailViewModel emailModel)
+        {
+            emailModel.ChaveAnexo = chave;
+            emailModel.Titulo = "Pedido Nº " + chave;
+            if (DateTime.Now.Hour < 12)
+                emailModel.Conteudo += "Bom dia." + Environment.NewLine;
+            else if (DateTime.Now.Hour < 19)
+                emailModel.Conteudo += "Boa tarde." + Environment.NewLine;
+            else
+                emailModel.Conteudo += "Boa noite." + Environment.NewLine;
+
+            using (var ctxTI = new TIDalutexContext())
+            {
+                emailModel.De = "e-mail do representante?";
+                emailModel.Para = "e-mail do cliente?";
+
+            }
+
+            emailModel.Conteudo += "Segue anexo o pedido Nº: " + emailModel.ChaveAnexo + Environment.NewLine;
+            emailModel.Conteudo += Environment.NewLine;
+            emailModel.Conteudo += "AVISO LEGAL: Esta mensagem (incluindo qualquer anexo) e os arquivos nela contidos é confidencial e legalmente protegida, somente podendo ser usada pelo indivíduo ou entidade a quem foi endereçada. Caso você a tenha recebido por engano, deverá devolvê-la ao remetente e, posteriormente, apagá-la, pois, a disseminação, encaminhamento, uso, impressão ou cópia do conteúdo desta mensagem são expressamente proibidos.";
         }
 
         [HttpGet]
@@ -1972,11 +1989,17 @@ namespace Dalutex.Controllers
             {
                 decimal dFiltroPedido = 0;
                 decimal.TryParse(model.FiltroPedido, out dFiltroPedido);
+                if (model.FiltroCliente != null)
+                    model.FiltroCliente = model.FiltroCliente.ToUpper();
+
+                if (model.FiltroRepresentante != null)
+                    model.FiltroRepresentante = model.FiltroRepresentante.ToUpper();
+
 
                 var result = (from p in ctxTI.VW_PESQUISA_PEDIDO
                                 where (p.PEDIDO == dFiltroPedido || dFiltroPedido <= 0)
-                                        && (p.CLIENTE.ToUpper().Contains(model.FiltroCliente.ToUpper()) || model.FiltroCliente == null)
-                                        && (p.REPRESENTANTE.ToUpper().Contains(model.FiltroRepresentante.ToUpper()) || model.FiltroRepresentante == null)
+                                        && (model.FiltroCliente == null || p.CLIENTE.ToUpper().Contains(model.FiltroCliente))
+                                        && (model.FiltroRepresentante == null || p.REPRESENTANTE.ToUpper().Contains(model.FiltroRepresentante))
                                 orderby p.PEDIDO descending  
                                 select p).ToList();
 

@@ -26,9 +26,9 @@
 
 
                         <div class="form-group">
-                            <div>
-                                @Html.TextBoxFor(x => x.Filtro, new { @class = "form-control", placeholder = "PESQUISA COLEÇÃO" })
-                                <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Localizar</button>
+                            <div style="display:inline-flex">
+                                @Html.TextBoxFor(x => x.Filtro, new { @class = "form-control", placeholder = "PESQUISA COLEÇÃO", style="height:37px;" })
+                                <button type="submit" class="btn btn-default" style="margin-left:5px; margin-bottom:3px"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Localizar</button>
                             </div>
                         </div>
 

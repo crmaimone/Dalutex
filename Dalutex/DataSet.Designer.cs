@@ -405,9 +405,7 @@ namespace Dalutex {
             
             private global::System.Data.DataColumn columnIDTRANSPORTADORA;
             
-            private global::System.Data.DataColumn columnGRUPO_FACCAO;
-            
-            private global::System.Data.DataColumn columnID_CLI_FACCAO;
+            private global::System.Data.DataColumn columnGRUPO_CLIENTE;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
@@ -948,17 +946,9 @@ namespace Dalutex {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn GRUPO_FACCAOColumn {
+            public global::System.Data.DataColumn GRUPO_CLIENTEColumn {
                 get {
-                    return this.columnGRUPO_FACCAO;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn ID_CLI_FACCAOColumn {
-                get {
-                    return this.columnID_CLI_FACCAO;
+                    return this.columnGRUPO_CLIENTE;
                 }
             }
             
@@ -1063,8 +1053,7 @@ namespace Dalutex {
                         string OBS_TROCA_TEC, 
                         decimal PEDIDO_CLIENTE, 
                         decimal IDTRANSPORTADORA, 
-                        string GRUPO_FACCAO, 
-                        decimal ID_CLI_FACCAO) {
+                        string GRUPO_CLIENTE) {
                 VW_IMPRESSAO_WEBRow rowVW_IMPRESSAO_WEBRow = ((VW_IMPRESSAO_WEBRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         PEDIDO,
@@ -1130,8 +1119,7 @@ namespace Dalutex {
                         OBS_TROCA_TEC,
                         PEDIDO_CLIENTE,
                         IDTRANSPORTADORA,
-                        GRUPO_FACCAO,
-                        ID_CLI_FACCAO};
+                        GRUPO_CLIENTE};
                 rowVW_IMPRESSAO_WEBRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowVW_IMPRESSAO_WEBRow);
                 return rowVW_IMPRESSAO_WEBRow;
@@ -1217,8 +1205,7 @@ namespace Dalutex {
                 this.columnOBS_TROCA_TEC = base.Columns["OBS_TROCA_TEC"];
                 this.columnPEDIDO_CLIENTE = base.Columns["PEDIDO_CLIENTE"];
                 this.columnIDTRANSPORTADORA = base.Columns["IDTRANSPORTADORA"];
-                this.columnGRUPO_FACCAO = base.Columns["GRUPO_FACCAO"];
-                this.columnID_CLI_FACCAO = base.Columns["ID_CLI_FACCAO"];
+                this.columnGRUPO_CLIENTE = base.Columns["GRUPO_CLIENTE"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1350,10 +1337,8 @@ namespace Dalutex {
                 base.Columns.Add(this.columnPEDIDO_CLIENTE);
                 this.columnIDTRANSPORTADORA = new global::System.Data.DataColumn("IDTRANSPORTADORA", typeof(decimal), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnIDTRANSPORTADORA);
-                this.columnGRUPO_FACCAO = new global::System.Data.DataColumn("GRUPO_FACCAO", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnGRUPO_FACCAO);
-                this.columnID_CLI_FACCAO = new global::System.Data.DataColumn("ID_CLI_FACCAO", typeof(decimal), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnID_CLI_FACCAO);
+                this.columnGRUPO_CLIENTE = new global::System.Data.DataColumn("GRUPO_CLIENTE", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnGRUPO_CLIENTE);
                 this.columnPEDIDO.AllowDBNull = false;
                 this.columnPEDIDO_BLOCO.AllowDBNull = false;
                 this.columnCLIENTE_NOVO.MaxLength = 1;
@@ -2531,33 +2516,17 @@ namespace Dalutex {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string GRUPO_FACCAO {
+            public string GRUPO_CLIENTE {
                 get {
                     try {
-                        return ((string)(this[this.tableVW_IMPRESSAO_WEB.GRUPO_FACCAOColumn]));
+                        return ((string)(this[this.tableVW_IMPRESSAO_WEB.GRUPO_CLIENTEColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'GRUPO_FACCAO\' in table \'VW_IMPRESSAO_WEB\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'GRUPO_CLIENTE\' in table \'VW_IMPRESSAO_WEB\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableVW_IMPRESSAO_WEB.GRUPO_FACCAOColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public decimal ID_CLI_FACCAO {
-                get {
-                    try {
-                        return ((decimal)(this[this.tableVW_IMPRESSAO_WEB.ID_CLI_FACCAOColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ID_CLI_FACCAO\' in table \'VW_IMPRESSAO_WEB\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableVW_IMPRESSAO_WEB.ID_CLI_FACCAOColumn] = value;
+                    this[this.tableVW_IMPRESSAO_WEB.GRUPO_CLIENTEColumn] = value;
                 }
             }
             
@@ -3295,26 +3264,14 @@ namespace Dalutex {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsGRUPO_FACCAONull() {
-                return this.IsNull(this.tableVW_IMPRESSAO_WEB.GRUPO_FACCAOColumn);
+            public bool IsGRUPO_CLIENTENull() {
+                return this.IsNull(this.tableVW_IMPRESSAO_WEB.GRUPO_CLIENTEColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetGRUPO_FACCAONull() {
-                this[this.tableVW_IMPRESSAO_WEB.GRUPO_FACCAOColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsID_CLI_FACCAONull() {
-                return this.IsNull(this.tableVW_IMPRESSAO_WEB.ID_CLI_FACCAOColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetID_CLI_FACCAONull() {
-                this[this.tableVW_IMPRESSAO_WEB.ID_CLI_FACCAOColumn] = global::System.Convert.DBNull;
+            public void SetGRUPO_CLIENTENull() {
+                this[this.tableVW_IMPRESSAO_WEB.GRUPO_CLIENTEColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -3539,8 +3496,7 @@ namespace Dalutex.DataSetTableAdapters {
             tableMapping.ColumnMappings.Add("TOTAL_KG", "TOTAL_KG");
             tableMapping.ColumnMappings.Add("PEDIDO_CLIENTE", "PEDIDO_CLIENTE");
             tableMapping.ColumnMappings.Add("IDTRANSPORTADORA", "IDTRANSPORTADORA");
-            tableMapping.ColumnMappings.Add("GRUPO_FACCAO", "GRUPO_FACCAO");
-            tableMapping.ColumnMappings.Add("ID_CLI_FACCAO", "ID_CLI_FACCAO");
+            tableMapping.ColumnMappings.Add("GRUPO_FACCAO", "GRUPO_CLIENTE");
             this._adapter.TableMappings.Add(tableMapping);
         }
         

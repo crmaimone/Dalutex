@@ -1926,7 +1926,7 @@ namespace Dalutex.Controllers
         private void PrepararModelEmailPedido(string chave, EnviarEmailViewModel emailModel)
         {
             emailModel.ChaveAnexo = chave;
-            emailModel.Titulo = "Pedido Nº " + chave;
+            emailModel.Titulo = "Espelho do pedido Nº " + chave;
             if (DateTime.Now.Hour < 12)
                 emailModel.Conteudo += "Bom dia." + Environment.NewLine;
             else if (DateTime.Now.Hour < 19)
@@ -1934,16 +1934,17 @@ namespace Dalutex.Controllers
             else
                 emailModel.Conteudo += "Boa noite." + Environment.NewLine;
 
-            using (var ctxTI = new TIDalutexContext())
+            using (var ctx = new DalutexContext())
             {
-                emailModel.De = "e-mail do representante?";
+                emailModel.De = "e-mail do representante";
                 emailModel.Para = "e-mail do cliente?";
 
             }
 
-            emailModel.Conteudo += "Segue anexo o pedido Nº: " + emailModel.ChaveAnexo + Environment.NewLine;
+            emailModel.Conteudo += "Segue anexo o pedido Nº: <b>" + emailModel.ChaveAnexo +"</b>" + Environment.NewLine;
             emailModel.Conteudo += Environment.NewLine;
-            emailModel.Conteudo += "AVISO LEGAL: Esta mensagem (incluindo qualquer anexo) e os arquivos nela contidos é confidencial e legalmente protegida, somente podendo ser usada pelo indivíduo ou entidade a quem foi endereçada. Caso você a tenha recebido por engano, deverá devolvê-la ao remetente e, posteriormente, apagá-la, pois, a disseminação, encaminhamento, uso, impressão ou cópia do conteúdo desta mensagem são expressamente proibidos.";
+            emailModel.Conteudo += "<p style='color:red;'>Esta mensagem foi gerada automaticamente. Favor não respondê-la.</p>" + Environment.NewLine;
+            emailModel.Conteudo += Environment.NewLine; emailModel.Conteudo += "<p style='color:gray;'>AVISO LEGAL: Esta mensagem (incluindo qualquer anexo) e os arquivos nela contidos é confidencial e legalmente protegida, somente podendo ser usada pelo indivíduo ou entidade a quem foi endereçada. Caso você a tenha recebido por engano, deverá devolvê-la ao remetente e, posteriormente, apagá-la, pois, a disseminação, encaminhamento, uso, impressão ou cópia do conteúdo desta mensagem são expressamente proibidos.</p>";
         }
 
         [HttpGet]

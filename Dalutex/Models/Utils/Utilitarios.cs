@@ -9,7 +9,7 @@ namespace Dalutex.Models.Utils
 {
     public class Utilitarios
     {
-        public void EnviaEmail(string de, string para, string assunto, string corpo, Attachment anexo)
+        public void EnviaEmail(string de, string para, string cc, string assunto, string corpo, Attachment anexo)
         {
             try
             {
@@ -19,6 +19,11 @@ namespace Dalutex.Models.Utils
 
                 foreach(var destinatario in destinatarios)
                     mail.To.Add(destinatario);
+
+                string[] copiados = cc.Split(separator);
+
+                foreach (var copiado in copiados)
+                    mail.CC.Add(copiado);
 
                 mail.From = new MailAddress(de);
                 mail.Subject = assunto;

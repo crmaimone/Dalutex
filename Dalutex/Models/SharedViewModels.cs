@@ -55,9 +55,15 @@ namespace Dalutex.Models
 
     public class EnviarEmailViewModel
     {
+        [Display(Name = "De")]
         public string De { get; set; }
+        [Display(Name = "Para")]
         public string Para { get; set; }
+        [Display(Name = "Com cópia para")]
+        public string ComCopia { get; set; }
+        [Display(Name = "Título")]
         public string Titulo { get; set; }
+        [Display(Name = "Conteúdo")]
         public string Conteudo { get; set; }
 
         public string ChaveAnexo { get; set; }

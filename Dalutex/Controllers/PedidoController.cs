@@ -1567,10 +1567,10 @@ namespace Dalutex.Controllers
                 espelho.CreatePdfStream(out buffer, out pdfStream);
 
                 Attachment anexo = new Attachment(pdfStream, "Pedido_" + model.ChaveAnexo, "application/pdf");
-                utils.EnviaEmail(model.De, model.Para, model.Titulo, model.Conteudo, anexo);
+                utils.EnviaEmail(model.De, model.Para, model.ComCopia, model.Titulo, model.Conteudo, anexo);
                 pdfStream.Close();
 
-                ViewBag.SendResult = "E-mail enviado com sucesso!";
+                ViewBag.SendResult = "e-mail enviado com sucesso.";
                 return View(model);
             }
             catch (Exception ex)
@@ -1905,9 +1905,10 @@ namespace Dalutex.Controllers
 
                 #region EnviarPDF
 
-                EnviarEmailViewModel emailModel = new EnviarEmailViewModel();
-                PrepararModelEmailPedido(iNUMERO_PEDIDO_BLOCO.ToString(), emailModel);
-                EnviarEmail(emailModel);
+                //Envio silencioso
+                //EnviarEmailViewModel emailModel = new EnviarEmailViewModel();
+                //PrepararModelEmailPedido(iNUMERO_PEDIDO_BLOCO.ToString(), emailModel);
+                //EnviarEmail(emailModel);
 
                 #endregion
 
@@ -1934,17 +1935,27 @@ namespace Dalutex.Controllers
             else
                 emailModel.Conteudo += "Boa noite." + Environment.NewLine;
 
-            using (var ctx = new DalutexContext())
-            {
-                emailModel.De = "e-mail do representante";
-                emailModel.Para = "e-mail do cliente?";
+            emailModel.De = ConfigurationManager.AppSettings["EMAIL_USUARIO"];
 
+            using (var ctxTI = new TIDalutexContext())
+            {
+                decimal dNumeroPedido = decimal.Parse(chave);
+                decimal idclientesgt = ctxTI.PRE_PEDIDO.Where(x => x.NUMERO_PEDIDO_BLOCO == dNumeroPedido).First().ID_CLIENTE.GetValueOrDefault();
+                if(idclientesgt > 0)
+                {
+                    VW_EMAILS objEmails = ctxTI.VW_EMAILS.Where(x => x.CLIENTESGT == idclientesgt).FirstOrDefault();
+                    if(objEmails != null)
+                    {
+                        emailModel.Para = objEmails.EMAIL_CLIENTE + "; ";
+                        emailModel.ComCopia = objEmails.EMAIL_REP + "; ";
+                    }
+                }
             }
 
-            emailModel.Conteudo += "Segue anexo o pedido Nº: <b>" + emailModel.ChaveAnexo +"</b>" + Environment.NewLine;
+            emailModel.Conteudo += "Segue anexo o pedido Nº: " + emailModel.ChaveAnexo +"" + Environment.NewLine;
             emailModel.Conteudo += Environment.NewLine;
-            emailModel.Conteudo += "<p style='color:red;'>Esta mensagem foi gerada automaticamente. Favor não respondê-la.</p>" + Environment.NewLine;
-            emailModel.Conteudo += Environment.NewLine; emailModel.Conteudo += "<p style='color:gray;'>AVISO LEGAL: Esta mensagem (incluindo qualquer anexo) e os arquivos nela contidos é confidencial e legalmente protegida, somente podendo ser usada pelo indivíduo ou entidade a quem foi endereçada. Caso você a tenha recebido por engano, deverá devolvê-la ao remetente e, posteriormente, apagá-la, pois, a disseminação, encaminhamento, uso, impressão ou cópia do conteúdo desta mensagem são expressamente proibidos.</p>";
+            emailModel.Conteudo += "Esta mensagem foi gerada automaticamente. Favor não respondê-la." + Environment.NewLine;
+            emailModel.Conteudo += Environment.NewLine; emailModel.Conteudo += "AVISO LEGAL: Esta mensagem (incluindo qualquer anexo) e os arquivos nela contidos é confidencial e legalmente protegida, somente podendo ser usada pelo indivíduo ou entidade a quem foi endereçada. Caso você a tenha recebido por engano, deverá devolvê-la ao remetente e, posteriormente, apagá-la, pois, a disseminação, encaminhamento, uso, impressão ou cópia do conteúdo desta mensagem são expressamente proibidos.";
         }
 
         [HttpGet]

@@ -4566,6 +4566,7 @@
                                 <FontFamily>Verdana</FontFamily>
                                 <FontSize>6pt</FontSize>
                                 <Format>###,###,##0.00</Format>
+                                <Language>pt-BR</Language>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -4614,6 +4615,7 @@
                                 <FontFamily>Verdana</FontFamily>
                                 <FontSize>6pt</FontSize>
                                 <Format>###,###,##0.00</Format>
+                                <Language>pt-BR</Language>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -4662,6 +4664,7 @@
                                 <FontFamily>Verdana</FontFamily>
                                 <FontSize>6pt</FontSize>
                                 <Format>###,###,##0.00</Format>
+                                <Language>pt-BR</Language>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -4961,6 +4964,7 @@
                                 <FontWeight>Bold</FontWeight>
                                 <Format>###,###,##0.00</Format>
                                 <Color>MidnightBlue</Color>
+                                <Language>pt-BR</Language>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -5014,6 +5018,7 @@
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                                 <Color>MidnightBlue</Color>
+                                <Language>pt-BR</Language>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -5188,6 +5193,7 @@
                                 <FontWeight>Bold</FontWeight>
                                 <Format>###,###,##0.00</Format>
                                 <Color>MidnightBlue</Color>
+                                <Language>pt-BR</Language>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -5528,6 +5534,41 @@
       <PrintOnLastPage>true</PrintOnLastPage>
       <ReportItems>
         <Rectangle Name="Rectangle2">
+          <ReportItems>
+            <Textbox Name="ExecutionTime">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>=Globals!ExecutionTime</Value>
+                      <Style>
+                        <FontFamily>Verdana</FontFamily>
+                        <FontSize>8pt</FontSize>
+                        <Language>pt-BR</Language>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Left</TextAlign>
+                  </Style>
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>ExecutionTime</rd:DefaultName>
+              <Height>0.44125cm</Height>
+              <Width>7.01043cm</Width>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+          </ReportItems>
           <KeepTogether>true</KeepTogether>
           <Top>1.34056cm</Top>
           <Left>0.18626cm</Left>
@@ -5551,6 +5592,7 @@
                   <Style>
                     <FontFamily>Verdana</FontFamily>
                     <FontSize>8pt</FontSize>
+                    <Language>pt-BR</Language>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -5663,6 +5705,7 @@
                   <Style>
                     <FontFamily>Verdana</FontFamily>
                     <FontSize>7pt</FontSize>
+                    <Language>pt-BR</Language>
                   </Style>
                 </TextRun>
                 <TextRun>
@@ -5670,6 +5713,7 @@
                   <Style>
                     <FontFamily>Verdana</FontFamily>
                     <FontSize>7pt</FontSize>
+                    <Language>pt-BR</Language>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -5705,6 +5749,7 @@
                   <Style>
                     <FontFamily>Verdana</FontFamily>
                     <FontSize>7pt</FontSize>
+                    <Language>pt-BR</Language>
                   </Style>
                 </TextRun>
                 <TextRun>
@@ -5712,6 +5757,7 @@
                   <Style>
                     <FontFamily>Verdana</FontFamily>
                     <FontSize>7pt</FontSize>
+                    <Language>pt-BR</Language>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -5726,41 +5772,6 @@
           <Height>0.44125cm</Height>
           <Width>3.52063cm</Width>
           <ZIndex>5</ZIndex>
-          <Style>
-            <Border>
-              <Style>None</Style>
-            </Border>
-            <PaddingLeft>2pt</PaddingLeft>
-            <PaddingRight>2pt</PaddingRight>
-            <PaddingTop>2pt</PaddingTop>
-            <PaddingBottom>2pt</PaddingBottom>
-          </Style>
-        </Textbox>
-        <Textbox Name="ExecutionTime">
-          <CanGrow>true</CanGrow>
-          <KeepTogether>true</KeepTogether>
-          <Paragraphs>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
-                  <Value>=Globals!ExecutionTime</Value>
-                  <Style>
-                    <FontFamily>Verdana</FontFamily>
-                    <FontSize>8pt</FontSize>
-                  </Style>
-                </TextRun>
-              </TextRuns>
-              <Style>
-                <TextAlign>Left</TextAlign>
-              </Style>
-            </Paragraph>
-          </Paragraphs>
-          <rd:DefaultName>ExecutionTime</rd:DefaultName>
-          <Top>1.34056cm</Top>
-          <Left>0.18626cm</Left>
-          <Height>0.44125cm</Height>
-          <Width>7.01043cm</Width>
-          <ZIndex>6</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>

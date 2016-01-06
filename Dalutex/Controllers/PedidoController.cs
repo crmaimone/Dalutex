@@ -1575,7 +1575,7 @@ namespace Dalutex.Controllers
             }
             catch (Exception ex)
             {
-                ViewBag.SendResult = "Houve uma falha aoo enviar o e-mail." + Environment.NewLine + ex.Message;
+                ViewBag.SendResult = "Houve uma falha ao enviar o e-mail." + Environment.NewLine + ex.Message;
                 base.Handle(ex);
                 return null;
             }

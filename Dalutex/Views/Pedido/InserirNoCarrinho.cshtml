@@ -168,51 +168,53 @@
                         <div class="col-xs-12">
                             @if (Model.Modo == "I")
                             {
-                                <button type="submit" class="btn btn-default pull-left"><span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span> INCLUIR</button>
+                                <button type="submit" class="btn btn-default pull-left"><span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>&nbsp;INCLUIR</button>
                                 <span class="pull-left">&nbsp;</span>
                                 if (Model.Tipo == Enums.ItemType.Estampado || Model.Tipo == Enums.ItemType.ValidacaoReserva)
                                 {
-                                    @Html.ActionLink("VOLTAR", "ArtigosDisponiveis", "Pedido",
-                                    new
-                                    {
-                                        desenho = Model.Desenho,
-                                        variante = Model.Variante,
-                                        idcolecao = Model.IDColecao,
-                                        nmcolecao = Model.NMColecao,
-                                        pagina = Model.Pagina,
-                                        pedidoreserva = Model.PedidoReserva,
-                                        idvariante = Model.IDVariante,
-                                        itempedidoreserva = Model.ItemPedidoReserva,
-                                        tipo = ((int)Model.Tipo).ToString()
-                                    },
-                                         new { @class = "btn btn-default pull-left" })
+                                    <a href="@Url.Action("ArtigosDisponiveis", "Pedido", new
+                                        {
+                                            desenho = Model.Desenho,
+                                            variante = Model.Variante,
+                                            idcolecao = Model.IDColecao,
+                                            nmcolecao = Model.NMColecao,
+                                            pagina = Model.Pagina,
+                                            pedidoreserva = Model.PedidoReserva,
+                                            idvariante = Model.IDVariante,
+                                            itempedidoreserva = Model.ItemPedidoReserva,
+                                            tipo = ((int)Model.Tipo).ToString()
+                                        })" class="btn btn-default pull-left">
+                                        <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>&nbsp;VOLTAR
+                                    </a>
                                 }
                                 else if (Model.Tipo == Enums.ItemType.Liso)
                                 {
-                                    @Html.ActionLink("VOLTAR", "Lisos", "Pedido",
-                                    new
-                                    {
-                                        idcolecao = Model.IDColecao,
-                                        nmcolecao = Model.NMColecao,
-                                        pagina = Model.Pagina
-                                    },
-                                    new { @class = "btn btn-default pull-left"  })
+                                    <a href="@Url.Action("Lisos", "Pedido", new
+                                        {
+                                            idcolecao = Model.IDColecao,
+                                            nmcolecao = Model.NMColecao,
+                                            pagina = Model.Pagina
+                                        })" class="btn btn-default pull-left">
+                                        <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>&nbsp;VOLTAR
+                                    </a>
                                 }
                                 else if (Model.Tipo == Enums.ItemType.Reserva)
                                 {
-                                    @Html.ActionLink("VOLTAR", "ItensParaReserva", "Pedido",
-                                    new
-                                    {
-                                        pagina = Model.Pagina
-                                    },
-                                    new { @class = "btn btn-default pull-left" })
+                                    <a href="@Url.Action("ItensParaReserva", "Pedido", new
+                                        {
+                                            pagina = Model.Pagina
+                                        })" class="btn btn-default pull-left">
+                                        <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>&nbsp;VOLTAR
+                                    </a>
                                 }
                             }
                             else if (Model.Modo == "A")
                             {
-                                <button type="submit" class="btn btn-default pull-left"><span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span> ALTERAR</button>
+                                <button type="submit" class="btn btn-default pull-left"><span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>&nbsp;ALTERAR</button>
                                 <span class="pull-left">&nbsp;</span>
-                                @Html.ActionLink("VOLTAR", "Carrinho", "Pedido", null, new { @class = "btn btn-default pull-right" })
+                                <a href="@Url.Action("Carrinho", "Pedido")" class="btn btn-default pull-left">
+                                    <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>&nbsp;VOLTAR
+                                </a>
                             }
                         </div>
                     </div>

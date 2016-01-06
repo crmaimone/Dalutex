@@ -16,13 +16,14 @@
                 {
                     @Html.AntiForgeryToken()
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    <div class="form-group" style="display:-webkit-inline-box">
+
+                    <div class="form-group pull-left">
                         @Html.LabelFor(m => m.Filtro, new { @class = "col-md-2 control-label" })
-                        <div class="col-md-10">
-                            @Html.TextBoxFor(m => m.Filtro, new { @class = "form-control" })
+                        <div style="display:inline-flex">
+                            @Html.TextBoxFor(m => m.Filtro, new { @class = "form-control", style = "height:37px;" })
                             @Html.ValidationMessageFor(m => m.Filtro, "", new { @class = "text-danger" })
+                            <button type="submit" class="btn btn-default" style="margin-left:5px; margin-bottom:3px"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>&nbsp;PESQUISAR</button>
                         </div>
-                        <input type="submit" id="btnRepres" value="Pesquisar" class="btn btn-default" />
                     </div>
                 }
             </section>

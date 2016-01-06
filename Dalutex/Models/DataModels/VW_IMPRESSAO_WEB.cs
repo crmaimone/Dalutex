@@ -175,8 +175,6 @@ namespace Dalutex.Models.DataModels
 
         public decimal? IDTRANSPORTADORA { get; set; }
 
-        public string GRUPO_FACCAO { get; set; }
-
-        public decimal?  ID_CLI_FACCAO { get; set; }
+        public string GRUPO_CLIENTE { get; set; }
     }
 }

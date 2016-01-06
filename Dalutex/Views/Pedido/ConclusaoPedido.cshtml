@@ -111,17 +111,28 @@
                             <div class="col-md-12">
                                 @Html.HiddenFor(x => x.IDTipoPedido)
 
-                                <input type="submit" value="PROSSEGUIR" class="btn btn-default pull-left" />
+                                <button type="submit" class="btn btn-default pull-left"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>&nbsp;PROSSEGUIR</button>
                                 <span class="pull-left">&nbsp;</span>
                                 @if (Model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
                                 {
-                                    @Html.ActionLink("VOLTAR", "Transportadora", "Cadastro", new { IDTransportadora = Model.Transportadora.IDTRANSPORTADORA }, new { @class = "btn btn-default btn-warning pull-left" })
+                                    <a href="@Url.Action("Transportadora", "Cadastro", new
+                                        {
+                                            IDTransportadora = Model.Transportadora.IDTRANSPORTADORA
+                                        })" class="btn btn-default pull-left">
+                                        <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>&nbsp;VOLTAR
+                                    </a>
                                 }
                                 else
                                 {
                                     <div><p>Deseja realmente concluir este pedido?</p></div>
-                                    @Html.ActionLink("VOLTAR", "ClientesFatura", "Cadastro", new { IDRepresentante = Model.Representante.IDREPRESENTANTE, IDClienteFatura = Model.ClienteFatura.ID_CLIENTE }, new { @class = "btn btn-default btn-warning pull-left" })
-                                }
+                                    <a href="@Url.Action("ClientesFatura", "Cadastro", new
+                                        {
+                                            IDRepresentante = Model.Representante.IDREPRESENTANTE,
+                                            IDClienteFatura = Model.ClienteFatura.ID_CLIENTE
+                                        })" class="btn btn-default pull-left">
+                                        <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>&nbsp;VOLTAR
+                                    </a>
+                               }
                             </div>
                         </div>
                         }
@@ -130,7 +141,9 @@
             else
             {
                 <h5>Seu carrinho está vazio.</h5>
-                @Html.ActionLink("Ir para a página inicial", "Index", "Home", null, new { @class = "btn btn-default btn-info pull-left" })
+                <a href="@Url.Action("Index", "Home")" class="btn btn-info pull-left">
+                    <span class="glyphicon glyphicon-home" aria-hidden="true"></span>&nbsp;HOME
+                </a>
             }
         </div>
     </div>

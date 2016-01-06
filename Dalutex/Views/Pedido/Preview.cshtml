@@ -12,18 +12,6 @@
     Html.ValidationSummary(true, "Não foi possível gerar o pedido.", new { @class = "text-danger" });
 }
 <div style="border:1px solid gray; background-color: aliceblue; padding:3px">
-    @*<div class="row">
-        <div class="col-xs-12">
-            @using (Html.BeginForm("Preview", "Pedido", null, FormMethod.Post))
-            {
-                <h4>Deseja realmente confirmar este pedido?</h4>
-                <input type="submit" value="CONFIRMAR" class="btn btn-info pull-left" />
-                <span class="pull-left">&nbsp;</span>
-                @Html.ActionLink("VOLTAR", "ConclusaoPedido", "Pedido", null, new { @class = "btn btn-warning pull-left" })
-            }
-        </div>
-    </div>*@
-    <br />
     <div class="row">
         <div class="col-xs-12">            
             @if(Model.TipoPedido.Trim() != "Reserva")
@@ -53,9 +41,11 @@
             @using (Html.BeginForm("Preview", "Pedido", null, FormMethod.Post))
             {
                 <h3>Deseja realmente confirmar este pedido?</h3>
-                <input type="submit" value="CONFIRMAR" class="btn btn-info pull-left" />
+                <button type="submit" class="btn btn-info pull-left"><span class="glyphicon glyphicon-check" aria-hidden="true"></span>&nbsp;CONFIRMAR</button>
                 <span class="pull-left">&nbsp;</span>
-                @Html.ActionLink("VOLTAR", "ConclusaoPedido", "Pedido", null, new { @class = "btn btn-warning pull-left glyphicon glyphicon-arrow-left" })
+                <a href="@Url.Action("ConclusaoPedido", "Pedido")" class="btn btn-warning pull-left">
+                    <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>&nbsp;VOLTAR
+                </a>
             }
         </div>
     </div>

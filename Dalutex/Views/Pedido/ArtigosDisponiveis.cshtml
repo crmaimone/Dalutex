@@ -101,19 +101,23 @@ else
                 
                 @if (Model.Tipo == Enums.ItemType.Estampado)
                 {
-                    @Html.ActionLink("VOLTAR", "Desenhos", "Pedido", new { idcolecao = Model.IDColecao, nmcolecao = Model.NMColecao, pagina = Model.Pagina }, new { @class = "btn btn-default" })
+                   <a href="@Url.Action("Desenhos", "Pedido", new { idcolecao = Model.IDColecao, nmcolecao = Model.NMColecao, pagina = Model.Pagina })" class="btn btn-default">
+                        <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>&nbsp;VOLTAR
+                    </a>
                 }
                 else
                 {
-                    @Html.ActionLink("VOLTAR", "DesenhosValidaReserva", "Pedido", new { pedidoreserva = Model.PedidoReserva, pagina = Model.Pagina }, new { @class = "btn btn-default" })
-                }                
-    
+                    <a href="@Url.Action("DesenhosValidaReserva", "Pedido", new { pedidoreserva = Model.PedidoReserva, pagina = Model.Pagina })" class="btn btn-default">
+                        <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>&nbsp;VOLTAR
+                    </a>
+                }
+
                 </div>
                 <div class="col-sm-6">
-                    <a href="@Url.Action("Ampliacao", "Pedido", 
-                                        new { desenho = Model.Desenho, variante = Model.Variante, idcolecao = Model.IDColecao, 
-                                              nmcolecao = Model.NMColecao, pagina = Model.Pagina, retornarpara  = "ArtigosDisponiveis", 
-                                              codstudio = "", 
+                    <a href="@Url.Action("Ampliacao", "Pedido",
+                                        new { desenho = Model.Desenho, variante = Model.Variante, idcolecao = Model.IDColecao,
+                                              nmcolecao = Model.NMColecao, pagina = Model.Pagina, retornarpara  = "ArtigosDisponiveis",
+                                              codstudio = "",
                                               //tipo = Model.Tipo
                                               tipo = (int)Model.Tipo
                                             }

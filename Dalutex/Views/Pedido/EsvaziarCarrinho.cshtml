@@ -8,7 +8,7 @@
     @using (Html.BeginForm("EsvaziarCarrinho", "Pedido", null, FormMethod.Post))
     {
         @Html.AntiForgeryToken()
-        <a class="btn btn-info pull-left" href="javascript:history.back()">NÃO! Tire-me daqui</a>
-        <input type="submit" value="REMOVER" class="btn btn-danger pull-right" />
+        <button class="btn btn-info pull-left" onclick="javascript:history.back()"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>&nbsp;NÃO! Tire-me daqui</button>
+        <button type="submit" class="btn btn-danger pull-right"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span>&nbsp;REMOVER</button>
     }
 </div>

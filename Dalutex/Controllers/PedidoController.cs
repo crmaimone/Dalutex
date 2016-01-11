@@ -2009,11 +2009,14 @@ namespace Dalutex.Controllers
 
 
                 var result = (from p in ctxTI.VW_PESQUISA_PEDIDO
-                                where (p.PEDIDO == dFiltroPedido || dFiltroPedido <= 0)
-                                        && (model.FiltroCliente == null || p.CLIENTE.ToUpper().Contains(model.FiltroCliente))
-                                        && (model.FiltroRepresentante == null || p.REPRESENTANTE.ToUpper().Contains(model.FiltroRepresentante))
-                                orderby p.PEDIDO descending  
-                                select p).ToList();
+                             where (p.PEDIDO == dFiltroPedido || dFiltroPedido <= 0)
+                                && (model.FiltroCliente == null || p.CLIENTE.ToUpper().Contains(model.FiltroCliente))
+                                && (model.FiltroRepresentante == null || p.REPRESENTANTE.ToUpper().Contains(model.FiltroRepresentante))
+                           orderby p.PEDIDO descending  
+                            select p).ToList();
+
+
+
 
                 decimal dTotal = result.Count / (decimal)iItensPorPagina;
                 model.TotalPaginas = (int)Decimal.Ceiling(dTotal);

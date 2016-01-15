@@ -59,7 +59,7 @@ namespace Dalutex.Models
             //Caso as imagens estejam na mesma pasta da aplicação
             //string strImagens = url.AbsoluteUri.Replace(url.AbsolutePath, "").Replace(url.Query, "") + ConfigurationManager.AppSettings["PASTA_DESENHOS"].Replace("~", "").Replace("\\", "/");
             //Caso as imagens estejam publicadas em outro site.
-            string strImagens = ConfigurationManager.AppSettings["PASTA_DESENHOS"].Replace("~", "").Replace("\\", "/");
+            string strImagens = ConfigurationManager.AppSettings["PASTA_DESENHOS_RELATORIO"];
             relatorio.SetParameters(new ReportParameter("PASTA_DESENHOS", strImagens));
 
             using (var ctx = new TIDalutexContext())

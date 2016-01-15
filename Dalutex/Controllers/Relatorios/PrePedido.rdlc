@@ -4617,7 +4617,7 @@
                                 <FontFamily>Verdana</FontFamily>
                                 <FontSize>6pt</FontSize>
                                 <Format>N2</Format>
-                                <Language>=System.Threading.Thread.CurrentThread.CurrentUICulture.ToString()</Language>
+                                <Language>pt-BR</Language>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -4666,7 +4666,7 @@
                                 <FontFamily>Verdana</FontFamily>
                                 <FontSize>6pt</FontSize>
                                 <Format>N2</Format>
-                                <Language>=System.Threading.Thread.CurrentThread.CurrentUICulture.ToString()</Language>
+                                <Language>pt-BR</Language>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -4699,6 +4699,7 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -5014,12 +5015,23 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Format(Sum(Fields!VALOR_TOTAL.Value, "dsPrePedido"),"Currency")</Value>
+                              <Value>R$ </Value>
                               <Style>
                                 <FontFamily>Verdana</FontFamily>
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
-                                <Format>C2</Format>
+                                <Format>N2</Format>
+                                <Color>MidnightBlue</Color>
+                                <Language>=System.Threading.Thread.CurrentThread.CurrentUICulture.ToString()</Language>
+                              </Style>
+                            </TextRun>
+                            <TextRun>
+                              <Value>=Sum(Fields!VALOR_TOTAL.Value, "dsPrePedido")</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <FontSize>8pt</FontSize>
+                                <FontWeight>Bold</FontWeight>
+                                <Format>n2</Format>
                                 <Color>MidnightBlue</Color>
                                 <Language>pt-BR</Language>
                               </Style>

@@ -14,5 +14,6 @@ namespace Dalutex.Models.DataModels
         public decimal PEDIDO { get; set; }
         public string REPRESENTANTE { get; set; }
         public string CLIENTE { get; set; }
+        public string DATA_EMISSAO { get; set; }
     }
 }

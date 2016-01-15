@@ -1935,7 +1935,7 @@ namespace Dalutex.Controllers
             else
                 emailModel.Conteudo += "Boa noite." + Environment.NewLine;
 
-            emailModel.De = ConfigurationManager.AppSettings["EMAIL_USUARIO"];
+            emailModel.De = "dalutex@dalutex.com.br";
 
             using (var ctxTI = new TIDalutexContext())
             {
@@ -2012,7 +2012,7 @@ namespace Dalutex.Controllers
                              where (p.PEDIDO == dFiltroPedido || dFiltroPedido <= 0)
                                 && (model.FiltroCliente == null || p.CLIENTE.ToUpper().Contains(model.FiltroCliente))
                                 && (model.FiltroRepresentante == null || p.REPRESENTANTE.ToUpper().Contains(model.FiltroRepresentante))
-                           orderby p.PEDIDO descending  
+                           orderby p.DATA_EMISSAO descending  
                             select p).ToList();
 
 

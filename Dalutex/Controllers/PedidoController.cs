@@ -1567,7 +1567,7 @@ namespace Dalutex.Controllers
                 espelho.CreatePdfStream(out buffer, out pdfStream);
 
                 Attachment anexo = new Attachment(pdfStream, "Pedido_" + model.ChaveAnexo, "application/pdf");
-                utils.EnviaEmail(model.De, model.Para, model.ComCopia, model.Titulo, model.Conteudo, anexo);
+                utils.EnviaEmail(model.De, model.Para, model.ComCopia, model.Titulo, model.Conteudo.Replace(Environment.NewLine,@"<BR />"), anexo);
                 pdfStream.Close();
 
                 ViewBag.SendResult = "e-mail enviado com sucesso.";

@@ -176,5 +176,7 @@ namespace Dalutex.Models.DataModels
         public decimal? IDTRANSPORTADORA { get; set; }
 
         public string GRUPO_CLIENTE { get; set; }
+
+        public int COD_CLI_ENTR { get; set; }
     }
 }

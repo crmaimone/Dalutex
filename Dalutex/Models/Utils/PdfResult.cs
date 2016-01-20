@@ -66,7 +66,9 @@ namespace Dalutex.Models
             {
                 //Define o nome do nosso DataSource e qual rotina irá preenche-lo, no caso, nosso método criado anteriormente
                 relatorio.DataSources.Clear();
-                relatorio.DataSources.Add(new ReportDataSource("dsPrePedido", ctx.VW_IMPRESSAO_WEB.Where(x => x.PEDIDO_BLOCO == IDPedidoBloco).ToList()));
+                var dts = ctx.VW_IMPRESSAO_WEB.Where(x => x.PEDIDO_BLOCO == IDPedidoBloco).ToList();
+
+                relatorio.DataSources.Add(new ReportDataSource("dsPrePedido", dts));
             }
 
             string reportType = "PDF";

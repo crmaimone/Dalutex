@@ -407,6 +407,8 @@ namespace Dalutex {
             
             private global::System.Data.DataColumn columnGRUPO_CLIENTE;
             
+            private global::System.Data.DataColumn columnCOD_CLI_ENTR;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public VW_IMPRESSAO_WEBDataTable() {
@@ -954,6 +956,14 @@ namespace Dalutex {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn COD_CLI_ENTRColumn {
+                get {
+                    return this.columnCOD_CLI_ENTR;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -1053,7 +1063,8 @@ namespace Dalutex {
                         string OBS_TROCA_TEC, 
                         decimal PEDIDO_CLIENTE, 
                         decimal IDTRANSPORTADORA, 
-                        string GRUPO_CLIENTE) {
+                        string GRUPO_CLIENTE, 
+                        int COD_CLI_ENTR) {
                 VW_IMPRESSAO_WEBRow rowVW_IMPRESSAO_WEBRow = ((VW_IMPRESSAO_WEBRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         PEDIDO,
@@ -1119,7 +1130,8 @@ namespace Dalutex {
                         OBS_TROCA_TEC,
                         PEDIDO_CLIENTE,
                         IDTRANSPORTADORA,
-                        GRUPO_CLIENTE};
+                        GRUPO_CLIENTE,
+                        COD_CLI_ENTR};
                 rowVW_IMPRESSAO_WEBRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowVW_IMPRESSAO_WEBRow);
                 return rowVW_IMPRESSAO_WEBRow;
@@ -1206,6 +1218,7 @@ namespace Dalutex {
                 this.columnPEDIDO_CLIENTE = base.Columns["PEDIDO_CLIENTE"];
                 this.columnIDTRANSPORTADORA = base.Columns["IDTRANSPORTADORA"];
                 this.columnGRUPO_CLIENTE = base.Columns["GRUPO_CLIENTE"];
+                this.columnCOD_CLI_ENTR = base.Columns["COD_CLI_ENTR"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1339,6 +1352,8 @@ namespace Dalutex {
                 base.Columns.Add(this.columnIDTRANSPORTADORA);
                 this.columnGRUPO_CLIENTE = new global::System.Data.DataColumn("GRUPO_CLIENTE", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnGRUPO_CLIENTE);
+                this.columnCOD_CLI_ENTR = new global::System.Data.DataColumn("COD_CLI_ENTR", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnCOD_CLI_ENTR);
                 this.columnPEDIDO.AllowDBNull = false;
                 this.columnPEDIDO_BLOCO.AllowDBNull = false;
                 this.columnCLIENTE_NOVO.MaxLength = 1;
@@ -2532,6 +2547,22 @@ namespace Dalutex {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int COD_CLI_ENTR {
+                get {
+                    try {
+                        return ((int)(this[this.tableVW_IMPRESSAO_WEB.COD_CLI_ENTRColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'COD_CLI_ENTR\' in table \'VW_IMPRESSAO_WEB\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableVW_IMPRESSAO_WEB.COD_CLI_ENTRColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsDATA_EMISSAONull() {
                 return this.IsNull(this.tableVW_IMPRESSAO_WEB.DATA_EMISSAOColumn);
             }
@@ -3273,6 +3304,18 @@ namespace Dalutex {
             public void SetGRUPO_CLIENTENull() {
                 this[this.tableVW_IMPRESSAO_WEB.GRUPO_CLIENTEColumn] = global::System.Convert.DBNull;
             }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsCOD_CLI_ENTRNull() {
+                return this.IsNull(this.tableVW_IMPRESSAO_WEB.COD_CLI_ENTRColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetCOD_CLI_ENTRNull() {
+                this[this.tableVW_IMPRESSAO_WEB.COD_CLI_ENTRColumn] = global::System.Convert.DBNull;
+            }
         }
         
         /// <summary>
@@ -3496,7 +3539,7 @@ namespace Dalutex.DataSetTableAdapters {
             tableMapping.ColumnMappings.Add("TOTAL_KG", "TOTAL_KG");
             tableMapping.ColumnMappings.Add("PEDIDO_CLIENTE", "PEDIDO_CLIENTE");
             tableMapping.ColumnMappings.Add("IDTRANSPORTADORA", "IDTRANSPORTADORA");
-            tableMapping.ColumnMappings.Add("GRUPO_FACCAO", "GRUPO_CLIENTE");
+            tableMapping.ColumnMappings.Add("GRUPO_CLIENTE", "GRUPO_CLIENTE");
             this._adapter.TableMappings.Add(tableMapping);
         }
         

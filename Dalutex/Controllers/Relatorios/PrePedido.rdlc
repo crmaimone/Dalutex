@@ -506,7 +506,7 @@
                               <Style>
                                 <FontFamily>Verdana</FontFamily>
                                 <FontSize>8pt</FontSize>
-                                <Format>dd/MM/yy hh:mm</Format>
+                                <Format>dd/MM/yy HH:mm</Format>
                                 <Language>=System.Threading.Thread.CurrentThread.CurrentUICulture.ToString()</Language>
                               </Style>
                             </TextRun>
@@ -1258,13 +1258,14 @@
                 <TablixCell />
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="ID_CLIENTE7">
+                    <Textbox Name="COD_CLI_ENTR">
+                      <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!ID_TRANSP.Value</Value>
+                              <Value>=Fields!COD_CLI_ENTR.Value</Value>
                               <Style>
                                 <FontFamily>Verdana</FontFamily>
                                 <FontSize>7pt</FontSize>
@@ -1276,8 +1277,7 @@
                           </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>ID_CLIENTE</rd:DefaultName>
-                      <ZIndex>24</ZIndex>
+                      <rd:DefaultName>COD_CLI_ENTR</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>Solid</Style>
@@ -1883,6 +1883,7 @@
                       </Style>
                     </Textbox>
                     <ColSpan>5</ColSpan>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell />
@@ -4699,7 +4700,6 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -6091,8 +6091,12 @@
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
         <Field Name="GRUPO_CLIENTE">
-          <DataField>GRUPO_FACCAO</DataField>
+          <DataField>GRUPO_CLIENTE</DataField>
           <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="COD_CLI_ENTR">
+          <DataField>COD_CLI_ENTR</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
       </Fields>
       <rd:DataSetInfo>

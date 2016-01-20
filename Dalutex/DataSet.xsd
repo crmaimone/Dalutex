@@ -81,7 +81,7 @@
               <Mapping SourceColumn="TOTAL_KG" DataSetColumn="TOTAL_KG" />
               <Mapping SourceColumn="PEDIDO_CLIENTE" DataSetColumn="PEDIDO_CLIENTE" />
               <Mapping SourceColumn="IDTRANSPORTADORA" DataSetColumn="IDTRANSPORTADORA" />
-              <Mapping SourceColumn="GRUPO_FACCAO" DataSetColumn="GRUPO_CLIENTE" />
+              <Mapping SourceColumn="GRUPO_CLIENTE" DataSetColumn="GRUPO_CLIENTE" />
             </Mappings>
             <Sources />
           </TableAdapter>
@@ -93,7 +93,7 @@
   <xs:element name="DataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="True" msprop:Generator_DataSetName="DataSet" msprop:Generator_UserDSName="DataSet">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="VW_IMPRESSAO_WEB" msprop:Generator_TableClassName="VW_IMPRESSAO_WEBDataTable" msprop:Generator_TableVarName="tableVW_IMPRESSAO_WEB" msprop:Generator_TablePropName="VW_IMPRESSAO_WEB" msprop:Generator_RowDeletingName="VW_IMPRESSAO_WEBRowDeleting" msprop:Generator_RowChangingName="VW_IMPRESSAO_WEBRowChanging" msprop:Generator_RowEvHandlerName="VW_IMPRESSAO_WEBRowChangeEventHandler" msprop:Generator_RowDeletedName="VW_IMPRESSAO_WEBRowDeleted" msprop:Generator_UserTableName="VW_IMPRESSAO_WEB" msprop:Generator_RowChangedName="VW_IMPRESSAO_WEBRowChanged" msprop:Generator_RowEvArgName="VW_IMPRESSAO_WEBRowChangeEvent" msprop:Generator_RowClassName="VW_IMPRESSAO_WEBRow">
+        <xs:element name="VW_IMPRESSAO_WEB" msprop:Generator_TableClassName="VW_IMPRESSAO_WEBDataTable" msprop:Generator_TableVarName="tableVW_IMPRESSAO_WEB" msprop:Generator_RowChangedName="VW_IMPRESSAO_WEBRowChanged" msprop:Generator_TablePropName="VW_IMPRESSAO_WEB" msprop:Generator_RowDeletingName="VW_IMPRESSAO_WEBRowDeleting" msprop:Generator_RowChangingName="VW_IMPRESSAO_WEBRowChanging" msprop:Generator_RowEvHandlerName="VW_IMPRESSAO_WEBRowChangeEventHandler" msprop:Generator_RowDeletedName="VW_IMPRESSAO_WEBRowDeleted" msprop:Generator_RowClassName="VW_IMPRESSAO_WEBRow" msprop:Generator_UserTableName="VW_IMPRESSAO_WEB" msprop:Generator_RowEvArgName="VW_IMPRESSAO_WEBRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="PEDIDO" msprop:Generator_ColumnVarNameInTable="columnPEDIDO" msprop:Generator_ColumnPropNameInRow="PEDIDO" msprop:Generator_ColumnPropNameInTable="PEDIDOColumn" msprop:Generator_UserColumnName="PEDIDO" type="xs:decimal" />
@@ -364,6 +364,7 @@
               <xs:element name="PEDIDO_CLIENTE" msprop:Generator_ColumnVarNameInTable="columnPEDIDO_CLIENTE" msprop:Generator_ColumnPropNameInRow="PEDIDO_CLIENTE" msprop:Generator_ColumnPropNameInTable="PEDIDO_CLIENTEColumn" msprop:Generator_UserColumnName="PEDIDO_CLIENTE" type="xs:decimal" minOccurs="0" />
               <xs:element name="IDTRANSPORTADORA" msprop:Generator_ColumnVarNameInTable="columnIDTRANSPORTADORA" msprop:Generator_ColumnPropNameInRow="IDTRANSPORTADORA" msprop:Generator_ColumnPropNameInTable="IDTRANSPORTADORAColumn" msprop:Generator_UserColumnName="IDTRANSPORTADORA" type="xs:decimal" minOccurs="0" />
               <xs:element name="GRUPO_CLIENTE" msprop:Generator_ColumnVarNameInTable="columnGRUPO_CLIENTE" msprop:Generator_ColumnPropNameInRow="GRUPO_CLIENTE" msprop:Generator_ColumnPropNameInTable="GRUPO_CLIENTEColumn" msprop:Generator_UserColumnName="GRUPO_CLIENTE" type="xs:string" minOccurs="0" />
+              <xs:element name="COD_CLI_ENTR" msprop:Generator_ColumnVarNameInTable="columnCOD_CLI_ENTR" msprop:Generator_ColumnPropNameInRow="COD_CLI_ENTR" msprop:Generator_ColumnPropNameInTable="COD_CLI_ENTRColumn" msprop:Generator_UserColumnName="COD_CLI_ENTR" type="xs:int" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

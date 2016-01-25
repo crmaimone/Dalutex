@@ -1883,7 +1883,6 @@
                       </Style>
                     </Textbox>
                     <ColSpan>5</ColSpan>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell />
@@ -4806,7 +4805,7 @@
                         <Image Name="imgEstampado">
                           <Source>External</Source>
                           <Value>=Parameters!PASTA_DESENHOS.Value + Fields!DESENHO.Value + "_" + Fields!VARIANTE.Value + ".JPG"</Value>
-                          <Sizing>Fit</Sizing>
+                          <Sizing>FitProportional</Sizing>
                           <Top>0.0635cm</Top>
                           <Left>0.06146cm</Left>
                           <Height>1.45896cm</Height>

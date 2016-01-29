@@ -15,16 +15,27 @@ namespace Dalutex.Models.Utils
             {
                 MailMessage mail = new MailMessage();
                 char separator = ';';
-                string[] destinatarios = para.Split(separator);
+                string[] destinatarios = para.Trim().Split(separator);
 
                 foreach(var destinatario in destinatarios)
-                    mail.To.Add(destinatario);
+                {
+                    if (destinatario.Trim() != "")
+                        mail.To.Add(destinatario);
+                }
+                    
 
-                string[] copiados = cc.Split(separator);
+                if(cc != null)
+                {
+                    string[] copiados = cc.Trim().Split(separator);
 
-                foreach (var copiado in copiados)
-                    mail.CC.Add(copiado);
-
+                    foreach (var copiado in copiados)
+                    {
+                        if (copiado.Trim() != "")
+                           mail.CC.Add(copiado);
+                    }
+                        
+                }
+                
                 mail.From = new MailAddress(de);
                 mail.Subject = assunto;
                 mail.Body = corpo;
@@ -32,6 +43,7 @@ namespace Dalutex.Models.Utils
                 {
                     mail.Attachments.Add(anexo);
                 }
+
                 mail.IsBodyHtml = true;
                 SmtpClient smtp = new SmtpClient();
                 smtp.Host = ConfigurationManager.AppSettings["EMAIL_SERVIDOR"];

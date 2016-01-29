@@ -231,13 +231,11 @@
         scriptWrapper = (function () {
 
             //API Attributes
-            txtPecas_Blur = function()
-            {
+            txtPecas_Blur = function () {
                 calcularTotal();
             }
 
-            calcularTotal = function()
-            {
+            calcularTotal = function () {
                 var $txtPecas = $("#txtPecas");
                 var $txtQuantidade = $("#txtQuantidade");
 
@@ -269,8 +267,7 @@
                 calcularTotal();
             }
 
-            txtPecas_Input = function(e)
-            {
+            txtPecas_Input = function (e) {
                 $(this).val($(this).val().replace(",", "").replace(".", ""));
             }
 
@@ -290,14 +287,14 @@
         (function Init() {
             $('.input-group.date').datepicker({
                 startDate: "@Model.DataEntregaItem.ToString("dd/MM/yyyy")",
-                endDate: "@DateTime.Today.AddDays(Model.NumeroMaximoDiasDataSolicitacao).ToString("dd/MM/yyyy")",                
+                endDate: "@Model.DtItemSolicitada.ToString("dd/MM/yyyy")",
                 format: "dd/mm/yyyy",
                 todayBtn: true,
                 clearBtn: true,
                 language: "pt-BR"
             });
 
-            $('.input-group.date').datepicker('update', '@Model.DtItemSolicitada.ToString("dd/MM/yyyy")');
+            $('.input-group.date').datepicker('update', '@Model.DataEntregaItem.ToString("dd/MM/yyyy")');
 
             $('#lstTiposPedido').selectpicker();
             $("#lblQuantidade").text($("#hidUM").val());
@@ -313,7 +310,7 @@
             });
             $('#lstTiposPedido').on('change', scriptWrapper.lstTiposPedido_Change);
             $('#lstTamanhoPadrao').on('change', scriptWrapper.lstTamanhoPadrao_Change);
-    })();
+        })();
     });
     </script>
 }

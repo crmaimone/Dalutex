@@ -300,7 +300,8 @@ namespace Dalutex.Controllers
 
                 this.CarregarTiposPedidos(model);
                 this.ObterPrevisaoEntrega(model);
-                model.DtItemSolicitada = model.DataEntregaItem;
+
+                model.DtItemSolicitada = model.DataEntregaItem.AddDays(int.Parse(ConfigurationManager.AppSettings["DIAS_DATA_SOLICITACAO"]));
 
                 model.ObterTipoPedido = (base.Session_Carrinho == null || base.Session_Carrinho.IDTipoPedido < 0)? "S" : "N";
             }
@@ -928,7 +929,7 @@ namespace Dalutex.Controllers
                     if (objDisponibilidade != null && objDisponibilidade.DISPONIBILIDADE_PCP != null)
                         model.DataEntregaItem = (DateTime)objDisponibilidade.DISPONIBILIDADE_PCP;
                     else
-                        model.DataEntregaItem = DateTime.Today.AddYears(1);
+                        model.DataEntregaItem = DateTime.Today.AddDays(45);
 
                     if (base.Session_Carrinho != null && base.Session_Carrinho.DataEntrega < model.DataEntregaItem)
                         base.Session_Carrinho.DataEntrega = model.DataEntregaItem;
@@ -1567,7 +1568,10 @@ namespace Dalutex.Controllers
                 espelho.CreatePdfStream(out buffer, out pdfStream);
 
                 Attachment anexo = new Attachment(pdfStream, "Pedido_" + model.ChaveAnexo, "application/pdf");
+
+
                 utils.EnviaEmail(model.De, model.Para, model.ComCopia, model.Titulo, model.Conteudo.Replace(Environment.NewLine,@"<BR />"), anexo);
+                
                 pdfStream.Close();
 
                 ViewBag.SendResult = "e-mail enviado com sucesso.";
@@ -1946,8 +1950,8 @@ namespace Dalutex.Controllers
                     VW_EMAILS objEmails = ctxTI.VW_EMAILS.Where(x => x.CLIENTESGT == idclientesgt).FirstOrDefault();
                     if(objEmails != null)
                     {
-                        emailModel.Para = objEmails.EMAIL_CLIENTE + "; ";
-                        emailModel.ComCopia = objEmails.EMAIL_REP + "; ";
+                        emailModel.Para = objEmails.EMAIL_REP + "; ";
+                        emailModel.ComCopia = objEmails.EMAIL_CLIENTE + "; "; 
                     }
                 }
             }

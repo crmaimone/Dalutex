@@ -37,7 +37,7 @@
                     {
                         foreach (Dalutex.Models.DataModels.VW_CLIENTE_TRANSP item in Model.ClientesFatura)
                         {
-                            <a href="@Url.Action("ProximoPasso", "Cadastro", new { IDClienteFatura = item.ID_CLIENTE, IDClienteEntrega = item.ID_CLIENTE })" class="list-group-item"><strong> @item.CNPJ.Trim()</strong> | @item.NOME.Trim() | @item.ENDERECO</a>
+                            <a href="@Url.Action("ProximoPasso", "Cadastro", new { IDClienteFatura = item.ID_CLIENTE })" class="list-group-item"><strong> @item.CNPJ.Trim()</strong> | @item.NOME.Trim() | @item.ENDERECO</a>
                         }
                     }
                     else

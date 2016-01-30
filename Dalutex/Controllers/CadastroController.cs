@@ -32,6 +32,8 @@ namespace Dalutex.Controllers
                 using (var ctx = new DalutexContext())
                 {
                     Session_Carrinho.Representante = ctx.REPRESENTANTES.Find(int.Parse(IDRepresentante));
+                    Session_Carrinho.ClienteFatura = null;
+                    Session_Carrinho.ClienteEntrega = null;
                 }
             }
             else if (IDClienteFatura != null)
@@ -254,8 +256,17 @@ namespace Dalutex.Controllers
                 IDClienteEntrega = base.Session_Carrinho.ClienteEntrega.ID_CLIENTE.ToString();
 
             int iIDClienteEntrega;
+            int.TryParse(IDClienteEntrega, out iIDClienteEntrega);
 
-            if (int.TryParse(IDClienteEntrega, out iIDClienteEntrega) && iIDClienteEntrega > 0)
+            if(iIDClienteEntrega == 0)
+            {
+                if(base.Session_Carrinho.ClienteFatura != null && base.Session_Carrinho.ClienteFatura.ID_CLIENTE > 0)
+                {
+                    iIDClienteEntrega = base.Session_Carrinho.ClienteFatura.ID_CLIENTE;
+                }
+            }
+
+            if(iIDClienteEntrega > 0)
             {
                 using (var ctx = new TIDalutexContext())
                 {

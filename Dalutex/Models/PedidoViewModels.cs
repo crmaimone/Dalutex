@@ -249,6 +249,8 @@ namespace Dalutex.Models
 
     public class InserirNoCarrinhoViewModel
     {
+        public int ID { get; set; }
+
         public InserirNoCarrinhoViewModel()
         {
             this.ComposeOpcoes = new List<int>() { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };//Valores fixos de zero a dez. verificar necessidade de mais.
@@ -410,10 +412,14 @@ namespace Dalutex.Models
         public string Cliente { get; set; }
         [Display(Name = "Representante")]
         public string Representante { get; set; }
+        public bool PodeEditarPedido { get; set; }
+        public bool PodeCancelarItens { get; set; }
     }
 
     public class ConclusaoPedidoViewModel
     {
+        public int ID { get; set; }
+
         public ConclusaoPedidoViewModel()
         {
             IDTipoPedido = -1;

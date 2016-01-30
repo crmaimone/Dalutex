@@ -1116,6 +1116,72 @@ namespace Dalutex.Controllers
             return View(model);
         }
 
+        private void RecarregarPedido(decimal NumeroPedidoBloco)
+        {
+            using(var ctx = new DalutexContext()){
+                using(var ctxTI = new TIDalutexContext()){
+                    PRE_PEDIDO objPrePedidoSalvo = ctxTI.PRE_PEDIDO.Where(x => x.NUMERO_PEDIDO_BLOCO == NumeroPedidoBloco).First();
+
+
+                    base.Session_Carrinho = new ConclusaoPedidoViewModel(){
+                        ID = (int)objPrePedidoSalvo.NUMERO_PRE_PEDIDO,
+                        IDTipoPedido = (int)objPrePedidoSalvo.TIPO_PEDIDO.GetValueOrDefault(),
+                        Representante = ctx.REPRESENTANTES.Find((int)objPrePedidoSalvo.ID_REPRESENTANTE),
+                        ClienteFatura = ctxTI.VW_CLIENTE_TRANSP.Where(c => c.ID_CLIENTE == (int)objPrePedidoSalvo.ID_CLIENTE).First(),
+                        QualidadeComercial = new KeyValuePair<string,string>(objPrePedidoSalvo.QUALIDADE_COM,objPrePedidoSalvo.QUALIDADE_COM),
+                        CondicaoPagto = ctxTI.VW_CONDICAO_PGTO.Find((int)objPrePedidoSalvo.COD_COND_PGTO),
+                        Observacoes = objPrePedidoSalvo.OBSERVACOES,
+                        DataEntrega = objPrePedidoSalvo.DATA_ENTREGA.GetValueOrDefault(),
+                        ClienteEntrega = ctxTI.VW_CLIENTE_TRANSP.Where(c => c.ID_CLIENTE == (int)objPrePedidoSalvo.ID_CLIENTE_ENTREGA).First(),
+                        Transportadora = ctx.TRANSPORTADORAS.Find((int)objPrePedidoSalvo.ID_TRANSPORTADORA),
+                        IDLocaisVenda = (int)objPrePedidoSalvo.ID_LOCAL.GetValueOrDefault(),
+                        Moeda = ctx.CADASTRO_MOEDAS.Find((int)objPrePedidoSalvo.COD_MOEDA),
+                        CanailVenda = ctx.CANAIS_VENDA.Find((short)objPrePedidoSalvo.CANAL_VENDAS),
+                        TipoAtendimento = ctxTI.PRE_PEDIDO_ATEND.Find(objPrePedidoSalvo.ATENDIMENTO),
+                        Frete = ctx.COML_TIPOSFRETE.Find((int)objPrePedidoSalvo.TIPOFRETE),
+                        ViaTransporte = ctx.COML_VIASTRANSPORTE.Find((int)objPrePedidoSalvo.VIATRANSPORTE),
+                        PorcentagemComissao = objPrePedidoSalvo.COMISSAO.GetValueOrDefault(),
+                        PedidoCliente = (int)objPrePedidoSalvo.PEDIDO_CLIENTE.GetValueOrDefault()
+                    };
+
+                    base.Session_Carrinho.Itens = new List<InserirNoCarrinhoViewModel>();
+
+                    List<PRE_PEDIDO_ITENS> lstItens = ctxTI.PRE_PEDIDO_ITENS.Where(i => i.NUMERO_PEDIDO_BLOCO == NumeroPedidoBloco).ToList();
+
+                    foreach (var item in lstItens)
+                    {
+                        base.Session_Carrinho.Itens.Add(new InserirNoCarrinhoViewModel()
+                        {
+                            ID = item.ITEM,
+                            Artigo = item.ARTIGO,
+                            DataEntregaItem = item.DATA_ENTREGA.GetValueOrDefault(),
+                            Desenho = item.DESENHO,
+                            TecnologiaPorExtenso = item.LISO_ESTAMP,
+                            Preco = item.PRECO_UNIT.GetValueOrDefault(),
+                            PrecoTabela = item.PRECOLISTA,
+                            Pecas = (int)item.QTDEPC,
+                            Quantidade = item.QUANTIDADE.GetValueOrDefault(),
+                            Reduzido = (int)item.REDUZIDO_ITEM,
+                            UnidadeMedida = item.UM,
+                            Variante = item.VARIANTE,
+                            Compose = (int)item.COD_COMPOSE,
+                            DtItemSolicitada = item.DATA_ENTREGA_DIGI.GetValueOrDefault(),
+                            ValorTotalItem = item.QUANTIDADE.GetValueOrDefault() * item.PRECO_UNIT.GetValueOrDefault(),
+                            Tipo =(
+                                objPrePedidoSalvo.CANAL_VENDAS == (int)Enums.CanaisVenda.TELEVENDAS
+                                    && item.PE == "S") ? Enums.ItemType.ProntaEntrega : (
+                                        ctxTI.PED_RESERVA_VENDA.Where(r => r.PEDIDO_VENDA == NumeroPedidoBloco).FirstOrDefault() != null ? Enums.ItemType.ValidacaoReserva:(
+                                            objPrePedidoSalvo.TIPO_PEDIDO == (int)Enums.TiposPedido.RESERVA? Enums.ItemType.Reserva : (
+                                                item.LISO_ESTAMP == "L" ? Enums.ItemType.Liso : Enums.ItemType.Estampado
+                                        )
+                                    )
+                            )
+                        });
+                    }
+                }
+            }
+        }
+
         public JsonResult ObterItensCarrinho()
         {
             return Json(base.Session_Carrinho.Itens.OrderBy(x => x.Compose), JsonRequestBehavior.AllowGet);
@@ -2056,6 +2122,13 @@ namespace Dalutex.Controllers
                     model.Representante = objPedido.REPRESENTANTE;
                 }
 
+                //TODO: Ver com o Odair em qual lugar eu verifico estas permissões
+                if (base.Session_Usuario.LOGIN_USU == "ODA")
+                {
+                    model.PodeCancelarItens = true;
+                    model.PodeEditarPedido = true;
+                }
+
                 return View(model);
             }
             else
@@ -2064,6 +2137,15 @@ namespace Dalutex.Controllers
             }
         }
 
+        public ActionResult DuplicarPedido(string numeropedido)
+        {
+            this.RecarregarPedido(decimal.Parse(numeropedido));
+            base.Session_Carrinho.ID = 0;
+            foreach (var item in base.Session_Carrinho.Itens)
+                item.ID = 0;
+
+            return RedirectToAction("ConclusaoPedido");
+        }
         #endregion
 
         #region Coleções

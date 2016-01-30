@@ -29,6 +29,15 @@
         <div class="col-md-12">
             <a class="btn btn-default right" href="@Url.Action("EspelhoPedido", new { numeropedido = @Model.Pedido })"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> IMPRIMIR</a>
             <a class="btn btn-default right" href="@Url.Action("EnviarEmail", new { numeropedido = @Model.Pedido })"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> E-MAIL</a>
+            <a class="btn btn-info right" href="@Url.Action("DuplicarPedido", new { numeropedido = @Model.Pedido })"><span class="glyphicon glyphicon-retweet" aria-hidden="true"></span> DUPLICAR</a>
+            @*@if (Model.PodeEditarPedido)
+            {
+                <a class="btn btn-warning right" href="@Url.Action("EditarPedido", new { numeropedido = @Model.Pedido })"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> EDITAR</a>
+            }
+            @if (Model.PodeCancelarItens)
+            {
+                <a class="btn btn-warning right" href="@Url.Action("EditarPedido", new { numeropedido = @Model.Pedido })"><span class="glyphicon glyphicon-adjust" aria-hidden="true"></span> CANCELAR</a>
+            }*@
        </div>
     </div>
 </div>

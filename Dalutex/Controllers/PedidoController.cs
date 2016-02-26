@@ -70,6 +70,23 @@ namespace Dalutex.Controllers
             return View();
         }
 
+        [HttpGet]
+        public JsonResult VerificaDesenhoBloqueado(string desenho)
+        {
+            ////ver com cassiano --- 25/02/2016 -----------------------------------------------------------------------------------------
+            using (var ctx = new TIDalutexContext())
+            {
+                VW_ORDEM_ANTERIOR_BLOQ obj = ctx.VW_ORDEM_ANTERIOR_BLOQ.Where(x => x.DESENHO == desenho).FirstOrDefault();
+                //se encontrou, está bloqueado.... mostrar mensagem na tela para o usuario e não deixar selecionar o desenho ..........
+                if (obj != null)
+                {
+                    return Json(false, JsonRequestBehavior.AllowGet);
+                }
+            }
+
+            return Json(true, JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult ArtigosDisponiveis(
             string desenho,
             string variante,
@@ -1218,7 +1235,6 @@ namespace Dalutex.Controllers
                     if (Session_Carrinho.Itens == null || Session_Carrinho.Itens.Count == 0)
                     {
                         ModelState.AddModelError("", "Não é permitido concluir o pedido sem itens.");
-                        this.ConclusaoPedidoCarregarEscolhas(model);
                         return View(model);
                     }
 
@@ -1230,7 +1246,6 @@ namespace Dalutex.Controllers
                     if (model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA && Session_Carrinho.Itens.Exists(x => x.Reduzido == 0))
                     {
                         ModelState.AddModelError("", "Este carrinho possuem itens com o código reduzido zerado. Favor entrar em contato com o TI.");
-                        this.ConclusaoPedidoCarregarEscolhas(model);
                         return View(model);
                     }
 
@@ -1240,7 +1255,6 @@ namespace Dalutex.Controllers
                     {                        
                         if (hasErrors)
                         {
-                            this.ConclusaoPedidoCarregarEscolhas(model);
                             return View(model);
                         }
 
@@ -1509,6 +1523,7 @@ namespace Dalutex.Controllers
                         int? iCodCondPgto = 0;
 
                         #region Pegar Código Condição de Pagto - Call Function Oracle
+
                         using(var ti_ctx = new TIDalutexContext())
                         {                                                                                                   
                             iCodCondPgto = ti_ctx.Database.SqlQuery<int>("select ti_dalutex.pega_consicao_pgto(:p0) from dual", model.CondicaoPagto.ID_COND).FirstOrDefault();
@@ -1710,21 +1725,30 @@ namespace Dalutex.Controllers
         {
             try
             {
+                bool estaEditando = (base.Session_Carrinho.ID > 0);
+
                 int iNUMERO_PEDIDO_BLOCO = default(int);
 
-                while (iNUMERO_PEDIDO_BLOCO == default(int))
+                if (!estaEditando)
                 {
-                    using (var ctx = new TIDalutexContext())
+                    while (iNUMERO_PEDIDO_BLOCO == default(int))
                     {
-                        PROXIMO_NUMERO_PEDIDO reservar = ctx.PROXIMO_NUMERO_PEDIDO.Where(x => x.DISPONIVEL == 0).OrderBy(x => x.NUMERO_PEDIDO).First();
-                        
-                        iNUMERO_PEDIDO_BLOCO = reservar.NUMERO_PEDIDO;
+                        using (var ctx = new TIDalutexContext())
+                        {
+                            PROXIMO_NUMERO_PEDIDO reservar = ctx.PROXIMO_NUMERO_PEDIDO.Where(x => x.DISPONIVEL == 0).OrderBy(x => x.NUMERO_PEDIDO).First();
 
-                        reservar.DISPONIVEL = 1;
-                        reservar.ROTINA = 2;                        
-                        reservar.DATA_RESERVA_SID = DateTime.Today;
-                        ctx.SaveChanges();
+                            iNUMERO_PEDIDO_BLOCO = reservar.NUMERO_PEDIDO;
+
+                            reservar.DISPONIVEL = 1;
+                            reservar.ROTINA = 2;
+                            reservar.DATA_RESERVA_SID = DateTime.Today;
+                            ctx.SaveChanges();
+                        }
                     }
+                }
+                else
+                {
+                    iNUMERO_PEDIDO_BLOCO = base.Session_Carrinho.ID;
                 }
 
                 #region Grava Pedido
@@ -1813,6 +1837,8 @@ namespace Dalutex.Controllers
 
                                 string origem = "";
 
+
+                                //TODO:<!EDICAO> REINSERIR NO CASO DE EDIÇÃO?
                                 if (item.Tipo == Enums.ItemType.ValidacaoReserva)
                                 {
                                     origem = "E";
@@ -1825,8 +1851,7 @@ namespace Dalutex.Controllers
                                         ITEM_PED_RESERVA = item.ItemPedidoReserva,
                                         ID_VAR_PED_RESERVA = item.IDVariante,
                                         PEDIDO_VENDA = iNUMERO_PEDIDO_BLOCO,
-                                        ITEM_PED_VENDA = i
-                                        ,
+                                        ITEM_PED_VENDA = i,//TODO:<!EDICAO> COMO RECUPERAR ESTA INFORMAÇÃO?
                                         ID_PED_RESERVA_VENDA = _id
                                     });
 
@@ -1854,7 +1879,7 @@ namespace Dalutex.Controllers
                                     COR = _cor,                         
                                     DATA_ENTREGA = item.DataEntregaItem,
                                     DESENHO = item.Desenho,
-                                    ITEM = i,
+                                    ITEM = i,//TODO:<!EDICAO> COMO RECUPERAR ESTA INFORMAÇÃO?
                                     LISO_ESTAMP = item.Tecnologia,
                                     NUMERO_PEDIDO_BLOCO = iNUMERO_PEDIDO_BLOCO,
                                     PE = "N",
@@ -2125,8 +2150,8 @@ namespace Dalutex.Controllers
                 //TODO: Ver com o Odair em qual lugar eu verifico estas permissões
                 if (base.Session_Usuario.LOGIN_USU == "ODA")
                 {
-                    model.PodeCancelarItens = true;
                     model.PodeEditarPedido = true;
+                    model.PodeCancelarItens = false;
                 }
 
                 return View(model);
@@ -2146,6 +2171,14 @@ namespace Dalutex.Controllers
 
             return RedirectToAction("ConclusaoPedido");
         }
+
+        public ActionResult EditarPedido(string numeropedido)
+        {
+            this.RecarregarPedido(decimal.Parse(numeropedido));
+
+            return RedirectToAction("ConclusaoPedido");
+        }
+
         #endregion
 
         #region Coleções
@@ -2269,9 +2302,12 @@ namespace Dalutex.Controllers
                 }
                 else if (idcolecao == "POCKET")
                 {
-                    CONFIG_GERAL objResult = ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Pocket);
-                    model.IDColecao = int.Parse(objResult.INT1.ToString());
-                    model.NMColecao = objResult.PARAMETRO2;
+                    //oda-- 25/02/2016 --- alteração para pegar a pocket vigente -------------------------------------
+                    model.NMColecao = "Flash";                    
+
+                    //CONFIG_GERAL objResult = ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Pocket);
+                    //model.IDColecao = int.Parse(objResult.INT1.ToString());
+                    //model.NMColecao = objResult.PARAMETRO2;
                 }
                 else if (idcolecao == "DESENHOS")
                 {
@@ -2289,7 +2325,7 @@ namespace Dalutex.Controllers
                 }
             }
 
-            if (model.TotalPaginas > 0 || model.IDColecao > 0)
+            if (model.TotalPaginas > 0 || model.IDColecao > 0 || idcolecao == "POCKET")
             {
                 ObterDesenhos(model);
             }
@@ -2317,92 +2353,59 @@ namespace Dalutex.Controllers
             {
                 List<DesenhoVariante> result = null;
                 
-                if (model.IDColecao == -1) // se partiu da view de desenhos ...... (-1 é valor padrão para quando a coloção não é identificada).
-                {                
-                    var query =
-                        from dc in ctx.VW_DESENHOS_POR_COLECAO
-                        where
-                            ((model.IDColecao == -1) || (dc.COLECAO == model.IDColecao))
-                            && (dc.DESENHO.StartsWith(model.FiltroDesenho.ToUpper()) || model.FiltroDesenho == null)
-                            && (dc.TECNOLOGIA.StartsWith(model.FiltroTecnologia.ToUpper()) || model.FiltroTecnologia == null)
-                            && (dc.ARTIGO.StartsWith(model.FiltroArtigo.ToUpper()) || model.FiltroArtigo == null)
-                        group dc by
-                            new
-                            {
-                                dc.DESENHO,
-                                dc.VARIANTE
-                            }
-                            into dv
-                            select new DesenhoVariante
-                            {
-                                Desenho = dv.Key.DESENHO,
-                                Variante = dv.Key.VARIANTE
-                            };
-                    if (model.TotalPaginas == 0)
-                    {
-                        result = query.OrderBy(x => x.Desenho)
-                                            .ThenBy(x => x.Variante)
-                                            .ToList();
-
-                        decimal dTotal = result.Count / (decimal)iItensPorPagina;
-                        model.TotalPaginas = (int)Decimal.Ceiling(dTotal);
-                        if (model.TotalPaginas == 0)
-                            model.TotalPaginas = 1;
-
-                        model.Galeria = result.Skip((model.Pagina - 1) * iItensPorPagina).Take(iItensPorPagina).ToList();
-                    }
-                    else
-                    {
-                        model.Galeria = query.OrderBy(x => x.Desenho)
-                                            .ThenBy(x => x.Variante)
-                                            .Skip((model.Pagina - 1) * iItensPorPagina)
-                                            .Take(iItensPorPagina)
-                                            .ToList();
-                    }
-                }
-                else//-- oda -- 03/09/2015 -- se for origem da view de coleções, então pega coleção do controle do desenvolvimento;
+                var preQuery =
+                    from dc in ctx.VW_DESENHOS_POR_COLECAO
+                    where
+                        ((model.IDColecao <= 0 ) || (dc.COLECAO == model.IDColecao))
+                        && (dc.DESENHO.StartsWith(model.FiltroDesenho.ToUpper()) || model.FiltroDesenho == null)
+                        && (dc.TECNOLOGIA.StartsWith(model.FiltroTecnologia.ToUpper()) || model.FiltroTecnologia == null)
+                        && (dc.ARTIGO.StartsWith(model.FiltroArtigo.ToUpper()) || model.FiltroArtigo == null)
+                       select dc;
+                    
+                List<VW_DESENHOS_POR_COLECAO> preResult = preQuery.ToList<VW_DESENHOS_POR_COLECAO>();
+                if (model.IDColecao == 0 && model.NMColecao != null && model.NMColecao.ToUpper() == "FLASH")
                 {
-                    var query =
-                        from dc in ctx.VW_DESENHOS_POR_COL_DESENV
-                        where
-                            ((model.IDColecao == -1) || (dc.COLECAO == model.IDColecao))
-                            && (dc.DESENHO.StartsWith(model.FiltroDesenho.ToUpper()) || model.FiltroDesenho == null)
-                            && (dc.TECNOLOGIA.StartsWith(model.FiltroTecnologia.ToUpper()) || model.FiltroTecnologia == null)
-                            && (dc.ARTIGO.StartsWith(model.FiltroArtigo.ToUpper()) || model.FiltroArtigo == null)
-                        group dc by
-                            new
-                            {
-                                dc.DESENHO,
-                                dc.VARIANTE
-                            }
-                            into dv
-                            select new DesenhoVariante
-                            {
-                                Desenho = dv.Key.DESENHO,
-                                Variante = dv.Key.VARIANTE
-                            };
+                    preResult = (from pr in preResult
+                                 join fs in ctx.VW_POCKET_ATUAL on pr.COLECAO equals fs.ID_COLECAO
+                                 select pr).ToList();
+                }
+
+                var query = 
+                    from pr in preResult
+                    group pr by
+                    new
+                    {
+                        pr.DESENHO,
+                        pr.VARIANTE
+                    }
+                    into dv
+                    select new DesenhoVariante
+                    {
+                        Desenho = dv.Key.DESENHO,
+                        Variante = dv.Key.VARIANTE
+                    };
+
+                if (model.TotalPaginas == 0)
+                {
+                    result = query.OrderBy(x => x.Desenho)
+                                        .ThenBy(x => x.Variante)
+                                        .ToList();
+
+                    decimal dTotal = result.Count / (decimal)iItensPorPagina;
+                    model.TotalPaginas = (int)Decimal.Ceiling(dTotal);
                     if (model.TotalPaginas == 0)
-                    {
-                        result = query.OrderBy(x => x.Desenho)
-                                            .ThenBy(x => x.Variante)
-                                            .ToList();
+                        model.TotalPaginas = 1;
 
-                        decimal dTotal = result.Count / (decimal)iItensPorPagina;
-                        model.TotalPaginas = (int)Decimal.Ceiling(dTotal);
-                        if (model.TotalPaginas == 0)
-                            model.TotalPaginas = 1;
-
-                        model.Galeria = result.Skip((model.Pagina - 1) * iItensPorPagina).Take(iItensPorPagina).ToList();
-                    }
-                    else
-                    {
-                        model.Galeria = query.OrderBy(x => x.Desenho)
-                                            .ThenBy(x => x.Variante)
-                                            .Skip((model.Pagina - 1) * iItensPorPagina)
-                                            .Take(iItensPorPagina)
-                                            .ToList();
-                    }
-                }                
+                    model.Galeria = result.Skip((model.Pagina - 1) * iItensPorPagina).Take(iItensPorPagina).ToList();
+                }
+                else
+                {
+                    model.Galeria = query.OrderBy(x => x.Desenho)
+                                        .ThenBy(x => x.Variante)
+                                        .Skip((model.Pagina - 1) * iItensPorPagina)
+                                        .Take(iItensPorPagina)
+                                        .ToList();
+                }
             }
         }
 
@@ -2661,6 +2664,7 @@ namespace Dalutex.Controllers
         public ActionResult DesenhosValidaReserva(int pedidoreserva, string pagina, string totalpaginas)
         {
             DesenhosValidaReservaViewModel model = new DesenhosValidaReservaViewModel();
+            model.PedidoReserva = pedidoreserva;
 
             if (!string.IsNullOrWhiteSpace(totalpaginas))
             {
@@ -2689,11 +2693,14 @@ namespace Dalutex.Controllers
                                         .ToList();
 
                     decimal dTotal = result.Count / (decimal)iItensPorPagina;
+                    
+                    
+
                     model.TotalPaginas = (int)Decimal.Ceiling(dTotal);
                     if (model.TotalPaginas == 0)
                         model.TotalPaginas = 1;
 
-                    model.Galeria = result.Skip((model.Pagina - 1) * iItensPorPagina).Take(iItensPorPagina).ToList();
+                    model.Galeria = result.Skip((model.Pagina - 1) * iItensPorPagina).Take(iItensPorPagina).ToList();               
                 }
                 else
                 {

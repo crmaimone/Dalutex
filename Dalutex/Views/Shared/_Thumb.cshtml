@@ -35,22 +35,26 @@
             }
             else if (Model.Tipo == Enums.ItemType.Estampado)
             {
-                <a href="@Url.Content(@"ArtigosDisponiveis?" +
+                
+                    <div class="clickable-thumb">
+                        <img src="@Url.Content(Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg")" class="img-thumbnail equal-height">
+                        <input type="hidden" class="desenho" value="@Model.Desenho" />
+                        <div class="caption">
+                            <h5 style="text-decoration:none">@Model.Desenho&nbsp;@Model.Variante</h5>
+                        </div>
+                    </div>
+                   
+                    <a href="@Url.Content(@"ArtigosDisponiveis?" +
                                                     "&desenho=" + @Model.Desenho +
                                                     "&variante=" + @Model.Variante+
                                                     "&idcolecao="+ @Model.IDColecao+
                                                     "&nmcolecao="+ @Model.NMColecao+
                                                     "&pagina="+ @Model.Pagina+
-                                                    "&pedidoreserva=" +@Model.PedidoReserva+ 
-                                                    "&idvariante=0"+ 
+                                                    "&pedidoreserva=" +@Model.PedidoReserva+
+                                                    "&idvariante=0"+
                                                     "&itempedidoreserva=0"+
                                                     "&tipo=" + ((int)Model.Tipo).ToString()
-                                                )">
-                    <img src="@Url.Content(Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg")" class="img-thumbnail equal-height">
-                    <div class="caption">
-                        <h5 style="text-decoration:none">@Model.Desenho&nbsp;@Model.Variante</h5>
-                    </div>
-                </a>
+                                                )"></a>
             }
             else if (Model.Tipo == Enums.ItemType.ValidacaoReserva)
             {

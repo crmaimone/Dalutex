@@ -25,7 +25,7 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<REPRESENTANTES> REPRESENTANTES { get; set; }
         public virtual DbSet<COML_CONTATOS> COML_CONTATOS { get; set; }
         public virtual DbSet<TRANSPORTADORAS> TRANSPORTADORAS { get; set; }
-        public virtual DbSet<VMASCARAPRODUTOACABADO> VMASCARAPRODUTOACABADO { get; set; }
+        public virtual DbSet<VMASCARAPRODUTOACABADO> VMASCARAPRODUTOACABADO { get; set; }        
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

@@ -59,6 +59,8 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<REGRAS_QTD_PEDIDO> REGRAS_QTD_PEDIDO { get; set; }
         public virtual DbSet<VW_PESQUISA_PEDIDO> VW_PESQUISA_PEDIDO { get; set; }
         public virtual DbSet<VW_EMAILS> VW_EMAILS { get; set; }
+        public virtual DbSet<VW_ORDEM_ANTERIOR_BLOQ> VW_ORDEM_ANTERIOR_BLOQ { get; set; }
+        public virtual DbSet<VW_POCKET_ATUAL> VW_POCKET_ATUAL { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

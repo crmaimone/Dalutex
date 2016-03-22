@@ -412,7 +412,7 @@ namespace Dalutex.Models
         public string Cliente { get; set; }
         [Display(Name = "Representante")]
         public string Representante { get; set; }
-        public bool PodeEditarPedido { get; set; }
+        public bool PodeEditarPedido { get; set; }        
         public bool PodeCancelarItens { get; set; }
     }
 
@@ -493,6 +493,7 @@ namespace Dalutex.Models
         public decimal PorcentagemComissao { get; set; }
         public DateTime DataEntrega { get; set; }
         public decimal TotalPedido { get; set; }
+        public int StatusPedido { get; set; }
         
         #endregion
 

@@ -61,6 +61,9 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<VW_EMAILS> VW_EMAILS { get; set; }
         public virtual DbSet<VW_ORDEM_ANTERIOR_BLOQ> VW_ORDEM_ANTERIOR_BLOQ { get; set; }
         public virtual DbSet<VW_POCKET_ATUAL> VW_POCKET_ATUAL { get; set; }
+        public virtual DbSet<VW_PEDIDO_ROM_FAT> VW_PEDIDO_ROM_FAT { get; set; }
+        public virtual DbSet<ACOES> ACOES { get; set; }
+        public virtual DbSet<USUARIOS_ACOES> USUARIOS_ACOES { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -159,7 +162,7 @@ namespace Dalutex.Models.DataModels
             modelBuilder.Entity<REGRA_PADRAO>()
                 .Property(e => e.ID_USUARIO_STATUS)
                 .HasPrecision(38, 0);
-            
+
 
 
             modelBuilder.Entity<VW_DESENHOS_POR_COL_DESENV>()
@@ -1294,6 +1297,68 @@ namespace Dalutex.Models.DataModels
             modelBuilder.Entity<PRE_PEDIDO_ITENS>()
                 .Property(e => e.QTDEPC)
                 .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_PEDIDO_ROM_FAT>()
+                 .Property(e => e.QTDE_PEDIDA)
+                 .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_PEDIDO_ROM_FAT>()
+                .Property(e => e.QTDE_ABERTA)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_PEDIDO_ROM_FAT>()
+                .Property(e => e.UM)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_PEDIDO_ROM_FAT>()
+                .Property(e => e.COD_CLI)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_PEDIDO_ROM_FAT>()
+                .Property(e => e.MES)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_PEDIDO_ROM_FAT>()
+                .Property(e => e.PRECOUNITARIO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_PEDIDO_ROM_FAT>()
+                .Property(e => e.ESTOQUE)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_PEDIDO_ROM_FAT>()
+                .Property(e => e.QTDE_FAT)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_PEDIDO_ROM_FAT>()
+                .Property(e => e.QTDE_ROM)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_PEDIDO_ROM_FAT>()
+                .Property(e => e.OBSERV_PED)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<ACOES>()
+                .Property(e => e.ID_ACAO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<ACOES>()
+                .Property(e => e.DESCRICAO_ACAO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<ACOES>()
+                .Property(e => e.UNIT)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<USUARIOS_ACOES>()
+                .Property(e => e.ID_USUARIO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<USUARIOS_ACOES>()
+                .Property(e => e.ID_ACAO)
+                .HasPrecision(38, 0);
+
         }
     }
 }

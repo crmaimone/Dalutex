@@ -1158,7 +1158,8 @@ namespace Dalutex.Controllers
                         Frete = ctx.COML_TIPOSFRETE.Find((int)objPrePedidoSalvo.TIPOFRETE),
                         ViaTransporte = ctx.COML_VIASTRANSPORTE.Find((int)objPrePedidoSalvo.VIATRANSPORTE),
                         PorcentagemComissao = objPrePedidoSalvo.COMISSAO.GetValueOrDefault(),
-                        PedidoCliente = (int)objPrePedidoSalvo.PEDIDO_CLIENTE.GetValueOrDefault()
+                        PedidoCliente = (int)objPrePedidoSalvo.PEDIDO_CLIENTE.GetValueOrDefault(),
+                        StatusPedido = (int)objPrePedidoSalvo.STATUS_PEDIDO.GetValueOrDefault()
                     };
 
                     base.Session_Carrinho.Itens = new List<InserirNoCarrinhoViewModel>();
@@ -2147,12 +2148,8 @@ namespace Dalutex.Controllers
                     model.Representante = objPedido.REPRESENTANTE;
                 }
 
-                //TODO: Ver com o Odair em qual lugar eu verifico estas permissões
-                if (base.Session_Usuario.LOGIN_USU == "ODA")
-                {
-                    model.PodeEditarPedido = true;
-                    model.PodeCancelarItens = false;
-                }
+                model.PodeEditarPedido = base.Session_Usuario.PodeEditarPedidoNormal || base.Session_Usuario.PodeEditarPedidoAvancado;
+                model.PodeCancelarItens = base.Session_Usuario.PodeCancelarItens;
 
                 return View(model);
             }
@@ -2174,9 +2171,16 @@ namespace Dalutex.Controllers
 
         public ActionResult EditarPedido(string numeropedido)
         {
-            this.RecarregarPedido(decimal.Parse(numeropedido));
+            if (base.Session_Usuario.PodeEditarPedidoNormal || base.Session_Usuario.PodeEditarPedidoAvancado)
+            {
+                this.RecarregarPedido(decimal.Parse(numeropedido));
 
-            return RedirectToAction("ConclusaoPedido");
+                return RedirectToAction("ConclusaoPedido");
+            }
+            else
+            {
+                return RedirectToAction("Message", new { message = "O seu usuário não tem acesso para editar pedidos.", title = "Edição de pedido." });
+            }
         }
 
         #endregion

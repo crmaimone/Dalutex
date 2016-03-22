@@ -100,25 +100,60 @@
     <hr>
     <a class="btn btn-default right" href="javascript:history.back()">VOLTAR</a>
 
+
+<div id="alertDesenhoBloqueado" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">ATENÇÃO</h4>
+            </div>
+            <div class="modal-body">
+                <p>desenho de ordem anterior indisponivel. favor verificar com o desenvolvimento</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 @section Scripts {
     @Scripts.Render("~/bundles/equalheight")
     <script>
         $(document).ready(function () {
             //API
             scriptWrapper = (function () {
-
+       
                 //API Attributes
+                VerificaBloqueioDesenho = function () {
+                    var strDesenho = $(this).find('.desenho').val();
+                    var $link = $(this).siblings('a');
+                    $.getJSON("VerificaDesenhoBloqueado?desenho=" + strDesenho,  function (result) {
+                        if(!result){
+                            $("#alertDesenhoBloqueado").modal();
+                        }
+                        else {
+                            $link[0].click();
+                        }
+                    });
+                }
 
                 //API Methods
 
                 // public API
                 return {
+                    VerificaBloqueioDesenho: VerificaBloqueioDesenho
                 };
             })();
 
             //Init
             (function Init() {
                 $('.equal-height').equalHeight();
+                $('.clickable-thumb').click(scriptWrapper.VerificaBloqueioDesenho);
             })();
         });
     </script>

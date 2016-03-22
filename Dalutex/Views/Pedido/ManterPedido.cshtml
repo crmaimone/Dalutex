@@ -34,10 +34,10 @@
             {
                 <a class="btn btn-warning right" href="@Url.Action("EditarPedido", new { numeropedido = @Model.Pedido })"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> EDITAR</a>
             }
-            @*@if (Model.PodeCancelarItens)
+            @if (Model.PodeCancelarItens)
             {
-                <a class="btn btn-warning right" href="@Url.Action("EditarPedido", new { numeropedido = @Model.Pedido })"><span class="glyphicon glyphicon-adjust" aria-hidden="true"></span> CANCELAR</a>
-            }*@
+                <a class="btn btn-warning right" href="#"><span class="glyphicon glyphicon-adjust" aria-hidden="true"></span> CANCELAR ITENS</a>
+            }
        </div>
     </div>
 </div>

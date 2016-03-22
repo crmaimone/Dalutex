@@ -33,5 +33,9 @@ namespace Dalutex.Models.DataModels
         public string SETOR { get; set; }
 
         public decimal? SID_SIMULT { get; set; }
+
+        public bool PodeEditarPedidoNormal { get; set; }
+        public bool PodeEditarPedidoAvancado { get; set; }
+        public bool PodeCancelarItens { get; set; }
     }
 }

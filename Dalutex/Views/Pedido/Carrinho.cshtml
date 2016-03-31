@@ -13,17 +13,20 @@
             { 
                 foreach (InserirNoCarrinhoViewModel item in ViewBag.Carrinho.Itens)
                 {
-                    ViewDataDictionary partialViewData = new ViewDataDictionary();
-                    partialViewData.Add(new KeyValuePair<string, object>("URLDESENHOS", ViewBag.UrlDesenhos));
-                    partialViewData.Add(new KeyValuePair<string, object>("URLRESERVAS", ViewBag.UrlReservas));
-                    partialViewData.Add(new KeyValuePair<string, object>("ALTERARITEM", true));
+                    if(!item.Excluir)
+                    { 
+                        ViewDataDictionary partialViewData = new ViewDataDictionary();
+                        partialViewData.Add(new KeyValuePair<string, object>("URLDESENHOS", ViewBag.UrlDesenhos));
+                        partialViewData.Add(new KeyValuePair<string, object>("URLRESERVAS", ViewBag.UrlReservas));
+                        partialViewData.Add(new KeyValuePair<string, object>("ALTERARITEM", true));
 
-                    @Html.Partial(
-                        "_ItemCarrinho",
-                        item,
-                        partialViewData
-                    )
-                    <hr />
+                        @Html.Partial(
+                            "_ItemCarrinho",
+                            item,
+                            partialViewData
+                        )
+                        <hr />
+                    }
                 }
             }
             else

@@ -250,6 +250,8 @@ namespace Dalutex.Models
     public class InserirNoCarrinhoViewModel
     {
         public int ID { get; set; }
+        public bool PreExistente { get; set; }
+        public bool Excluir { get; set; }
 
         public InserirNoCarrinhoViewModel()
         {
@@ -414,11 +416,13 @@ namespace Dalutex.Models
         public string Representante { get; set; }
         public bool PodeEditarPedido { get; set; }        
         public bool PodeCancelarItens { get; set; }
+        public decimal Status { get; set; }
     }
 
     public class ConclusaoPedidoViewModel
     {
         public int ID { get; set; }
+        public bool Editando { get; set; }
 
         public ConclusaoPedidoViewModel()
         {

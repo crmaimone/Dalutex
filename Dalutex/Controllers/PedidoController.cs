@@ -20,6 +20,7 @@ namespace Dalutex.Controllers
 {
     public class PedidoController : BaseController
     {
+        
         #region Shared
 
         private ActionResult ValidarTipoPedido(object model)
@@ -86,17 +87,17 @@ namespace Dalutex.Controllers
 
             return Json(true, JsonRequestBehavior.AllowGet);
         }
-
+        
         public ActionResult ArtigosDisponiveis(
-            string desenho,
-            string variante,
-            int idcolecao,
-            string nmcolecao,
-            int pagina,
-            int idvariante,
-            int pedidoreserva,
-            int itempedidoreserva,
-            int tipo)
+           string desenho,
+           string variante,
+           int idcolecao,
+           string nmcolecao,
+           int pagina,
+           int idvariante,
+           int pedidoreserva,
+           int itempedidoreserva,
+           int tipo)
         {
             ArtigosDisponiveisViewModel model = new ArtigosDisponiveisViewModel();
             model.Desenho = desenho;
@@ -125,7 +126,7 @@ namespace Dalutex.Controllers
             VW_CARACT_DESENHOS objPrimeiroCarac = lstQuery.FirstOrDefault();
             int? iIDTecnologia;
 
-            if (objPrimeiroCarac != null && objPrimeiroCarac.TECNOLOGIA != null)
+            if (objPrimeiroCarac != null && objPrimeiroCarac.TECNOLOGIA != null)            
             {
                 model.TecnologiaAtual = objPrimeiroCarac.TECNOLOGIA.Replace(" ", "_");
 
@@ -159,11 +160,11 @@ namespace Dalutex.Controllers
                     {
                         lstArtigosStr.Add(item.ARTIGO);
                     }
-                    
+
                     var query =
                         from ar in ctx.VW_ARTIGOS_DISPONIVEIS
-                        where (!lstArtigosStr.Contains(ar.ARTIGO))
-                           && (lstTecnologias.Contains(ar.ID_TEC))
+                        where //(!lstArtigosStr.Contains(ar.ARTIGO)) && 
+                              (lstTecnologias.Contains(ar.ID_TEC))
                         group ar by
                             new
                             {
@@ -177,7 +178,7 @@ namespace Dalutex.Controllers
                                 Tecnologia = grp.Key.TECNOLOGIA
                             };
 
-                    string _sql = query.ToString();//apenas para pegar o SQL que esta sendo passado
+                    //string _sql = query.ToString();//apenas para pegar o SQL que esta sendo passado
 
                     model.Artigos = query.OrderBy(x => x.Tecnologia).ThenBy(x => x.Artigo).ToList();
                 }
@@ -959,17 +960,26 @@ namespace Dalutex.Controllers
         {
             if (base.Session_Carrinho != null && base.Session_Carrinho.Itens != null)
             {
-                if (base.Session_Carrinho.Itens.Remove(model))
+                InserirNoCarrinhoViewModel objExcluir = base.Session_Carrinho.Itens.First(i => i.Equals(model));
+                if (!objExcluir.PreExistente)
                 {
-                    if (base.Session_Carrinho.Itens.Count == default(int))
+                    if (base.Session_Carrinho.Itens.Remove(objExcluir))
                     {
-                        base.Session_Carrinho = null;
+                        if (base.Session_Carrinho.Itens.Count == default(int))
+                        {
+                            base.Session_Carrinho = null;
+                        }
+                        return RedirectToAction("Carrinho");
                     }
-                    return RedirectToAction("Carrinho");
+                    else
+                    {
+                        return RedirectToAction("Error", new { message = "Este item não foi encontrado no carrinho para excluir.", title = "EXCLUSÃO DO CARRINHO" });
+                    }
                 }
                 else
                 {
-                    return RedirectToAction("Error", new { message = "Este item não foi encontrado no carrinho para excluir.", title = "EXCLUSÃO DO CARRINHO" });
+                    objExcluir.Excluir = true;
+                    return RedirectToAction("Carrinho");
                 }
             }
             else
@@ -1139,9 +1149,8 @@ namespace Dalutex.Controllers
                 using(var ctxTI = new TIDalutexContext()){
                     PRE_PEDIDO objPrePedidoSalvo = ctxTI.PRE_PEDIDO.Where(x => x.NUMERO_PEDIDO_BLOCO == NumeroPedidoBloco).First();
 
-
                     base.Session_Carrinho = new ConclusaoPedidoViewModel(){
-                        ID = (int)objPrePedidoSalvo.NUMERO_PRE_PEDIDO,
+                        ID = (int)objPrePedidoSalvo.NUMERO_PEDIDO_BLOCO,
                         IDTipoPedido = (int)objPrePedidoSalvo.TIPO_PEDIDO.GetValueOrDefault(),
                         Representante = ctx.REPRESENTANTES.Find((int)objPrePedidoSalvo.ID_REPRESENTANTE),
                         ClienteFatura = ctxTI.VW_CLIENTE_TRANSP.Where(c => c.ID_CLIENTE == (int)objPrePedidoSalvo.ID_CLIENTE).First(),
@@ -1171,6 +1180,7 @@ namespace Dalutex.Controllers
                         base.Session_Carrinho.Itens.Add(new InserirNoCarrinhoViewModel()
                         {
                             ID = item.ITEM,
+                            PreExistente = true,
                             Artigo = item.ARTIGO,
                             DataEntregaItem = item.DATA_ENTREGA.GetValueOrDefault(),
                             Desenho = item.DESENHO,
@@ -1726,7 +1736,7 @@ namespace Dalutex.Controllers
         {
             try
             {
-                bool estaEditando = (base.Session_Carrinho.ID > 0);
+                bool estaEditando = base.Session_Carrinho.Editando;
 
                 int iNUMERO_PEDIDO_BLOCO = default(int);
 
@@ -1751,55 +1761,87 @@ namespace Dalutex.Controllers
                 {
                     iNUMERO_PEDIDO_BLOCO = base.Session_Carrinho.ID;
                 }
-
-                #region Grava Pedido
-
-                PRE_PEDIDO objPrePedido = new PRE_PEDIDO()
+                
+                using (var ctx = new TIDalutexContext())
                 {
-                    NUMERO_PEDIDO_BLOCO = iNUMERO_PEDIDO_BLOCO,
-                    TIPO_PEDIDO = base.Session_Carrinho.IDTipoPedido,
-                    ID_REPRESENTANTE = base.Session_Carrinho.Representante.IDREPRESENTANTE,
-                    ID_CLIENTE = base.Session_Carrinho.ClienteFatura.ID_CLIENTE,
-                    QUALIDADE_COM = base.Session_Carrinho.QualidadeComercial.Key,
-                    COD_COND_PGTO = base.Session_Carrinho.CondicaoPagto.ID_COND,
-                    OBSERVACOES = base.Session_Carrinho.Observacoes,
-                    DATA_ENTREGA = base.Session_Carrinho.DataEntrega,
-                    DATA_EMISSAO = DateTime.Now,
-                    DATA_EMISSAO_DT = DateTime.Today,
-                    ID_CLIENTE_ENTREGA = base.Session_Carrinho.ClienteEntrega.ID_CLIENTE,
-                    ID_TRANSPORTADORA = base.Session_Carrinho.Transportadora.IDTRANSPORTADORA,
-                    USUARIO_INICIO = base.Session_Usuario.NOME_USU,
-                    DATA_INICIO = DateTime.Now,
-                    DATA_FINAL = DateTime.Now,
+                    #region Grava Pedido
 
-                    ID_LOCAL = (base.Session_Carrinho.IDLocaisVenda == null ? 5 : base.Session_Carrinho.IDLocaisVenda),//todo: verificar com marcio se precisa de uma view para este tipo
+                    PRE_PEDIDO objPrePedido = null;
+
+                    if (!estaEditando)
+                    {
+                        objPrePedido = new PRE_PEDIDO();
+                    }
+                    else
+                    {
+                        objPrePedido = ctx.PRE_PEDIDO.Where(p => p.NUMERO_PEDIDO_BLOCO == iNUMERO_PEDIDO_BLOCO).First();
+                    }
+
                     
-                    COD_MOEDA = base.Session_Carrinho.Moeda.CODIGOMOEDA,
-                    CANAL_VENDAS = base.Session_Carrinho.CanailVenda.CANAL_VENDA,
-                    ATENDIMENTO = base.Session_Carrinho.TipoAtendimento.COD_ATEND,
-                    TIPOFRETE = base.Session_Carrinho.Frete.TIPOFRETE,
+                    objPrePedido.NUMERO_PEDIDO_BLOCO = iNUMERO_PEDIDO_BLOCO;
+                    objPrePedido.TIPO_PEDIDO = base.Session_Carrinho.IDTipoPedido;
+                    objPrePedido.ID_REPRESENTANTE = base.Session_Carrinho.Representante.IDREPRESENTANTE;
+                    objPrePedido.ID_CLIENTE = base.Session_Carrinho.ClienteFatura.ID_CLIENTE;
+                    objPrePedido.QUALIDADE_COM = base.Session_Carrinho.QualidadeComercial.Key;
+                    objPrePedido.COD_COND_PGTO = base.Session_Carrinho.CondicaoPagto.ID_COND;
+                    objPrePedido.OBSERVACOES = base.Session_Carrinho.Observacoes;
+                    objPrePedido.DATA_ENTREGA = base.Session_Carrinho.DataEntrega;
+
+                    objPrePedido.ID_CLIENTE_ENTREGA = base.Session_Carrinho.ClienteEntrega.ID_CLIENTE;
+                    objPrePedido.ID_TRANSPORTADORA = base.Session_Carrinho.Transportadora.IDTRANSPORTADORA;
+                    objPrePedido.USUARIO_INICIO = base.Session_Usuario.NOME_USU;
+
+                    objPrePedido.ID_LOCAL = (base.Session_Carrinho.IDLocaisVenda == null ? 5 : base.Session_Carrinho.IDLocaisVenda);//todo: verificar com marcio se precisa de uma view para este tipo
+                    
+                    objPrePedido.COD_MOEDA = base.Session_Carrinho.Moeda.CODIGOMOEDA;
+                    objPrePedido.CANAL_VENDAS = base.Session_Carrinho.CanailVenda.CANAL_VENDA;
+                    objPrePedido.ATENDIMENTO = base.Session_Carrinho.TipoAtendimento.COD_ATEND;
+                    objPrePedido.TIPOFRETE = base.Session_Carrinho.Frete.TIPOFRETE;
 
                     //GERENTE = model.IDGerentesVenda,// não é necessario gravar neste campo para pedidos <> de PE
                     
-                    VIATRANSPORTE = base.Session_Carrinho.ViaTransporte.VIATRANSPORTE,
-                    COMISSAO = Session_Carrinho.PorcentagemComissao,
-                    ORIGEM = "PW", // APENAS PRA INFORMAR QUE ESTE PEDIDO VEIO DO PEDIDO WEB NOVO. 
-                    STATUS_PEDIDO = 1, //embora esteja definido no banco como padrão "1", esta gravando nulo, então, deixar explicito.....  
-                    PEDIDO_CLIENTE = base.Session_Carrinho.PedidoCliente                                                                                                                                                                                                                                                                                               
-                };
-                #endregion
+                    objPrePedido.VIATRANSPORTE = base.Session_Carrinho.ViaTransporte.VIATRANSPORTE;
+                    objPrePedido.COMISSAO = Session_Carrinho.PorcentagemComissao;
+                    objPrePedido.ORIGEM = "PW"; // APENAS PRA INFORMAR QUE ESTE PEDIDO VEIO DO PEDIDO WEB NOVO. 
+                    objPrePedido.PEDIDO_CLIENTE = base.Session_Carrinho.PedidoCliente;                                                                                                                                                                                                                                                                                        
 
-                using (var ctx = new TIDalutexContext())
-                {
+                    if(!estaEditando)
+                    {
+                        objPrePedido.STATUS_PEDIDO = 1; //embora esteja definido no banco como padrão "1", esta gravando nulo, então, deixar explicito.....  
+                        objPrePedido.DATA_INICIO = DateTime.Now;
+                        objPrePedido.DATA_FINAL = DateTime.Now;
+                        objPrePedido.DATA_EMISSAO = DateTime.Now;
+                        objPrePedido.DATA_EMISSAO_DT = DateTime.Today;
+                    }
+
+                    #endregion
+
+
                     using (var transaction = ctx.Database.BeginTransaction())
                     {
                         try
                         {
-                            List<PRE_PEDIDO_ITENS> lstItens = new List<PRE_PEDIDO_ITENS>();
+                            List<PRE_PEDIDO_ITENS> lstItens = null;
+                            if (!estaEditando)
+                            {
+                                lstItens = new List<PRE_PEDIDO_ITENS>();
+                            }
+                            else
+                            {
+                                lstItens = ctx.PRE_PEDIDO_ITENS.Where(i => i.NUMERO_PEDIDO_BLOCO == iNUMERO_PEDIDO_BLOCO).ToList();
+                            }
 
-                            int i = 0;
+                            int iNumeroItem = 0;
+                            if (estaEditando)
+                            {
+                                iNumeroItem = lstItens.Max(i => i.ITEM);
+                            }
+
                             foreach (InserirNoCarrinhoViewModel item in base.Session_Carrinho.Itens)
                             {
+                                if (item.Excluir)
+                                    continue;
+
                                 if (base.Session_Carrinho.IDTipoPedido == (int)Enums.TiposPedido.RESERVA)
                                 {
                                     item.Artigo = "0000";
@@ -1809,7 +1851,7 @@ namespace Dalutex.Controllers
 
                                     #region Reserva - Item sem reduzido (id_controle)
 
-                                    if (item.Reduzido <= default(int))
+                                    if (item.Reduzido <= default(int) && item.ID == 0)
                                     {
                                         item.Reduzido = ctx.Database.SqlQuery<int>("SELECT SEQ_ID_CONTROLE_DESENV.NEXTVAL FROM DUAL", 1).FirstOrDefault();
 
@@ -1834,31 +1876,49 @@ namespace Dalutex.Controllers
                                     #endregion
                                 }
 
-                                i++;
+                                if(!item.PreExistente)
+                                    iNumeroItem++;
 
                                 string origem = "";
 
+                                #region Inserir a reserva do item se necessário
 
-                                //TODO:<!EDICAO> REINSERIR NO CASO DE EDIÇÃO?
                                 if (item.Tipo == Enums.ItemType.ValidacaoReserva)
                                 {
                                     origem = "E";
 
-                                    int _id = ctx.Database.SqlQuery<int>("SELECT SEQ_ID_PED_RES_VENDA.NEXTVAL FROM DUAL", 1).FirstOrDefault();
-
-                                    ctx.PED_RESERVA_VENDA.Add(new PED_RESERVA_VENDA()
+                                    PED_RESERVA_VENDA objPedReservaVenda = null;
+                                    if(!item.PreExistente)//Se é um item novo
                                     {
-                                        PEDIDO_RESERVA = item.PedidoReserva,
-                                        ITEM_PED_RESERVA = item.ItemPedidoReserva,
-                                        ID_VAR_PED_RESERVA = item.IDVariante,
-                                        PEDIDO_VENDA = iNUMERO_PEDIDO_BLOCO,
-                                        ITEM_PED_VENDA = i,//TODO:<!EDICAO> COMO RECUPERAR ESTA INFORMAÇÃO?
-                                        ID_PED_RESERVA_VENDA = _id
-                                    });
+                                        int _id = ctx.Database.SqlQuery<int>("SELECT SEQ_ID_PED_RES_VENDA.NEXTVAL FROM DUAL", 1).FirstOrDefault();
 
+                                        objPedReservaVenda = new PED_RESERVA_VENDA()
+                                        {
+                                            PEDIDO_RESERVA = item.PedidoReserva,
+                                            ITEM_PED_RESERVA = item.ItemPedidoReserva,
+                                            ID_VAR_PED_RESERVA = item.IDVariante,
+                                            PEDIDO_VENDA = iNUMERO_PEDIDO_BLOCO,
+                                            ITEM_PED_VENDA = iNumeroItem,
+                                            ID_PED_RESERVA_VENDA = _id
+                                        };
+
+                                        ctx.PED_RESERVA_VENDA.Add(objPedReservaVenda);
+                                    }
+                                    else
+                                    {
+                                        objPedReservaVenda = ctx.PED_RESERVA_VENDA.Where(
+                                            r => r.PEDIDO_VENDA == iNUMERO_PEDIDO_BLOCO
+                                            && r.ITEM_PED_VENDA == item.ID
+                                            && r.PEDIDO_RESERVA == item.PedidoReserva
+                                            && r.ITEM_PED_RESERVA == item.ItemPedidoReserva).First();
+
+                                        objPedReservaVenda.ID_VAR_PED_RESERVA = item.IDVariante;
+                                    }
+                                   
                                     ctx.SaveChanges();
                                 }
 
+                                #endregion
 
                                 string _cor ;
                                 if (item.Tipo == Enums.ItemType.ValidacaoReserva)
@@ -1874,47 +1934,61 @@ namespace Dalutex.Controllers
                                     _cor = item.Cor;
                                 }
 
-                                PRE_PEDIDO_ITENS objItem = new PRE_PEDIDO_ITENS()
+                                PRE_PEDIDO_ITENS objItemSalvar = null;
+
+                                if(!item.PreExistente)
                                 {
-                                    ARTIGO = item.Artigo,
-                                    COR = _cor,                         
-                                    DATA_ENTREGA = item.DataEntregaItem,
-                                    DESENHO = item.Desenho,
-                                    ITEM = i,//TODO:<!EDICAO> COMO RECUPERAR ESTA INFORMAÇÃO?
-                                    LISO_ESTAMP = item.Tecnologia,
-                                    NUMERO_PEDIDO_BLOCO = iNUMERO_PEDIDO_BLOCO,
-                                    PE = "N",
-                                    PRECO_UNIT = item.Preco,
-                                    PRECOLISTA = (item.PrecoTabela == null ? 0 : item.PrecoTabela), 
-                                    QTDEPC = item.Pecas,
-                                    QUANTIDADE = item.Quantidade,
-                                    REDUZIDO_ITEM = item.Reduzido,
-                                    UM = item.UnidadeMedida,
-                                    VALOR_TOTAL = item.Preco * item.Quantidade,
-                                    VARIANTE = item.Variante,
-                                    COD_COMPOSE = item.Compose,
-                                    ORIGEM = origem,
+                                    objItemSalvar = new PRE_PEDIDO_ITENS();
+                                    objItemSalvar.ITEM = iNumeroItem;
+                                    objItemSalvar.NUMERO_PEDIDO_BLOCO = iNUMERO_PEDIDO_BLOCO;
+                                    objItemSalvar.Novo = true;
+                                }
+                                else
+                                {
+                                    objItemSalvar = lstItens.Where(i => i.ITEM == item.ID).First();
+                                }
 
-                                    // oda -- 26/11/2015 ---- gravar informações faltando dos itens ------
-                                    MALHA_PLANO = item.UnidadeMedida == "MT"? "P": "M",
-                                    MODA_DECORACAO = "M",
-                                    DATA_ENTREGA_DIGI = item.DtItemSolicitada,
-                                    ID_TAB_PRECO = -1,      //todo: se nulop, -1
-                                    PRECODIGITADOMOEDA = 0, //todo: apontar este campo para preco correto em caso de este existir                                    
-                                };
+                                objItemSalvar.ARTIGO = item.Artigo;
+                                objItemSalvar.COR = _cor;                     
+                                objItemSalvar.DATA_ENTREGA = item.DataEntregaItem;
+                                objItemSalvar.DESENHO = item.Desenho;
+                                objItemSalvar.LISO_ESTAMP = item.Tecnologia;
+                                objItemSalvar.PE = "N";
+                                objItemSalvar.PRECO_UNIT = item.Preco;
+                                objItemSalvar.PRECOLISTA = (item.PrecoTabela == null ? 0 : item.PrecoTabela);
+                                objItemSalvar.QTDEPC = item.Pecas;
+                                objItemSalvar.QUANTIDADE = item.Quantidade;
+                                objItemSalvar.REDUZIDO_ITEM = item.Reduzido;
+                                objItemSalvar.UM = item.UnidadeMedida;
+                                objItemSalvar.VALOR_TOTAL = item.Preco * item.Quantidade;
+                                objItemSalvar.VARIANTE = item.Variante;
+                                objItemSalvar.COD_COMPOSE = item.Compose;
+                                objItemSalvar.ORIGEM = origem;
+                                objItemSalvar.MALHA_PLANO = item.UnidadeMedida == "MT"? "P": "M";
+                                objItemSalvar.MODA_DECORACAO = "M";
+                                objItemSalvar.DATA_ENTREGA_DIGI = item.DtItemSolicitada;
+                                objItemSalvar.ID_TAB_PRECO = -1;     //todo: se nulop, -1
+                                objItemSalvar.PRECODIGITADOMOEDA = 0;//todo: apontar este campo para preco correto em caso de este existir                                    
 
-                                if (item.Tipo == Enums.ItemType.ValidacaoReserva || item.Tipo == Enums.ItemType.Estampado)
+
+                                if ((item.Tipo == Enums.ItemType.ValidacaoReserva || item.Tipo == Enums.ItemType.Estampado) && !item.PreExistente)
                                 {
                                     if (item.TecnologiaOriginal != item.TecnologiaPorExtenso)
                                     {
-                                        objItem.TROCA_TECNOLOGIA = "Troca de " + item.TecnologiaOriginal + " para " + item.TecnologiaPorExtenso;
+                                        objItemSalvar.TROCA_TECNOLOGIA = "Troca de " + item.TecnologiaOriginal + " para " + item.TecnologiaPorExtenso;
                                     }
                                 }
 
-                                lstItens.Add(objItem);
+                                if (objItemSalvar.Novo)
+                                {
+                                    lstItens.Add(objItemSalvar);
+                                }
                             }
 
-                            ctx.PRE_PEDIDO.Add(objPrePedido);
+                            if(!estaEditando)
+                            {
+                                ctx.PRE_PEDIDO.Add(objPrePedido);
+                            }
 
                             if (base.Session_Carrinho.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
                             {
@@ -1922,12 +1996,15 @@ namespace Dalutex.Controllers
 
                                 #region Liberação financeira
 
-                                ctx.PRE_PEDIDO_CRITICA.Add(new PRE_PEDIDO_CRITICA()
+                                if(!estaEditando)
                                 {
-                                    NUMERO_PRE_PEDIDO = objPrePedido.NUMERO_PEDIDO_BLOCO,
-                                    COD_CRITICA = (decimal)Enums.TiposCritica.LiberacaoFinanceira,
-                                    FLG_STATUS = "C"
-                                });
+                                    ctx.PRE_PEDIDO_CRITICA.Add(new PRE_PEDIDO_CRITICA()
+                                    {
+                                        NUMERO_PRE_PEDIDO = objPrePedido.NUMERO_PEDIDO_BLOCO,
+                                        COD_CRITICA = (decimal)Enums.TiposCritica.LiberacaoFinanceira,
+                                        FLG_STATUS = "C"
+                                    });
+                                }
 
                                 #endregion
 
@@ -1945,12 +2022,26 @@ namespace Dalutex.Controllers
 
                                 if (hasItemSemReduzido)
                                 {
-                                    ctx.PRE_PEDIDO_CRITICA.Add(new PRE_PEDIDO_CRITICA()
+                                    PRE_PEDIDO_CRITICA objCriticaAnterior = null;
+
+                                    if(estaEditando)
                                     {
-                                        NUMERO_PRE_PEDIDO = objPrePedido.NUMERO_PEDIDO_BLOCO,
-                                        COD_CRITICA = (decimal)Enums.TiposCritica.SemReduzido,
-                                        FLG_STATUS = "C"
-                                    });
+                                        ctx.PRE_PEDIDO_CRITICA
+                                        .Where(p => 
+                                            p.NUMERO_PRE_PEDIDO == objPrePedido.NUMERO_PEDIDO_BLOCO
+                                            && p.COD_CRITICA == (decimal)Enums.TiposCritica.SemReduzido
+                                        ).FirstOrDefault();
+                                    }
+
+                                    if(objCriticaAnterior == null)
+                                    {
+                                        ctx.PRE_PEDIDO_CRITICA.Add(new PRE_PEDIDO_CRITICA()
+                                        {
+                                            NUMERO_PRE_PEDIDO = objPrePedido.NUMERO_PEDIDO_BLOCO,
+                                            COD_CRITICA = (decimal)Enums.TiposCritica.SemReduzido,
+                                            FLG_STATUS = "C"
+                                        });
+                                    }
                                 }
 
                                 #endregion
@@ -1961,18 +2052,33 @@ namespace Dalutex.Controllers
                                 {
                                     if (item.REDUZIDO_ITEM > 0)
                                     {
-                                        //Se não tem preço, crítica. Se tem preço e ele é diferente do informado pelo representante, crítica.
+                                        //Se não tem preço, critica. Se tem preço e ele é diferente do informado pelo representante, critica.
                                         if (item.PRECOLISTA == null || item.PRECOLISTA.GetValueOrDefault() != item.PRECO_UNIT.GetValueOrDefault())
                                         {
-                                            ctx.PRE_PEDIDO_CRITICA.Add(new PRE_PEDIDO_CRITICA()
+                                            PRE_PEDIDO_CRITICA objCriticaAnterior = null;
+
+                                            if(estaEditando)
                                             {
-                                                NUMERO_PRE_PEDIDO = objPrePedido.NUMERO_PEDIDO_BLOCO,
-                                                COD_CRITICA = (decimal)Enums.TiposCritica.PrecoDiferente,
-                                                FLG_STATUS = "C",
-                                                ITEM_PEDIDO = item.ITEM,
-                                                VALOR_TAB = item.PRECOLISTA,
-                                                VALOR_ITEM = item.PRECO_UNIT
-                                            });
+                                                ctx.PRE_PEDIDO_CRITICA
+                                                .Where(p => 
+                                                    p.NUMERO_PRE_PEDIDO == objPrePedido.NUMERO_PEDIDO_BLOCO
+                                                    && p.COD_CRITICA == (decimal)Enums.TiposCritica.PrecoDiferente
+                                                    && p.ITEM_PEDIDO == item.ITEM
+                                                ).FirstOrDefault();
+                                            }
+
+                                            if(objCriticaAnterior == null)
+                                            {
+                                                ctx.PRE_PEDIDO_CRITICA.Add(new PRE_PEDIDO_CRITICA()
+                                                {
+                                                    NUMERO_PRE_PEDIDO = objPrePedido.NUMERO_PEDIDO_BLOCO,
+                                                    COD_CRITICA = (decimal)Enums.TiposCritica.PrecoDiferente,
+                                                    FLG_STATUS = "C",
+                                                    ITEM_PEDIDO = item.ITEM,
+                                                    VALOR_TAB = item.PRECOLISTA,
+                                                    VALOR_ITEM = item.PRECO_UNIT
+                                                });
+                                            }
                                         }
                                     }
                                 }
@@ -1984,8 +2090,27 @@ namespace Dalutex.Controllers
 
                             foreach (PRE_PEDIDO_ITENS item in lstItens)
                             {
-                                ctx.PRE_PEDIDO_ITENS.Add(item);
+                                if (item.Novo)
+                                {
+                                    ctx.PRE_PEDIDO_ITENS.Add(item);
+                                }
                             }
+
+                            //if(Session_Usuario.PodeCancelarItens)
+                            //{
+                                foreach (InserirNoCarrinhoViewModel item in base.Session_Carrinho.Itens)
+                                {
+                                    if(item.Excluir)
+                                    {
+                                        PRE_PEDIDO_ITENS objExcluir = ctx.PRE_PEDIDO_ITENS.First(i => i.ITEM == item.ID);
+                                        ctx.PRE_PEDIDO_ITENS.Remove(objExcluir);
+                                    }
+                                }
+                            //}
+                            //else
+                            //{
+                            //    throw new InvalidOperationException("Este usuário não tem permissão para cancelar itens.");
+                            //}
 
                             ctx.SaveChanges();
 
@@ -2146,10 +2271,20 @@ namespace Dalutex.Controllers
                     model.Pedido = objPedido.PEDIDO;
                     model.Cliente = objPedido.CLIENTE;
                     model.Representante = objPedido.REPRESENTANTE;
+                    model.Status = objPedido.STATUS_PEDIDO;
+
+                    if(objPedido.STATUS_PEDIDO == 10)/*Migrou para o SGT*/
+                    {
+                        model.PodeEditarPedido = false; /*VER COM O ODAIR base.Session_Usuario.PodeEditarPedidoAvancado;*/
+                    }
+                    else
+                    {
+                        model.PodeEditarPedido = base.Session_Usuario.PodeEditarPedidoNormal || base.Session_Usuario.PodeEditarPedidoAvancado;
+                        model.PodeCancelarItens = false; /*VER COM O ODAIR base.Session_Usuario.PodeCancelarItens;*/
+                    }
                 }
 
-                model.PodeEditarPedido = base.Session_Usuario.PodeEditarPedidoNormal || base.Session_Usuario.PodeEditarPedidoAvancado;
-                model.PodeCancelarItens = base.Session_Usuario.PodeCancelarItens;
+               
 
                 return View(model);
             }
@@ -2174,8 +2309,24 @@ namespace Dalutex.Controllers
             if (base.Session_Usuario.PodeEditarPedidoNormal || base.Session_Usuario.PodeEditarPedidoAvancado)
             {
                 this.RecarregarPedido(decimal.Parse(numeropedido));
+                base.Session_Carrinho.Editando = true;
 
-                return RedirectToAction("ConclusaoPedido");
+                if (Session_Carrinho.StatusPedido == 10)/*Migrou para o SGT*/
+                {
+                    if(!base.Session_Usuario.PodeEditarPedidoAvancado)
+                    {
+                        Session_Carrinho =  new ConclusaoPedidoViewModel();;
+                        return RedirectToAction("Message", new { message = "Este pedido já migrou para o SGT. Não é permitido alterá-lo.", title = "Edição de pedido." });
+                    }
+                    else
+                    {
+                        return RedirectToAction("ConclusaoPedido");
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("ConclusaoPedido");
+                }
             }
             else
             {

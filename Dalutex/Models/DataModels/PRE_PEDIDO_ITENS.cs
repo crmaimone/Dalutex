@@ -83,6 +83,8 @@ namespace Dalutex.Models.DataModels
         public decimal? QTDEPC { get; set; }
 
         public string TROCA_TECNOLOGIA { get; set; }
-        
+
+        [NotMapped]
+        public bool Novo { get; set; }
     }
 }

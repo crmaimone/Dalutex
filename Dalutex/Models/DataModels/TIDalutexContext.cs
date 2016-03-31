@@ -64,9 +64,26 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<VW_PEDIDO_ROM_FAT> VW_PEDIDO_ROM_FAT { get; set; }
         public virtual DbSet<ACOES> ACOES { get; set; }
         public virtual DbSet<USUARIOS_ACOES> USUARIOS_ACOES { get; set; }
+        public virtual DbSet<LOG_PEDIDO_WEB> LOG_PEDIDO_WEB { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<LOG_PEDIDO_WEB>()
+                .Property(e => e.ID_LOG_PEDIDO_WEB)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<LOG_PEDIDO_WEB>()
+                .Property(e => e.DS_LOG_PEDIDO_WEB)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<LOG_PEDIDO_WEB>()
+                .Property(e => e.USU_LOG_PEDIDO_WEB)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<LOG_PEDIDO_WEB>()
+                .Property(e => e.TP_LOG_PEDIDO_WEB)
+                .IsUnicode(false);
+
             modelBuilder.Entity<REGRAS_QTD_PEDIDO>()
                 .Property(e => e.ID_REGRAS_QTD_PEDIDO)
                 .HasPrecision(38, 0);
@@ -185,26 +202,6 @@ namespace Dalutex.Models.DataModels
 
             modelBuilder.Entity<VW_LISTA_PECAS_PE>()
                 .Property(e => e.METROS_PECA)
-                .HasPrecision(38, 0);
-
-            modelBuilder.Entity<PED_RESERVA_VENDA>()
-                .Property(e => e.PEDIDO_RESERVA)
-                .HasPrecision(38, 0);
-
-            modelBuilder.Entity<PED_RESERVA_VENDA>()
-                .Property(e => e.ITEM_PED_RESERVA)
-                .HasPrecision(38, 0);
-
-            modelBuilder.Entity<PED_RESERVA_VENDA>()
-                .Property(e => e.ID_VAR_PED_RESERVA)
-                .HasPrecision(38, 0);
-
-            modelBuilder.Entity<PED_RESERVA_VENDA>()
-                .Property(e => e.PEDIDO_VENDA)
-                .HasPrecision(38, 0);
-
-            modelBuilder.Entity<PED_RESERVA_VENDA>()
-                .Property(e => e.ITEM_PED_VENDA)
                 .HasPrecision(38, 0);
 
             modelBuilder.Entity<PED_RESERVA_VENDA>()

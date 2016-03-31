@@ -34,8 +34,11 @@ namespace Dalutex.Models.DataModels
 
         public decimal? SID_SIMULT { get; set; }
 
+        [NotMapped]
         public bool PodeEditarPedidoNormal { get; set; }
+        [NotMapped]
         public bool PodeEditarPedidoAvancado { get; set; }
+        [NotMapped]
         public bool PodeCancelarItens { get; set; }
     }
 }

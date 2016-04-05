@@ -80,7 +80,24 @@ namespace Dalutex.Controllers
                     {
                         using (var ctx = new TIDalutexContext())
                         {
-                            Session["SESSION_USUARIO"] = ctx.USUARIOS.Where(x => x.NOME_USU.ToUpper() == User.Identity.Name.ToUpper()).FirstOrDefault();
+                            var objUsuario = ctx.USUARIOS.Where(x => x.NOME_USU.ToUpper() == User.Identity.Name.ToUpper()).FirstOrDefault();
+                            if (objUsuario != null)
+                            {
+                                var lstAcoes = ctx.USUARIOS_ACOES.Where(a => a.ID_USUARIO == objUsuario.COD_USU && (a.ID_ACAO == 141 || a.ID_ACAO == 142 || a.ID_ACAO == 143)).ToList();
+
+                                if (lstAcoes.Exists(a => a.ID_ACAO == 141))
+                                    objUsuario.PodeCancelarItens = true;
+
+                                if (lstAcoes.Exists(a => a.ID_ACAO == 142))
+                                    objUsuario.PodeEditarPedidoNormal = true;
+
+                                if (lstAcoes.Exists(a => a.ID_ACAO == 143))
+                                    objUsuario.PodeEditarPedidoAvancado = true;
+
+                                objUsuario.SENHA_USU = null;
+                                this.Session_Usuario = objUsuario;
+                            }
+
                             return Session["SESSION_USUARIO"] as USUARIOS;
                         }
                     }

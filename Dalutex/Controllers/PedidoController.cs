@@ -20,7 +20,6 @@ namespace Dalutex.Controllers
 {
     public class PedidoController : BaseController
     {
-        
         #region Shared
 
         private ActionResult ValidarTipoPedido(object model)
@@ -125,12 +124,14 @@ namespace Dalutex.Controllers
 
             VW_CARACT_DESENHOS objPrimeiroCarac = lstQuery.FirstOrDefault();
             int? iIDTecnologia;
+            int? iRevisado;
 
             if (objPrimeiroCarac != null && objPrimeiroCarac.TECNOLOGIA != null)            
             {
                 model.TecnologiaAtual = objPrimeiroCarac.TECNOLOGIA.Replace(" ", "_");
 
                 iIDTecnologia = objPrimeiroCarac.ID_TECNOLOGIA;
+                iRevisado = objPrimeiroCarac.REVISADO;
 
                 List<int?> lstCaracteristicas = new List<int?>();
 
@@ -152,7 +153,13 @@ namespace Dalutex.Controllers
                     }
 
                     //-- oda 03/11/2015 -- alteração de validação da caracteristicas e tecnologias por artigos disponiveis --- 
-                    List<PED_LINK_RESTRICAO_ARTIGO> lstArtigos = ctx.PED_LINK_RESTRICAO_ARTIGO.Where(x => lstCaracteristicas.Contains(x.ID_CARAC_TEC)).ToList();
+                    List<PED_LINK_RESTRICAO_ARTIGO> lstArtigos = ctx.PED_LINK_RESTRICAO_ARTIGO
+                        .Where(x => lstCaracteristicas.Contains(x.ID_CARAC_TEC))
+                        .OrderBy(x => x.ARTIGO)
+                        .ThenBy(x => x.ID_CARAC_TEC)
+                        .ToList();
+
+                    //List<PED_LINK_RESTRICAO_ARTIGO> lstArtigos2 = ctx.PED_LINK_RESTRICAO_ARTIGO.Where(x => x.ID_CARAC_TEC == 7).ToList();
 
                     List<string> lstArtigosStr = new List<string>();
 
@@ -161,9 +168,11 @@ namespace Dalutex.Controllers
                         lstArtigosStr.Add(item.ARTIGO);
                     }
 
-                    var query =
+                    if (iRevisado == 1)
+                    {
+                        var query =
                         from ar in ctx.VW_ARTIGOS_DISPONIVEIS
-                        where //(!lstArtigosStr.Contains(ar.ARTIGO)) && 
+                        where (!lstArtigosStr.Contains(ar.ARTIGO)) && 
                               (lstTecnologias.Contains(ar.ID_TEC))
                         group ar by
                             new
@@ -178,9 +187,33 @@ namespace Dalutex.Controllers
                                 Tecnologia = grp.Key.TECNOLOGIA
                             };
 
-                    //string _sql = query.ToString();//apenas para pegar o SQL que esta sendo passado
+                        string _sql = query.ToString();//apenas para pegar o SQL que esta sendo passado
 
-                    model.Artigos = query.OrderBy(x => x.Tecnologia).ThenBy(x => x.Artigo).ToList();
+                        model.Artigos = query.OrderBy(x => x.Tecnologia).ThenBy(x => x.Artigo).ToList();
+                    }
+                    else
+                    {                   
+                        var query =
+                            from ar in ctx.VW_ARTIGOS_DISPONIVEIS
+                            where //(!lstArtigosStr.Contains(ar.ARTIGO)) && 
+                                  (lstTecnologias.Contains(ar.ID_TEC))
+                            group ar by
+                                new
+                                {
+                                    ar.ARTIGO,
+                                    ar.TECNOLOGIA,
+                                }
+                                into grp
+                                select new ArtigoTecnologia
+                                {
+                                    Artigo = grp.Key.ARTIGO,
+                                    Tecnologia = grp.Key.TECNOLOGIA
+                                };
+
+                        string _sql = query.ToString();//apenas para pegar o SQL que esta sendo passado
+
+                        model.Artigos = query.OrderBy(x => x.Tecnologia).ThenBy(x => x.Artigo).ToList();
+                    }
                 }
             }
 
@@ -243,7 +276,9 @@ namespace Dalutex.Controllers
             , int iditemstudio
             , int idvariante
             , int pedidoreserva
-            , int itempedidoreserva)
+            , int itempedidoreserva
+            , int iditem
+            , bool preexistente)
         {
             InserirNoCarrinhoViewModel model = new InserirNoCarrinhoViewModel();
 
@@ -264,7 +299,9 @@ namespace Dalutex.Controllers
             model.IDVariante = idvariante;
             model.PedidoReserva = pedidoreserva;
             model.ItemPedidoReserva = itempedidoreserva;
-            model.Reduzido = reduzido;           
+            model.Reduzido = reduzido;
+            model.ID = iditem;
+            model.PreExistente = preexistente;
 
             if (base.Session_Carrinho != null)
                 model.IDTipoPedido = base.Session_Carrinho.IDTipoPedido;
@@ -965,9 +1002,10 @@ namespace Dalutex.Controllers
                 {
                     if (base.Session_Carrinho.Itens.Remove(objExcluir))
                     {
-                        if (base.Session_Carrinho.Itens.Count == default(int))
+                        if (base.Session_Carrinho.Itens.Where(i => !i.Excluir).ToList().Count == default(int))
                         {
-                            base.Session_Carrinho = null;
+                            base.Session_Carrinho.Itens = new List<InserirNoCarrinhoViewModel>();
+                            base.Session_Carrinho.IDTipoPedido = -1;
                         }
                         return RedirectToAction("Carrinho");
                     }
@@ -979,6 +1017,11 @@ namespace Dalutex.Controllers
                 else
                 {
                     objExcluir.Excluir = true;
+                    if (base.Session_Carrinho.Itens.Where(i => !i.Excluir).ToList().Count == default(int))
+                    {
+                        base.Session_Carrinho.Itens = new List<InserirNoCarrinhoViewModel>();
+                        base.Session_Carrinho.IDTipoPedido = -1;
+                    }
                     return RedirectToAction("Carrinho");
                 }
             }
@@ -1020,7 +1063,8 @@ namespace Dalutex.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult EsvaziarCarrinho(object model)
         {
-            base.Session_Carrinho = new ConclusaoPedidoViewModel();
+            base.Session_Carrinho.Itens = new List<InserirNoCarrinhoViewModel>();
+            base.Session_Carrinho.IDTipoPedido = -1;
             return RedirectToAction("Index", "Home");
         }
 
@@ -1048,12 +1092,16 @@ namespace Dalutex.Controllers
             if (Session_Carrinho != null)
             {
                 model.IDTipoPedido = base.Session_Carrinho.IDTipoPedido;
+                model.Observacoes = base.Session_Carrinho.Observacoes;
                 if (base.Session_Carrinho.Itens != null)
                 {
                     decimal totalPedido = 0;
                     base.Session_Carrinho.Itens.ForEach(delegate(InserirNoCarrinhoViewModel item)
                     {
-                        totalPedido += item.ValorTotalItem;
+                        if (!item.Excluir)
+                        {
+                            totalPedido += item.ValorTotalItem;
+                        }
                     });
                     model.TotalPedido = base.Session_Carrinho.TotalPedido = totalPedido;
                 }
@@ -1072,9 +1120,7 @@ namespace Dalutex.Controllers
             }
 
 
-            //oda-- 03/12/2015 --- acertar a data dos itens pelo tipo de atendimento ---------------------------
-            
-
+            //oda-- 03/12/2015 --- acertar a data dos itens pelo tipo de atendimento ---------------------------            
             if (model.TipoAtendimento.COD_ATEND.Equals((int)Enums.TiposAtendimento.EstampaCompleta))
             {
                 List<KeyValuePair<string, DateTime>> lstConsolidada = base.Session_Carrinho.Itens
@@ -1212,7 +1258,7 @@ namespace Dalutex.Controllers
 
         public JsonResult ObterItensCarrinho()
         {
-            return Json(base.Session_Carrinho.Itens.OrderBy(x => x.Compose), JsonRequestBehavior.AllowGet);
+            return Json(base.Session_Carrinho.Itens.Where(i => !i.Excluir).OrderBy(x => x.Compose), JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -1679,10 +1725,16 @@ namespace Dalutex.Controllers
 
         public JsonResult TotalCarrinho()
         {
-            if (base.Session_Carrinho != null && base.Session_Carrinho.Itens != null && base.Session_Carrinho.Itens.Count > 0)
-                return Json(base.Session_Carrinho.Itens.Count, JsonRequestBehavior.AllowGet);
-            else
-                return Json("", JsonRequestBehavior.AllowGet);
+            if (base.Session_Carrinho != null && base.Session_Carrinho.Itens != null)
+            {
+                int iCount = base.Session_Carrinho.Itens.Where(i => !i.Excluir).ToList().Count;
+                if(iCount > 0)
+                {
+                    return Json(iCount, JsonRequestBehavior.AllowGet);
+                }
+            }
+
+            return Json("", JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Preview()
@@ -2102,7 +2154,7 @@ namespace Dalutex.Controllers
                                 {
                                     if(item.Excluir)
                                     {
-                                        PRE_PEDIDO_ITENS objExcluir = ctx.PRE_PEDIDO_ITENS.First(i => i.ITEM == item.ID);
+                                        PRE_PEDIDO_ITENS objExcluir = ctx.PRE_PEDIDO_ITENS.First(i => i.ITEM == item.ID && i.NUMERO_PEDIDO_BLOCO == iNUMERO_PEDIDO_BLOCO);
                                         ctx.PRE_PEDIDO_ITENS.Remove(objExcluir);
                                     }
                                 }
@@ -2235,8 +2287,6 @@ namespace Dalutex.Controllers
                                 && (model.FiltroRepresentante == null || p.REPRESENTANTE.ToUpper().Contains(model.FiltroRepresentante))
                            orderby p.DATA_EMISSAO descending  
                             select p).ToList();
-
-
 
 
                 decimal dTotal = result.Count / (decimal)iItensPorPagina;

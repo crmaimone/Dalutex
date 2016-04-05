@@ -24,6 +24,8 @@ namespace Dalutex.Models.DataModels
 
         public string CARACT_TECNICA { get; set; }
 
-        public int? ID_TECNOLOGIA { get; set; }         
+        public int? ID_TECNOLOGIA { get; set; }
+
+        public int? REVISADO { get; set; }
     }
 }

@@ -429,6 +429,7 @@ namespace Dalutex.Controllers
                             decimal QtdeMaxima = 0;
                             decimal QtdeMinima = 0;
                             decimal QtdeConvertida = 0;
+                            decimal Rendimento = 0;
 
                             REGRAS_QTD_PEDIDO objMinMax=null;
 
@@ -451,7 +452,7 @@ namespace Dalutex.Controllers
 
                             //oda -- 25/04/2016 --- alteração na regra para tec. CILINDRO: Min por variante = 400 MTs --------------------------------------------------------
                             if (model.Tecnologia == "C")
-                            {
+                            {                                
                                 QtdeMaxima = 999999;
                                 QtdeMinima = 400;
                                 
@@ -459,13 +460,17 @@ namespace Dalutex.Controllers
 
                                 if (model.UnidadeMedida == "KG")
                                 {
-                                    QtdeConvertida = model.Quantidade * ctx.Database.SqlQuery<decimal>("select dalutex.Pega_Rendimento_Real(:p0) from dual", model.Artigo).FirstOrDefault();
+                                    Rendimento = ctx.Database.SqlQuery<decimal>("select dalutex.Pega_Rendimento_Real(:p0) from dual", model.Artigo).FirstOrDefault();
+                                    
+                                    QtdeConvertida = model.Quantidade * Rendimento;
+
                                     model.QuantidadeConvertida = QtdeConvertida;
-                                } else model.QuantidadeConvertida = model.Quantidade;
+                                }  else model.QuantidadeConvertida = model.Quantidade;
 
                                 if ( QtdeConvertida < QtdeMinima)
                                 {
-                                    ModelState.AddModelError("", "A QUANTIDADE MÍNIMA POR VARIANTE [CONVENCIONAL] NÃO PODE SER MENOR QUE: " + QtdeMinima.ToString() + "MTs");
+                                    ModelState.AddModelError("", "A QUANTIDADE MÍNIMA POR VARIANTE [CONVENCIONAL] NÃO PODE SER MENOR QUE " + QtdeMinima.ToString() + "MTs. ARTIGO: " + model.Artigo +
+                                        " RENDIMENTO: " + Rendimento.ToString() + " TOTAL CONVERTIDO: " + QtdeConvertida.ToString() + " MTs");
                                     hasErrors = true;
                                 }
                             }
@@ -1497,14 +1502,15 @@ namespace Dalutex.Controllers
 
                                 decimal idGrCol = 0;
 
-                                //validar apenas o convencional -----------------------------------------------------------------------------------------------------
+                                //oda-- 27/04/2016 --- validar apenas o convencional -----------------------------------------------------------------------------------
                                 foreach (KeyValuePair<string, decimal> item in lstGrupoConv)
                                 {
-                                    if (item.Key.Substring(5, 1) == "C") 
+                                    if (item.Key.Substring(4, 1) == "C") 
                                     {
-                                        if (item.Value < 800) //TODO: hardcode!!! colocar em parametros ----------------------------------------------------------------
+                                        if (item.Value < int.Parse(ConfigurationManager.AppSettings["QTDE_MINIMA_DESENHO_CONV"])) //TODO: hardcode!!! colocar em parametros ------------------------------------------------------
                                         {
-                                            ModelState.AddModelError("", "Quantidade mínima para o desenho [ " + item.Key.Substring(0, 4) + "] na tecnologia [Convencional] é de " + "800 MTs");
+                                            ModelState.AddModelError("", "Quantidade mínima para o desenho [" + item.Key.Substring(0, 4) + 
+                                                                         "] na tecnologia [Convencional] é de " + ConfigurationManager.AppSettings["QTDE_MINIMA_DESENHO_CONV"] + " MTs");//TODO: hardcode!!! colocar em parametros
                                             hasErrors = true;
                                         }
                                     }
@@ -1515,8 +1521,6 @@ namespace Dalutex.Controllers
                                         return View(model);
                                     }
                                 }
-
-
 
                                 foreach (KeyValuePair<string, decimal> item in lstGrupoDesenho)
                                 {

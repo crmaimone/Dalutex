@@ -327,6 +327,11 @@ namespace Dalutex.Models
         [DataType(DataType.Currency)]
         public decimal Quantidade { get; set; }
 
+
+        [DataType(DataType.Currency)]
+        public decimal QuantidadeConvertida { get; set; }
+
+
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [DataType(DataType.Currency, ErrorMessage ="O valor {0} não é válido para {1}.")]
         [Display(Name = "PREÇO:")]

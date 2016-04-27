@@ -65,6 +65,8 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<ACOES> ACOES { get; set; }
         public virtual DbSet<USUARIOS_ACOES> USUARIOS_ACOES { get; set; }
         public virtual DbSet<LOG_PEDIDO_WEB> LOG_PEDIDO_WEB { get; set; }
+        public virtual DbSet<VW_ORDEM_ANTERIOR_BLOQ_NEW> VW_ORDEM_ANTERIOR_BLOQ_NEW { get; set; }
+        
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

@@ -432,29 +432,74 @@ namespace Dalutex.Controllers
                             decimal Rendimento = 0;
 
                             REGRAS_QTD_PEDIDO objMinMax=null;
+                            int IDColecao = int.Parse(model.IDColecao);
 
-                            int ID_GRUPO_COL = 0;
+                            VW_GRUPO_COL_RED objGrupoCol = null;
 
-                            CONFIG_GERAL objColPocket = ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Pocket);
-
-                            if (model.IDColecao == objColPocket.INT1.ToString())
-                                ID_GRUPO_COL = (int)Enums.GrupoColecoes.Pocket;
-                            else if (model.IDColecao == ((int)Enums.TipoColecaoEspecial.Exclusivos).ToString())
-                                ID_GRUPO_COL = (int)Enums.GrupoColecoes.Exclusivos;
+                            if (IDColecao > 0)
+                            {
+                                objGrupoCol = ctx.VW_GRUPO_COL_RED.Where(m => m.ID_COL == IDColecao).FirstOrDefault();
+                            }
+                            else if(model.Reduzido > 0)
+                            {
+                                objGrupoCol = ctx.VW_GRUPO_COL_RED.Where(m => m.REDUZIDO == model.Reduzido).FirstOrDefault();
+                            }
                             else
-                                ID_GRUPO_COL = (int)Enums.GrupoColecoes.Colecao;
+                            {
+                                model.IDGrupoColecao = (int)Enums.GrupoColecoes.Colecao;
+                            }
 
 
-                            // -- oda -- 04/11/2015 -- nova regra de tamanho Min e Max -------------------------------------------------------------------------------------
-                            model.IDGrupoColecao = ID_GRUPO_COL;
+                            if (model.IDGrupoColecao == 0)
+                            {
+                                if (model.IDColecao == ((int)Enums.TipoColecaoEspecial.Exclusivos).ToString())
+                                    model.IDGrupoColecao = (int)Enums.GrupoColecoes.Exclusivos;
+                                else
+                                    model.IDGrupoColecao = objGrupoCol.ID_GRUPO_COL;
+                            }
+
+
+                            //nova regra validação ------------
+                            //var qryQtdeMinMax =
+                            //            from Qtde in ctx.REGRAS_QTD_PEDIDO
+                            //            where
+                            //                   Qtde.TECNOLOGIA == model.TecnologiaOriginal.Substring(0, 1)
+                            //                && Qtde.PROCESSO == _pi
+                            //                && Qtde.TECNOLOGIA_DESTINO == model.Tecnologia
+                            //                && Qtde.PROCESSO_DESTINO == _piOld
+                            //                && Qtde.GRUPO_COLECAO == model.IDGrupoColecao
+                            //                && Qtde.TIPO_PEDIDO == model.IDTipoPedido
+                            //                && Qtde.UM == model.UnidadeMedida
+                            //                && Qtde.EXCLUIDO == false
+                            //            select
+                            //                Qtde;
+
+                            //objMinMax = qryQtdeMinMax.FirstOrDefault();
+
+                            //if (objMinMax != null)
+                            //{
+                            //    QtdeMaxima = objMinMax.QTD_MAX_VAR;
+                            //    QtdeMinima = objMinMax.QTD_MIN_VAR;
+                            //}
+
+
+
+
+
+
+
+
+
+
 
                             int _piOld = 0;
 
+                            
                             //oda -- 25/04/2016 --- alteração na regra para tec. CILINDRO: Min por variante = 400 MTs --------------------------------------------------------
                             if (model.Tecnologia == "C")
                             {                                
                                 QtdeMaxima = 999999;
-                                QtdeMinima = 400;
+                                QtdeMinima = 100;
                                 
                                 QtdeConvertida = model.Quantidade;
 
@@ -513,7 +558,7 @@ namespace Dalutex.Controllers
                                             && Qtde.PROCESSO == _pi
                                             && Qtde.TECNOLOGIA_DESTINO == model.Tecnologia
                                             && Qtde.PROCESSO_DESTINO == _piOld
-                                            && Qtde.GRUPO_COLECAO == ID_GRUPO_COL
+                                            && Qtde.GRUPO_COLECAO == model.IDGrupoColecao
                                             && Qtde.TIPO_PEDIDO == model.IDTipoPedido
                                             && Qtde.UM == model.UnidadeMedida
                                             && Qtde.EXCLUIDO == false
@@ -579,7 +624,7 @@ namespace Dalutex.Controllers
                                     where
                                            Qtde.TECNOLOGIA == model.TecnologiaOriginal.Substring(0, 1)
                                         && Qtde.PROCESSO == _pi
-                                        && Qtde.GRUPO_COLECAO == ID_GRUPO_COL
+                                        && Qtde.GRUPO_COLECAO == model.IDGrupoColecao
                                         && Qtde.TIPO_PEDIDO == model.IDTipoPedido
                                         && Qtde.UM == model.UnidadeMedida
                                         && Qtde.EXCLUIDO == false
@@ -620,7 +665,7 @@ namespace Dalutex.Controllers
                                     where
                                            Qtde.TECNOLOGIA == model.TecnologiaOriginal.Substring(0, 1)
                                         && Qtde.TECNOLOGIA_DESTINO == model.Tecnologia
-                                        && Qtde.GRUPO_COLECAO == ID_GRUPO_COL 
+                                        && Qtde.GRUPO_COLECAO == model.IDGrupoColecao 
                                         && Qtde.TIPO_PEDIDO == model.IDTipoPedido
                                         && Qtde.PROCESSO == 0
                                         && Qtde.UM == model.UnidadeMedida
@@ -662,7 +707,7 @@ namespace Dalutex.Controllers
                                     from Qtde in ctx.REGRAS_QTD_PEDIDO
                                     where
                                            Qtde.TECNOLOGIA_DESTINO == model.Tecnologia
-                                            && Qtde.GRUPO_COLECAO == ID_GRUPO_COL
+                                            && Qtde.GRUPO_COLECAO == model.IDGrupoColecao
                                             && Qtde.TIPO_PEDIDO == model.IDTipoPedido
                                             && Qtde.PROCESSO == 0
                                             && Qtde.UM == model.UnidadeMedida
@@ -1157,72 +1202,74 @@ namespace Dalutex.Controllers
             }
 
 
-            //oda-- 03/12/2015 --- acertar a data dos itens pelo tipo de atendimento ---------------------------            
-            if (model.TipoAtendimento.COD_ATEND.Equals((int)Enums.TiposAtendimento.EstampaCompleta))
+            //oda-- 03/12/2015 --- acertar a data dos itens pelo tipo de atendimento --------------------------- 
+            if (model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
             {
-                List<KeyValuePair<string, DateTime>> lstConsolidada = base.Session_Carrinho.Itens
-                                    .GroupBy(g => g.Desenho)
-                                    .Select(consolidado => new KeyValuePair<string, DateTime>(consolidado.First().Desenho, consolidado.Max(s => s.DtItemSolicitada)))
-                                    .ToList();
-    
-                foreach (KeyValuePair<string, DateTime> item in lstConsolidada)
+                if (model.TipoAtendimento.COD_ATEND.Equals((int)Enums.TiposAtendimento.EstampaCompleta))
                 {
-                    foreach (InserirNoCarrinhoViewModel it in Session_Carrinho.Itens)
-                    {   
-                        if (it.Desenho == item.Key)
-                        {
-                            it.DtItemSolicitada = item.Value;
-                        }                        
-                    }
-                }                
-            }
-            else if (model.TipoAtendimento.COD_ATEND.Equals((int)Enums.TiposAtendimento.PedidoCompleto))
-            {
-                List<KeyValuePair<string, DateTime>> lstConsolidada = base.Session_Carrinho.Itens
-                     .GroupBy(g => g.Artigo).Select(consolidado => new KeyValuePair<string, DateTime>(consolidado.First().Artigo, consolidado.Max(s => s.DtItemSolicitada))).ToList();
+                    List<KeyValuePair<string, DateTime>> lstConsolidada = base.Session_Carrinho.Itens
+                                        .GroupBy(g => g.Desenho)
+                                        .Select(consolidado => new KeyValuePair<string, DateTime>(consolidado.First().Desenho, consolidado.Max(s => s.DtItemSolicitada)))
+                                        .ToList();
 
-                foreach (KeyValuePair<string, DateTime> item in lstConsolidada)
-                {
-                    foreach (InserirNoCarrinhoViewModel it in Session_Carrinho.Itens)
-                    {                        
-                        it.DtItemSolicitada = item.Value;                        
-                    }
-                } 
-            }
-            else if (model.TipoAtendimento.COD_ATEND.Equals((int)Enums.TiposAtendimento.CompletoPorArtigo))
-            {
-                List<KeyValuePair<string, DateTime>> lstConsolidada = base.Session_Carrinho.Itens
-                     .GroupBy(g => g.Artigo).Select(consolidado => new KeyValuePair<string, DateTime>(consolidado.First().Artigo, consolidado.Max(s => s.DtItemSolicitada))).ToList();
-
-                foreach (KeyValuePair<string, DateTime> item in lstConsolidada)
-                {
-                    foreach (InserirNoCarrinhoViewModel it in Session_Carrinho.Itens)
+                    foreach (KeyValuePair<string, DateTime> item in lstConsolidada)
                     {
-                        if (it.Artigo == item.Key)
+                        foreach (InserirNoCarrinhoViewModel it in Session_Carrinho.Itens)
+                        {
+                            if (it.Desenho == item.Key)
+                            {
+                                it.DtItemSolicitada = item.Value;
+                            }
+                        }
+                    }
+                }
+                else if (model.TipoAtendimento.COD_ATEND.Equals((int)Enums.TiposAtendimento.PedidoCompleto))
+                {
+                    List<KeyValuePair<string, DateTime>> lstConsolidada = base.Session_Carrinho.Itens
+                         .GroupBy(g => g.Artigo).Select(consolidado => new KeyValuePair<string, DateTime>(consolidado.First().Artigo, consolidado.Max(s => s.DtItemSolicitada))).ToList();
+
+                    foreach (KeyValuePair<string, DateTime> item in lstConsolidada)
+                    {
+                        foreach (InserirNoCarrinhoViewModel it in Session_Carrinho.Itens)
                         {
                             it.DtItemSolicitada = item.Value;
                         }
                     }
                 }
-            }
-            else if (model.TipoAtendimento.COD_ATEND.Equals((int)Enums.TiposAtendimento.ArtigoCompose))
-            {
-                List<KeyValuePair<int, DateTime>> lstConsolidada = base.Session_Carrinho.Itens
-                     .GroupBy(g => g.Compose).Select(consolidado => new KeyValuePair<int, DateTime>(consolidado.First().Compose, consolidado.Max(s => s.DtItemSolicitada))).ToList();
-
-                foreach (KeyValuePair<int, DateTime> item in lstConsolidada)
+                else if (model.TipoAtendimento.COD_ATEND.Equals((int)Enums.TiposAtendimento.CompletoPorArtigo))
                 {
-                    foreach (InserirNoCarrinhoViewModel it in Session_Carrinho.Itens)
+                    List<KeyValuePair<string, DateTime>> lstConsolidada = base.Session_Carrinho.Itens
+                         .GroupBy(g => g.Artigo).Select(consolidado => new KeyValuePair<string, DateTime>(consolidado.First().Artigo, consolidado.Max(s => s.DtItemSolicitada))).ToList();
+
+                    foreach (KeyValuePair<string, DateTime> item in lstConsolidada)
                     {
-                        if (it.Compose == item.Key)
+                        foreach (InserirNoCarrinhoViewModel it in Session_Carrinho.Itens)
                         {
-                            it.DtItemSolicitada = item.Value;
+                            if (it.Artigo == item.Key)
+                            {
+                                it.DtItemSolicitada = item.Value;
+                            }
                         }
                     }
                 }
-            }
+                else if (model.TipoAtendimento.COD_ATEND.Equals((int)Enums.TiposAtendimento.ArtigoCompose))
+                {
+                    List<KeyValuePair<int, DateTime>> lstConsolidada = base.Session_Carrinho.Itens
+                         .GroupBy(g => g.Compose).Select(consolidado => new KeyValuePair<int, DateTime>(consolidado.First().Compose, consolidado.Max(s => s.DtItemSolicitada))).ToList();
 
-            
+                    foreach (KeyValuePair<int, DateTime> item in lstConsolidada)
+                    {
+                        foreach (InserirNoCarrinhoViewModel it in Session_Carrinho.Itens)
+                        {
+                            if (it.Compose == item.Key)
+                            {
+                                it.DtItemSolicitada = item.Value;
+                            }
+                        }
+                    }
+                }
+
+            } 
             return View(model);
         }
 
@@ -1455,7 +1502,7 @@ namespace Dalutex.Controllers
                         }
 
                         // -- oda -- 05/11/2015 --- regra de validação de qtde por desenho ------------------------------------------------------------------------------------------------------------------
-                        using (var ctx = new TIDalutexContext())
+                        using (var ctxTI = new TIDalutexContext())
                         {
                             if (model.IDTipoPedido == (int)Enums.TiposPedido.VENDA)
                             {
@@ -1530,7 +1577,7 @@ namespace Dalutex.Controllers
 
                                         //procura as qtdes max e min, pela regra 2.1: [TEC_ORIGEM + TEC_DESTI + GRUPO_COL + TIPO_PED + UM]
                                         var qryQtdeMinMax =
-                                            from Qtde in ctx.REGRAS_QTD_PEDIDO
+                                            from Qtde in ctxTI.REGRAS_QTD_PEDIDO
                                             where
                                                    Qtde.TECNOLOGIA_DESTINO == item.Key.Substring(6, 1)
                                                 && (Qtde.TECNOLOGIA == item.Key.Substring(8, 1) || Qtde.TECNOLOGIA == "X") 
@@ -1552,7 +1599,7 @@ namespace Dalutex.Controllers
                                          {
                                              //procura as qtdes max e min, pela regra 2.2: [TEC_DESTI + TEC_DESTI+ TIPO_PED + UM]
                                              var qryQtdeMinMax2 =
-                                                 from Qtde in ctx.REGRAS_QTD_PEDIDO
+                                                 from Qtde in ctxTI.REGRAS_QTD_PEDIDO
                                                  where
                                                         Qtde.TECNOLOGIA_DESTINO == item.Key.Substring(6, 1)
                                                      && (Qtde.TECNOLOGIA == item.Key.Substring(8, 1) || Qtde.TECNOLOGIA == "X")   
@@ -1574,7 +1621,7 @@ namespace Dalutex.Controllers
                                                 {
                                                         //procura as qtdes max e min, pela regra 2.3: [TEC_DESTI + TIPO_PED + UM]
                                                         var qryQtdeMinMax3 =
-                                                            from Qtde in ctx.REGRAS_QTD_PEDIDO
+                                                            from Qtde in ctxTI.REGRAS_QTD_PEDIDO
                                                             where
                                                                 Qtde.TECNOLOGIA_DESTINO == item.Key.Substring(6, 1)
                                                                 && Qtde.TIPO_PEDIDO == model.IDTipoPedido
@@ -1658,8 +1705,9 @@ namespace Dalutex.Controllers
 
                         foreach (InserirNoCarrinhoViewModel item in base.Session_Carrinho.Itens)
                         {
-                            using (var ctx = new TIDalutexContext())
-                            {                                                                                                                 
+                            using (var ctxTI = new TIDalutexContext())
+                            {
+                                VW_TABELA_PRECO_NOVA objPrecoNovo = null;                                                                         
                                 if (item.Reduzido > 0)
                                 {
                                     using (var ctxDlx = new DalutexContext())
@@ -1675,9 +1723,9 @@ namespace Dalutex.Controllers
                                                                     Comissao = co.ID_COLECAO == "POCK" ? 3 : 4,
                                                                     IDColecao = vw.COLECAO
                                                                 };
-                                        ParametrosPreco objParametro = queryParametros.First();                                                                                                   
+                                        ParametrosPreco objParametro = queryParametros.First();                                        
 
-                                        TABELAPRECOITEM objPreco = ctx.TABELAPRECOITEM.Where(x =>
+                                        TABELAPRECOITEM objPreco = ctxTI.TABELAPRECOITEM.Where(x =>
                                                 x.COLECAO == (objParametro.E_Exclusivo ? objParametro.IDColecao : iColecaoAtual)
                                                 && x.QUALIDADECOMERCIAL == Session_Carrinho.QualidadeComercial.Key
                                                 && x.COD_COND_PAGTO == iCodCondPgto
@@ -1686,32 +1734,65 @@ namespace Dalutex.Controllers
                                                 && x.ARTIGO == item.Artigo
                                             ).FirstOrDefault();
 
+                                        VW_GRUPO_COL_RED grCol = ctxTI.VW_GRUPO_COL_RED.Where(x => x.REDUZIDO == item.Reduzido).FirstOrDefault();
 
-                                        if (objPreco != null)
+                                        int iTipoCol = grCol == null ? 1 : Convert.ToInt32(grCol.TIPO_COL);
+
+                                        VMASCARAPRODUTOACABADO vm = ctxDlx.VMASCARAPRODUTOACABADO.Where(x => x.CODIGO_REDUZIDO == item.Reduzido).FirstOrDefault();
+                                        string vClassif = null;
+                                        if (vm != null)
                                         {
-                                            item.PrecoTabela = decimal.Round(objPreco.VALOR.GetValueOrDefault(), 2, MidpointRounding.ToEven);
-                                        }                                    
+                                            vClassif = vm.CLASSIF_COR;
+                                        }
+
+                                        objPrecoNovo = ctxTI.VW_TABELA_PRECO_NOVA.Where(x =>
+                                                             x.TIPO == iTipoCol// 1: coleção/exclusivo; 2: flash/pocket
+                                                             && 
+                                                             ( 
+                                                              (x.TECNOLOGIA == item.Tecnologia && x.TECNOLOGIA != "L")
+                                                             ||
+                                                              (x.TECNOLOGIA == item.Tecnologia && item.Tecnologia == "L" && x.CLASSIFICACAO == vClassif) 
+                                                             )
+                                                             && x.CONDICAO_PAGAMENTO == iCodCondPgto
+                                                             && x.ARTIGO == item.Artigo
+                                                             && x.QUALIDADE == 1
+                                                             && x.QUALIDADE_COMERCIAL ==  Session_Carrinho.QualidadeComercial.Key
+                                                             && x.TAMANHO_PECA == "G"
+                                                             && x.COMISSAO == (iTipoCol == 2 ? 3 : 4)
+
+                                            ).FirstOrDefault();                                                                          
                                     }
                                 }
                                 else//se não tem reduzido ----
                                 {
                                     if (model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
                                     {
-                                        TABELAPRECOITEM objPreco = ctx.TABELAPRECOITEM.Where(x =>
-                                                    x.COLECAO == iColecaoAtual
-                                                    && x.QUALIDADECOMERCIAL == Session_Carrinho.QualidadeComercial.Key
-                                                    && x.COD_COND_PAGTO == iCodCondPgto
-                                                    && x.EST_LISO == item.Tecnologia
-                                                    && x.COMISSAO == (item.NMColecao == "POCK" ? 3 : 4)
-                                                    && x.ARTIGO == item.Artigo
-                                                ).FirstOrDefault();
 
-                                        if (objPreco != null)
-                                        {
-                                            item.PrecoTabela = decimal.Round(objPreco.VALOR.GetValueOrDefault(), 2, MidpointRounding.ToEven);
-                                        }
+                                        int iIDColecao = int.Parse(item.IDColecao);
+
+                                        VW_GRUPO_COL_RED grCol = ctxTI.VW_GRUPO_COL_RED.Where(x => x.ID_COL == iIDColecao).FirstOrDefault();
+
+                                        int iTipoCol = grCol == null ? 1 : Convert.ToInt32(grCol.TIPO_COL);
+
+                                        objPrecoNovo = ctxTI.VW_TABELA_PRECO_NOVA.Where(x =>
+                                                             x.TIPO == iTipoCol// 1: coleção/exclusivo; 2: flash/pocket
+                                                             && x.TECNOLOGIA == item.Tecnologia                                                                                                                               
+                                                             && x.CONDICAO_PAGAMENTO == iCodCondPgto
+                                                             && x.ARTIGO == item.Artigo
+                                                             && x.QUALIDADE == 1
+                                                             && x.QUALIDADE_COMERCIAL == Session_Carrinho.QualidadeComercial.Key
+                                                             && x.TAMANHO_PECA == "G"
+                                                             && x.COMISSAO == (iTipoCol == 2 ? 3 : 4)
+
+                                            ).FirstOrDefault();                                       
                                     }
-                                }                                                       
+
+                                }
+
+                                if (objPrecoNovo != null)
+                                {
+                                    item.PrecoTabela = decimal.Round(objPrecoNovo.PRECO.GetValueOrDefault(), 2, MidpointRounding.ToEven);
+                                }                   
                             }                       
                         }
                         #endregion
@@ -1905,15 +1986,20 @@ namespace Dalutex.Controllers
                     objPrePedido.OBSERVACOES = base.Session_Carrinho.Observacoes;
                     objPrePedido.DATA_ENTREGA = base.Session_Carrinho.DataEntrega;
 
-                    objPrePedido.ID_CLIENTE_ENTREGA = base.Session_Carrinho.ClienteEntrega.ID_CLIENTE;
-                    objPrePedido.ID_TRANSPORTADORA = base.Session_Carrinho.Transportadora.IDTRANSPORTADORA;
+                    //if (base.Session_Carrinho.IDTipoPedido == (int)Enums.TiposPedido.RESERVA)
+
+                    objPrePedido.ID_CLIENTE_ENTREGA = (base.Session_Carrinho.IDTipoPedido != (int)Enums.TiposPedido.RESERVA ? base.Session_Carrinho.ClienteEntrega.ID_CLIENTE : base.Session_Carrinho.ClienteFatura.ID_CLIENTE);
+                    objPrePedido.ID_TRANSPORTADORA = (base.Session_Carrinho.IDTipoPedido != (int)Enums.TiposPedido.RESERVA ? base.Session_Carrinho.Transportadora.IDTRANSPORTADORA : -1);
+
                     objPrePedido.USUARIO_INICIO = base.Session_Usuario.NOME_USU;
 
                     objPrePedido.ID_LOCAL = (base.Session_Carrinho.IDLocaisVenda == null ? 5 : base.Session_Carrinho.IDLocaisVenda);//todo: verificar com marcio se precisa de uma view para este tipo
                     
                     objPrePedido.COD_MOEDA = base.Session_Carrinho.Moeda.CODIGOMOEDA;
                     objPrePedido.CANAL_VENDAS = base.Session_Carrinho.CanailVenda.CANAL_VENDA;
-                    objPrePedido.ATENDIMENTO = base.Session_Carrinho.TipoAtendimento.COD_ATEND;
+
+                    objPrePedido.ATENDIMENTO = (base.Session_Carrinho.IDTipoPedido != (int)Enums.TiposPedido.RESERVA ? base.Session_Carrinho.TipoAtendimento.COD_ATEND : 0);
+                    
                     objPrePedido.TIPOFRETE = base.Session_Carrinho.Frete.TIPOFRETE;
 
                     //GERENTE = model.IDGerentesVenda,// não é necessario gravar neste campo para pedidos <> de PE
@@ -2165,11 +2251,11 @@ namespace Dalutex.Controllers
                                 #endregion
 
                                 #region Preço divergente
-
+                             
                                 foreach (PRE_PEDIDO_ITENS item in lstItens)
                                 {
-                                    if (item.REDUZIDO_ITEM > 0)
-                                    {
+                                    //if (item.REDUZIDO_ITEM > 0)
+                                    //{
                                         //Se não tem preço, critica. Se tem preço e ele é diferente do informado pelo representante, critica.
                                         if (item.PRECOLISTA == null || item.PRECOLISTA.GetValueOrDefault() != item.PRECO_UNIT.GetValueOrDefault())
                                         {
@@ -2198,7 +2284,7 @@ namespace Dalutex.Controllers
                                                 });
                                             }
                                         }
-                                    }
+                                    //}
                                 }
 
                                 #endregion
@@ -2574,11 +2660,7 @@ namespace Dalutex.Controllers
                 else if (idcolecao == "POCKET")
                 {
                     //oda-- 25/02/2016 --- alteração para pegar a pocket vigente -------------------------------------
-                    model.NMColecao = "Flash";                    
-
-                    //CONFIG_GERAL objResult = ctx.CONFIG_GERAL.Find((int)Enums.TipoColecaoEspecial.Pocket);
-                    //model.IDColecao = int.Parse(objResult.INT1.ToString());
-                    //model.NMColecao = objResult.PARAMETRO2;
+                    model.NMColecao = "Flash";
                 }
                 else if (idcolecao == "DESENHOS")
                 {
@@ -2636,8 +2718,12 @@ namespace Dalutex.Controllers
                 List<VW_DESENHOS_POR_COLECAO> preResult = preQuery.ToList<VW_DESENHOS_POR_COLECAO>();
                 if (model.IDColecao == 0 && model.NMColecao != null && model.NMColecao.ToUpper() == "FLASH")
                 {
+                    List<VW_POCKET_ATUAL> lstColecoesFlash = ctx.VW_POCKET_ATUAL.ToList();
+                    if (lstColecoesFlash.Count > 0)
+                        model.IDColecao = lstColecoesFlash.First().ID_COLECAO;
+
                     preResult = (from pr in preResult
-                                 join fs in ctx.VW_POCKET_ATUAL on pr.COLECAO equals fs.ID_COLECAO
+                                 join fs in lstColecoesFlash on pr.COLECAO equals fs.ID_COLECAO
                                  select pr).ToList();
                 }
 

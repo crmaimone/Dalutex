@@ -102,7 +102,7 @@ namespace Dalutex.Models
 
         public enum GrupoColecoes
         {
-            Pocket=1,
+            Flash=1,
             Colecao=2,
             Exclusivos=3
         }

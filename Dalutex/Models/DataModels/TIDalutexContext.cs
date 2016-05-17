@@ -66,10 +66,47 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<USUARIOS_ACOES> USUARIOS_ACOES { get; set; }
         public virtual DbSet<LOG_PEDIDO_WEB> LOG_PEDIDO_WEB { get; set; }
         public virtual DbSet<VW_ORDEM_ANTERIOR_BLOQ_NEW> VW_ORDEM_ANTERIOR_BLOQ_NEW { get; set; }
+        public virtual DbSet<VW_TABELA_PRECO_NOVA> VW_TABELA_PRECO_NOVA { get; set; }
+        public virtual DbSet<VW_GRUPO_COL_RED> VW_GRUPO_COL_RED { get; set; }
+        public virtual DbSet<REGRAS_QTD_PEDIDOX> REGRAS_QTD_PEDIDOX { get; set; }
         
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<VW_GRUPO_COL_RED>()
+                .Property(e => e.TIPO_COL)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_TABELA_PRECO_NOVA>()
+               .Property(e => e.ID_TABELA_PRECO_ITEM)
+               .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_TABELA_PRECO_NOVA>()
+                .Property(e => e.PRECO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_TABELA_PRECO_NOVA>()
+                .Property(e => e.ARTIGO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_TABELA_PRECO_NOVA>()
+                .Property(e => e.TECNOLOGIA)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_TABELA_PRECO_NOVA>()
+                .Property(e => e.QUALIDADE_COMERCIAL)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_TABELA_PRECO_NOVA>()
+                .Property(e => e.TAMANHO_PECA)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_TABELA_PRECO_NOVA>()
+                .Property(e => e.COMISSAO)
+                .HasPrecision(38, 0);
+
             modelBuilder.Entity<LOG_PEDIDO_WEB>()
                 .Property(e => e.ID_LOG_PEDIDO_WEB)
                 .HasPrecision(38, 0);

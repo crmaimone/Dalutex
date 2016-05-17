@@ -44,65 +44,68 @@
                                         <td><a href="@Url.Action("ClientesFatura", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a></td>
                                         <td>@Model.ClienteFatura.NOME</td>
                                     </tr>
-                                    <tr>
-                                        <td>@Html.LabelFor(x => x.ClienteEntrega):&nbsp;</td>
-                                        <td><a href="@Url.Action("ClientesEntrega", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a></td>
-                                        <td>@Model.ClienteEntrega.NOME</td>
-                                    </tr>
-                                    <tr>
-                                        <td>@Html.LabelFor(x => x.Transportadora):&nbsp;</td>
-                                        <td><a href="@Url.Action("Transportadora", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a></td>
-                                        <td>@Model.Transportadora.NOME</td>
-                                    </tr>
-                                    <tr>
-                                        <td>@Html.LabelFor(x => x.QualidadeComercial):&nbsp;</td>
-                                        <td><a href="@Url.Action("QualidadeComercial", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a></td>
-                                        <td>@Model.QualidadeComercial.Value</td>
-                                    </tr>
-                                    <tr>
-                                        <td>@Html.LabelFor(x => x.Moeda):&nbsp;</td>
-                                        <td><a href="@Url.Action("Moeda", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a></td>
-                                        <td>@Model.Moeda.NOMEMOEDA</td>
-                                    </tr>
-                                    <tr>
-                                        <td>@Html.LabelFor(x => x.CondicaoPagto):&nbsp;</td>
-                                        <td><a href="@Url.Action("CondicaoPgto", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a></td>
-                                        <td>@Model.CondicaoPagto.DESCRI_COND</td>
-                                    </tr>
-                                    <tr>
-                                        <td>@Html.LabelFor(x => x.CanailVenda):&nbsp;</td>
-                                        <td><a href="@Url.Action("CanalVendas", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a></td>
-                                        <td>@Model.CanailVenda.DESCRICAO</td>
-                                    </tr>
-                                    <tr>
-                                        <td>@Html.LabelFor(x => x.ViaTransporte):&nbsp;</td>
-                                        <td><a href="@Url.Action("ViaTransporte", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a></td>
-                                        <td>@Model.ViaTransporte.DESCRICAO</td>
-                                    </tr>
-                                    <tr>
-                                        <td>@Html.LabelFor(x => x.Frete):&nbsp;</td>
-                                        <td><a href="@Url.Action("Frete", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a></td>
-                                        <td>@Model.Frete.DESCRICAO</td>
-                                    </tr>
-                                    <tr>
-                                        <td>@Html.LabelFor(x => x.TipoAtendimento):&nbsp;</td>
-                                        <td><a href="@Url.Action("TipoAtendimento", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a></td>
-                                        <td>@Model.TipoAtendimento.DESCRI_ATEND</td>
-                                    </tr>
-                                    <tr>
-                                        <td>@Html.LabelFor(x => x.PedidoCliente, new { @class = "control-label" }):&nbsp;</td>
-                                        <td colspan ="2">
-                                            @Html.TextBoxFor(x => x.PedidoCliente, new { @class = "form-control" })
-                                            @Html.ValidationMessageFor(x => x.PedidoCliente, "", new { @class = "text-danger" })
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>@Html.LabelFor(x => x.Observacoes, new { @class = "control-label" }):&nbsp;</td>
-                                        <td colspan="2">
-                                            @Html.TextAreaFor(x => x.Observacoes, 0, 0, new { @style = "width:100%; Height:90px;" })
-                                            @Html.ValidationMessageFor(m => m.Observacoes, "", new { @class = "text-danger" })
-                                        </td>
-                                    </tr>
+                                        @if (Model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
+                                        {
+                                            <tr>                                       
+                                                <td>@Html.LabelFor(x => x.ClienteEntrega):&nbsp;</td>
+                                                <td><a href="@Url.Action("ClientesEntrega", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a></td>
+                                                <td>@Model.ClienteEntrega.NOME</td>                                        
+                                            </tr>
+                                            <tr>
+                                                <td>@Html.LabelFor(x => x.Transportadora):&nbsp;</td>
+                                                <td><a href="@Url.Action("Transportadora", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a></td>
+                                                <td>@Model.Transportadora.NOME</td>
+                                            </tr>
+                                            <tr>
+                                                <td>@Html.LabelFor(x => x.QualidadeComercial):&nbsp;</td>
+                                                <td><a href="@Url.Action("QualidadeComercial", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a></td>
+                                                <td>@Model.QualidadeComercial.Value</td>
+                                            </tr>
+                                            <tr>
+                                                <td>@Html.LabelFor(x => x.Moeda):&nbsp;</td>
+                                                <td><a href="@Url.Action("Moeda", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a></td>
+                                                <td>@Model.Moeda.NOMEMOEDA</td>
+                                            </tr>
+                                            <tr>
+                                                <td>@Html.LabelFor(x => x.CondicaoPagto):&nbsp;</td>
+                                                <td><a href="@Url.Action("CondicaoPgto", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a></td>
+                                                <td>@Model.CondicaoPagto.DESCRI_COND</td>
+                                            </tr>
+                                            <tr>
+                                                <td>@Html.LabelFor(x => x.CanailVenda):&nbsp;</td>
+                                                <td><a href="@Url.Action("CanalVendas", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a></td>
+                                                <td>@Model.CanailVenda.DESCRICAO</td>
+                                            </tr>
+                                            <tr>
+                                                <td>@Html.LabelFor(x => x.ViaTransporte):&nbsp;</td>
+                                                <td><a href="@Url.Action("ViaTransporte", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a></td>
+                                                <td>@Model.ViaTransporte.DESCRICAO</td>
+                                            </tr>
+                                            <tr>
+                                                <td>@Html.LabelFor(x => x.Frete):&nbsp;</td>
+                                                <td><a href="@Url.Action("Frete", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a></td>
+                                                <td>@Model.Frete.DESCRICAO</td>
+                                            </tr>
+                                            <tr>
+                                                <td>@Html.LabelFor(x => x.TipoAtendimento):&nbsp;</td>
+                                                <td><a href="@Url.Action("TipoAtendimento", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a></td>
+                                                <td>@Model.TipoAtendimento.DESCRI_ATEND</td>
+                                            </tr>
+                                            <tr>
+                                                <td>@Html.LabelFor(x => x.PedidoCliente, new { @class = "control-label" }):&nbsp;</td>
+                                                <td colspan ="2">
+                                                    @Html.TextBoxFor(x => x.PedidoCliente, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(x => x.PedidoCliente, "", new { @class = "text-danger" })
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>@Html.LabelFor(x => x.Observacoes, new { @class = "control-label" }):&nbsp;</td>
+                                                <td colspan="2">
+                                                    @Html.TextAreaFor(x => x.Observacoes, 0, 0, new { @style = "width:100%; Height:90px;" })
+                                                    @Html.ValidationMessageFor(m => m.Observacoes, "", new { @class = "text-danger" })
+                                                </td>
+                                            </tr>
+                                        }
                                 </tbody>
                             </table>
                         </div>

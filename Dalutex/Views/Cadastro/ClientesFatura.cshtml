@@ -32,18 +32,38 @@
         <div class="col-md-8">
             <section id="ResultadoClientes">
                 <div class="list-group" id="lstClientes">
-                    <a href="#" class="list-group-item active">CLIENTE FATURA</a>
-                    @if (@Model != null && @Model.ClientesFatura != null)
-                    {
-                        foreach (Dalutex.Models.DataModels.VW_CLIENTE_TRANSP item in Model.ClientesFatura)
+
+                    @if (Model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
+                    { 
+                        <a href="#" class="list-group-item active">CLIENTE FATURA</a>
+                        if (@Model != null && @Model.ClientesFatura != null)
                         {
-                            <a href="@Url.Action("ProximoPasso", "Cadastro", new { IDClienteFatura = item.ID_CLIENTE })" class="list-group-item"><strong> @item.CNPJ.Trim()</strong> | @item.NOME.Trim() | @item.ENDERECO</a>
+                            foreach (Dalutex.Models.DataModels.VW_CLIENTE_TRANSP item in Model.ClientesFatura)
+                            {
+                                <a href="@Url.Action("ProximoPasso", "Cadastro", new { IDClienteFatura = item.ID_CLIENTE })" class="list-group-item"><strong> @item.CNPJ.Trim()</strong> | @item.NOME.Trim() | @item.ENDERECO</a>
+                            }
+                        }
+                        else
+                        {
+                            <p class="list-group-item"><em>UTILIZE O FILTRO PARA BUSCAR O CLIENTE DA FATURA</em></p>
                         }
                     }
                     else
                     {
-                        <p class="list-group-item"><em>UTILIZE O FILTRO PARA BUSCAR O CLIENTE ENTREGA</em></p>
+                        <a href="#" class="list-group-item active">CLIENTE</a>
+                        if (@Model != null && @Model.ClientesFatura != null)
+                        {
+                            foreach (Dalutex.Models.DataModels.VW_CLIENTE_TRANSP item in Model.ClientesFatura)
+                            {
+                                <a href="@Url.Action("ProximoPasso", "Cadastro", new { IDClienteFatura = item.ID_CLIENTE })" class="list-group-item"><strong> @item.CNPJ.Trim()</strong> | @item.NOME.Trim() | @item.ENDERECO</a>
+                            }
+                        }
+                        else
+                        {
+                            <p class="list-group-item"><em>UTILIZE O FILTRO PARA BUSCAR O CLIENTE</em></p>
+                        }
                     }
+                    
                 </div>
             </section>
         </div>

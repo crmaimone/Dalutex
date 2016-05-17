@@ -165,6 +165,7 @@
     <Compile Include="Models\DataModels\ACOES.cs" />
     <Compile Include="Models\DataModels\LOG_PEDIDO_WEB.cs" />
     <Compile Include="Models\DataModels\REGRAS_QTD_PEDIDO.cs" />
+    <Compile Include="Models\DataModels\REGRAS_QTD_PEDIDOX.cs" />
     <Compile Include="Models\DataModels\REGRA_PADRAO.cs" />
     <Compile Include="Models\DataModels\USUARIOS_ACOES.cs" />
     <Compile Include="Models\DataModels\VW_DESENHOS_POR_COL_DESENV.cs" />
@@ -218,6 +219,7 @@
     <Compile Include="Models\DataModels\LOCALVENDA.cs" />
     <Compile Include="Models\DataModels\CADASTRO_MOEDAS.cs" />
     <Compile Include="Models\DataModels\VW_CONDICAO_PGTO.cs" />
+    <Compile Include="Models\DataModels\VW_GRUPO_COL_RED.cs" />
     <Compile Include="Models\DataModels\VW_IMPRESSAO_WEB.cs" />
     <Compile Include="Models\DataModels\VW_ITENS_PE.cs" />
     <Compile Include="Models\DataModels\VW_ITENS_VALIDAR_RESERVA.cs" />
@@ -229,6 +231,7 @@
     <Compile Include="Models\DataModels\VW_PESQUISA_PEDIDO.cs" />
     <Compile Include="Models\DataModels\VW_PI_RED.cs" />
     <Compile Include="Models\DataModels\VW_POCKET_ATUAL.cs" />
+    <Compile Include="Models\DataModels\VW_TABELA_PRECO_NOVA.cs" />
     <Compile Include="Models\DataModels\VW_TROCA_TEC.cs" />
     <Compile Include="Models\DataModels\VW_VALIDAR_RESERVA.cs" />
     <Compile Include="Models\Relatorios.cs" />

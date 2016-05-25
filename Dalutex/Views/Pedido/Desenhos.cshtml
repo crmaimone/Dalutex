@@ -33,8 +33,8 @@
             <div class="form-group" >
                 <div>
                     @Html.TextBoxFor(x => x.FiltroDesenho, new { @class = "form-control", @style = "display:inline", placeholder = "Desenho" })
-                    @Html.TextBoxFor(x => x.FiltroArtigo, new { @class = "form-control", @style = "display:inline", placeholder = "Artigo" })
-                    @Html.TextBoxFor(x => x.FiltroTecnologia, new { @class = "form-control", @style = "display:inline", placeholder = "Tecnologia" })
+                    @*@Html.TextBoxFor(x => x.FiltroArtigo, new { @class = "form-control", @style = "display:inline", placeholder = "Artigo" })
+                    @Html.TextBoxFor(x => x.FiltroTecnologia, new { @class = "form-control", @style = "display:inline", placeholder = "Tecnologia" })*@
                     <button type="submit" class="btn btn-default btn-group-sm"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Pesquisar</button>
                 </div>
                 
@@ -44,7 +44,7 @@
             </div>
        }
     </div>
-    
+        
     <div class="row">
         @if (Model.Galeria != null)
         {
@@ -76,6 +76,8 @@
             }
         }
     </div>
+
+    
 
     <nav>
         <ul class="pagination">
@@ -133,8 +135,16 @@
         </ul>
     </nav>
     <hr>
-    <button class="btn btn-default right" onclick="javascript: history.back()"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> VOLTAR</button>
-</div>
+    <div>                               
+        @if (ViewBag.Carrinho != null && ViewBag.Carrinho.Itens != null)
+        {
+            <a href="@Url.Action("ProximoPasso", "Cadastro")" class="btn btn-success pull-left">
+                <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>&nbsp;PROSSEGUIR
+            </a>
+        }
+        <span class="pull-left">&nbsp;</span>
+        <button class="btn btn-default right" onclick="javascript: history.back()"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> VOLTAR</button>
+    </div>
 
 <div id="alertDesenhoBloqueado" class="modal fade" role="dialog">
     <div class="modal-dialog">

@@ -182,8 +182,6 @@
     <Compile Include="Models\DataModels\PRE_PEDIDO_CRITICA.cs" />
     <Compile Include="Models\DataModels\PROXIMO_NUMERO_PEDIDO.cs" />
     <Compile Include="Models\DataModels\REPRESENTANTES.cs" />
-    <Compile Include="Models\DataModels\TABELAPRECO.cs" />
-    <Compile Include="Models\DataModels\TABELAPRECOITEM.cs" />
     <Compile Include="Models\DataModels\TAMANHOPECA.cs" />
     <Compile Include="Models\DataModels\TRANSPORTADORAS.cs" />
     <Compile Include="Models\DataModels\VMASCARAPRODUTOACABADO.cs" />
@@ -407,6 +405,7 @@
     <Content Include="Scripts\fileinput_locale_LANG.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <Content Include="Scripts\jquery.maskmoney.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.equalheight.js" />
     <Content Include="Scripts\jquery.equalheight.min.js" />
@@ -482,6 +481,7 @@
     <Content Include="Views\Pedido\PesquisaPedido.cshtml" />
     <Content Include="Views\Pedido\ManterPedido.cshtml" />
     <Content Include="Views\Pedido\EnviarEmail.cshtml" />
+    <Content Include="Views\Pedido\LimparPedido.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

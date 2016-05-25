@@ -14,8 +14,7 @@
             | <strong>Tecnologia:</strong>&nbsp;@Model.TecnologiaPorExtenso 
             | <strong>Desenho:</strong>&nbsp;@Model.Desenho 
             | <strong>Variante:</strong>&nbsp;@Model.Variante</h5>
-        </div>
-        
+        </div>        
     }
     else if (Model.Tipo == Enums.ItemType.Liso)
     {
@@ -100,13 +99,32 @@
                                 @Html.ValidationMessageFor(m => m.Quantidade, "", new { @class = "text-danger" })
                             </div>
                         </div>
+                    
+                    
                         <div class="form-group">
+                            @{string Valor = "0";} 
+
+                               @if (ViewBag.ItensCarrinho != null)
+                               {
+                                   foreach (var item in ViewBag.ItensCarrinho)
+                                   {
+                                       if (item.Artigo == Model.Artigo && item.Tecnologia == Model.Tecnologia)
+                                       {
+                                           Valor = item.Preco.ToString();
+                                           break;
+                                       }
+                                   }
+                               }
+                            
                             @Html.LabelFor(x => x.Preco, new { @class = "col-md-4 control-label", @placeholder = "Valor Unitário" })
                             <div class="col-md-8">
-                                @Html.TextBoxFor(x => x.Preco, new { id = "txtPreco", @class = "form-control" })
+                                @Html.TextBoxFor(x => x.Preco, new { id = "txtPreco", @class = "form-control", Value = Valor })
                                 @Html.ValidationMessageFor(m => m.Preco, "", new { @class = "text-danger" })
+                                
                             </div>
                         </div>
+                    
+                    
                         <div class="form-group">
                             @Html.LabelFor(x => x.DataEntregaItem, new { @class = "col-md-4 control-label"})
                             <div class='col-md-8'>
@@ -227,6 +245,7 @@
 </div>
 @section Scripts {
     @Scripts.Render("~/bundles/datepicker")
+    @Scripts.Render("~/bundles/jquerymaskmoney")
     <script>
     $(document).ready(function () {
         //API
@@ -312,6 +331,9 @@
             });
             $('#lstTiposPedido').on('change', scriptWrapper.lstTiposPedido_Change);
             $('#lstTamanhoPadrao').on('change', scriptWrapper.lstTamanhoPadrao_Change);
+
+            $("#txtPreco").maskMoney({allowNegative: false, thousands: '.', decimal: ',' });
+
         })();
     });
     </script>

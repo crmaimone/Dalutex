@@ -1,0 +1,14 @@
+﻿@{
+    ViewBag.Title = "Limpar pedido";
+}
+
+<div class="header-title"><h3>@ViewBag.Title</h3></div>
+<div class="container-fluid">
+    <p>Deseja realmente excluir todas as informações salvas?</p>
+    @using (Html.BeginForm("LimparPedido", "Pedido", null, FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <button class="btn btn-info pull-left" onclick="javascript:history.back()"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>&nbsp;NÃO! Tire-me daqui</button>
+        <button type="submit" class="btn btn-danger pull-right"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span>&nbsp;SIM</button>
+    }
+</div>

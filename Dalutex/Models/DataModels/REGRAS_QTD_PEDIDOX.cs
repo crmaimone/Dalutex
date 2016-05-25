@@ -43,10 +43,10 @@
 
         public DateTime? DATAHORA_EXCLUSAO { get; set; }
 
-        public bool? TRAB_ARTE_FINAL { get; set; }
+        public bool DESENHO_PRONTO { get; set; }
          
         [StringLength(3)]
-        public string? COLUNA_EXCEL { get; set; }
+        public string COLUNA_EXCEL { get; set; }
 
     }
 }

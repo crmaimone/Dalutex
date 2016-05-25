@@ -40,8 +40,6 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<DISPONIBILIDADE_MALHA> DISPONIBILIDADE_MALHA { get; set; }
         public virtual DbSet<VW_COLECAO> VW_COLECAO { get; set; }
         public virtual DbSet<PRE_PEDIDO_CRITICA> PRE_PEDIDO_CRITICA { get; set; }
-        public virtual DbSet<TABELAPRECO> TABELAPRECO { get; set; }
-        public virtual DbSet<TABELAPRECOITEM> TABELAPRECOITEM { get; set; }
         public virtual DbSet<VW_TROCA_TEC> VW_TROCA_TEC { get; set; }
         public virtual DbSet<VW_LISOS_POR_COLECAO> VW_LISOS_POR_COLECAO { get; set; }
         public virtual DbSet<VW_IMPRESSAO_WEB> VW_IMPRESSAO_WEB { get; set; }
@@ -595,52 +593,7 @@ namespace Dalutex.Models.DataModels
 
             modelBuilder.Entity<VW_CLIENTE_TRANSP>()
                 .Property(e => e.ID_TRANSP)
-                .IsOptional();
-
-            modelBuilder.Entity<TABELAPRECO>()
-                .Property(e => e.NOME)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<TABELAPRECO>()
-                .Property(e => e.DESCRICAO)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<TABELAPRECOITEM>()
-                .Property(e => e.TAMANHO)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<TABELAPRECOITEM>()
-                .Property(e => e.QUALIDADE)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<TABELAPRECOITEM>()
-                .Property(e => e.QUALIDADECOMERCIAL)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<TABELAPRECOITEM>()
-                .Property(e => e.COD_COND_PAGTO)
-                .HasPrecision(38, 0);
-
-            modelBuilder.Entity<TABELAPRECOITEM>()
-                .Property(e => e.VALOR)
-                .HasPrecision(15, 2);
-
-            modelBuilder.Entity<TABELAPRECOITEM>()
-                .Property(e => e.PERCENTUAL)
-                .HasPrecision(15, 2);
-
-            modelBuilder.Entity<TABELAPRECOITEM>()
-                .Property(e => e.ARTIGO)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<TABELAPRECOITEM>()
-                .Property(e => e.EST_LISO)
-                .IsFixedLength()
-                .IsUnicode(false);
-
-            modelBuilder.Entity<TABELAPRECOITEM>()
-                .Property(e => e.DESENHO)
-                .IsUnicode(false);
+                .IsOptional();          
 
             modelBuilder.Entity<PRE_PEDIDO_CRITICA>()
                 .Property(e => e.NUMERO_PRE_PEDIDO)

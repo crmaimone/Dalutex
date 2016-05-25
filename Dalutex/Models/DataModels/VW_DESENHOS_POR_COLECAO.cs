@@ -34,5 +34,8 @@ namespace Dalutex.Models.DataModels
 
         public string TECNOLOGIA { get; set; }
 
+        public decimal? DESENHO_PRONTO { get; set; }
+        
+
     }
 }

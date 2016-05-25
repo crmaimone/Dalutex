@@ -18,5 +18,6 @@
 
         public string EMAIL_REP { get; set; }
         public string EMAIL_CLIENTE { get; set; }
+        public string NOME { get; set; }
     }
 }

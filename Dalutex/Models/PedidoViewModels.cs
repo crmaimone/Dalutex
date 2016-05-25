@@ -331,11 +331,14 @@ namespace Dalutex.Models
         [DataType(DataType.Currency)]
         public decimal QuantidadeConvertida { get; set; }
 
-
+        [DisplayFormat(DataFormatString = "{0:C}")] //oda -- format
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [DataType(DataType.Currency, ErrorMessage ="O valor {0} não é válido para {1}.")]
-        [Display(Name = "PREÇO:")]
+        [Display(Name = "PREÇO:")]        
         public decimal Preco { get; set; }
+
+
+
         public decimal? PrecoTabela { get; set; }
         public decimal? Farol { get; set; }
 

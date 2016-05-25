@@ -94,14 +94,14 @@
                                             <tr>
                                                 <td>@Html.LabelFor(x => x.PedidoCliente, new { @class = "control-label" }):&nbsp;</td>
                                                 <td colspan ="2">
-                                                    @Html.TextBoxFor(x => x.PedidoCliente, new { @class = "form-control" })
+                                                    @Html.TextBoxFor(x => x.PedidoCliente, new { @class = "form-control", @id = "txtPedidoCliente", @value = Model.PedidoCliente.GetValueOrDefault().ToString() })
                                                     @Html.ValidationMessageFor(x => x.PedidoCliente, "", new { @class = "text-danger" })
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>@Html.LabelFor(x => x.Observacoes, new { @class = "control-label" }):&nbsp;</td>
                                                 <td colspan="2">
-                                                    @Html.TextAreaFor(x => x.Observacoes, 0, 0, new { @style = "width:100%; Height:90px;" })
+                                                    @Html.TextAreaFor(x => x.Observacoes, 0, 0, new { @style = "width:100%; Height:90px;", @id = "txtObservacoes", @value=Model.Observacoes })
                                                     @Html.ValidationMessageFor(m => m.Observacoes, "", new { @class = "text-danger" })
                                                 </td>
                                             </tr>
@@ -228,11 +228,21 @@
                     }
                 }
 
+                salvarComplemento = function (value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("AtualizaComplentoPedido", "Pedido")',
+                        data: 'numPedidoCliente=' + $('#txtPedidoCliente').val() + '&observacoes=' + $('#txtObservacoes').val(),
+                        async: false,
+                    });
+                }
+
                 // public API
                 return {
                     lstCanais_Change: lstCanais_Change,
                     currencyFormatter: currencyFormatter,
-                    dateFormatter: dateFormatter
+                    dateFormatter: dateFormatter,
+                    salvarComplemento: salvarComplemento
                 };
             })();
 
@@ -257,6 +267,10 @@
                         $("#thQuantidadeItens").html(data.length);
                     },
                 });
+
+                $('#txtPedidoCliente').focusout(scriptWrapper.salvarComplemento);
+                $('#txtObservacoes').focusout(scriptWrapper.salvarComplemento);
+
             })();
         });
     </script>

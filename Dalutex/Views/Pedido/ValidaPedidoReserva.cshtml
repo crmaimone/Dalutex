@@ -79,6 +79,7 @@
                         <th>Desenho</th>
                         <th>Cód. Dal</th>
                         <th>Variante</th>
+                        <th>Tecnologia</th>
                         @*<th>Digitador</th>*@
                     </tr>
                 </thead>
@@ -97,6 +98,7 @@
                             <td>@item.DESENHO</td>
                             <td>@item.COD_DAL</td>
                             <td>@item.VARIANTE</td>
+                            <td>@item.TECNOLOGIA</td>
                             @*<td>@item.DIGITADOR</td>*@
 
                         </tr>
@@ -135,7 +137,8 @@
                         </a>
                     </li>
                 }
-                for (int i = 1; i <= Model.TotalPaginas; i++)
+                int iComecar = Model.Pagina <= 5 ? 1 : Model.Pagina - 5;
+                for (int i = iComecar; i <= Model.TotalPaginas; i++)
                 {
                     if (Model.Pagina == i)
                     {
@@ -164,6 +167,10 @@
                                                     , pagina = i
                                                     , totalpaginas = Model.TotalPaginas
                                                 })">@i</a></li>
+                    }
+                    if (i == iComecar + 9)
+                    {
+                        break;
                     }
                 }
                 if (Model.Pagina < Model.TotalPaginas)

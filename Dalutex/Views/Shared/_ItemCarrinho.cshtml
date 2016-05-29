@@ -42,21 +42,24 @@
 
                                 <div><strong>Peças:</strong>&nbsp;@Model.Pecas</div>
 
-                                if (Model.Farol < 200)
+                                if (Model.Farol > 0)
                                 {
-                                    <div> <font color="red"> <strong>Farol:</strong>&nbsp;@Model.Farol </font></div>
+                                    <div> <font color="red"> <strong>Farol:</strong>&nbsp;@Model.Farol.ToString("#.##") </font></div>
                                 }
-                                else
-                                {
-                                    <div><strong>Farol:</strong>&nbsp;@Model.Farol</div>
-                                }
-
                             }
                             else if (Model.Tipo == Enums.ItemType.Liso)
                             {
                                 <div><strong>Cor:</strong>&nbsp;@Model.Cor </div>                               
                                 <div><strong>Reduzido:</strong>&nbsp;@Model.Reduzido</div>
+                                <div> <strong>Tecnologia:</strong>&nbsp;Liso</div>
+                                <div><strong>Peças:</strong>&nbsp;@Model.Pecas</div>
+
+                                if (Model.Farol > 0)
+                                {
+                                    <div> <font color="red"> <strong>Farol:</strong>&nbsp;@Model.Farol.ToString("#.##")</font></div>
+                                }                                                                                                                                                                                                                                                                                                                             
                             }
+                            
                         </div>
                         <div class="col-md-5">
                             @if (Model.PrecoTabela != null)
@@ -71,7 +74,8 @@
                             {
                                 <div><strong>Preço unitário:</strong>&nbsp;@Model.Preco.ToString("C")</div>
                             }
-                            @if (Model.Tipo == Enums.ItemType.Estampado || Model.Tipo == Enums.ItemType.ValidacaoReserva)
+
+                            @if (Model.Tipo == Enums.ItemType.Estampado || Model.Tipo == Enums.ItemType.Liso || Model.Tipo == Enums.ItemType.ValidacaoReserva)
                             {
                                 <div><strong>Previsão de entrega:</strong>&nbsp;@Model.DataEntregaItem.ToString("d")</div>
 
@@ -86,9 +90,9 @@
                             {
                                 <div class="form-group">
                                     @Html.LabelFor(x => x.Compose)
-                                    <div>
+                                    
                                         @Html.DropDownListFor(m => m.Compose, new SelectList(Model.ComposeOpcoes), "Selecione", new { @class = "lstCompose", data_numero_sequencial = Model.NumeroSequencial })
-                                    </div>
+                                    
                                 </div>
                             }
                             else

@@ -67,10 +67,36 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<VW_TABELA_PRECO_NOVA> VW_TABELA_PRECO_NOVA { get; set; }
         public virtual DbSet<VW_GRUPO_COL_RED> VW_GRUPO_COL_RED { get; set; }
         public virtual DbSet<REGRAS_QTD_PEDIDOX> REGRAS_QTD_PEDIDOX { get; set; }
+        public virtual DbSet<VW_ARTIGOS_DISPONIVEIS_NEW> VW_ARTIGOS_DISPONIVEIS_NEW { get; set; }
+        public virtual DbSet<VW_CARACT_DESENHOS_NEW> VW_CARACT_DESENHOS_NEW { get; set; }
         
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<VW_ARTIGOS_DISPONIVEIS_NEW>()
+                .Property(e => e.ARTIGO)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_ARTIGOS_DISPONIVEIS_NEW>()
+                .Property(e => e.TECNOLOGIA)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_ARTIGOS_DISPONIVEIS_NEW>()
+                .Property(e => e.ID_CARAC_TEC)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_ARTIGOS_DISPONIVEIS_NEW>()
+                .Property(e => e.ID_TECNOLOGIA);
+
+            modelBuilder.Entity<VW_ARTIGOS_DISPONIVEIS_NEW>()
+                .Property(e => e.ART_DISP_PCP)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_ARTIGOS_DISPONIVEIS_NEW>()
+                .Property(e => e.REST_DES)
+                .HasPrecision(38, 0);
+
             modelBuilder.Entity<VW_GRUPO_COL_RED>()
                 .Property(e => e.TIPO_COL)
                 .HasPrecision(38, 0);

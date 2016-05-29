@@ -125,101 +125,85 @@ namespace Dalutex.Controllers
             model.ItemPedidoReserva = itempedidoreserva;
             model.Tipo = (Enums.ItemType)tipo;
 
-            List<VW_CARACT_DESENHOS> lstQuery = null;
-
-            using (var ctx = new TIDalutexContext())
-            {
-                //List<VW_ORDEM_ANTERIOR_BLOQ_NEW> lst = ctx.VW_ORDEM_ANTERIOR_BLOQ_NEW.Where(x => x.COD_DAL_MESTRE == desenho).ToList();
-
-                //if (lst != null)
-                //{
-                //    return View(model);
-                //}
-                
-
-                var query =
-                    from vw in ctx.VW_CARACT_DESENHOS
-                    where vw.DESENHO == desenho
-                    select vw;
-
-                lstQuery = query.ToList();
-            }
-
-            VW_CARACT_DESENHOS objPrimeiroCarac = lstQuery.FirstOrDefault();
-            int? iIDTecnologia;
-            int? iRevisado;
-
-            if (objPrimeiroCarac != null && objPrimeiroCarac.TECNOLOGIA != null)            
-            {
-                model.TecnologiaAtual = objPrimeiroCarac.TECNOLOGIA.Replace(" ", "_");
-
-                iIDTecnologia = objPrimeiroCarac.ID_TECNOLOGIA;
-                iRevisado = objPrimeiroCarac.REVISADO;
-
-                List<int?> lstCaracteristicas = new List<int?>();
-
-                foreach (VW_CARACT_DESENHOS item in lstQuery)
-                {
-                    lstCaracteristicas.Add(item.ID_CARAC_TEC);
-                }
-
                 using (var ctx = new TIDalutexContext())
                 {
-                    List<VW_TROCA_TEC> lstTrocas = ctx.VW_TROCA_TEC.Where(x => x.ID_TEC_ORIGINAL == iIDTecnologia).ToList();
-
-                    List<int?> lstTecnologias = new List<int?>();
-                    lstTecnologias.Add(iIDTecnologia);
-
-                    foreach (VW_TROCA_TEC item in lstTrocas)
+                    VW_CARACT_DESENHOS objPrimeiroCarac = ctx.VW_CARACT_DESENHOS.Where(x => x.DESENHO == desenho).FirstOrDefault();
+                    if (objPrimeiroCarac != null && objPrimeiroCarac.TECNOLOGIA != null)            
                     {
-                        lstTecnologias.Add(item.ID_TEC_NOVA);
-                    }
+                        model.TecnologiaAtual = objPrimeiroCarac.TECNOLOGIA.Replace(" ", "_");
+                        List<VW_TROCA_TEC> lstTrocas = ctx.VW_TROCA_TEC.Where(x => x.ID_TEC_ORIGINAL == objPrimeiroCarac.ID_TECNOLOGIA).ToList();
 
-                    //-- oda 03/11/2015 -- alteração de validação da caracteristicas e tecnologias por artigos disponiveis --- 
-                    List<PED_LINK_RESTRICAO_ARTIGO> lstArtigos = ctx.PED_LINK_RESTRICAO_ARTIGO
-                        .Where(x => lstCaracteristicas.Contains(x.ID_CARAC_TEC))
-                        .OrderBy(x => x.ARTIGO)
-                        .ThenBy(x => x.ID_CARAC_TEC)
-                        .ToList();
+                        List<int?> lstTecnologias = new List<int?>();
+                        lstTecnologias.Add(objPrimeiroCarac.ID_TECNOLOGIA);
 
-                    //List<PED_LINK_RESTRICAO_ARTIGO> lstArtigos2 = ctx.PED_LINK_RESTRICAO_ARTIGO.Where(x => x.ID_CARAC_TEC == 7).ToList();
+                        foreach (VW_TROCA_TEC item in lstTrocas)
+                        {
+                            lstTecnologias.Add(item.ID_TEC_NOVA);
+                        }
 
-                    List<string> lstArtigosStr = new List<string>();
+                    ////-- oda 03/11/2015 -- alteração de validação da caracteristicas e tecnologias por artigos disponiveis --- 
+                    //List<PED_LINK_RESTRICAO_ARTIGO> lstArtigos = ctx.PED_LINK_RESTRICAO_ARTIGO
+                    //    .Where(x => lstCaracteristicas.Contains(x.ID_CARAC_TEC))
+                    //    .OrderBy(x => x.ARTIGO)
+                    //    .ThenBy(x => x.ID_CARAC_TEC)
+                    //    .ToList();
 
-                    foreach (PED_LINK_RESTRICAO_ARTIGO item in lstArtigos)
-                    {
-                        lstArtigosStr.Add(item.ARTIGO);
-                    }
+                    //List<string> lstArtigosStr = new List<string>();
 
-                    if (iRevisado == 1)
-                    {
-                        var query =
-                        from ar in ctx.VW_ARTIGOS_DISPONIVEIS
-                        where (!lstArtigosStr.Contains(ar.ARTIGO)) && 
-                              (lstTecnologias.Contains(ar.ID_TEC))
-                        group ar by
-                            new
-                            {
-                                ar.ARTIGO,
-                                ar.TECNOLOGIA,
-                            }
-                            into grp
-                            select new ArtigoTecnologia
-                            {
-                                Artigo = grp.Key.ARTIGO,
-                                Tecnologia = grp.Key.TECNOLOGIA
-                            };
+                    //foreach (PED_LINK_RESTRICAO_ARTIGO item in lstArtigos)
+                    //{
+                    //    lstArtigosStr.Add(item.ARTIGO);
+                    //}
 
-                        string _sql = query.ToString();//apenas para pegar o SQL que esta sendo passado
+                    //IQueryable<ArtigoTecnologia> query = null;
 
-                        model.Artigos = query.OrderBy(x => x.Tecnologia).ThenBy(x => x.Artigo).ToList();
-                    }
-                    else
-                    {                   
-                        var query =
-                            from ar in ctx.VW_ARTIGOS_DISPONIVEIS
-                            where //(!lstArtigosStr.Contains(ar.ARTIGO)) && 
-                                  (lstTecnologias.Contains(ar.ID_TEC))
+                    //if (iRevisado == 1)
+                    //{
+                    //    query =
+                    //    from ar in ctx.VW_ARTIGOS_DISPONIVEIS
+                    //    where (!lstArtigosStr.Contains(ar.ARTIGO)) && 
+                    //          (lstTecnologias.Contains(ar.ID_TEC))
+                    //    group ar by
+                    //        new
+                    //        {
+                    //            ar.ARTIGO,
+                    //            ar.TECNOLOGIA,
+                    //        }
+                    //        into grp
+                    //        select new ArtigoTecnologia
+                    //        {
+                    //            Artigo = grp.Key.ARTIGO,
+                    //            Tecnologia = grp.Key.TECNOLOGIA
+                    //        };
+                    //}
+                    //else
+                    //{                   
+                    //    query =
+                    //        from ar in ctx.VW_ARTIGOS_DISPONIVEIS
+                    //        where
+                    //              (lstTecnologias.Contains(ar.ID_TEC))
+                    //        group ar by
+                    //            new
+                    //            {
+                    //                ar.ARTIGO,
+                    //                ar.TECNOLOGIA,
+                    //            }
+                    //            into grp
+                    //            select new ArtigoTecnologia
+                    //            {
+                    //                Artigo = grp.Key.ARTIGO,
+                    //                Tecnologia = grp.Key.TECNOLOGIA
+                    //            };
+                    //}
+
+                    //oda -- 27/05/2016 --- alteração para carregar toda lista de arigos disponiveis porem marcando como restrição
+
+                    List<string> strCaracterisNew = ctx.VW_CARACT_DESENHOS_NEW.Where(x => x.DESENHO == desenho).Select(x => x.CARACT_TECNICA).ToList();
+                    List<VW_ARTIGOS_DISPONIVEIS_NEW> ListaArtigos = ctx.VW_ARTIGOS_DISPONIVEIS_NEW.Where(x => lstTecnologias.Contains(x.ID_TECNOLOGIA)).OrderBy(o => o.ID_DA_VIEW).ToList();
+
+                    model.Artigos = 
+                        (
+                        from ar in ListaArtigos
                             group ar by
                                 new
                                 {
@@ -227,15 +211,39 @@ namespace Dalutex.Controllers
                                     ar.TECNOLOGIA,
                                 }
                                 into grp
+                                //orderby vw.ID_DA_VIEW
                                 select new ArtigoTecnologia
                                 {
                                     Artigo = grp.Key.ARTIGO,
                                     Tecnologia = grp.Key.TECNOLOGIA
-                                };
+                                }).ToList();
 
-                        string _sql = query.ToString();//apenas para pegar o SQL que esta sendo passado
+                    foreach (var item in model.Artigos)
+                    {
+                        var elemento = ListaArtigos.Where(x => x.ARTIGO == item.Artigo && x.TECNOLOGIA == item.Tecnologia && strCaracterisNew.Contains(x.CARACT_TECNICA)).FirstOrDefault();
+                        if( elemento != null)
+                            item.Restricao += " (Restrição: " + elemento.CARACT_TECNICA + ")";
 
-                        model.Artigos = query.OrderBy(x => x.Tecnologia).ThenBy(x => x.Artigo).ToList();
+                        if(ListaArtigos.Where(x => x.ARTIGO == item.Artigo && x.TECNOLOGIA == item.Tecnologia).First().ART_DISP_PCP == "XX")
+                            item.Restricao += " (Sem Disp. PCP)";
+                    }
+
+                    if (base.Session_Carrinho != null)
+                    {
+                        foreach (var item in model.Artigos)
+                        {
+                            if (base.Session_Carrinho.Itens.Exists(
+                                delegate(InserirNoCarrinhoViewModel incluido)
+                                {
+                                    return incluido.Artigo == item.Artigo
+                                        && incluido.TecnologiaPorExtenso == item.Tecnologia
+                                        && incluido.Desenho == desenho
+                                        && incluido.Variante == variante;
+                                }))
+                            {
+                                item.TemNoCarrinho = true;
+                            }
+                        }
                     }
                 }
             }
@@ -332,16 +340,52 @@ namespace Dalutex.Controllers
                
                 ViewBag.ItensCarrinho = base.Session_Carrinho.Itens;
 
-                //foreach (var item in base.Session_Carrinho.Itens)
-                //{
-                //    if (item.Artigo == "" && item.Tecnologia == "D")
-                //    {
-                //        item.Preco
-                //        break;
-                //    }
-                //}
-                
+                if (modo == "I")//Inclusão
+                {
+                    foreach (var item in base.Session_Carrinho.Itens)
+                    {
+                        if (model.TecnologiaPorExtenso != "L")
+                        {
+                            if (item.Artigo == model.Artigo
+                                && item.Tecnologia == model.Tecnologia
+                                && item.Desenho == model.Desenho
+                                && item.Variante == model.Variante)
+                            {
+                                ModelState.AddModelError("", "Este item já foi incluído no carrinho.");
 
+                                return RedirectToAction("Desenhos", "Pedido",
+                                new
+                                {
+                                    idcolecao = model.NMColecao,
+                                    nmcolecao = model.NMColecao,
+                                    filtro = model.Desenho,
+                                    pagina = "1",
+                                    totalpaginas = "1"
+                                });
+                                
+                                //return View(model);
+                            }
+                        }
+                        else
+                        {
+                            if (item.Reduzido == model.Reduzido)
+                            {
+                                ModelState.AddModelError("", "Este item já foi incluído no carrinho.");
+
+                                return RedirectToAction("Lisos", "Pedido",
+                                new
+                                {
+                                    idcolecao = "LISOS",
+                                    //nmcolecao = null, 
+                                    pagina = 1//, 
+                                    //totalpaginas = null
+                                });
+
+                               // return View(model);
+                            }
+                        }
+                    }
+                }                                
             }
 
             if (pagina != null)
@@ -990,7 +1034,7 @@ namespace Dalutex.Controllers
 
                         base.Session_Carrinho.Itens.Add(model);
 
-                        if (model.Tipo == Enums.ItemType.Estampado || model.Tipo == Enums.ItemType.ValidacaoReserva)
+                        if (model.Tipo == Enums.ItemType.Estampado)// || model.Tipo != Enums.ItemType.ValidacaoReserva)
                         {
                             return RedirectToAction("Desenhos", "Pedido",
                                 new
@@ -1001,6 +1045,16 @@ namespace Dalutex.Controllers
                                     pagina = "1", 
                                     totalpaginas = "1"
                                 });
+                        }
+                        else if (model.Tipo == Enums.ItemType.ValidacaoReserva)
+                        {
+                            return RedirectToAction("DesenhosValidaReserva", "Pedido",
+                                new
+                                {                                                                       
+                                    pedidoreserva = model.PedidoReserva 
+                                    //string pagina, 
+                                    //string totalpaginas                                                       
+                                });                           
                         }
                         // --- oda -- OK ----------------------------------------
                         //return RedirectToAction("ArtigosDisponiveis", "Pedido",
@@ -1016,8 +1070,6 @@ namespace Dalutex.Controllers
                         //        itempedidoreserva = model.ItemPedidoReserva,
                         //        tipo = (int)model.Tipo
                         //    });
-
-
 
                         else if (model.Tipo == Enums.ItemType.Liso)
                             return RedirectToAction("Lisos", "Pedido", new { idcolecao = model.IDColecao, nmcolecao = model.NMColecao, pagina = model.Pagina });
@@ -1429,7 +1481,7 @@ namespace Dalutex.Controllers
             return View(model);
         }
 
-        private void RecarregarPedido(decimal NumeroPedidoBloco)
+        private void RecarregarPedido(decimal NumeroPedidoBloco, bool ComItens = true)
         {
             using(var ctx = new DalutexContext()){
                 using(var ctxTI = new TIDalutexContext()){
@@ -1459,38 +1511,41 @@ namespace Dalutex.Controllers
 
                     base.Session_Carrinho.Itens = new List<InserirNoCarrinhoViewModel>();
 
-                    List<PRE_PEDIDO_ITENS> lstItens = ctxTI.PRE_PEDIDO_ITENS.Where(i => i.NUMERO_PEDIDO_BLOCO == NumeroPedidoBloco).ToList();
-
-                    foreach (var item in lstItens)
+                    if (ComItens)
                     {
-                        base.Session_Carrinho.Itens.Add(new InserirNoCarrinhoViewModel()
+                        List<PRE_PEDIDO_ITENS> lstItens = ctxTI.PRE_PEDIDO_ITENS.Where(i => i.NUMERO_PEDIDO_BLOCO == NumeroPedidoBloco).ToList();
+
+                        foreach (var item in lstItens)
                         {
-                            ID = item.ITEM,
-                            PreExistente = true,
-                            Artigo = item.ARTIGO,
-                            DataEntregaItem = item.DATA_ENTREGA.GetValueOrDefault(),
-                            Desenho = item.DESENHO,
-                            TecnologiaPorExtenso = item.LISO_ESTAMP,
-                            Preco = item.PRECO_UNIT.GetValueOrDefault(),
-                            PrecoTabela = item.PRECOLISTA,
-                            Pecas = (int)item.QTDEPC,
-                            Quantidade = item.QUANTIDADE.GetValueOrDefault(),
-                            Reduzido = (int)item.REDUZIDO_ITEM,
-                            UnidadeMedida = item.UM,
-                            Variante = item.VARIANTE,
-                            Compose = (int)item.COD_COMPOSE,
-                            DtItemSolicitada = item.DATA_ENTREGA_DIGI.GetValueOrDefault(),
-                            ValorTotalItem = item.QUANTIDADE.GetValueOrDefault() * item.PRECO_UNIT.GetValueOrDefault(),
-                            Tipo =(
-                                objPrePedidoSalvo.CANAL_VENDAS == (int)Enums.CanaisVenda.TELEVENDAS
-                                    && item.PE == "S") ? Enums.ItemType.ProntaEntrega : (
-                                        ctxTI.PED_RESERVA_VENDA.Where(r => r.PEDIDO_VENDA == NumeroPedidoBloco).FirstOrDefault() != null ? Enums.ItemType.ValidacaoReserva:(
-                                            objPrePedidoSalvo.TIPO_PEDIDO == (int)Enums.TiposPedido.RESERVA? Enums.ItemType.Reserva : (
-                                                item.LISO_ESTAMP == "L" ? Enums.ItemType.Liso : Enums.ItemType.Estampado
+                            base.Session_Carrinho.Itens.Add(new InserirNoCarrinhoViewModel()
+                            {
+                                ID = item.ITEM,
+                                PreExistente = true,
+                                Artigo = item.ARTIGO,
+                                DataEntregaItem = item.DATA_ENTREGA.GetValueOrDefault(),
+                                Desenho = item.DESENHO,
+                                TecnologiaPorExtenso = item.LISO_ESTAMP,
+                                Preco = item.PRECO_UNIT.GetValueOrDefault(),
+                                PrecoTabela = item.PRECOLISTA,
+                                Pecas = (int)item.QTDEPC,
+                                Quantidade = item.QUANTIDADE.GetValueOrDefault(),
+                                Reduzido = (int)item.REDUZIDO_ITEM,
+                                UnidadeMedida = item.UM,
+                                Variante = item.VARIANTE,
+                                Compose = (int)item.COD_COMPOSE,
+                                DtItemSolicitada = item.DATA_ENTREGA_DIGI.GetValueOrDefault(),
+                                ValorTotalItem = item.QUANTIDADE.GetValueOrDefault() * item.PRECO_UNIT.GetValueOrDefault(),
+                                Tipo = (
+                                    objPrePedidoSalvo.CANAL_VENDAS == (int)Enums.CanaisVenda.TELEVENDAS
+                                        && item.PE == "S") ? Enums.ItemType.ProntaEntrega : (
+                                            ctxTI.PED_RESERVA_VENDA.Where(r => r.PEDIDO_VENDA == NumeroPedidoBloco).FirstOrDefault() != null ? Enums.ItemType.ValidacaoReserva : (
+                                                objPrePedidoSalvo.TIPO_PEDIDO == (int)Enums.TiposPedido.RESERVA ? Enums.ItemType.Reserva : (
+                                                    item.LISO_ESTAMP == "L" ? Enums.ItemType.Liso : Enums.ItemType.Estampado
+                                            )
                                         )
-                                    )
-                            )
-                        });
+                                )
+                            });
+                        }
                     }
                 }
             }
@@ -1730,7 +1785,7 @@ namespace Dalutex.Controllers
                                         // DESENHO = item.Key.Substring(0, 4) ;
                                         // TECNOLOGIA = item.Key.Substring(8, 1) ;
                                         // UM = item.Key.Substring(4, 2);
-                                        if (item.Key.Substring(8, 1) != "L") 
+                                        if (item.Key.Substring(6, 1) != "L") 
                                         {
                                             try{objDesenhoPronto = ctxTI.VW_DESENHOS_POR_COLECAO.Where(x => x.DESENHO == item.Key.Substring(0, 4)).FirstOrDefault().DESENHO_PRONTO;}
                                             catch{objDesenhoPronto = null;}
@@ -1812,8 +1867,9 @@ namespace Dalutex.Controllers
 
                                                     if (QtdeConvertida < QtdeMinima)
                                                     {
-                                                        ModelState.AddModelError("", "A QUANTIDADE MÍNIMA POR DESENHO NÃO PODE SER MENOR QUE: " + QtdeMinima.ToString()
-                                                            + " | MTs. ARTIGO: " + vArtigo +
+                                                        ModelState.AddModelError("", "A QUANTIDADE MÍNIMA POR DESENHO NÃO PODE SER MENOR QUE: " + QtdeMinima.ToString() +
+                                                              " | item: " + item.Key +
+                                                              " | MTs. ARTIGO: " + vArtigo +
                                                               " | RENDIMENTO: " + Rendimento.ToString() +
                                                               " | TOTAL CONVERTIDO: " + QtdeConvertida.ToString() +
                                                               " MTs");
@@ -1823,6 +1879,7 @@ namespace Dalutex.Controllers
                                                 else
                                                 {
                                                     ModelState.AddModelError("", "QUANTIDADES MÍNIMAS E MÁXIMAS POR DESENHO NÃO CADASTRADO PARA ESTE ITEM. ENTRAR EM CONTATO COM DEPTO. COMERCIAL: " +
+                                                        " | item: " + item.Key +
                                                         " | Tecnologia: " + vTec +
                                                         " | IDGrupoColecao: " + idGrCol +
                                                         " | desenhoPronto: " + desenhoPronto.ToString() +
@@ -1837,7 +1894,8 @@ namespace Dalutex.Controllers
                                             else
                                             {
                                                 ModelState.AddModelError("", "QUANTIDADES MÍNIMAS E MÁXIMAS POR DESENHO NÃO CADASTRADO PARA ESTE ITEM. ENTRAR EM CONTATO COM DEPTO. COMERCIAL: " +
-                                                    " Tecnologia: " + item.Key.Substring(4, 1) +
+                                                        " | item: " + item.Key +
+                                                        " | Tecnologia: " + item.Key.Substring(4, 1) +
                                                         " | IDGrupoColecao: " + idGrCol +
                                                         " | desenhoPronto: " + desenhoPronto.ToString() +
                                                         " | IDTipoPedido: " + model.IDTipoPedido +
@@ -2820,6 +2878,14 @@ namespace Dalutex.Controllers
             }
         }
 
+        public ActionResult DuplicarCabecalho(string numeropedido)
+        {
+            this.RecarregarPedido(decimal.Parse(numeropedido), false);
+            base.Session_Carrinho.ID = 0;
+
+            return RedirectToAction("ConclusaoPedido");
+        }
+
         public ActionResult DuplicarPedido(string numeropedido)
         {
             this.RecarregarPedido(decimal.Parse(numeropedido));
@@ -3218,6 +3284,21 @@ namespace Dalutex.Controllers
                 {
                     item.RGB = utils.RGBConverter(ColorTranslator.FromWin32(int.Parse(item.RGB)));
                 });
+
+                if(base.Session_Carrinho != null)
+                {
+                    model.Galeria.ForEach(delegate(Liso item)
+                    {
+                        if (base.Session_Carrinho.Itens.Exists(
+                            delegate(InserirNoCarrinhoViewModel incluido)
+                            {
+                                return incluido.Reduzido == item.Reduzido;
+                            }))
+                        {
+                            item.TemNoCarrinho = true;
+                        }
+                    });
+                }
             }
         }
 

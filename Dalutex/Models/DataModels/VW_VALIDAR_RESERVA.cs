@@ -48,5 +48,7 @@ namespace Dalutex.Models.DataModels
 
         [StringLength(30)]
         public string DIGITADOR { get; set; }
+
+        public string TECNOLOGIA { get; set; }
     }
 }

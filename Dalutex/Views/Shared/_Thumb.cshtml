@@ -2,11 +2,9 @@
 @using Dalutex.Models
 
     @if (Model.Tipo != Enums.ItemType.ProntaEntrega)
-    { 
-        <div class="thumbnail">
-            @if (Model.Tipo == Enums.ItemType.Liso)
-            {
-                <a href="@Url.Content("InserirNoCarrinho?"+
+    {
+        string thumbClass = "thumbnail";
+        string linkUrl = Url.Content("InserirNoCarrinho?"+
                                         "&desenho=" + Model.Desenho +
                                         "&variante=" + Model.Variante +
                                         "&artigo=" + Model.Artigo +
@@ -26,7 +24,18 @@
                                         "&itempedidoreserva=0"+
                                         "&iditem=0"+
                                         "&preexistente=false"
-                                        )">
+                                        );
+
+        if (Model.TemNoCarrinho == true)
+        {
+            thumbClass += " warning";
+            linkUrl = "#";
+        }
+        
+        <div class="@thumbClass">
+            @if (Model.Tipo == Enums.ItemType.Liso)
+            {
+                <a href="@linkUrl">
                     <img style="background-color:@Model.RGB;" class="liso-thumbnail">
                     <div class="caption" style="text-decoration:none">
                         <h5>Cor: @Model.Cor</h5>
@@ -99,7 +108,12 @@
                                         "&preexistente=false"
                                         )">
 
-                    <img src="@Url.Content(Model.UrlImagens + @Model.CodStudio + ".jpg")" class="img-thumbnail equal-height">
+                    @*<img src="@Url.Content(Model.UrlImagens + @Model.CodStudio + ".jpg")" class="img-thumbnail equal-height">*@
+
+                    @{string _img = "";}
+                    @if (Model.Desenho == null){_img = "not_disp.jpg";}else{_img = Model.Desenho + "_CA.jpg";}
+                    
+                    <img src="@Url.Content(Model.UrlImagens + _img)" class="img-thumbnail equal-height">
                     <p class="thumb-paragraph">Cod. Dal:&nbsp;@Model.CodDal</p>
                     <p class="thumb-paragraph">Cod. Studio:&nbsp;@Model.CodStudio</p>
                     <p class="thumb-paragraph">Desenho:&nbsp;@Model.Desenho</p>

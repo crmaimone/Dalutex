@@ -6,6 +6,7 @@
 @{
     ViewBag.Title = "ARTIGOS E TECNOLOGIAS DISPONÍVEIS";
 }
+
 <div class="header-title"><h3>@ViewBag.Title</h3></div>
 
 @if (Model.Desenho == null)
@@ -15,9 +16,11 @@
 else
 { 
     <div class="panel panel-default">
-        <h5>DESENHO: @Model.Desenho | VARIANTE: @Model.Variante</h5>
-    </div>
-
+        <h5>DESENHO: <strong>@Model.Desenho </strong>  | VARIANTE: <strong>@Model.Variante</strong> </h5>
+        <hr />
+        <h5>Artigos não listados encontram-se Indisponiveis. Verificar com Dep. Comercial.</h5> 
+    </div>       
+     
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-6">
@@ -30,7 +33,13 @@ else
                     <h5>Por favor verificar com o SETOR ENGENHARIA DE PRODUTOS.</h5>
                 }
                 else
-                {                                    
+                {
+                    
+
+
+
+
+                    //anterior funcionando da forma atual -----------
                     if (Model.Artigos != null && Model.Artigos.Count > 0)
                     {   
                         string _Key = "";
@@ -60,7 +69,10 @@ else
                                     <div class="collapse" id="@_Key">
                                     @foreach (var item in group)
                                     {
-                                        <a href="@Url.Content("~/Pedido/InserirNoCarrinho?"+
+                                        string linkCaption = item.Artigo;
+                                        string linkClass = "list-group-item";
+                                        string iconClass = "glyphicon glyphicon-ok";
+                                        string linkUrl = Url.Content("~/Pedido/InserirNoCarrinho?"+
                                                                                 "&desenho=" + Model.Desenho +
                                                                                 "&variante=" + Model.Variante +
                                                                                 "&artigo=" + item.Artigo +
@@ -81,9 +93,24 @@ else
                                                                                 "&itempedidoreserva="+Model.ItemPedidoReserva+
                                                                                 "&iditem=0"+
                                                                                 "&preexistente=false"                                                                  
-                                                                                )"
-                                                                         
-                                           class="list-group-item"><i class="glyphicon glyphicon-ok"></i>&nbsp;@item.Artigo</a>
+                                                                                );
+                                        
+                                        if(item.TemNoCarrinho)
+                                        {
+                                            linkCaption += " (INCLUÍDO)";
+                                        }
+                                        
+                                        
+                                        linkCaption += item.Restricao;
+                                        
+                                        if(item.TemNoCarrinho || !string.IsNullOrWhiteSpace(item.Restricao))
+                                        {
+                                            linkClass += " warning";
+                                            iconClass = "glyphicon glyphicon-remove";
+                                            linkUrl = "#";
+                                        }
+                                        
+                                        <a href="@linkUrl" class="@linkClass"><i class="@iconClass"></i>&nbsp;@linkCaption</a>
                                     }
                                     </div>
                                 }                                                           

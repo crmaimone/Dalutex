@@ -29,6 +29,7 @@ namespace Dalutex.Models
         public int ItemPedidoReserva { get; set; }
         public int IDVariante { get; set; }
         public string Studio { get; set; }
+        public bool TemNoCarrinho { get; set; }
 
         //Rotina PE..
         public string Tecnologia { get; set; }

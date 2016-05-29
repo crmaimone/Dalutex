@@ -66,8 +66,15 @@ namespace Dalutex.Models
 
     public class ArtigoTecnologia
     {
+        public ArtigoTecnologia()
+        {
+            Restricao = "";
+        }
+
         public string Artigo { get; set; }
         public string Tecnologia { get; set; }
+        public bool TemNoCarrinho { get; set; }
+        public string Restricao { get; set; }
     }
 
     public class Liso
@@ -76,6 +83,7 @@ namespace Dalutex.Models
         public string Cor { get; set; }
         public string RGB { get; set; }
         public int Reduzido { get; set; }
+        public bool TemNoCarrinho { get; set; }
     }
 
     public class DesenhosViewModel
@@ -340,7 +348,7 @@ namespace Dalutex.Models
 
 
         public decimal? PrecoTabela { get; set; }
-        public decimal? Farol { get; set; }
+        public decimal Farol { get; set; }
 
         public int IDGrupoColecao { get; set; }
 

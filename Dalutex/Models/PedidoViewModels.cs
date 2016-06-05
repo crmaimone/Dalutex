@@ -320,13 +320,10 @@ namespace Dalutex.Models
         public int IDTipoPedido { get; set; }
         public List<COML_TIPOSPEDIDOS> TiposPedido { get; set; }
 
-
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [Display(Name = "TAMANHO PADRÃO:")]
         public decimal? IDTamanhoPadrao { get; set; }
         public List<REGRA_PADRAO> TamanhoPadrao { get; set; }
-
-
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [Display(Name="PEÇAS:")]
@@ -334,7 +331,6 @@ namespace Dalutex.Models
 
         [DataType(DataType.Currency)]
         public decimal Quantidade { get; set; }
-
 
         [DataType(DataType.Currency)]
         public decimal QuantidadeConvertida { get; set; }
@@ -344,8 +340,6 @@ namespace Dalutex.Models
         [DataType(DataType.Currency, ErrorMessage ="O valor {0} não é válido para {1}.")]
         [Display(Name = "PREÇO:")]        
         public decimal Preco { get; set; }
-
-
 
         public decimal? PrecoTabela { get; set; }
         public decimal Farol { get; set; }
@@ -391,6 +385,9 @@ namespace Dalutex.Models
         {
             return base.GetHashCode();
         }
+
+        public bool TemRestricao { get; set; }
+        public string Restricao{ get; set; }
     }
 
     public class AmpliacaoViewModel
@@ -415,6 +412,12 @@ namespace Dalutex.Models
         public string FiltroCliente { get; set; }
         [Display(Name = "Representante")]
         public string FiltroRepresentante { get; set; }
+        [Display(Name = "Filtrar datas?")]
+        public bool FiltroData { get; set; }
+        [Display(Name = "De")]
+        public DateTime FiltroDataInicial { get; set; }
+        [Display(Name = "Até")]
+        public DateTime FiltroDataFinal { get; set; }
 
         public List<VW_PESQUISA_PEDIDO> Pedidos { get; set; }
 

@@ -33,13 +33,7 @@ else
                     <h5>Por favor verificar com o SETOR ENGENHARIA DE PRODUTOS.</h5>
                 }
                 else
-                {
-                    
-
-
-
-
-                    //anterior funcionando da forma atual -----------
+                {                    
                     if (Model.Artigos != null && Model.Artigos.Count > 0)
                     {   
                         string _Key = "";
@@ -92,7 +86,7 @@ else
                                                                                 "&pedidoreserva="+Model.PedidoReserva+
                                                                                 "&itempedidoreserva="+Model.ItemPedidoReserva+
                                                                                 "&iditem=0"+
-                                                                                "&preexistente=false"                                                                  
+                                                                                "&preexistente=false"                                                                                                                                                  
                                                                                 );
                                         
                                         if(item.TemNoCarrinho)
@@ -103,11 +97,41 @@ else
                                         
                                         linkCaption += item.Restricao;
                                         
-                                        if(item.TemNoCarrinho || !string.IsNullOrWhiteSpace(item.Restricao))
+                                        if(item.TemNoCarrinho)// || !string.IsNullOrWhiteSpace(item.Restricao))
                                         {
                                             linkClass += " warning";
                                             iconClass = "glyphicon glyphicon-remove";
                                             linkUrl = "#";
+                                        }
+
+                                        if (!string.IsNullOrWhiteSpace(item.Restricao))
+                                        {
+                                            linkClass += " warning";
+                                            iconClass = "glyphicon glyphicon-remove";
+                                           linkUrl = Url.Content("~/Pedido/InserirNoCarrinho?"+
+                                                                                    "&desenho=" + Model.Desenho +
+                                                                                    "&variante=" + Model.Variante +
+                                                                                    "&artigo=" + item.Artigo +
+                                                                                    "&tecnologia=" + item.Tecnologia +
+                                                                                    "&tecnologiaoriginal=" + Model.TecnologiaAtual +
+                                                                                    "&idcolecao="+ Model.IDColecao +
+                                                                                    "&nmcolecao="+ Model.NMColecao +
+                                                                                    "&pagina="+ Model.Pagina +
+                                                                                    "&codstudio=null" +
+                                                                                    "&coddal=null" +
+                                                                                    "&modo=I" +                                                                                                                                               
+                                                                                    "&reduzido=" + Model.Reduzido+                                                                                                                                                
+                                                                                    "&tipo=" + ((int)Model.Tipo).ToString() +                                                                     
+                                                                                    "&idstudio=0"+
+                                                                                    "&iditemstudio=0"+
+                                                                                    "&idvariante="+Model.IDVariante+
+                                                                                    "&pedidoreserva="+Model.PedidoReserva+
+                                                                                    "&itempedidoreserva="+Model.ItemPedidoReserva+
+                                                                                    "&iditem=0"+
+                                                                                    "&preexistente=false"+
+                                                                                    "&TemRestricao=true"+
+                                                                                    "&Restricao="+item.Restricao                                                                                                                                                  
+                                                                                    ); 
                                         }
                                         
                                         <a href="@linkUrl" class="@linkClass"><i class="@iconClass"></i>&nbsp;@linkCaption</a>

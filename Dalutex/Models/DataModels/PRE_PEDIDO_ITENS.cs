@@ -84,6 +84,10 @@ namespace Dalutex.Models.DataModels
 
         public string TROCA_TECNOLOGIA { get; set; }
 
+        public decimal? TEM_RESTRICAO { get; set; }
+
+        public string RESTRICAO { get; set; }
+
         [NotMapped]
         public bool Novo { get; set; }
     }

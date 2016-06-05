@@ -92,4 +92,26 @@ namespace Dalutex.Models
         public string Desenho { get; set; }
     }
 
+
+    public class RascunhoPedidoViewModel
+    {
+        [Display(Name = "Pedido")]
+        public string FiltroPedido { get; set; }
+        [Display(Name = "Cliente")]
+        public string FiltroCliente { get; set; }
+        [Display(Name = "Representante")]
+        public string FiltroRepresentante { get; set; }
+        [Display(Name = "Filtrar datas?")]
+        public bool FiltroData { get; set; }
+        [Display(Name = "De")]
+        public DateTime FiltroDataInicial { get; set; }
+        [Display(Name = "Até")]
+        public DateTime FiltroDataFinal { get; set; }
+
+        public List<VW_RASCUNHO_PEDIDOS> Pedidos { get; set; }
+
+        public int Pagina { get; set; }
+        public int TotalPaginas { get; set; }
+    }
+
 }

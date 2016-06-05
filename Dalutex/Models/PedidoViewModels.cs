@@ -524,6 +524,6 @@ namespace Dalutex.Models
 
         public List<InserirNoCarrinhoViewModel> Itens { get; set; }
 
-        #endregion
+        #endregion        
     }    
 }

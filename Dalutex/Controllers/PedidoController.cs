@@ -2418,21 +2418,14 @@ namespace Dalutex.Controllers
                                 }
                             }
 
-                            //if(Session_Usuario.PodeCancelarItens)
-                            //{
-                                foreach (InserirNoCarrinhoViewModel item in base.Session_Carrinho.Itens)
+                            foreach (InserirNoCarrinhoViewModel item in base.Session_Carrinho.Itens)
+                            {
+                                if(item.Excluir)
                                 {
-                                    if(item.Excluir)
-                                    {
-                                        PRE_PEDIDO_ITENS objExcluir = ctx.PRE_PEDIDO_ITENS.First(i => i.ITEM == item.ID && i.NUMERO_PEDIDO_BLOCO == iNUMERO_PEDIDO_BLOCO);
-                                        ctx.PRE_PEDIDO_ITENS.Remove(objExcluir);
-                                    }
+                                    PRE_PEDIDO_ITENS objExcluir = ctx.PRE_PEDIDO_ITENS.First(i => i.ITEM == item.ID && i.NUMERO_PEDIDO_BLOCO == iNUMERO_PEDIDO_BLOCO);
+                                    ctx.PRE_PEDIDO_ITENS.Remove(objExcluir);
                                 }
-                            //}
-                            //else
-                            //{
-                            //    throw new InvalidOperationException("Este usuário não tem permissão para cancelar itens.");
-                            //}
+                            }
 
                             ctx.SaveChanges();
 

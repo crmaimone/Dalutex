@@ -164,6 +164,8 @@
     <Compile Include="fonts\ARTIGO_PESO_PADRAO.cs" />
     <Compile Include="Models\DataModels\ACOES.cs" />
     <Compile Include="Models\DataModels\LOG_PEDIDO_WEB.cs" />
+    <Compile Include="Models\DataModels\RASCUNHO_PEDIDO.cs" />
+    <Compile Include="Models\DataModels\RASCUNHO_PEDIDO_ITEM.cs" />
     <Compile Include="Models\DataModels\REGRAS_QTD_PEDIDO.cs" />
     <Compile Include="Models\DataModels\REGRAS_QTD_PEDIDOX.cs" />
     <Compile Include="Models\DataModels\REGRA_PADRAO.cs" />
@@ -231,6 +233,7 @@
     <Compile Include="Models\DataModels\VW_PESQUISA_PEDIDO.cs" />
     <Compile Include="Models\DataModels\VW_PI_RED.cs" />
     <Compile Include="Models\DataModels\VW_POCKET_ATUAL.cs" />
+    <Compile Include="Models\DataModels\VW_RASCUNHO_PEDIDOS.cs" />
     <Compile Include="Models\DataModels\VW_TABELA_PRECO_NOVA.cs" />
     <Compile Include="Models\DataModels\VW_TROCA_TEC.cs" />
     <Compile Include="Models\DataModels\VW_VALIDAR_RESERVA.cs" />
@@ -484,6 +487,9 @@
     <Content Include="Views\Pedido\ManterPedido.cshtml" />
     <Content Include="Views\Pedido\EnviarEmail.cshtml" />
     <Content Include="Views\Pedido\LimparPedido.cshtml" />
+    <Content Include="Views\Cadastro\RascunhoPedido.cshtml" />
+    <Content Include="Views\Cadastro\SalvarRascunhoPedido.cshtml" />
+    <Content Include="Views\Cadastro\RascunhoPedidoSucesso.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

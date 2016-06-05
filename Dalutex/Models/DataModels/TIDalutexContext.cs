@@ -69,10 +69,279 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<REGRAS_QTD_PEDIDOX> REGRAS_QTD_PEDIDOX { get; set; }
         public virtual DbSet<VW_ARTIGOS_DISPONIVEIS_NEW> VW_ARTIGOS_DISPONIVEIS_NEW { get; set; }
         public virtual DbSet<VW_CARACT_DESENHOS_NEW> VW_CARACT_DESENHOS_NEW { get; set; }
+        public virtual DbSet<RASCUNHO_PEDIDO> RASCUNHO_PEDIDO { get; set; }
+        public virtual DbSet<RASCUNHO_PEDIDO_ITEM> RASCUNHO_PEDIDO_ITEM { get; set; }
+        public virtual DbSet<VW_RASCUNHO_PEDIDOS> VW_RASCUNHO_PEDIDOS { get; set; }
         
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<VW_RASCUNHO_PEDIDOS>()
+                .Property(e => e.PEDIDO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_RASCUNHO_PEDIDOS>()
+                .Property(e => e.CLIENTE)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_RASCUNHO_PEDIDOS>()
+                .Property(e => e.REPRESENTANTE)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_RASCUNHO_PEDIDOS>()
+                .Property(e => e.STATUS_PEDIDO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO>()
+               .Property(e => e.PEDIDO)
+               .HasPrecision(38, 0);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO>()
+                .Property(e => e.ID_REPRESENTANTE)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO>()
+                .Property(e => e.ID_CLIENTE)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO>()
+                .Property(e => e.STATUS_PEDIDO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO>()
+                .Property(e => e.CLIENTE_NOVO)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO>()
+                .Property(e => e.ESTADO)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO>()
+                .Property(e => e.TIPO_PEDIDO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO>()
+                .Property(e => e.USUARIO_STATUS)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO>()
+                .Property(e => e.QUALIDADE_COM)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO>()
+                .Property(e => e.COD_COND_PGTO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO>()
+                .Property(e => e.OBSERVACOES)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO>()
+                .Property(e => e.NOME_CLIENTE)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO>()
+                .Property(e => e.ORIGEM)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO>()
+                .Property(e => e.ID_CLIENTE_ENTREGA)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO>()
+                .Property(e => e.ID_TRANSPORTADORA)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO>()
+                .Property(e => e.USUARIO_INICIO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO>()
+                .Property(e => e.USUARIO_FINAL)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO>()
+                .Property(e => e.CNPJ)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO>()
+                .Property(e => e.FLAG_DATA_OK_APS)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO>()
+                .Property(e => e.ID_LOCAL)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO>()
+                .Property(e => e.ID_STATUS)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO>()
+                .Property(e => e.CNPJ_ENTREGA)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO>()
+                .Property(e => e.GERENTE)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO>()
+                .Property(e => e.ATENDIMENTO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO>()
+                .Property(e => e.NUMERO_CARTAO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO>()
+                .Property(e => e.BANDEIRA)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO>()
+                .Property(e => e.BANCO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO>()
+                .Property(e => e.MOTIVO_CANC)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO>()
+                .Property(e => e.COMISSAO)
+                .HasPrecision(4, 2);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO>()
+                .Property(e => e.ID_CLI_FACCAO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO>()
+                .Property(e => e.GRUPO_FACCAO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO>()
+                .Property(e => e.PEDIDO_CLIENTE)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO_ITEM>()
+                .Property(e => e.PEDIDO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO_ITEM>()
+                .Property(e => e.REDUZIDO_ITEM)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO_ITEM>()
+                .Property(e => e.STATUS_ITEM)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO_ITEM>()
+                .Property(e => e.LISO_ESTAMP)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO_ITEM>()
+                .Property(e => e.MALHA_PLANO)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO_ITEM>()
+                .Property(e => e.MODA_DECORACAO)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO_ITEM>()
+                .Property(e => e.ARTIGO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO_ITEM>()
+                .Property(e => e.COR)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO_ITEM>()
+                .Property(e => e.DESENHO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO_ITEM>()
+                .Property(e => e.VARIANTE)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO_ITEM>()
+                .Property(e => e.QUANTIDADE)
+                .HasPrecision(10, 2);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO_ITEM>()
+                .Property(e => e.PRECO_UNIT)
+                .HasPrecision(10, 2);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO_ITEM>()
+                .Property(e => e.VALOR_TOTAL)
+                .HasPrecision(10, 2);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO_ITEM>()
+                .Property(e => e.UM)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO_ITEM>()
+                .Property(e => e.COLECAO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO_ITEM>()
+                .Property(e => e.PE)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO_ITEM>()
+                .Property(e => e.ITEM)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO_ITEM>()
+                .Property(e => e.SIT_ITEM)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO_ITEM>()
+                .Property(e => e.ORIGEM)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO_ITEM>()
+                .Property(e => e.COMPOSE)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO_ITEM>()
+                .Property(e => e.COD_COMPOSE)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO_ITEM>()
+                .Property(e => e.ID_TAB_PRECO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO_ITEM>()
+                .Property(e => e.QUALIDADE)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO_ITEM>()
+                .Property(e => e.PRECODIGITADOMOEDA)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO_ITEM>()
+                .Property(e => e.PRECOLISTA)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO_ITEM>()
+                .Property(e => e.QTDEPC)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO_ITEM>()
+                .Property(e => e.TROCA_TECNOLOGIA)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<RASCUNHO_PEDIDO_ITEM>()
+                .Property(e => e.RESTRICAO)
+                .IsUnicode(false);
+
             modelBuilder.Entity<VW_ARTIGOS_DISPONIVEIS_NEW>()
                 .Property(e => e.ARTIGO)
                 .IsFixedLength()

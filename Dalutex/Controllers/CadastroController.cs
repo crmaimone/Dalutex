@@ -26,7 +26,7 @@ namespace Dalutex.Controllers
             string IDTipo
         )
         {
-           
+
             if (IDRepresentante != null)
             {
                 using (var ctx = new DalutexContext())
@@ -49,7 +49,7 @@ namespace Dalutex.Controllers
                 using (var ctx = new TIDalutexContext())
                 {
                     int iIDClienteEntrega = int.Parse(IDClienteEntrega);
-                    Session_Carrinho.ClienteEntrega = ctx.VW_CLIENTE_TRANSP.Where(x => x.ID_CLIENTE == iIDClienteEntrega).First(); 
+                    Session_Carrinho.ClienteEntrega = ctx.VW_CLIENTE_TRANSP.Where(x => x.ID_CLIENTE == iIDClienteEntrega).First();
                 }
             }
             if (IDTransportadora != null) /*Não é ELSE pq os dois parâmetros são passados*/
@@ -129,27 +129,27 @@ namespace Dalutex.Controllers
                 {
                     return RedirectToAction("QualidadeComercial");
                 }
-                else if (base.Session_Carrinho.Moeda == null || base.Session_Carrinho.Moeda.CODIGOMOEDA < 0 )
+                else if (base.Session_Carrinho.Moeda == null || base.Session_Carrinho.Moeda.CODIGOMOEDA < 0)
                 {
                     return RedirectToAction("Moeda");
                 }
-                else if (base.Session_Carrinho.CondicaoPagto == null || base.Session_Carrinho.CondicaoPagto.ID_COND <= 0 )
+                else if (base.Session_Carrinho.CondicaoPagto == null || base.Session_Carrinho.CondicaoPagto.ID_COND <= 0)
                 {
                     return RedirectToAction("CondicaoPgto");
                 }
-                else if (base.Session_Carrinho.CanailVenda == null || base.Session_Carrinho.CanailVenda.CANAL_VENDA <= 0 )
+                else if (base.Session_Carrinho.CanailVenda == null || base.Session_Carrinho.CanailVenda.CANAL_VENDA <= 0)
                 {
                     return RedirectToAction("CanalVendas");
                 }
-                else if (base.Session_Carrinho.ViaTransporte == null || base.Session_Carrinho.ViaTransporte.VIATRANSPORTE <= 0 )
+                else if (base.Session_Carrinho.ViaTransporte == null || base.Session_Carrinho.ViaTransporte.VIATRANSPORTE <= 0)
                 {
                     return RedirectToAction("ViaTransporte");
                 }
-                else if (base.Session_Carrinho.Frete == null || base.Session_Carrinho.Frete.TIPOFRETE <= 0 )
+                else if (base.Session_Carrinho.Frete == null || base.Session_Carrinho.Frete.TIPOFRETE <= 0)
                 {
                     return RedirectToAction("Frete");
                 }
-                else if (base.Session_Carrinho.TipoAtendimento == null || base.Session_Carrinho.TipoAtendimento.COD_ATEND <= 0 )
+                else if (base.Session_Carrinho.TipoAtendimento == null || base.Session_Carrinho.TipoAtendimento.COD_ATEND <= 0)
                 {
                     return RedirectToAction("TipoAtendimento");
                 }
@@ -258,15 +258,15 @@ namespace Dalutex.Controllers
             int iIDClienteEntrega;
             int.TryParse(IDClienteEntrega, out iIDClienteEntrega);
 
-            if(iIDClienteEntrega == 0)
+            if (iIDClienteEntrega == 0)
             {
-                if(base.Session_Carrinho.ClienteFatura != null && base.Session_Carrinho.ClienteFatura.ID_CLIENTE > 0)
+                if (base.Session_Carrinho.ClienteFatura != null && base.Session_Carrinho.ClienteFatura.ID_CLIENTE > 0)
                 {
                     iIDClienteEntrega = base.Session_Carrinho.ClienteFatura.ID_CLIENTE;
                 }
             }
 
-            if(iIDClienteEntrega > 0)
+            if (iIDClienteEntrega > 0)
             {
                 using (var ctx = new TIDalutexContext())
                 {
@@ -593,6 +593,231 @@ namespace Dalutex.Controllers
         [AllowAnonymous]
         public ActionResult Teste()
         {
+            return View();
+        }
+
+
+        public ActionResult RascunhoPedido(string pedido, string cliente, string representante, string pagina, string totalpaginas)
+        {
+            RascunhoPedidoViewModel model = new RascunhoPedidoViewModel();
+            model.FiltroData = true;
+            model.FiltroDataInicial = DateTime.Today.AddDays(-7);
+            model.FiltroDataFinal = DateTime.Today;
+
+            if (pagina != null)
+            {
+                int iIDPedido;
+
+                if (int.TryParse(pedido, out iIDPedido) && iIDPedido > 0)
+                {
+                    model.FiltroPedido = iIDPedido.ToString();
+                }
+
+                model.FiltroCliente = cliente;
+                model.FiltroRepresentante = representante;
+
+                int iPagina;
+                if (int.TryParse(pagina, out iPagina) && iPagina > 0)
+                {
+                    model.Pagina = iPagina;
+                }
+
+                int iTotalPaginas;
+                if (int.TryParse(totalpaginas, out iTotalPaginas) && iTotalPaginas > 0)
+                {
+                    model.TotalPaginas = iTotalPaginas;
+                }
+
+                ObterPedidosRascunho(model);
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult RascunhoPedido(RascunhoPedidoViewModel model)
+        {
+            model.Pagina = 1;
+            ObterPedidosRascunho(model);
+
+            return View(model);
+        }
+
+        public void ObterPedidosRascunho(RascunhoPedidoViewModel model)
+        {
+            int iItensPorPagina = 10;
+
+            using (var ctxTI = new TIDalutexContext())
+            {
+                decimal dFiltroPedido = 0;
+                decimal.TryParse(model.FiltroPedido, out dFiltroPedido);
+                if (model.FiltroCliente != null)
+                    model.FiltroCliente = model.FiltroCliente.ToUpper();
+
+                if (model.FiltroRepresentante != null)
+                    model.FiltroRepresentante = model.FiltroRepresentante.ToUpper();
+
+                var result = (from p in ctxTI.VW_RASCUNHO_PEDIDOS 
+                              where (p.PEDIDO == dFiltroPedido || dFiltroPedido <= 0)
+                                 && (model.FiltroCliente == null || p.CLIENTE.ToUpper().Contains(model.FiltroCliente))
+                                 && (model.FiltroRepresentante == null || p.REPRESENTANTE.ToUpper().Contains(model.FiltroRepresentante))
+                                 && (model.FiltroData == false || p.DATA_EMISSAO >= model.FiltroDataInicial && p.DATA_EMISSAO <= model.FiltroDataFinal)
+                              orderby p.DATA_EMISSAO descending
+                              select p).ToList();
+
+                decimal dTotal = result.Count / (decimal)iItensPorPagina;
+                model.TotalPaginas = (int)Decimal.Ceiling(dTotal);
+                if (model.TotalPaginas == 0)
+                    model.TotalPaginas = 1;
+
+                model.Pedidos = result.Skip((model.Pagina - 1) * iItensPorPagina).Take(iItensPorPagina).ToList();
+            }
+        }
+       
+        [HttpPost]
+        public ActionResult SalvarRascunhoPedido()
+        {
+            if (base.Session_Carrinho != null)
+            {
+                try
+                {
+                    int vNumeroPedido = 0;
+
+                    using (var ctx = new TIDalutexContext())
+                    {
+                        #region Grava Pedido
+                        vNumeroPedido = ctx.Database.SqlQuery<int>("SELECT SEQ_RASCUNHO_PEDIDO.NEXTVAL FROM DUAL", 1).FirstOrDefault();
+
+                        RASCUNHO_PEDIDO objPrePedido = new RASCUNHO_PEDIDO();
+
+                        objPrePedido.PEDIDO = vNumeroPedido;
+                        objPrePedido.TIPO_PEDIDO = base.Session_Carrinho.IDTipoPedido;
+                        objPrePedido.ID_REPRESENTANTE = base.Session_Carrinho.Representante.IDREPRESENTANTE;
+                        objPrePedido.ID_CLIENTE = base.Session_Carrinho.ClienteFatura.ID_CLIENTE;
+                        objPrePedido.QUALIDADE_COM = base.Session_Carrinho.QualidadeComercial.Key;
+                        objPrePedido.COD_COND_PGTO = base.Session_Carrinho.CondicaoPagto.ID_COND;
+                        objPrePedido.OBSERVACOES = base.Session_Carrinho.Observacoes;
+                        objPrePedido.DATA_ENTREGA = base.Session_Carrinho.DataEntrega;
+                        objPrePedido.ID_CLIENTE_ENTREGA = (base.Session_Carrinho.IDTipoPedido != (int)Enums.TiposPedido.RESERVA ? base.Session_Carrinho.ClienteEntrega.ID_CLIENTE : base.Session_Carrinho.ClienteFatura.ID_CLIENTE);
+                        objPrePedido.ID_TRANSPORTADORA = (base.Session_Carrinho.IDTipoPedido != (int)Enums.TiposPedido.RESERVA ? base.Session_Carrinho.Transportadora.IDTRANSPORTADORA : -1);
+                        objPrePedido.USUARIO_INICIO = base.Session_Usuario.NOME_USU;
+                        objPrePedido.ID_LOCAL = (base.Session_Carrinho.IDLocaisVenda == null ? 5 : base.Session_Carrinho.IDLocaisVenda);//todo: verificar com marcio se precisa de uma view para este tipo
+                        objPrePedido.COD_MOEDA = base.Session_Carrinho.Moeda.CODIGOMOEDA;
+                        objPrePedido.CANAL_VENDAS = base.Session_Carrinho.CanailVenda.CANAL_VENDA;
+                        objPrePedido.ATENDIMENTO = (base.Session_Carrinho.IDTipoPedido != (int)Enums.TiposPedido.RESERVA ? base.Session_Carrinho.TipoAtendimento.COD_ATEND : 0);
+                        objPrePedido.TIPOFRETE = base.Session_Carrinho.Frete.TIPOFRETE;
+                        objPrePedido.VIATRANSPORTE = base.Session_Carrinho.ViaTransporte.VIATRANSPORTE;
+                        objPrePedido.COMISSAO = Session_Carrinho.PorcentagemComissao;
+                        objPrePedido.ORIGEM = "PW"; // APENAS PRA INFORMAR QUE ESTE PEDIDO VEIO DO PEDIDO WEB NOVO. 
+                        objPrePedido.PEDIDO_CLIENTE = base.Session_Carrinho.PedidoCliente;
+                        objPrePedido.STATUS_PEDIDO = 1; //embora esteja definido no banco como padrão "1", esta gravando nulo, então, deixar explicito.....  
+                        objPrePedido.DATA_INICIO = DateTime.Now;
+                        objPrePedido.DATA_FINAL = DateTime.Now;
+                        objPrePedido.DATA_EMISSAO = DateTime.Now;
+                        objPrePedido.DATA_EMISSAO_DT = DateTime.Today;
+                        #endregion
+
+                        using (var transaction = ctx.Database.BeginTransaction())
+                        {
+                            try
+                            {
+                                #region Salvar Itens
+                                List<RASCUNHO_PEDIDO_ITEM> lstItens = new List<RASCUNHO_PEDIDO_ITEM>();
+
+                                int iNumeroItem = 0;
+
+                                foreach (InserirNoCarrinhoViewModel item in base.Session_Carrinho.Itens)
+                                {
+                                    if (base.Session_Carrinho.IDTipoPedido == (int)Enums.TiposPedido.RESERVA)
+                                    {
+                                        item.Artigo = "0000";
+                                        item.Quantidade = 100;
+                                        item.Pecas = 1;
+                                        item.TecnologiaPorExtenso = null;
+                                        item.DataEntregaItem = DateTime.Now;
+                                        item.DtItemSolicitada = DateTime.Now;
+                                    }
+
+                                    string _cor;
+                                    if (item.Tipo == Enums.ItemType.ValidacaoReserva) { _cor = "E000000"; } else if (item.Cor == null) { _cor = "0000000"; } else { _cor = item.Cor; }
+
+                                    RASCUNHO_PEDIDO_ITEM objItemSalvar = new RASCUNHO_PEDIDO_ITEM();
+
+                                    iNumeroItem++;
+
+                                    objItemSalvar.ITEM = iNumeroItem;
+                                    objItemSalvar.PEDIDO = vNumeroPedido;
+                                    objItemSalvar.ARTIGO = item.Artigo;
+                                    objItemSalvar.COR = _cor;
+                                    objItemSalvar.DATA_ENTREGA = item.DataEntregaItem;
+                                    objItemSalvar.DESENHO = item.Desenho;
+                                    objItemSalvar.LISO_ESTAMP = item.Tecnologia;
+                                    objItemSalvar.PE = "N";
+                                    objItemSalvar.PRECO_UNIT = item.Preco;
+                                    objItemSalvar.PRECOLISTA = (item.PrecoTabela == null ? 0 : item.PrecoTabela);
+                                    objItemSalvar.QTDEPC = item.Pecas;
+                                    objItemSalvar.QUANTIDADE = item.Quantidade;
+                                    objItemSalvar.REDUZIDO_ITEM = item.Reduzido;
+                                    objItemSalvar.UM = item.UnidadeMedida;
+                                    objItemSalvar.VALOR_TOTAL = item.Preco * item.Quantidade;
+                                    objItemSalvar.VARIANTE = item.Variante;
+                                    objItemSalvar.COD_COMPOSE = item.Compose;
+                                    objItemSalvar.ORIGEM = "PW";
+                                    objItemSalvar.MALHA_PLANO = item.UnidadeMedida == "MT" ? "P" : "M";
+                                    objItemSalvar.MODA_DECORACAO = "M";
+                                    objItemSalvar.DATA_ENTREGA_DIGI = item.DtItemSolicitada;
+                                    objItemSalvar.ID_TAB_PRECO = -1;
+                                    objItemSalvar.STATUS_ITEM = 15;
+                                    objItemSalvar.PRECODIGITADOMOEDA = 0;
+                                    objItemSalvar.TEM_RESTRICAO = item.TemRestricao;
+                                    objItemSalvar.RESTRICAO = item.Restricao;
+
+                                    if ((item.Tipo == Enums.ItemType.ValidacaoReserva || item.Tipo == Enums.ItemType.Estampado) && !item.PreExistente)
+                                    {
+                                        if (item.TecnologiaOriginal != item.TecnologiaPorExtenso)
+                                        {
+                                            objItemSalvar.TROCA_TECNOLOGIA = "Troca de " + item.TecnologiaOriginal + " para " + item.TecnologiaPorExtenso;
+                                        }
+                                    }
+
+                                    lstItens.Add(objItemSalvar);
+                                }
+
+                                ctx.RASCUNHO_PEDIDO.Add(objPrePedido);
+
+
+                                foreach (RASCUNHO_PEDIDO_ITEM item in lstItens)
+                                {
+                                    ctx.RASCUNHO_PEDIDO_ITEM.Add(item);
+                                }
+                                #endregion
+
+                                ctx.SaveChanges();
+
+                                transaction.Commit();
+                            }
+                            catch (Exception ex)
+                            {
+                                transaction.Rollback();
+                                throw ex;
+                            }
+                        }
+                    }
+                    return RedirectToAction("RascunhoPedidoSucesso", "Cadastro", new { pedido = vNumeroPedido.ToString() });
+                }
+                catch (Exception ex) { base.Handle(ex); }
+            }
+            return RedirectToAction("RascunhoPedidoSucesso", "Cadastro", new { pedido = "0" });
+        }
+
+        public ActionResult SalvarRascunhoPedido(string pedido)
+        {
+            return View();
+        }
+
+        public ActionResult RascunhoPedidoSucesso(string pedido)
+        {
+            ViewBag.NumeroPedido = pedido;
+
             return View();
         }
     }

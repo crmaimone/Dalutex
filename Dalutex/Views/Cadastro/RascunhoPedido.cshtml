@@ -1,0 +1,184 @@
+﻿@using Dalutex.Models.DataModels
+@using Dalutex.Models.Utils
+@using Dalutex.Models
+
+@model Dalutex.Models.RascunhoPedidoViewModel
+
+@{
+    ViewBag.Title = "RASCUNHO DE PEDIDOS";
+}
+
+<div class="header-title"><h3>@ViewBag.Title</h3></div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <section id="PesquisaPedidos">
+                @using (Html.BeginForm("RascunhoPedido", "Cadastro", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group" style="margin-top:5px">
+                        @Html.LabelFor(m => m.FiltroPedido, new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(m => m.FiltroPedido, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.FiltroPedido, "", new { @class = "text-danger" })
+                        </div>
+                        @Html.LabelFor(m => m.FiltroRepresentante, new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10" style="margin-top:5px">
+                            @Html.TextBoxFor(m => m.FiltroRepresentante, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.FiltroRepresentante, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="checkbox col-sm-10 col-sm-offset-2">
+                            <label style="font-weight:bold; padding-left:5px;">
+                                @Html.CheckBoxFor(model => model.FiltroData, new { @id = "chkFiltroDatas", @style = "margin-left:0px;" })
+                                @Html.DisplayNameFor(model => model.FiltroData)
+                            </label>
+                        </div>
+
+                        @Html.LabelFor(m => m.FiltroDataInicial, new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10" style="margin-top:5px">
+                            @Html.TextBoxFor(m => m.FiltroDataInicial, new { @class = "form-control dtPicker", @id = "txtDtInicial" })
+                            @Html.ValidationMessageFor(m => m.FiltroDataInicial, "", new { @class = "text-danger" })
+                        </div>
+                        @Html.LabelFor(m => m.FiltroDataFinal, new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10" style="margin-top:5px">
+                            @Html.TextBoxFor(m => m.FiltroDataFinal, new { @class = "form-control dtPicker", @id = "txtDtFinal" })
+                            @Html.ValidationMessageFor(m => m.FiltroDataFinal, "", new { @class = "text-danger" })
+                            <button type="submit" class="btn btn-default" style="margin-top:5px;"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>  PESQUISAR</button>
+                        </div>
+                        <input type="hidden" name="Pagina" value="@Model.Pagina" />
+                    </div>
+                }
+            </section>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <section id="ResultadoPedidos">
+                <div class="list-group" id="lstPedidos">
+                    <a href="#" class="list-group-item active">PEDIDO&nbsp;|&nbsp;REPRESENTANTE&nbsp;|&nbsp;CLIENTE</a>
+                    @if (@Model != null && @Model.Pedidos != null)
+                    {
+                        foreach (VW_RASCUNHO_PEDIDOS item in Model.Pedidos)
+                        {
+                            <a href="@Url.Action("#", "Cadastro", new { IDPedido = item.PEDIDO})" class="list-group-item list-group-item-success">
+                                <strong>@Utilitarios.PreencheComChar(@item.PEDIDO.ToString(), " ", 7)</strong>
+                                &nbsp;|&nbsp;@Utilitarios.PreencheComChar(@item.REPRESENTANTE, " ", 10)&nbsp;|&nbsp;
+                                @Utilitarios.PreencheComChar(@item.CLIENTE, " ", 20)
+                            </a>
+                        }
+                    }
+                    else
+                    {
+                        <p class="list-group-item"><em>UTILIZE OS FILTROS DISPONIVEIS PARA BUSCAR O PEDIDO QUE DESEJA RECARREGAR</em></p>
+                    }
+                </div>
+            </section>
+        </div>
+    </div>
+    <nav>
+        <ul class="pagination">
+            @if (Model.Pedidos != null)
+            {
+                if (Model.Pagina > 1)
+                {
+                    <li>
+                        <a href="@Url.Action("PesquisaPedido", "Pedido", new { pedido = Model.FiltroPedido, cliente = Model.FiltroCliente, representante = Model.FiltroRepresentante, pagina = Model.Pagina - 1, totalpaginas = Model.TotalPaginas })" aria-label="Anterior">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                }
+                else
+                {
+                    <li class="disabled">
+                        <a href="#" aria-label="Anterior">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                }
+                int iComecar = Model.Pagina <= 5 ? 1 : Model.Pagina - 5;
+                for (int i = iComecar; i <= Model.TotalPaginas; i++)
+                {
+                    if (Model.Pagina == i)
+                    {
+                        <li class="active"><a href="@Url.Action("PesquisaPedido", "Pedido", new { pedido = Model.FiltroPedido, cliente = Model.FiltroCliente, representante = Model.FiltroRepresentante, pagina = i, totalpaginas = Model.TotalPaginas })">@i</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="@Url.Action("PesquisaPedido", "Pedido", new { pedido = Model.FiltroPedido, cliente = Model.FiltroCliente, representante = Model.FiltroRepresentante, pagina = i, totalpaginas = Model.TotalPaginas })">@i</a></li>
+                    }
+                    if (i == iComecar + 9)
+                    {
+                        break;
+                    }
+                }
+                if (Model.Pagina < Model.TotalPaginas)
+                {
+                    <li>
+                        <a href="@Url.Action("PesquisaPedido", "Pedido", new { pedido = Model.FiltroPedido, cliente = Model.FiltroCliente, representante = Model.FiltroRepresentante, pagina = Model.Pagina + 1, totalpaginas = Model.TotalPaginas })" aria-label="Próxima">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                }
+                else
+                {
+                    <li class="disabled">
+                        <a href="#" aria-label="Próxima">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                }
+            }
+        </ul>
+    </nav>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/datepicker")
+    <script>
+    $(document).ready(function () {
+        //API
+        scriptWrapper = (function () {
+
+            //API Attributes
+
+            //API Methods
+            chkFiltroDatas_Change = function () {
+                if ($('#chkFiltroDatas').is(":checked"))
+                {
+                    $('#txtDtInicial').prop('disabled', false);
+                    $('#txtDtFinal').prop('disabled', false);
+                }
+                else
+                {
+                    $('#txtDtInicial').prop('disabled', true);
+                    $('#txtDtFinal').prop('disabled', true);
+                }
+            }
+
+            // public API
+            return {
+                chkFiltroDatas_Change: chkFiltroDatas_Change,
+            };
+        })();
+
+        //Init
+        (function Init() {
+            $('.dtPicker').datepicker({
+                format: "dd/mm/yyyy",
+                todayBtn: true,
+                clearBtn: true,
+                language: "pt-BR"
+            });
+
+            $('#txtDtInicial').datepicker('update', '@Model.FiltroDataInicial.ToString("dd/MM/yyyy")');
+            $('#txtDtFinal').datepicker('update', '@Model.FiltroDataFinal.ToString("dd/MM/yyyy")');
+
+            $('#chkFiltroDatas').on('change', scriptWrapper.chkFiltroDatas_Change);
+
+        })();
+    });
+    </script>
+}
+

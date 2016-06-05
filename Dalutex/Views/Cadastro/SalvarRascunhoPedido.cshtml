@@ -1,0 +1,18 @@
+﻿
+@{
+    ViewBag.Title = "SALVAR PEDIDO RASCUNHO";
+}
+
+<div class="header-title"><h3>@ViewBag.Title</h3></div>
+
+<div class="row">
+    <div class="col-xs-12">
+        @using (Html.BeginForm("SalvarRascunhoPedido", "Cadastro", null, FormMethod.Post))
+        {
+            <h3>Deseja salvar um rascunho deste pedido? </h3>
+            <button type="submit" class="btn btn-info pull-left"><span class="glyphicon glyphicon-check" aria-hidden="true"></span>&nbsp;CONFIRMAR</button>
+            <span class="pull-left">&nbsp;</span>
+            <a class="btn btn-default right" href="@Url.Action("Index","Home")"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>&nbsp;VOLTAR AO INÍCIO</a>
+        }
+    </div>
+</div>

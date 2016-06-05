@@ -473,10 +473,26 @@ namespace Dalutex.Controllers
                 {
                     if (model.Tipo != Enums.ItemType.Reserva)
                     {
+                        decimal QtdeMaxima = 0;
+                        decimal QtdeMinima = 0;
+                        decimal QtdeConvertida = 0;
+                        decimal Rendimento = 0;
+
                         if ((model.IDTipoPedido != (int)Enums.TiposPedido.AMOSTRA) && (model.IDTipoPedido != (int)Enums.TiposPedido.PILOTAGEM))
                         {
                             model.Quantidade = model.IDTamanhoPadrao.GetValueOrDefault() * model.Pecas;
                             model.QuantidadeConvertida = model.Quantidade;
+
+                            if(model.UnidadeMedida == "KG")
+                            {
+                                using (var ctx = new TIDalutexContext())
+                                {
+                                    QtdeConvertida = model.Quantidade;
+                                    Rendimento = ctx.Database.SqlQuery<decimal>("select dalutex.Pega_Rendimento_Real(:p0, :p1) from dual", model.Artigo, model.Tecnologia).FirstOrDefault();
+                                    QtdeConvertida = model.Quantidade * Rendimento;
+                                    model.QuantidadeConvertida = QtdeConvertida;
+                                }
+                            }
                         }
                         
                         #region Validação dos campos qtde
@@ -507,12 +523,7 @@ namespace Dalutex.Controllers
                         #endregion
 
                         using (var ctx = new TIDalutexContext())
-                        {
-                            decimal QtdeMaxima = 0;
-                            decimal QtdeMinima = 0;
-                            decimal QtdeConvertida = 0;
-                            decimal Rendimento = 0;
-
+                        {                            
                             REGRAS_QTD_PEDIDO objMinMax=null;
                             REGRAS_QTD_PEDIDOX objMinMaxX = null;
                             int IDColecao = int.Parse(model.IDColecao);
@@ -541,407 +552,112 @@ namespace Dalutex.Controllers
                                     model.IDGrupoColecao = objGrupoCol.ID_GRUPO_COL;
                             }
 
-                            #region Nova Regra de Validação Qtde
-                            if (ConfigurationManager.AppSettings["NOVA_REGRA_QTDE_ATIVA"] == "1")
+                            #region Nova Regra de Validação Qtde 
+                            decimal? objDesenhoPronto = 0;
+                            bool desenhoPronto = false;
+
+                            if (model.Tecnologia != "L")
                             {
-                                
-                                decimal? objDesenhoPronto = 0;
-                                bool desenhoPronto = false;
-
-                                if (model.Tecnologia != "L")
-                                {
-                                    try
-                                    {
-                                         objDesenhoPronto = ctx.VW_DESENHOS_POR_COLECAO.Where(x => x.DESENHO == model.Desenho).FirstOrDefault().DESENHO_PRONTO;
-                                    }
-                                    catch
-                                    {
-                                        objDesenhoPronto = null;
-                                    }
+                                try{objDesenhoPronto = ctx.VW_DESENHOS_POR_COLECAO.Where(x => x.DESENHO == model.Desenho).FirstOrDefault().DESENHO_PRONTO;}
+                                catch{objDesenhoPronto = null;}
                                     
-                                    if (objDesenhoPronto != null)
-                                    {
-                                        desenhoPronto = (objDesenhoPronto == 1);
-                                    }
-                                }
+                                if (objDesenhoPronto != null)
+                                {desenhoPronto = (objDesenhoPronto == 1);}
+                            }
 
-                                //oda -- 17/05/2016 -- nova regra validação ------------
-                                var qryQtdeMinMaxX =
-                                            from Qtde in ctx.REGRAS_QTD_PEDIDOX
-                                            where
-                                                   Qtde.TECNOLOGIA_DESTINO == model.Tecnologia
-                                                && Qtde.GRUPO_COLECAO == model.IDGrupoColecao
-                                                && Qtde.DESENHO_PRONTO == desenhoPronto             
-                                                && Qtde.TIPO_PEDIDO == model.IDTipoPedido
-                                                && Qtde.UM == model.UnidadeMedida
-                                                && Qtde.EXCLUIDO == false
-                                            select
-                                                Qtde;
+                            //oda -- 17/05/2016 -- nova regra validação ------------
+                            var qryQtdeMinMaxX =
+                                        from Qtde in ctx.REGRAS_QTD_PEDIDOX
+                                        where
+                                                Qtde.TECNOLOGIA_DESTINO == model.Tecnologia
+                                            && Qtde.GRUPO_COLECAO == model.IDGrupoColecao
+                                            && Qtde.DESENHO_PRONTO == desenhoPronto             
+                                            && Qtde.TIPO_PEDIDO == model.IDTipoPedido
+                                            && Qtde.UM == model.UnidadeMedida
+                                            && Qtde.EXCLUIDO == false
+                                        select
+                                            Qtde;
 
-                                objMinMaxX = qryQtdeMinMaxX.FirstOrDefault();
+                            objMinMaxX = qryQtdeMinMaxX.FirstOrDefault();
 
-                                if (objMinMaxX != null)
+                            if (objMinMaxX != null)
+                            {
+                                QtdeMaxima = objMinMaxX.QTD_MAX_VAR;
+                                QtdeMinima = objMinMaxX.QTD_MIN_VAR;
+
+                                if (model.Quantidade < QtdeMinima)
                                 {
-                                    QtdeMaxima = objMinMaxX.QTD_MAX_VAR;
-                                    QtdeMinima = objMinMaxX.QTD_MIN_VAR;
-
-                                    if (model.Quantidade < QtdeMinima)
-                                    {
-                                        ModelState.AddModelError("", "A QUANTIDADE MÍNIMA POR VARIANTE NÃO PODE SER MENOR QUE: " + QtdeMinima.ToString());
-                                        hasErrors = true;
-                                    }
-                                    else if (model.Quantidade > QtdeMaxima)
-                                            {
-                                            ModelState.AddModelError("", "A QUANTIDADE MÁXIMA POR VARIANTE NÃO PODE SER MAIOR QUE: " + QtdeMaxima.ToString());
-                                            hasErrors = true;
-                                            }
+                                    ModelState.AddModelError("", "A QUANTIDADE MÍNIMA POR VARIANTE NÃO PODE SER MENOR QUE: " + QtdeMinima.ToString());
+                                    hasErrors = true;
                                 }
-                                else                          
-                                {   //se não achou a qtde na regra, verifica se a UM é KG pra tentar achar em MT, se não..... num deu!
-                                    if (model.UnidadeMedida == "KG")
-                                    {
-                                        var qryQtdeMinMaxMT =
-                                            from Qtde in ctx.REGRAS_QTD_PEDIDOX
-                                            where
-                                                   Qtde.TECNOLOGIA_DESTINO == model.Tecnologia
-                                                && Qtde.GRUPO_COLECAO == model.IDGrupoColecao
-                                                && Qtde.DESENHO_PRONTO == desenhoPronto
-                                                && Qtde.TIPO_PEDIDO == model.IDTipoPedido
-                                                && Qtde.UM == "MT"
-                                                && Qtde.EXCLUIDO == false
-                                            select
-                                                Qtde;
-
-                                        objMinMaxX = qryQtdeMinMaxMT.FirstOrDefault();
-
-                                        QtdeConvertida = model.Quantidade;
-                                        Rendimento = ctx.Database.SqlQuery<decimal>("select dalutex.Pega_Rendimento_Real(:p0, :p1) from dual", model.Artigo, model.Tecnologia).FirstOrDefault();
-                                        QtdeConvertida = model.Quantidade * Rendimento;
-                                        model.QuantidadeConvertida = QtdeConvertida;                                  
-
-                                        if (objMinMaxX != null)
+                                else if (model.Quantidade > QtdeMaxima)
                                         {
-                                            QtdeMaxima = objMinMaxX.QTD_MAX_VAR;
-                                            QtdeMinima = objMinMaxX.QTD_MIN_VAR;
-
-                                            if (model.QuantidadeConvertida < QtdeMinima)
-                                            {
-                                                ModelState.AddModelError("", "A QUANTIDADE MÍNIMA POR VARIANTE NÃO PODE SER MENOR QUE: " + QtdeMinima.ToString()
-                                                    + " | MTs. ARTIGO: " + model.Artigo +
-                                                      " | RENDIMENTO: " + Rendimento.ToString() +
-                                                      " | TOTAL CONVERTIDO: " + QtdeConvertida.ToString() +
-                                                      " MTs");
-                                                hasErrors = true;
-                                            }
+                                        ModelState.AddModelError("", "A QUANTIDADE MÁXIMA POR VARIANTE NÃO PODE SER MAIOR QUE: " + QtdeMaxima.ToString());
+                                        hasErrors = true;
                                         }
-                                        else
+                            }
+                            else                          
+                            {   //se não achou a qtde na regra, verifica se a UM é KG pra tentar achar em MT, se não..... num deu!
+                                if (model.UnidadeMedida == "KG")
+                                {
+                                    var qryQtdeMinMaxMT =
+                                        from Qtde in ctx.REGRAS_QTD_PEDIDOX
+                                        where
+                                                Qtde.TECNOLOGIA_DESTINO == model.Tecnologia
+                                            && Qtde.GRUPO_COLECAO == model.IDGrupoColecao
+                                            && Qtde.DESENHO_PRONTO == desenhoPronto
+                                            && Qtde.TIPO_PEDIDO == model.IDTipoPedido
+                                            && Qtde.UM == "MT"
+                                            && Qtde.EXCLUIDO == false
+                                        select
+                                            Qtde;
+
+                                    objMinMaxX = qryQtdeMinMaxMT.FirstOrDefault();                                 
+
+                                    if (objMinMaxX != null)
+                                    {
+                                        QtdeMaxima = objMinMaxX.QTD_MAX_VAR;
+                                        QtdeMinima = objMinMaxX.QTD_MIN_VAR;
+
+                                        if (model.QuantidadeConvertida < QtdeMinima)
                                         {
-                                            ModelState.AddModelError("", "QUANTIDADES MÍNIMAS E MÁXIMAS POR VARIANTE NÃO CADASTRADO PARA ESTE ITEM. ENTRAR EM CONTATO COM DEPTO. COMERCIAL: "+
-                                                " | Tecnologia: " + model.Tecnologia.ToString() +
-                                                " | IDGrupoColecao: " + model.IDGrupoColecao +
-                                                " | desenhoPronto: " + desenhoPronto.ToString() +
-                                                " | IDTipoPedido: " + model.IDTipoPedido +
-                                                " | UnidadeMedida: " + model.UnidadeMedida +
-                                                " | Excluido: false" +
-                                                " | [Regra para item em convertido em MT]"
-                                                );
+                                            ModelState.AddModelError("", "A QUANTIDADE MÍNIMA POR VARIANTE NÃO PODE SER MENOR QUE: " + QtdeMinima.ToString()
+                                                + " | MTs. ARTIGO: " + model.Artigo +
+                                                    " | RENDIMENTO: " + Rendimento.ToString() +
+                                                    " | TOTAL CONVERTIDO: " + QtdeConvertida.ToString() +
+                                                    " MTs");
                                             hasErrors = true;
                                         }
                                     }
                                     else
                                     {
-                                        ModelState.AddModelError("", "QUANTIDADES MÍNIMAS E MÁXIMAS POR VARIANTE NÃO CADASTRADO PARA ESTE ITEM. ENTRAR EM CONTATO COM DEPTO. COMERCIAL: " +
-                                            " Tecnologia: " + model.Tecnologia.ToString() +
-                                                " | IDGrupoColecao: " + model.IDGrupoColecao +
-                                                " | desenhoPronto: " + desenhoPronto.ToString() +
-                                                " | IDTipoPedido: " + model.IDTipoPedido +
-                                                " | UnidadeMedida: " + model.UnidadeMedida +
-                                                " | Excluido: false" +
-                                                " |  [Não encontrou na regra]"
-                                                );
+                                        ModelState.AddModelError("", "QUANTIDADES MÍNIMAS E MÁXIMAS POR VARIANTE NÃO CADASTRADO PARA ESTE ITEM. ENTRAR EM CONTATO COM DEPTO. COMERCIAL: "+
+                                            " | Tecnologia: " + model.Tecnologia.ToString() +
+                                            " | IDGrupoColecao: " + model.IDGrupoColecao +
+                                            " | desenhoPronto: " + desenhoPronto.ToString() +
+                                            " | IDTipoPedido: " + model.IDTipoPedido +
+                                            " | UnidadeMedida: " + model.UnidadeMedida +
+                                            " | Excluido: false" +
+                                            " | [Regra para item em convertido em MT]"
+                                            );
                                         hasErrors = true;
                                     }
+                                }
+                                else
+                                {
+                                    ModelState.AddModelError("", "QUANTIDADES MÍNIMAS E MÁXIMAS POR VARIANTE NÃO CADASTRADO PARA ESTE ITEM. ENTRAR EM CONTATO COM DEPTO. COMERCIAL: " +
+                                        " Tecnologia: " + model.Tecnologia.ToString() +
+                                            " | IDGrupoColecao: " + model.IDGrupoColecao +
+                                            " | desenhoPronto: " + desenhoPronto.ToString() +
+                                            " | IDTipoPedido: " + model.IDTipoPedido +
+                                            " | UnidadeMedida: " + model.UnidadeMedida +
+                                            " | Excluido: false" +
+                                            " |  [Não encontrou na regra]"
+                                            );
+                                    hasErrors = true;
                                 }
                             }
-                            #endregion
-                            else
-                            {
-                                #region regra antiga cilindro
-                                int _piOld = 0;
-
-                                //oda -- 25/04/2016 --- alteração na regra para tec. CILINDRO: Min por variante = 400 MTs --------------------------------------------------------
-                                if (model.Tecnologia == "C")
-                                {
-                                    QtdeMaxima = 999999;
-                                    QtdeMinima = 100;
-
-                                    QtdeConvertida = model.Quantidade;
-
-                                    if (model.UnidadeMedida == "KG")
-                                    {
-                                        Rendimento = ctx.Database.SqlQuery<decimal>("select dalutex.Pega_Rendimento_Real(:p0, :p1) from dual", model.Artigo, model.Tecnologia).FirstOrDefault();
-
-                                        QtdeConvertida = model.Quantidade * Rendimento;
-
-                                        model.QuantidadeConvertida = QtdeConvertida;
-                                    }
-                                    else model.QuantidadeConvertida = model.Quantidade;
-
-                                    if (QtdeConvertida < QtdeMinima)
-                                    {
-                                        ModelState.AddModelError("", "A QUANTIDADE MÍNIMA POR VARIANTE [CONVENCIONAL] NÃO PODE SER MENOR QUE " + QtdeMinima.ToString() + "MTs. ARTIGO: " + model.Artigo +
-                                            " RENDIMENTO: " + Rendimento.ToString() + " TOTAL CONVERTIDO: " + QtdeConvertida.ToString() + " MTs");
-                                        hasErrors = true;
-                                    }
-                                }
-                                #endregion
-                                else
-                                #region regra qtde antiga
-                                {
-                                    //se for troca de tecnologia, então tento pegar o reduzido do item na tecnologia original pelo artigo selecionado
-                                    if (model.Tecnologia != model.TecnologiaOriginal)
-                                    {
-                                        using (var ctxDalutex = new DalutexContext())
-                                        {   //PEGAR O REDUZIDO DO ORIGINAL ----
-                                            VMASCARAPRODUTOACABADO objReduzido = ctxDalutex.VMASCARAPRODUTOACABADO.Where(
-                                                      x => x.ARTIGO == model.Artigo
-                                                        && x.DESENHO == model.Desenho
-                                                        && x.VARIANTE == model.Variante
-                                                        && x.MAQUINA == model.TecnologiaOriginal
-                                                    ).FirstOrDefault();
-                                            //se encontrou o reduzido, procuro o PI ----
-                                            if (objReduzido != null)
-                                            {
-                                                _piOld = ctx.VW_PI_RED.Where(x => x.REDUZIDO == objReduzido.CODIGO_REDUZIDO).FirstOrDefault().PI;
-                                            }
-                                        }
-                                    }
-
-                                    int _pi = 0;
-
-                                    if (model.Reduzido > -2) //se tem reduzido (o item novo, na tec atual) --------
-                                    {
-                                        // pega o PI do cadastro do SGT para o reduzido.                         
-                                        _pi = ctx.VW_PI_RED.Where(x => x.REDUZIDO == model.Reduzido).FirstOrDefault().PI;
-                                    }
-
-                                    //procura as qtdes max e min, pela regra 1.1: [TEC_ORIGEM + PROCESSO_OR + TEC_DESTI + PROC_DEST + GRUPO_COL + TIPO_PED + UM]
-                                    if (_pi > 0)//se tem PI Origem
-                                    {
-                                        var qryQtdeMinMax =
-                                            from Qtde in ctx.REGRAS_QTD_PEDIDO
-                                            where
-                                                   Qtde.TECNOLOGIA == model.TecnologiaOriginal.Substring(0, 1)
-                                                && Qtde.PROCESSO == _pi
-                                                && Qtde.TECNOLOGIA_DESTINO == model.Tecnologia
-                                                && Qtde.PROCESSO_DESTINO == _piOld
-                                                && Qtde.GRUPO_COLECAO == model.IDGrupoColecao
-                                                && Qtde.TIPO_PEDIDO == model.IDTipoPedido
-                                                && Qtde.UM == model.UnidadeMedida
-                                                && Qtde.EXCLUIDO == false
-                                            select
-                                                Qtde;
-
-                                        objMinMax = qryQtdeMinMax.FirstOrDefault();
-
-                                        if (objMinMax != null)
-                                        {
-                                            QtdeMaxima = objMinMax.QTD_MAX_VAR;
-                                            QtdeMinima = objMinMax.QTD_MIN_VAR;
-                                        }
-                                    }
-                                    else if ((_pi > 0) && (objMinMax != null))//se não encontrou, procura as qtdes max e min, pela regra 1.2: [TEC_ORIGEM + PROCESSO_OR + TEC_DESTI + PROC_DEST + TIPO_PED + UM]
-                                    {
-                                        var qryQtdeMinMax =
-                                        from Qtde in ctx.REGRAS_QTD_PEDIDO
-                                        where
-                                               Qtde.TECNOLOGIA == model.TecnologiaOriginal.Substring(0, 1)
-                                            && Qtde.PROCESSO == _pi
-                                            && Qtde.TECNOLOGIA_DESTINO == model.Tecnologia
-                                            && Qtde.PROCESSO_DESTINO == _piOld
-                                            && Qtde.TIPO_PEDIDO == model.IDTipoPedido
-                                            && Qtde.UM == model.UnidadeMedida
-                                            && Qtde.EXCLUIDO == false
-                                        select
-                                            Qtde;
-
-                                        objMinMax = qryQtdeMinMax.FirstOrDefault();
-                                    }
-                                    if (objMinMax != null)
-                                    {
-                                        QtdeMaxima = objMinMax.QTD_MAX_VAR;
-                                        QtdeMinima = objMinMax.QTD_MIN_VAR;
-                                    }
-                                    else if (_pi > 0)//se não encontrou, procura as qtdes max e min, pela regra 1.3: [TEC_ORIGEM + PROCESSO_OR + TEC_DESTI + TIPO_PED + UM]
-                                    {
-                                        var qryQtdeMinMax =
-                                        from Qtde in ctx.REGRAS_QTD_PEDIDO
-                                        where
-                                               Qtde.TECNOLOGIA == model.TecnologiaOriginal.Substring(0, 1)
-                                            && Qtde.PROCESSO == _pi
-                                            && Qtde.TECNOLOGIA_DESTINO == model.Tecnologia
-                                            && Qtde.TIPO_PEDIDO == model.IDTipoPedido
-                                            && Qtde.UM == model.UnidadeMedida
-                                            && Qtde.EXCLUIDO == false
-                                        select
-                                            Qtde;
-
-                                        objMinMax = qryQtdeMinMax.FirstOrDefault();
-                                    }
-
-                                    if (objMinMax != null)
-                                    {
-                                        QtdeMaxima = objMinMax.QTD_MAX_VAR;
-                                        QtdeMinima = objMinMax.QTD_MIN_VAR;
-                                    }
-                                    else if (_pi > 0)//se não encontrou, procura as qtdes max e min, pela regra 1.4: [TEC_ORIGEM + PROCESSO_OR + GRUPO_COL + TIPO_PED + UM]
-                                    {
-                                        var qryQtdeMinMax =
-                                        from Qtde in ctx.REGRAS_QTD_PEDIDO
-                                        where
-                                               Qtde.TECNOLOGIA == model.TecnologiaOriginal.Substring(0, 1)
-                                            && Qtde.PROCESSO == _pi
-                                            && Qtde.GRUPO_COLECAO == model.IDGrupoColecao
-                                            && Qtde.TIPO_PEDIDO == model.IDTipoPedido
-                                            && Qtde.UM == model.UnidadeMedida
-                                            && Qtde.EXCLUIDO == false
-                                        select
-                                            Qtde;
-
-                                        objMinMax = qryQtdeMinMax.FirstOrDefault();
-                                    }
-                                    if (objMinMax != null)
-                                    {
-                                        QtdeMaxima = objMinMax.QTD_MAX_VAR;
-                                        QtdeMinima = objMinMax.QTD_MIN_VAR;
-                                    }
-                                    else if (_pi > 0)//se não encontrou, procura as qtdes max e min, pela regra 1.5: [TEC_ORIGEM + PROCESSO_OR + TIPO_PED + UM]
-                                    {
-                                        var qryQtdeMinMax =
-                                        from Qtde in ctx.REGRAS_QTD_PEDIDO
-                                        where
-                                               Qtde.TECNOLOGIA == model.TecnologiaOriginal.Substring(0, 1)
-                                            && Qtde.PROCESSO == _pi
-                                            && Qtde.TIPO_PEDIDO == model.IDTipoPedido
-                                            && Qtde.UM == model.UnidadeMedida
-                                            && Qtde.EXCLUIDO == false
-                                        select
-                                            Qtde;
-
-                                        objMinMax = qryQtdeMinMax.FirstOrDefault();
-                                    }
-                                    if (objMinMax != null)
-                                    {
-                                        QtdeMaxima = objMinMax.QTD_MAX_VAR;
-                                        QtdeMinima = objMinMax.QTD_MIN_VAR;
-                                    }
-                                    else//se não encontrou, procura as qtdes max e min, pela regra 2.1: [TEC_ORIGEM + TEC_DESTINO + GRUPO_COL + TIPO_PEDIDO + UM]
-                                    {
-                                        var qryQtdeMinMax =
-                                        from Qtde in ctx.REGRAS_QTD_PEDIDO
-                                        where
-                                               Qtde.TECNOLOGIA == model.TecnologiaOriginal.Substring(0, 1)
-                                            && Qtde.TECNOLOGIA_DESTINO == model.Tecnologia
-                                            && Qtde.GRUPO_COLECAO == model.IDGrupoColecao
-                                            && Qtde.TIPO_PEDIDO == model.IDTipoPedido
-                                            && Qtde.PROCESSO == 0
-                                            && Qtde.UM == model.UnidadeMedida
-                                            && Qtde.EXCLUIDO == false
-                                        select
-                                            Qtde;
-
-                                        objMinMax = qryQtdeMinMax.FirstOrDefault();
-                                    }
-                                    if (objMinMax != null)
-                                    {
-                                        QtdeMaxima = objMinMax.QTD_MAX_VAR;
-                                        QtdeMinima = objMinMax.QTD_MIN_VAR;
-                                    }
-                                    else//se não encontrou, procura as qtdes max e min, pela regra 2.2: [TEC_ORIGEM + TEC_DESTINO + TIPO_PEDIDO + UM]
-                                    {
-                                        var qryQtdeMinMax =
-                                        from Qtde in ctx.REGRAS_QTD_PEDIDO
-                                        where
-                                                Qtde.TECNOLOGIA == model.TecnologiaOriginal.Substring(0, 1)
-                                            && Qtde.TECNOLOGIA_DESTINO == model.Tecnologia
-                                            && Qtde.TIPO_PEDIDO == model.IDTipoPedido
-                                            && Qtde.PROCESSO == 0
-                                            && Qtde.UM == model.UnidadeMedida
-                                            && Qtde.EXCLUIDO == false
-                                        select
-                                            Qtde;
-
-                                        objMinMax = qryQtdeMinMax.FirstOrDefault();
-                                    }
-                                    if (objMinMax != null)
-                                    {
-                                        QtdeMaxima = objMinMax.QTD_MAX_VAR;
-                                        QtdeMinima = objMinMax.QTD_MIN_VAR;
-                                    }
-                                    else //se não encontrou, procura as qtdes max e min, pela regra 3.1: [TEC_DESTINO + GRUPO_COL + TIPO_PEDIDO + UM]
-                                    {
-                                        var qryQtdeMinMax =
-                                        from Qtde in ctx.REGRAS_QTD_PEDIDO
-                                        where
-                                               Qtde.TECNOLOGIA_DESTINO == model.Tecnologia
-                                                && Qtde.GRUPO_COLECAO == model.IDGrupoColecao
-                                                && Qtde.TIPO_PEDIDO == model.IDTipoPedido
-                                                && Qtde.PROCESSO == 0
-                                                && Qtde.UM == model.UnidadeMedida
-                                                && Qtde.EXCLUIDO == false
-                                        select
-                                            Qtde;
-
-                                        objMinMax = qryQtdeMinMax.FirstOrDefault();
-                                    }
-                                    if (objMinMax != null)
-                                    {
-                                        QtdeMaxima = objMinMax.QTD_MAX_VAR;
-                                        QtdeMinima = objMinMax.QTD_MIN_VAR;
-                                    }
-                                    else//se não encontrou, procura as qtdes max e min, pela regra 3.2: [TEC_DESTINO + TIPO_PEDIDO + UM]
-                                    {
-                                        var qryQtdeMinMax =
-                                        from Qtde in ctx.REGRAS_QTD_PEDIDO
-                                        where
-                                               Qtde.TECNOLOGIA_DESTINO == model.Tecnologia
-                                               && Qtde.TIPO_PEDIDO == model.IDTipoPedido
-                                               && Qtde.PROCESSO == 0
-                                               && Qtde.UM == model.UnidadeMedida
-                                               && Qtde.EXCLUIDO == false
-                                        select
-                                            Qtde;
-
-                                        objMinMax = qryQtdeMinMax.FirstOrDefault();
-                                    }
-                                    if (objMinMax != null)
-                                    {
-                                        QtdeMaxima = objMinMax.QTD_MAX_VAR;
-                                        QtdeMinima = objMinMax.QTD_MIN_VAR;
-                                    }
-
-                                    if (objMinMax == null)
-                                    {
-                                        ModelState.AddModelError("", "QUANTIDADES MÍNIMAS E MÁXIMAS POR VARIANTE NÃO CADASTRADO PARA ESTE ITEM. ENTRAR EM CONTATO COM DEPTO. COMERCIAL: ");
-                                        hasErrors = true;
-                                    }
-                                    else
-                                    {
-                                        if (model.Quantidade < QtdeMinima)
-                                        {
-                                            ModelState.AddModelError("", "A QUANTIDADE MÍNIMA POR VARIANTE NÃO PODE SER MENOR QUE: " + QtdeMinima.ToString());
-                                            hasErrors = true;
-                                        }
-                                        if (model.Quantidade > QtdeMaxima)
-                                        {
-                                            ModelState.AddModelError("", "A QUANTIDADE MÁXIMA POR VARIANTE NÃO PODE SER MAIOR QUE: " + QtdeMaxima.ToString());
-                                            hasErrors = true;
-                                        }
-                                    }
-                                    // -- oda -- 04/11/2015 -- nova regra de tamanho Min e Max ------------------------------------------------------------------------------------- 
-                                }
-                                #endregion
-                            }                            
+                            #endregion                            
                         }
                     }
 
@@ -954,11 +670,7 @@ namespace Dalutex.Controllers
                                 model.ObterTipoPedido = "S";
                                 this.CarregarTiposPedidos(model);
                             }
-                        }
-                        else
-                        {
-                            model.ObterTipoPedido = "N";
-                        }
+                        } else{model.ObterTipoPedido = "N";}
 
                         CarregarTamanhosPadrao(model);
                         ObterPrevisaoEntrega(model);
@@ -2662,6 +2374,37 @@ namespace Dalutex.Controllers
                                     //}
                                 }
 
+                                #endregion
+
+                                #region Item com Restrição
+                                foreach (PRE_PEDIDO_ITENS item in lstItens)
+                                {
+                                    if (item.TEM_RESTRICAO == 1)
+                                    {
+                                        PRE_PEDIDO_CRITICA objCriticaAnterior = null;
+
+                                        if (estaEditando)
+                                        {
+                                            ctx.PRE_PEDIDO_CRITICA
+                                            .Where(p =>
+                                                p.NUMERO_PRE_PEDIDO == objPrePedido.NUMERO_PEDIDO_BLOCO
+                                                && p.COD_CRITICA == (decimal)Enums.TiposCritica.Restricao
+                                                && p.ITEM_PEDIDO == item.ITEM
+                                            ).FirstOrDefault();
+                                        }
+
+                                        if (objCriticaAnterior == null)
+                                        {
+                                            ctx.PRE_PEDIDO_CRITICA.Add(new PRE_PEDIDO_CRITICA()
+                                            {
+                                                NUMERO_PRE_PEDIDO = objPrePedido.NUMERO_PEDIDO_BLOCO,
+                                                COD_CRITICA = (decimal)Enums.TiposCritica.Restricao,
+                                                FLG_STATUS = "C",
+                                                ITEM_PEDIDO = item.ITEM
+                                            });
+                                        }
+                                    }                                    
+                                }
                                 #endregion
 
                                 #endregion

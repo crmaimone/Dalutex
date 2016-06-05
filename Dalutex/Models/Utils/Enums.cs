@@ -83,7 +83,8 @@ namespace Dalutex.Models
         {
             LiberacaoFinanceira = 7,
             SemReduzido = 17,
-            PrecoDiferente = 2
+            PrecoDiferente = 2,
+            Restricao = 18
         }
 
         public enum TiposAtendimento

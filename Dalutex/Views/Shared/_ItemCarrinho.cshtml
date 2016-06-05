@@ -42,6 +42,11 @@
 
                                 <div><strong>Peças:</strong>&nbsp;@Model.Pecas</div>
 
+                                if (Model.TemRestricao == true)
+                                {
+                                    <div> <font color="red"> <strong>Restrição:</strong>&nbsp;@Model.Restricao</font></div>
+                                }
+
                                 if (Model.Farol > 0)
                                 {
                                     <div> <font color="red"> <strong>Farol:</strong>&nbsp;@Model.Farol.ToString("#.##") </font></div>
@@ -53,7 +58,7 @@
                                 <div><strong>Reduzido:</strong>&nbsp;@Model.Reduzido</div>
                                 <div> <strong>Tecnologia:</strong>&nbsp;Liso</div>
                                 <div><strong>Peças:</strong>&nbsp;@Model.Pecas</div>
-
+                               
                                 if (Model.Farol > 0)
                                 {
                                     <div> <font color="red"> <strong>Farol:</strong>&nbsp;@Model.Farol.ToString("#.##")</font></div>
@@ -82,7 +87,7 @@
                                 <div><strong>Data Solicitada:</strong>&nbsp;@Model.DtItemSolicitada.ToString("d")</div>
                                 <div><strong>Coleção:</strong>&nbsp;@Model.NMColecao</div>
 
-                                <div><strong>Quantidade:</strong>&nbsp;@Model.Quantidade&nbsp;@Model.UnidadeMedida</div>
+                                <div><strong>Quantidade:</strong>&nbsp;@Model.Quantidade&nbsp;@Model.UnidadeMedida &nbsp;| Qtde Conv. (MTs): @Model.QuantidadeConvertida</div>
                                 <div><strong>Total:</strong>&nbsp;@Model.ValorTotalItem.ToString("c")</div>
                             }                                                                                   
                             

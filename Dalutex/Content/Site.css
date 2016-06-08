@@ -303,3 +303,6 @@ a.actlinkimg
 a.list-group-item.warning{
     background-color:tomato;
 }
+.list-group.panel>.list-group-item.indisponiveis{
+    background-color:tomato!important;
+}

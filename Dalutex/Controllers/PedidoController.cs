@@ -196,8 +196,24 @@ namespace Dalutex.Controllers
                     //            };
                     //}
 
-                    //oda -- 27/05/2016 --- alteração para carregar toda lista de arigos disponiveis porem marcando como restrição
+                    //oda -- 06/06/2016 ---- carregar uma lista de artigos INETIVOS ---
+                    //List<VW_ARTIGOS_INATIVOS> ListaArtigosInativos = ctx.VW_ARTIGOS_INATIVOS.OrderBy(o => o.ARTIGO).ToList();
 
+                    //model.ArtigosInativos =
+                    //(
+                    //from ar in ListaArtigosInativos
+                    //group ar by
+                    //    new
+                    //    {
+                    //        ar.ARTIGO
+                    //    }
+                    //    into grp                        
+                    //    select new ArtigosInativos
+                    //    {
+                    //        Artigo = grp.Key.ARTIGO
+                    //    }).OrderBy(x => x.Artigo).ToList();
+                    
+                    //oda -- 27/05/2016 --- alteração para carregar toda lista de arigos disponiveis porem marcando como restrição
                     List<string> strCaracterisNew = ctx.VW_CARACT_DESENHOS_NEW.Where(x => x.DESENHO == desenho).Select(x => x.CARACT_TECNICA).ToList();
                     List<VW_ARTIGOS_DISPONIVEIS_NEW> ListaArtigos = ctx.VW_ARTIGOS_DISPONIVEIS_NEW.Where(x => lstTecnologias.Contains(x.ID_TECNOLOGIA)).OrderBy(o => o.ID_DA_VIEW).ToList();
 
@@ -440,7 +456,11 @@ namespace Dalutex.Controllers
                     }                 
                     CarregarTamanhosPadrao(model);
 
-                    model.IDTamanhoPadrao = model.TamanhoPadrao[0].VALOR_PADRAO;                                       
+                    if (model.TamanhoPadrao.Count > 0)
+                        model.IDTamanhoPadrao = model.TamanhoPadrao[0].VALOR_PADRAO;
+                    else
+                        ModelState.AddModelError("", "TAMANHO PADRÃO NÃO LOCALIZADO PARA O ARTIGO INFORMADO.");
+
                 }
 
                 this.CarregarTiposPedidos(model);

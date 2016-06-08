@@ -8,6 +8,9 @@
 }
 
 <div class="header-title"><h3>@ViewBag.Title</h3></div>
+@{
+Dictionary<string,string> dicTecnologias = new Dictionary<string,string>();    
+}
 
 @if (Model.Desenho == null)
 {
@@ -28,16 +31,16 @@ else
                 {
                     <h5>A tecnologia do Desenho <strong>@Model.Desenho</strong> é <strong>@Model.TecnologiaAtual</strong>.</h5>
                     <br />
-                    <h5><strong>Não há cadastro de artigos disponiveis para esta tecnologia.</strong></h5>
+                    <h5><strong>Não há cadastro de artigos disponíveis para esta tecnologia.</strong></h5>
                     <br />
                     <h5>Por favor verificar com o SETOR ENGENHARIA DE PRODUTOS.</h5>
                 }
                 else
-                {                    
+                {
                     if (Model.Artigos != null && Model.Artigos.Count > 0)
-                    {   
+                    {                      
                         string _Key = "";
-                
+
                         <div id="MainMenu">
                             <div class="list-group panel">                       
                                                 
@@ -50,16 +53,18 @@ else
                                         <a href="#@_Key" class="list-group-item list-group-item-success" data-toggle="collapse" 
                                            data-parent="#MainMenu"><i class="glyphicon glyphicon-arrow-down"></i>
                                            <strong>&nbsp;@_Key &nbsp;(Tecnologia Atual)</strong>                                     
-                                        </a>
+                                        </a>                                                                            
                                     }
-                                    else 
-                                    { 
+                                    else
+                                    {
                                         <a href="#@_Key" class="list-group-item list-group-item-success" data-toggle="collapse" 
                                            data-parent="#MainMenu"><i class="glyphicon glyphicon-arrow-down"></i>
                                             &nbsp;Tecnologia Disponível Para Troca:&nbsp;@_Key
                                         </a>
                                     }
-
+                                    
+                                    dicTecnologias.Add(_Key.Substring(0,1),_Key);
+                    
                                     <div class="collapse" id="@_Key">
                                     @foreach (var item in group)
                                     {
@@ -144,18 +149,67 @@ else
                     else
                     {
                         <h5>Desenho <strong>@Model.Desenho</strong> não possui cadastro de</h5>
-                        @*<h5><strong>TECNOLOGIA ou CARACTERISTICAS TÉCNICAS</strong></h5>*@
                         <h5><strong>TECNOLOGIA</strong></h5>
                         <br />
                         <h5>Por favor verificar com o DESENVOLVIMENTO</h5>
                     }
+
+
+                    <div class="list-group panel">
+
+                        <a href="#" class="list-group-item indisponiveis" data-toggle="collapse" data-parent="#MainMenu"><i class="glyphicon glyphicon-warning-sign"></i> Selecionar um Artigo "Indisponível"</a>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="input-group ">
+                                    <input type="text" maxlength="4" class="form-control" aria-label="..." placeholder="Informar o Artigo" id="txtArtigo">
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tecnologia <span class="caret" id="ComboTecnol"></span></button>
+                                        <input type="hidden" id="hidLinkTecnologia"
+                                               value="@Url.Action("InserirNoCarrinho", "Pedido", new
+                                                 {
+                                                     desenho = Model.Desenho,
+                                                     variante = Model.Variante,
+                                                     artigo = "null",
+                                                     tecnologia = "null",
+                                                     tecnologiaoriginal = Model.TecnologiaAtual,
+                                                     idcolecao = Model.IDColecao,
+                                                     nmcolecao = Model.NMColecao,
+                                                     pagina = Model.Pagina,
+                                                     codstudio = "null",
+                                                     coddal = "null",
+                                                     modo = "I",
+                                                     reduzido = Model.Reduzido,
+                                                     tipo = ((int)Model.Tipo).ToString(),
+                                                     idstudio = 0,
+                                                     iditemstudio = 0,
+                                                     idvariante = Model.IDVariante,
+                                                     pedidoreserva = Model.PedidoReserva,
+                                                     itempedidoreserva = Model.ItemPedidoReserva,
+                                                     iditem = 0,
+                                                     preexistente = false,
+                                                     TemRestricao = true,
+                                                     Restricao = "Artigo Inativo"
+                                                 })" />
+
+                                        <ul class="dropdown-menu dropdown-menu-right" id="cboTecnologias">
+                                            @foreach (var item in dicTecnologias)
+                                            {
+                                                <li><a href="#" chartec="@item.Key">@item.Value</a></li>
+                                            }
+                                        </ul>
+                                    </div><!-- /btn-group -->
+                                </div><!-- /input-group -->
+                            </div><!-- /.col-lg-6 -->
+                        </div>
+                    </div>
                 }
 
                 <br />
-                
+
                 @if (Model.Tipo == Enums.ItemType.Estampado)
                 {
-                   <a href="@Url.Action("Desenhos", "Pedido", new { idcolecao = Model.IDColecao, nmcolecao = Model.NMColecao, pagina = Model.Pagina })" class="btn btn-default">
+                    <a href="@Url.Action("Desenhos", "Pedido", new { idcolecao = Model.IDColecao, nmcolecao = Model.NMColecao, pagina = Model.Pagina })" class="btn btn-default">
                         <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>&nbsp;VOLTAR
                     </a>
                 }
@@ -181,4 +235,77 @@ else
                     </div>
                 </div>
             </div>
+    <div id="alertArtigosDisponiveis" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">ATENÇÃO</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="alertMessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/datepicker")
+    @Scripts.Render("~/bundles/jquerymaskmoney")
+    <script>
+        $(document).ready(function () {
+            //API
+            scriptWrapper = (function () {
+
+                //API Attributes
+
+                //API Methods
+                cboTecnologias_Click = function () {
+                    var artigoIndisponivel = $("#txtArtigo").val();
+                    if(artigoIndisponivel === "")
+                    {
+                        $("#alertArtigosDisponiveis .alertMessage").html("Por favor digite um artigo.");
+                        $("#alertArtigosDisponiveis").modal();
+                    }
+                    else
+                    {
+                        if (artigoIndisponivel.length > 4) {
+                            artigoIndisponivel = artigoIndisponivel.substring(0, 4);
+                        }
+                        else if (artigoIndisponivel.length < 4)
+                        {
+                            artigoIndisponivel = pad(artigoIndisponivel,4);
+                            $("#txtArtigo").val(artigoIndisponivel);
+                        }
+
+                        var sLink = $("#hidLinkTecnologia").val();
+                        sLink = sLink.replace('artigo=null', 'artigo=' + artigoIndisponivel.toUpperCase());
+                        sLink = sLink.replace('tecnologia=null', 'tecnologia=' + $(this).attr("chartec"));
+                        window.location.href = sLink;
+                    }
+                }
+
+                function pad(n, width, z) {
+                    z = z || '0';
+                    n = n + '';
+                    return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+                }
+
+                // public API
+                return {
+                    cboTecnologias_Click: cboTecnologias_Click,
+                };
+            })();
+
+            //Init
+            (function Init() {
+                $(document).on('click', '#cboTecnologias li a', scriptWrapper.cboTecnologias_Click);
+            })();
+        });
+    </script>
 }

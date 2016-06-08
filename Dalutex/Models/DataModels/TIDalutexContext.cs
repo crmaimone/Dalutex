@@ -72,6 +72,8 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<RASCUNHO_PEDIDO> RASCUNHO_PEDIDO { get; set; }
         public virtual DbSet<RASCUNHO_PEDIDO_ITEM> RASCUNHO_PEDIDO_ITEM { get; set; }
         public virtual DbSet<VW_RASCUNHO_PEDIDOS> VW_RASCUNHO_PEDIDOS { get; set; }
+        public virtual DbSet<VW_ARTIGOS_INATIVOS> VW_ARTIGOS_INATIVOS { get; set; }
+        
         
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

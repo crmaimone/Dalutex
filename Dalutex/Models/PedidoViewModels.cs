@@ -77,6 +77,12 @@ namespace Dalutex.Models
         public string Restricao { get; set; }
     }
 
+
+    public class ArtigosInativos
+    {
+        public string Artigo { get; set; }
+    }
+
     public class Liso
     {
         public string Artigo { get; set; }
@@ -253,6 +259,8 @@ namespace Dalutex.Models
         public int ItemPedidoReserva { get; set; }
         public Enums.ItemType Tipo { get; set; }
         public int Reduzido { get; set; }
+
+        //public List<ArtigosInativos> ArtigosInativos { get; set; }
     }
 
     public class InserirNoCarrinhoViewModel

@@ -431,6 +431,7 @@ namespace Dalutex.Models
 
         public int Pagina { get; set; }
         public int TotalPaginas { get; set; }
+        public string TipoPedido { get; set; }
     }
 
     public class ManterPedidoViewModel

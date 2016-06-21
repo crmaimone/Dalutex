@@ -16,5 +16,6 @@ namespace Dalutex.Models.DataModels
         public string CLIENTE { get; set; }
         public DateTime DATA_EMISSAO { get; set; }
         public decimal STATUS_PEDIDO { get; set; }
+        public string TIPO_PEDIDO { get; set; }
     }
 }

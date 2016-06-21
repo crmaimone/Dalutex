@@ -141,77 +141,6 @@ namespace Dalutex.Controllers
                             lstTecnologias.Add(item.ID_TEC_NOVA);
                         }
 
-                    ////-- oda 03/11/2015 -- alteração de validação da caracteristicas e tecnologias por artigos disponiveis --- 
-                    //List<PED_LINK_RESTRICAO_ARTIGO> lstArtigos = ctx.PED_LINK_RESTRICAO_ARTIGO
-                    //    .Where(x => lstCaracteristicas.Contains(x.ID_CARAC_TEC))
-                    //    .OrderBy(x => x.ARTIGO)
-                    //    .ThenBy(x => x.ID_CARAC_TEC)
-                    //    .ToList();
-
-                    //List<string> lstArtigosStr = new List<string>();
-
-                    //foreach (PED_LINK_RESTRICAO_ARTIGO item in lstArtigos)
-                    //{
-                    //    lstArtigosStr.Add(item.ARTIGO);
-                    //}
-
-                    //IQueryable<ArtigoTecnologia> query = null;
-
-                    //if (iRevisado == 1)
-                    //{
-                    //    query =
-                    //    from ar in ctx.VW_ARTIGOS_DISPONIVEIS
-                    //    where (!lstArtigosStr.Contains(ar.ARTIGO)) && 
-                    //          (lstTecnologias.Contains(ar.ID_TEC))
-                    //    group ar by
-                    //        new
-                    //        {
-                    //            ar.ARTIGO,
-                    //            ar.TECNOLOGIA,
-                    //        }
-                    //        into grp
-                    //        select new ArtigoTecnologia
-                    //        {
-                    //            Artigo = grp.Key.ARTIGO,
-                    //            Tecnologia = grp.Key.TECNOLOGIA
-                    //        };
-                    //}
-                    //else
-                    //{                   
-                    //    query =
-                    //        from ar in ctx.VW_ARTIGOS_DISPONIVEIS
-                    //        where
-                    //              (lstTecnologias.Contains(ar.ID_TEC))
-                    //        group ar by
-                    //            new
-                    //            {
-                    //                ar.ARTIGO,
-                    //                ar.TECNOLOGIA,
-                    //            }
-                    //            into grp
-                    //            select new ArtigoTecnologia
-                    //            {
-                    //                Artigo = grp.Key.ARTIGO,
-                    //                Tecnologia = grp.Key.TECNOLOGIA
-                    //            };
-                    //}
-
-                    //oda -- 06/06/2016 ---- carregar uma lista de artigos INETIVOS ---
-                    //List<VW_ARTIGOS_INATIVOS> ListaArtigosInativos = ctx.VW_ARTIGOS_INATIVOS.OrderBy(o => o.ARTIGO).ToList();
-
-                    //model.ArtigosInativos =
-                    //(
-                    //from ar in ListaArtigosInativos
-                    //group ar by
-                    //    new
-                    //    {
-                    //        ar.ARTIGO
-                    //    }
-                    //    into grp                        
-                    //    select new ArtigosInativos
-                    //    {
-                    //        Artigo = grp.Key.ARTIGO
-                    //    }).OrderBy(x => x.Artigo).ToList();
                     
                     //oda -- 27/05/2016 --- alteração para carregar toda lista de arigos disponiveis porem marcando como restrição
                     List<string> strCaracterisNew = ctx.VW_CARACT_DESENHOS_NEW.Where(x => x.DESENHO == desenho).Select(x => x.CARACT_TECNICA).ToList();
@@ -352,8 +281,37 @@ namespace Dalutex.Controllers
             model.Reduzido = reduzido;
             model.ID = iditem;
             model.PreExistente = preexistente;
-            model.TemRestricao = TemRestricao;
-            model.Restricao = Restricao;
+
+            using(var ctxTI = new TIDalutexContext())
+            {
+
+                List<string> strCaracterisNew = ctxTI.VW_CARACT_DESENHOS_NEW.Where(x => x.DESENHO == desenho).Select(x => x.CARACT_TECNICA).ToList();
+                List<VW_ARTIGOS_DISPONIVEIS_NEW> ListaArtigos = ctxTI.VW_ARTIGOS_DISPONIVEIS_NEW
+                    .Where(x => x.TECNOLOGIA == tecnologia && x.ARTIGO == artigo)
+                    .OrderBy(o => o.ID_DA_VIEW).ToList();
+
+                if(ListaArtigos.Count == 0)
+                {
+                    model.TemRestricao = true;
+                    model.Restricao = "Artigo Inativo";
+                }
+                else
+                {
+                    model.Restricao = "";
+
+                    if(ListaArtigos[0].CARACT_TECNICA != "X")
+                    {
+                        model.TemRestricao = true;
+                        model.Restricao = " (Restrição: " + ListaArtigos[0].CARACT_TECNICA + ")";
+                    }
+
+                    if(ListaArtigos[0].ART_DISP_PCP == "XX")
+                    {
+                        model.TemRestricao = true;
+                        model.Restricao += " (Sem Disp. PCP)";
+                    }
+                }
+            }
 
             if (base.Session_Carrinho != null)
             {
@@ -753,18 +711,19 @@ namespace Dalutex.Controllers
 
                     if (model.Modo == "I")//Inclusão
                     {
-                        if (base.Session_Carrinho.Itens.Contains(model))
-                        {
-                            ModelState.AddModelError("", "Este item já foi incluído no carrinho.");
-                            if (base.Session_Carrinho == null || base.Session_Carrinho.IDTipoPedido < 0)
-                            {
-                                model.ObterTipoPedido = "S";
-                                this.CarregarTiposPedidos(model);                                
-                            }
-                            this.CarregarTamanhosPadrao(model);
+                        //todo: ver com cassiano 08/06/2016 ------------------- se adicionar item pelo "artigos indisponiveis, dá erro aki--------    
+                        //if (base.Session_Carrinho.Itens.Contains(model))
+                        //{
+                        //    ModelState.AddModelError("", "Este item já foi incluído no carrinho.");
+                        //    if (base.Session_Carrinho == null || base.Session_Carrinho.IDTipoPedido < 0)
+                        //    {
+                        //        model.ObterTipoPedido = "S";
+                        //        this.CarregarTiposPedidos(model);                                
+                        //    }
+                        //    this.CarregarTamanhosPadrao(model);
 
-                            return View(model);
-                        }
+                        //    return View(model);
+                        //}
 
                         if (base.Session_Carrinho.Itens.Count == 0)
                             model.NumeroSequencial = 1;

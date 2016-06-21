@@ -195,7 +195,8 @@ else
                                         <ul class="dropdown-menu dropdown-menu-right" id="cboTecnologias">
                                             @foreach (var item in dicTecnologias)
                                             {
-                                                <li><a href="#" chartec="@item.Key">@item.Value</a></li>
+                                                @*<li><a href="#" chartec="@item.Key">@item.Value</a></li>*@
+                                                <li><a href="#" chartec="@item.Value">@item.Value</a></li>
                                             }
                                         </ul>
                                     </div><!-- /btn-group -->

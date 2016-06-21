@@ -30,6 +30,12 @@
                             @Html.ValidationMessageFor(m => m.FiltroRepresentante, "", new { @class = "text-danger" })
                         </div>
 
+                        @Html.LabelFor(m => m.FiltroCliente, new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10" style="margin-top:5px">
+                            @Html.TextBoxFor(m => m.FiltroCliente, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.FiltroCliente, "", new { @class = "text-danger" })                            
+                        </div>
+
                         <div class="checkbox col-sm-10 col-sm-offset-2">
                             <label style="font-weight:bold; padding-left:5px;">
                                 @Html.CheckBoxFor(model => model.FiltroData, new { @id = "chkFiltroDatas", @style="margin-left:0px;" })
@@ -58,12 +64,16 @@
         <div class="col-md-8">
             <section id="ResultadoPedidos">
                 <div class="list-group" id="lstPedidos">
-                    <a href="#" class="list-group-item active">PEDIDO&nbsp;-&nbsp;REPRESENTANTE&nbsp;-&nbsp;CLIENTE</a>
+                    <a href="#" class="list-group-item active"><strong>PEDIDO&nbsp;|&nbsp;REPRESENTANTE&nbsp;|&nbsp;CLIENTE&nbsp;|&nbsp;TIPO PEDIDO</strong> </a>
                     @if (@Model != null && @Model.Pedidos != null)
                     {
                         foreach (VW_PESQUISA_PEDIDO item in Model.Pedidos)
                         {
-                            <a href="@Url.Action("ManterPedido", "Pedido", new { IDPedido = item.PEDIDO})" class="list-group-item"><strong>@Utilitarios.PreencheComChar(@item.PEDIDO.ToString()," ",7)</strong>&nbsp;-&nbsp;@Utilitarios.PreencheComChar(@item.REPRESENTANTE, " ", 10)&nbsp;-&nbsp;@Utilitarios.PreencheComChar(@item.CLIENTE, " ", 20)</a>
+                            <a href="@Url.Action("ManterPedido", "Pedido", new { IDPedido = item.PEDIDO})" class="list-group-item">
+                                <strong>@Utilitarios.PreencheComChar(@item.PEDIDO.ToString()," ",7)</strong>
+                                &nbsp;|&nbsp;@Utilitarios.PreencheComChar(@item.REPRESENTANTE, " ", 10)
+                                &nbsp;|&nbsp;@Utilitarios.PreencheComChar(@item.CLIENTE, " ", 20)
+                                &nbsp;|&nbsp; @item.TIPO_PEDIDO</a>
                         }
                     }
                     else

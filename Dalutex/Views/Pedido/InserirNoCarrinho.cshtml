@@ -10,191 +10,188 @@
     @if (Model.Tipo == Enums.ItemType.Estampado || Model.Tipo == Enums.ItemType.ValidacaoReserva)
     {
         <div class="panel panel-default">
-            <h5><strong>Artigo:</strong>&nbsp;@Model.Artigo 
-            | <strong>Tecnologia:</strong>&nbsp;@Model.TecnologiaPorExtenso 
-            | <strong>Desenho:</strong>&nbsp;@Model.Desenho 
-            | <strong>Variante:</strong>&nbsp;@Model.Variante</h5>
-        </div>        
+            <h5>
+                <strong>Artigo:</strong>&nbsp;@Model.Artigo
+                | <strong>Tecnologia:</strong>&nbsp;@Model.TecnologiaPorExtenso
+                | <strong>Desenho:</strong>&nbsp;@Model.Desenho
+                | <strong>Variante:</strong>&nbsp;@Model.Variante
+            </h5>
+        </div>
     }
     else if (Model.Tipo == Enums.ItemType.Liso)
     {
         <div class="panel panel-default">
-            <h5><strong>Artigo:</strong>&nbsp;@Model.Artigo
-            |<strong>Tecnologia:</strong>&nbsp;@Model.TecnologiaPorExtenso 
-            |<strong>Cor:</strong>&nbsp;@Model.Cor</h5>
+            <h5>
+                <strong>Artigo:</strong>&nbsp;@Model.Artigo
+                |<strong>Tecnologia:</strong>&nbsp;@Model.TecnologiaPorExtenso
+                |<strong>Cor:</strong>&nbsp;@Model.Cor
+            </h5>
         </div>
     }
     else if (Model.Tipo == Enums.ItemType.Reserva)
     {
-        <div class="panel panel-default">               
+        <div class="panel panel-default">
             <p><strong>Código de studio:</strong>&nbsp;@Model.CodStudio</p>
             <p><strong>Código Dal:</strong>&nbsp;@Model.CodDal</p>
-            <p><strong>Desenho:</strong>&nbsp;@Model.Desenho</p>               
+            <p><strong>Desenho:</strong>&nbsp;@Model.Desenho</p>
         </div>
     }
 </div>
-<div class="container">
-    <div class="row">
-        <div class="col-md-8">
-            <section id="InserirCarrinhoForm">
-                @using (Html.BeginForm("InserirNoCarrinho", "Pedido", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-                {
-                    @Html.AntiForgeryToken()
-                    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
-                    
-                    if (Model.Tipo != Enums.ItemType.Reserva)
-                    {
-                        if (Model.ObterTipoPedido =="S")
+
+
+<div class="container-fluid">
+    <div class="panel panel-default">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <section id="InserirCarrinhoForm">
+                        @using (Html.BeginForm("InserirNoCarrinho", "Pedido", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                         {
-                            <div class="form-group">
-                                @Html.LabelFor(x => x.IDTipoPedido, new { @class = "col-md-4 control-label" })
-                                <div class="col-md-8">
-                                    @Html.DropDownListFor(m => m.IDTipoPedido, new SelectList(Model.TiposPedido, "TIPOPEDIDO", "DESCRICAO"), "Selecione", new { @id = "lstTiposPedido" })                                   
-                                    @Html.ValidationMessageFor(m => m.IDTipoPedido, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-                        }
-                        
-                        <hr />
-                    
-                         
-                        if ( (Model.IDTipoPedido != (int)Enums.TiposPedido.PILOTAGEM) && (Model.IDTipoPedido != (int)Enums.TiposPedido.AMOSTRA) )
-                        {                                                      
-                            <div class="form-group">
-                                @Html.LabelFor(x => x.IDTamanhoPadrao, new { @class = "col-md-4 control-label" })
-                                <div class="col-md-8">
-                                    @Html.DropDownListFor(m => m.IDTamanhoPadrao, new SelectList(Model.TamanhoPadrao, "VALOR_PADRAO", "VALOR_PADRAO"), "Selecione", new { @id = "lstTamanhoPadrao" })
-                                    @Html.ValidationMessageFor(m => m.IDTamanhoPadrao, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-                        }
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
-                    
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.Pecas, new { @class = "col-md-4 control-label" })
-                            <div class="col-md-8">
-                                @if (Model.IDTipoPedido == 0)
-                                {
-                                    @Html.TextBoxFor(x => x.Pecas, new { id = "txtPecas", @class = "form-control", @placeholder = "Qtde de Peças" })
-                                }
-                                else
-                                {
-                                    @Html.TextBoxFor(x => x.Pecas, new { id = "txtPecas", disabled = "disabled", @class = "form-control", @placeholder = "Qtde de Peças" })
-                                }
-
-                                @Html.ValidationMessageFor(m => m.Pecas, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.Quantidade, new { @class = "col-md-4 control-label", id = "lblQuantidade" })
-                            <div class="col-md-8">
-                                @if (Model.IDTipoPedido == 0)
-                                {
-                                    @Html.TextBoxFor(x => x.Quantidade, new { id = "txtQuantidade", disabled = "disabled", @class = "form-control" })
-                                }
-                                else
-                                {
-                                    @Html.TextBoxFor(x => x.Quantidade, new { id = "txtQuantidade", @class = "form-control" })
-                                }
-                                @Html.ValidationMessageFor(m => m.Quantidade, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                    
-                    
-                        <div class="form-group">
-                            @{string Valor = "0";} 
-
-                               @if (ViewBag.ItensCarrinho != null)
-                               {
-                                   foreach (var item in ViewBag.ItensCarrinho)
-                                   {
-                                       if (item.Artigo == Model.Artigo && item.Tecnologia == Model.Tecnologia)
-                                       {
-                                           Valor = item.Preco.ToString();
-                                           break;
-                                       }
-                                   }
-                               }
-                            
-                            @Html.LabelFor(x => x.Preco, new { @class = "col-md-4 control-label", @placeholder = "Valor Unitário" })
-                            <div class="col-md-8">
-                                @Html.TextBoxFor(x => x.Preco, new { id = "txtPreco", @class = "form-control", Value = Valor })
-                                @Html.ValidationMessageFor(m => m.Preco, "", new { @class = "text-danger" })
-                                
-                            </div>
-                        </div>
-                    
-                    
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.DataEntregaItem, new { @class = "col-md-4 control-label"})
-                            <div class='col-md-8'>
-                                @Html.Label(Model.DataEntregaItem.ToString("dd/MM/yyyy"), new { @class = "control-label" })
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.DtItemSolicitada, new { @class = "col-md-4 control-label" })
-                            <div class='input-group date col-md-8' style="width:258px">
-                                <input type='text' class="form-control" name="DtItemSolicitada" />
-                                <span class="input-group-addon">
-                                    <span class="glyphicon glyphicon-calendar"></span>
-                                </span>
-                            </div>
-                        </div>
-                    }
-                    else
-                    {
-                        <h5>Clique em INCLUIR para adicionar este item desenho ao carrinho.</h5>
-                    }
-                    <input type="hidden" name="Tipo" value="@Model.Tipo" />
-                    <input type="hidden" name="Desenho" value="@Model.Desenho" />
-                    <input type="hidden" name="Variante" value="@Model.Variante" />
-                    <input type="hidden" name="Artigo" value="@Model.Artigo" />
-                    <input type="hidden" name="TecnologiaPorExtenso" value="@Model.TecnologiaPorExtenso" />
-                    <input type="hidden" name="TecnologiaOriginal" value="@Model.TecnologiaOriginal" />
-                    <input type="hidden" name="Reduzido" value="@ViewBag.POGReduzido" />
-                    <input type="hidden" name="Modo" value="@Model.Modo" />
-                    <input type="hidden" name="IDColecao" value="@Model.IDColecao" />
-                    <input type="hidden" name="IDTipoPedido" value="@Model.IDTipoPedido" />
-                    <input type="hidden" name="NMColecao" value="@Model.NMColecao" />
-                    <input type="hidden" name="Pagina" value="@Model.Pagina" />
-                    <input type="hidden" name="Cor" value="@Model.Cor" />
-                    <input type="hidden" name="RGB" value="@Model.RGB" />
-                    <input type="hidden" name="CodStudio" value="@Model.CodStudio" />
-                    <input type="hidden" name="CodDal" value="@Model.CodDal" />
-                    <input type="hidden" name="IDStudio" value="@Model.IDStudio" />
-                    <input type="hidden" name="IDItemStudio" value="@Model.IDItemStudio" />
-                    <input type="hidden" name="UnidadeMedida" id="hidUM" value="@Model.UnidadeMedida" />
-                    <input type="hidden" name="IDVariante" value="@Model.IDVariante" />
-                    <input type="hidden" name="PedidoReserva" value="@Model.PedidoReserva" />
-                    <input type="hidden" name="ItemPedidoReserva" value="@Model.ItemPedidoReserva" />
-                    <input type="hidden" name="ObterTipoPedido" value="@Model.ObterTipoPedido" />
-                    <input type="hidden" name="DataEntregaItem" value="@Model.DataEntregaItem" />
-                    <input type="hidden" name="NumeroMaximoDiasDataSolicitacao" value="@Model.NumeroMaximoDiasDataSolicitacao" />
-                    <input type="hidden" name="ID" value="@Model.ID" />
-                    <input type="hidden" name="PreExistente" value="@Model.PreExistente.ToString()" />
-                    <input type="hidden" name="TemRestricao" value="@Model.TemRestricao.ToString()" />
-                    <input type="hidden" name="Restricao" value="@Model.Restricao" />
-
-
-
-                    // TODO:
-                    // DEVOLVER O VALOR SELECIONADO NO COMBO "TAMANHO PADRÃO" PARA ESTE CAMPO
-                    @*<input type="hidden" name="ValorPadrao" id="hidValPadrao" value="@Model.ValorPadrao ">*@
-                    @*<input type="hidden" name="ValorPadrao" id="hidValPadrao" value="@Model.IDTamanhoPadrao">*@
-                    @*@<input type="hidden" name="ValorPadrao" value="@Model.IDTamanhoPadrao" />*@
-                    
-                    
-
-                    <div class="form-group">
-                        <div class="col-xs-12">
-                            @if (Model.Modo == "I")
+                            if (Model.Tipo != Enums.ItemType.Reserva)
                             {
-                                <button type="submit" class="btn btn-default pull-left"><span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>&nbsp;INCLUIR</button>
-                                <span class="pull-left">&nbsp;</span>
-                                if (Model.Tipo == Enums.ItemType.Estampado || Model.Tipo == Enums.ItemType.ValidacaoReserva)
+                                if (Model.ObterTipoPedido == "S")
                                 {
-                                    <a href="@Url.Action("ArtigosDisponiveis", "Pedido", new
+                                    <div class="form-group">
+                                        @Html.LabelFor(x => x.IDTipoPedido, new { @class = "col-md-4 control-label" })
+                                        <div class="col-md-8">
+                                            @Html.DropDownListFor(m => m.IDTipoPedido, new SelectList(Model.TiposPedido, "TIPOPEDIDO", "DESCRICAO"), "Selecione", new { @id = "lstTiposPedido" })
+                                            @Html.ValidationMessageFor(m => m.IDTipoPedido, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                }
+
+                                <hr />
+
+                                if ((Model.IDTipoPedido != (int)Enums.TiposPedido.PILOTAGEM) && (Model.IDTipoPedido != (int)Enums.TiposPedido.AMOSTRA))
+                                {
+                                    <div class="form-group">
+                                        @Html.LabelFor(x => x.IDTamanhoPadrao, new { @class = "col-md-4 control-label" })
+                                        <div class="col-md-8">
+                                            @Html.DropDownListFor(m => m.IDTamanhoPadrao, new SelectList(Model.TamanhoPadrao, "VALOR_PADRAO", "VALOR_PADRAO"), "Selecione", new { @id = "lstTamanhoPadrao" })
+                                            @Html.ValidationMessageFor(m => m.IDTamanhoPadrao, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                }
+
+
+                                <div class="form-group">
+                                    @Html.LabelFor(x => x.Pecas, new { @class = "col-md-4 control-label" })
+                                    <div class="col-md-8">
+                                        @if (Model.IDTipoPedido == 0)
+                                        {
+                                            @Html.TextBoxFor(x => x.Pecas, new { id = "txtPecas", @class = "form-control", @placeholder = "Qtde de Peças" })
+                                        }
+                                        else
+                                        {
+                                            @Html.TextBoxFor(x => x.Pecas, new { id = "txtPecas", disabled = "disabled", @class = "form-control", @placeholder = "Qtde de Peças" })
+                                        }
+
+                                        @Html.ValidationMessageFor(m => m.Pecas, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(x => x.Quantidade, new { @class = "col-md-4 control-label", id = "lblQuantidade" })
+                                    <div class="col-md-8">
+                                        @if (Model.IDTipoPedido == 0)
+                                        {
+                                            @Html.TextBoxFor(x => x.Quantidade, new { id = "txtQuantidade", disabled = "disabled", @class = "form-control" })
+                                        }
+                                        else
+                                        {
+                                            @Html.TextBoxFor(x => x.Quantidade, new { id = "txtQuantidade", @class = "form-control" })
+                                        }
+                                        @Html.ValidationMessageFor(m => m.Quantidade, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @{string Valor = "0";}
+
+                                    @if (ViewBag.ItensCarrinho != null)
+                                    {
+                                        foreach (var item in ViewBag.ItensCarrinho)
+                                        {
+                                            if (item.Artigo == Model.Artigo && item.Tecnologia == Model.Tecnologia)
+                                            {
+                                                Valor = item.Preco.ToString();
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                    @Html.LabelFor(x => x.Preco, new { @class = "col-md-4 control-label", @placeholder = "Valor Unitário" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(x => x.Preco, new { id = "txtPreco", @class = "form-control", Value = Valor })
+                                        @Html.ValidationMessageFor(m => m.Preco, "", new { @class = "text-danger" })
+
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    @Html.LabelFor(x => x.DataEntregaItem, new { @class = "col-md-4 control-label" })
+                                    <div class='col-md-8'>
+                                        @Html.Label(Model.DataEntregaItem.ToString("dd/MM/yyyy"), new { @class = "control-label" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(x => x.DtItemSolicitada, new { @class = "col-md-4 control-label" })
+                                    <div class='input-group date col-md-8' style="width:258px">
+                                        <input type='text' class="form-control" name="DtItemSolicitada" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <h5>Clique em INCLUIR para adicionar este item desenho ao carrinho.</h5>
+                            }
+                            <input type="hidden" name="Tipo" value="@Model.Tipo" />
+                            <input type="hidden" name="Desenho" value="@Model.Desenho" />
+                            <input type="hidden" name="Variante" value="@Model.Variante" />
+                            <input type="hidden" name="Artigo" value="@Model.Artigo" />
+                            <input type="hidden" name="TecnologiaPorExtenso" value="@Model.TecnologiaPorExtenso" />
+                            <input type="hidden" name="TecnologiaOriginal" value="@Model.TecnologiaOriginal" />
+                            <input type="hidden" name="Reduzido" value="@ViewBag.POGReduzido" />
+                            <input type="hidden" name="Modo" value="@Model.Modo" />
+                            <input type="hidden" name="IDColecao" value="@Model.IDColecao" />
+                            <input type="hidden" name="IDTipoPedido" value="@Model.IDTipoPedido" />
+                            <input type="hidden" name="NMColecao" value="@Model.NMColecao" />
+                            <input type="hidden" name="Pagina" value="@Model.Pagina" />
+                            <input type="hidden" name="Cor" value="@Model.Cor" />
+                            <input type="hidden" name="RGB" value="@Model.RGB" />
+                            <input type="hidden" name="CodStudio" value="@Model.CodStudio" />
+                            <input type="hidden" name="CodDal" value="@Model.CodDal" />
+                            <input type="hidden" name="IDStudio" value="@Model.IDStudio" />
+                            <input type="hidden" name="IDItemStudio" value="@Model.IDItemStudio" />
+                            <input type="hidden" name="UnidadeMedida" id="hidUM" value="@Model.UnidadeMedida" />
+                            <input type="hidden" name="IDVariante" value="@Model.IDVariante" />
+                            <input type="hidden" name="PedidoReserva" value="@Model.PedidoReserva" />
+                            <input type="hidden" name="ItemPedidoReserva" value="@Model.ItemPedidoReserva" />
+                            <input type="hidden" name="ObterTipoPedido" value="@Model.ObterTipoPedido" />
+                            <input type="hidden" name="DataEntregaItem" value="@Model.DataEntregaItem" />
+                            <input type="hidden" name="NumeroMaximoDiasDataSolicitacao" value="@Model.NumeroMaximoDiasDataSolicitacao" />
+                            <input type="hidden" name="ID" value="@Model.ID" />
+                            <input type="hidden" name="PreExistente" value="@Model.PreExistente.ToString()" />
+                            <input type="hidden" name="TemRestricao" value="@Model.TemRestricao.ToString()" />
+                            <input type="hidden" name="Restricao" value="@Model.Restricao" />
+
+                            <div class="form-group">
+                                <div class="col-xs-12">
+                                    @if (Model.Modo == "I")
+                                    {
+                                        <button type="submit" class="btn btn-default pull-left"><span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>&nbsp;INCLUIR</button>
+                                        <span class="pull-left">&nbsp;</span>
+                                        if (Model.Tipo == Enums.ItemType.Estampado || Model.Tipo == Enums.ItemType.ValidacaoReserva)
+                                        {
+                                            <a href="@Url.Action("ArtigosDisponiveis", "Pedido", new
                                         {
                                             desenho = Model.Desenho,
                                             variante = Model.Variante,
@@ -206,137 +203,142 @@
                                             itempedidoreserva = Model.ItemPedidoReserva,
                                             tipo = ((int)Model.Tipo).ToString()
                                         })" class="btn btn-default pull-left">
-                                        <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>&nbsp;VOLTAR
-                                    </a>
-                                }
-                                else if (Model.Tipo == Enums.ItemType.Liso)
-                                {
-                                    <a href="@Url.Action("Lisos", "Pedido", new
+                                                <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>&nbsp;VOLTAR
+                                            </a>
+                                        }
+                                        else if (Model.Tipo == Enums.ItemType.Liso)
+                                        {
+                                            <a href="@Url.Action("Lisos", "Pedido", new
                                         {
                                             idcolecao = Model.IDColecao,
                                             nmcolecao = Model.NMColecao,
                                             pagina = Model.Pagina
                                         })" class="btn btn-default pull-left">
-                                        <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>&nbsp;VOLTAR
-                                    </a>
-                                }
-                                else if (Model.Tipo == Enums.ItemType.Reserva)
-                                {
-                                    <a href="@Url.Action("ItensParaReserva", "Pedido", new
+                                                <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>&nbsp;VOLTAR
+                                            </a>
+                                        }
+                                        else if (Model.Tipo == Enums.ItemType.Reserva)
+                                        {
+                                            <a href="@Url.Action("ItensParaReserva", "Pedido", new
                                         {
                                             pagina = Model.Pagina
                                         })" class="btn btn-default pull-left">
-                                        <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>&nbsp;VOLTAR
-                                    </a>
-                                }
-                            }
-                            else if (Model.Modo == "A")
-                            {
-                                <button type="submit" class="btn btn-default pull-left"><span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>&nbsp;ALTERAR</button>
-                                <span class="pull-left">&nbsp;</span>
-                                <a href="@Url.Action("Carrinho", "Pedido")" class="btn btn-default pull-left">
-                                    <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>&nbsp;VOLTAR
-                                </a>
-                            }
-                        </div>
-                    </div>
-                }
-            </section>
+                                                <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>&nbsp;VOLTAR
+                                            </a>
+                                        }
+                                    }
+                                    else if (Model.Modo == "A")
+                                    {
+                                        <button type="submit" class="btn btn-default pull-left"><span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>&nbsp;ALTERAR</button>
+                                        <span class="pull-left">&nbsp;</span>
+                                        <a href="@Url.Action("Carrinho", "Pedido")" class="btn btn-default pull-left">
+                                            <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>&nbsp;VOLTAR
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </section>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+
+
 @section Scripts {
     @Scripts.Render("~/bundles/datepicker")
     @Scripts.Render("~/bundles/jquerymaskmoney")
     <script>
-    $(document).ready(function () {
-        //API
-        scriptWrapper = (function () {
+        $(document).ready(function () {
+            //API
+            scriptWrapper = (function () {
 
-            //API Attributes
-            txtPecas_Blur = function () {
-                calcularTotal();
-            }
-
-            calcularTotal = function () {
-                var $txtPecas = $("#txtPecas");
-                var $txtQuantidade = $("#txtQuantidade");
-
-                if (!isNaN($txtPecas.val())) {
-                    $txtQuantidade.val($txtPecas.val() * $("#lstTamanhoPadrao > option:selected").attr("value"));
-                    return;
+                //API Attributes
+                txtPecas_Blur = function () {
+                    calcularTotal();
                 }
-            }
 
-            lstTiposPedido_Change = function () {
-                if ($("#lstTiposPedido > option:selected").attr("value") != "0") {
-                    $("#txtPecas").val("0")
-                    $("#txtPecas").prop('disabled', true);
-                    $("#txtQuantidade").prop('disabled', false);
-                    $("label[for=IDTamanhoPadrao]").hide();
-                    $("#lstTamanhoPadrao").selectpicker('hide');
+                calcularTotal = function () {
+                    var $txtPecas = $("#txtPecas");
+                    var $txtQuantidade = $("#txtQuantidade");
+
+                    if (!isNaN($txtPecas.val())) {
+                        $txtQuantidade.val($txtPecas.val() * $("#lstTamanhoPadrao > option:selected").attr("value"));
+                        return;
+                    }
                 }
-                else {
-                    $("#txtQuantidade").val("0")
-                    $("#txtPecas").prop('disabled', false);
-                    $("#txtQuantidade").prop('disabled', true);
-                    $("label[for=IDTamanhoPadrao]").show();
-                    $("#lstTamanhoPadrao").selectpicker('show');
+
+                lstTiposPedido_Change = function () {
+                    if ($("#lstTiposPedido > option:selected").attr("value") != "0") {
+                        $("#txtPecas").val("0")
+                        $("#txtPecas").prop('disabled', true);
+                        $("#txtQuantidade").prop('disabled', false);
+                        $("label[for=IDTamanhoPadrao]").hide();
+                        $("#lstTamanhoPadrao").selectpicker('hide');
+                    }
+                    else {
+                        $("#txtQuantidade").val("0")
+                        $("#txtPecas").prop('disabled', false);
+                        $("#txtQuantidade").prop('disabled', true);
+                        $("label[for=IDTamanhoPadrao]").show();
+                        $("#lstTamanhoPadrao").selectpicker('show');
+                    }
+                    //Buscar novos minimos e máximos
                 }
-                //Buscar novos minimos e máximos
-            }
 
-            lstTamanhoPadrao_Change = function () {
-                calcularTotal();
-            }
+                lstTamanhoPadrao_Change = function () {
+                    calcularTotal();
+                }
 
-            txtPecas_Input = function (e) {
-                $(this).val($(this).val().replace(",", "").replace(".", ""));
-            }
+                txtPecas_Input = function (e) {
+                    $(this).val($(this).val().replace(",", "").replace(".", ""));
+                }
 
 
-            //API Methods
+                //API Methods
 
-            // public API
-            return {
-                txtPecas_Blur: txtPecas_Blur,
-                lstTiposPedido_Change: lstTiposPedido_Change,
-                lstTamanhoPadrao_Change: lstTamanhoPadrao_Change,
-                txtPecas_Input: txtPecas_Input
-            };
-        })();
+                // public API
+                return {
+                    txtPecas_Blur: txtPecas_Blur,
+                    lstTiposPedido_Change: lstTiposPedido_Change,
+                    lstTamanhoPadrao_Change: lstTamanhoPadrao_Change,
+                    txtPecas_Input: txtPecas_Input
+                };
+            })();
 
-        //Init
-        (function Init() {
-            $('.input-group.date').datepicker({
-                startDate: "@Model.DataEntregaItem.ToString("dd/MM/yyyy")",
-                endDate: "@Model.DtItemSolicitada.ToString("dd/MM/yyyy")",
-                format: "dd/mm/yyyy",
-                todayBtn: true,
-                clearBtn: true,
-                language: "pt-BR"
-            });
+            //Init
+            (function Init() {
+                $('.input-group.date').datepicker({
+                    startDate: "@Model.DataEntregaItem.ToString("dd/MM/yyyy")",
+                    endDate: "@Model.DtItemSolicitada.ToString("dd/MM/yyyy")",
+                    format: "dd/mm/yyyy",
+                    todayBtn: true,
+                    clearBtn: true,
+                    language: "pt-BR"
+                });
 
-            $('.input-group.date').datepicker('update', '@Model.DataEntregaItem.ToString("dd/MM/yyyy")');
+                $('.input-group.date').datepicker('update', '@Model.DataEntregaItem.ToString("dd/MM/yyyy")');
 
-            $('#lstTiposPedido').selectpicker();
-            $("#lblQuantidade").text($("#hidUM").val());
-            $("#txtPecas").blur(this.txtPecas_Blur);
-            $('#lstTamanhoPadrao').selectpicker();
-            $('#txtPecas').on("input", scriptWrapper.txtPecas_Input)
+                $('#lstTiposPedido').selectpicker();
+                $("#lblQuantidade").text($("#hidUM").val());
+                $("#txtPecas").blur(this.txtPecas_Blur);
+                $('#lstTamanhoPadrao').selectpicker();
+                $('#txtPecas').on("input", scriptWrapper.txtPecas_Input)
 
-            $("#txtPecas").focus(function () {
-                this.select();
-            });
-            $("#txtPreco").focus(function () {
-                this.select();
-            });
-            $('#lstTiposPedido').on('change', scriptWrapper.lstTiposPedido_Change);
-            $('#lstTamanhoPadrao').on('change', scriptWrapper.lstTamanhoPadrao_Change);
+                $("#txtPecas").focus(function () {
+                    this.select();
+                });
+                $("#txtPreco").focus(function () {
+                    this.select();
+                });
+                $('#lstTiposPedido').on('change', scriptWrapper.lstTiposPedido_Change);
+                $('#lstTamanhoPadrao').on('change', scriptWrapper.lstTamanhoPadrao_Change);
 
-            $("#txtPreco").maskMoney({allowNegative: false, thousands: '.', decimal: ',' });
+                $("#txtPreco").maskMoney({ allowNegative: false, thousands: '.', decimal: ',' });
 
-        })();
-    });
+            })();
+        });
     </script>
 }

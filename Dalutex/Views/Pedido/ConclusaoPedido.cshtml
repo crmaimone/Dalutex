@@ -31,7 +31,7 @@
                                 <tbody>
                                     <tr>
                                         <td style="padding-top:0px">@Html.LabelFor(x => x.DescTipoPedido, new { @class = "control-label" }):&nbsp;</td>
-                                        <td colspan="2"> @Model.DescTipoPedido </td>
+                                        <td colspan="2"> <strong>@Model.DescTipoPedido </strong> </td>
                                     </tr>
 
                                     <tr>
@@ -126,8 +126,7 @@
                                     </a>
                                 }
                                 else
-                                {
-                                    <div><p>Deseja realmente concluir este pedido?</p></div>
+                                {                                                                                                            
                                     <a href="@Url.Action("ClientesFatura", "Cadastro", new
                                         {
                                             IDRepresentante = Model.Representante.IDREPRESENTANTE,

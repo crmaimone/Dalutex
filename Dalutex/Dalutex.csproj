@@ -163,6 +163,7 @@
     <Compile Include="Models\CadastroViewModel.cs" />
     <Compile Include="fonts\ARTIGO_PESO_PADRAO.cs" />
     <Compile Include="Models\DataModels\ACOES.cs" />
+    <Compile Include="Models\DataModels\LINK_GRUPO_COND_PGTO.cs" />
     <Compile Include="Models\DataModels\LOG_PEDIDO_WEB.cs" />
     <Compile Include="Models\DataModels\RASCUNHO_PEDIDO.cs" />
     <Compile Include="Models\DataModels\RASCUNHO_PEDIDO_ITEM.cs" />

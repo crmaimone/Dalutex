@@ -67,10 +67,10 @@
                             
                         </div>
                         <div class="col-md-5">
-                            @if (Model.PrecoTabela != null)
+                            @*@if (Model.PrecoTabela != null)
                             {
                                 <div><strong>Preço de tabela:</strong>&nbsp;@Model.PrecoTabela.GetValueOrDefault().ToString("C")</div>
-                                if (Model.PrecoTabela.GetValueOrDefault() != Model.Preco)
+                                if (Model.PrecoTabela.GetValueOrDefault() > Model.Preco)
                                 {
                                     <div><strong class="text-danger">Preço unitário Digitado:&nbsp;@Model.Preco.ToString("C") &nbsp; <span class="glyphicon glyphicon-remove-circle"></span></strong></div>
                                 }
@@ -78,7 +78,9 @@
                             else
                             {
                                 <div><strong>Preço unitário:</strong>&nbsp;@Model.Preco.ToString("C")</div>
-                            }
+                            }*@
+
+                            <div><strong>Preço unitário:</strong>&nbsp;@Model.Preco.ToString("C")</div>
 
                             @if (Model.Tipo == Enums.ItemType.Estampado || Model.Tipo == Enums.ItemType.Liso || Model.Tipo == Enums.ItemType.ValidacaoReserva)
                             {

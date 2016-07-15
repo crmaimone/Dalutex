@@ -282,33 +282,43 @@ namespace Dalutex.Controllers
             model.ID = iditem;
             model.PreExistente = preexistente;
 
-            using(var ctxTI = new TIDalutexContext())
+            if (model.TecnologiaPorExtenso != "L")
             {
-
-                List<string> strCaracterisNew = ctxTI.VW_CARACT_DESENHOS_NEW.Where(x => x.DESENHO == desenho).Select(x => x.CARACT_TECNICA).ToList();
-                List<VW_ARTIGOS_DISPONIVEIS_NEW> ListaArtigos = ctxTI.VW_ARTIGOS_DISPONIVEIS_NEW
-                    .Where(x => x.TECNOLOGIA == tecnologia && x.ARTIGO == artigo)
-                    .OrderBy(o => o.ID_DA_VIEW).ToList();
-
-                if(ListaArtigos.Count == 0)
+                using (var ctxTI = new TIDalutexContext())
                 {
-                    model.TemRestricao = true;
-                    model.Restricao = "Artigo Inativo";
-                }
-                else
-                {
-                    model.Restricao = "";
+                    List<VW_ARTIGOS_DISPONIVEIS_NEW> ListaArtigosInativo = ctxTI.VW_ARTIGOS_DISPONIVEIS_NEW
+                        .Where(x => x.TECNOLOGIA == tecnologia && x.ARTIGO == artigo)
+                        .OrderBy(o => o.ID_DA_VIEW).ToList();
 
-                    if(ListaArtigos[0].CARACT_TECNICA != "X")
+                    if (ListaArtigosInativo.Count == 0)
                     {
                         model.TemRestricao = true;
-                        model.Restricao = " (Restrição: " + ListaArtigos[0].CARACT_TECNICA + ")";
+                        model.Restricao = "Artigo Inativo";
                     }
 
-                    if(ListaArtigos[0].ART_DISP_PCP == "XX")
+                    List<string> strCaracterisNew = ctxTI.VW_CARACT_DESENHOS_NEW.Where(x => x.DESENHO == desenho).Select(x => x.CARACT_TECNICA).ToList();
+
+                    List<VW_ARTIGOS_DISPONIVEIS_NEW> ListaArtigos = ctxTI.VW_ARTIGOS_DISPONIVEIS_NEW
+                        .Where(x => x.TECNOLOGIA == tecnologia && x.ARTIGO == artigo)//&& strCaracterisNew.Contains(x.CARACT_TECNICA))
+                        .OrderBy(o => o.ID_DA_VIEW).ToList();
+
+                    if (ListaArtigos.Count > 0)
                     {
-                        model.TemRestricao = true;
-                        model.Restricao += " (Sem Disp. PCP)";
+                        if (ListaArtigos[0].ART_DISP_PCP == "XX")
+                        {
+                            model.TemRestricao = true;
+                            model.Restricao += " (Sem Disp. PCP)";
+                        }
+
+                        foreach (var item in ListaArtigos)
+                        {
+                            if (strCaracterisNew.Contains(item.CARACT_TECNICA))
+                            {
+                                model.TemRestricao = true;
+                                model.Restricao += " (Restrição: " + strCaracterisNew[0] + ")";
+                                break;
+                            }
+                        }
                     }
                 }
             }
@@ -1767,15 +1777,13 @@ namespace Dalutex.Controllers
                     {                    
                         #region Obter Preço
                         //int? iColecaoAtual = 0;
-                        int? iCodCondPgto = 0;
+                        int iCodCondPgto = 0;
 
                         #region Pegar Código Condição de Pagto - Call Function Oracle
-
                         using(var ti_ctx = new TIDalutexContext())
                         {                                                                                                   
-                            iCodCondPgto = ti_ctx.Database.SqlQuery<int>("select ti_dalutex.pega_consicao_pgto(:p0) from dual", model.CondicaoPagto.ID_COND).FirstOrDefault();
-
-                           //iColecaoAtual = int.Parse(ti_ctx.CONFIG_GERAL.Where(y => y.ID_CONFIG == (int)Enums.TipoColecaoEspecial.Atual).First().PARAMETRO1); 
+                            //iCodCondPgto = ti_ctx.Database.SqlQuery<int>("select ti_dalutex.pega_consicao_pgto(:p0) from dual", model.CondicaoPagto.ID_COND).FirstOrDefault();
+                            try{iCodCondPgto = ti_ctx.LINK_GRUPO_COND_PGTO.Where(x => x.COD_COND == model.CondicaoPagto.ID_COND).FirstOrDefault().ID_GRUPO_COND;} catch { iCodCondPgto = 1; }// 1: AVISTA
                         }
                         #endregion
 

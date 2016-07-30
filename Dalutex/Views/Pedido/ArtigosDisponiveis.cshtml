@@ -102,43 +102,48 @@ else
                                         
                                         linkCaption += item.Restricao;
                                         
-                                        if(item.TemNoCarrinho)// || !string.IsNullOrWhiteSpace(item.Restricao))
+                                        if ( (item.TemNoCarrinho) || !string.IsNullOrWhiteSpace(item.Restricao) )
                                         {
                                             linkClass += " warning";
                                             iconClass = "glyphicon glyphicon-remove";
-                                            linkUrl = "#";
+                                            linkUrl = "";
                                         }
 
-                                        if (!string.IsNullOrWhiteSpace(item.Restricao))
+                                        //oda-- 29/07/2016 -- bloquear entrada com restrição ----------------------
+                                        if (Convert.ToBoolean(@System.Configuration.ConfigurationManager.AppSettings["BLOQUEIA_RESTRICAO"]) == false)
                                         {
-                                            linkClass += " warning";
-                                            iconClass = "glyphicon glyphicon-remove";
-                                           linkUrl = Url.Content("~/Pedido/InserirNoCarrinho?"+
-                                                                                    "&desenho=" + Model.Desenho +
-                                                                                    "&variante=" + Model.Variante +
-                                                                                    "&artigo=" + item.Artigo +
-                                                                                    "&tecnologia=" + item.Tecnologia +
-                                                                                    "&tecnologiaoriginal=" + Model.TecnologiaAtual +
-                                                                                    "&idcolecao="+ Model.IDColecao +
-                                                                                    "&nmcolecao="+ Model.NMColecao +
-                                                                                    "&pagina="+ Model.Pagina +
-                                                                                    "&codstudio=null" +
-                                                                                    "&coddal=null" +
-                                                                                    "&modo=I" +                                                                                                                                               
-                                                                                    "&reduzido=" + Model.Reduzido+                                                                                                                                                
-                                                                                    "&tipo=" + ((int)Model.Tipo).ToString() +                                                                     
-                                                                                    "&idstudio=0"+
-                                                                                    "&iditemstudio=0"+
-                                                                                    "&idvariante="+Model.IDVariante+
-                                                                                    "&pedidoreserva="+Model.PedidoReserva+
-                                                                                    "&itempedidoreserva="+Model.ItemPedidoReserva+
-                                                                                    "&iditem=0"+
-                                                                                    "&preexistente=false"+
-                                                                                    "&TemRestricao=true"+
-                                                                                    "&Restricao="+item.Restricao                                                                                                                                                  
-                                                                                    ); 
+                                            //oda -- 30/07/2016 --  alteração para bloquear restrições. solicitação LUDOVIT ------
+                                            if (!string.IsNullOrWhiteSpace(item.Restricao))
+                                            {
+                                                linkClass += " warning";
+                                                iconClass = "glyphicon glyphicon-remove";
+                                                linkUrl = Url.Content("~/Pedido/InserirNoCarrinho?" +
+                                                                                        "&desenho=" + Model.Desenho +
+                                                                                        "&variante=" + Model.Variante +
+                                                                                        "&artigo=" + item.Artigo +
+                                                                                        "&tecnologia=" + item.Tecnologia +
+                                                                                        "&tecnologiaoriginal=" + Model.TecnologiaAtual +
+                                                                                        "&idcolecao=" + Model.IDColecao +
+                                                                                        "&nmcolecao=" + Model.NMColecao +
+                                                                                        "&pagina=" + Model.Pagina +
+                                                                                        "&codstudio=null" +
+                                                                                        "&coddal=null" +
+                                                                                        "&modo=I" +
+                                                                                        "&reduzido=" + Model.Reduzido +
+                                                                                        "&tipo=" + ((int)Model.Tipo).ToString() +
+                                                                                        "&idstudio=0" +
+                                                                                        "&iditemstudio=0" +
+                                                                                        "&idvariante=" + Model.IDVariante +
+                                                                                        "&pedidoreserva=" + Model.PedidoReserva +
+                                                                                        "&itempedidoreserva=" + Model.ItemPedidoReserva +
+                                                                                        "&iditem=0" +
+                                                                                        "&preexistente=false" +
+                                                                                        "&TemRestricao=true" +
+                                                                                        "&Restricao=" + item.Restricao
+                                                                                        );
+                                            }
                                         }
-                                        
+
                                         <a href="@linkUrl" class="@linkClass"><i class="@iconClass"></i>&nbsp;@linkCaption</a>
                                     }
                                     </div>

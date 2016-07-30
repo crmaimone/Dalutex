@@ -17,3 +17,4 @@ namespace Dalutex.Models.DataModels
         public int ID_GRUPO_COND { get; set; }
     }
 }
+    

@@ -409,6 +409,8 @@ namespace Dalutex {
             
             private global::System.Data.DataColumn columnCOD_CLI_ENTR;
             
+            private global::System.Data.DataColumn columnDESCRICAO_STATUS;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public VW_IMPRESSAO_WEBDataTable() {
@@ -964,6 +966,14 @@ namespace Dalutex {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn DESCRICAO_STATUSColumn {
+                get {
+                    return this.columnDESCRICAO_STATUS;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -1064,7 +1074,8 @@ namespace Dalutex {
                         decimal PEDIDO_CLIENTE, 
                         decimal IDTRANSPORTADORA, 
                         string GRUPO_CLIENTE, 
-                        int COD_CLI_ENTR) {
+                        int COD_CLI_ENTR, 
+                        string DESCRICAO_STATUS) {
                 VW_IMPRESSAO_WEBRow rowVW_IMPRESSAO_WEBRow = ((VW_IMPRESSAO_WEBRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         PEDIDO,
@@ -1131,7 +1142,8 @@ namespace Dalutex {
                         PEDIDO_CLIENTE,
                         IDTRANSPORTADORA,
                         GRUPO_CLIENTE,
-                        COD_CLI_ENTR};
+                        COD_CLI_ENTR,
+                        DESCRICAO_STATUS};
                 rowVW_IMPRESSAO_WEBRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowVW_IMPRESSAO_WEBRow);
                 return rowVW_IMPRESSAO_WEBRow;
@@ -1219,6 +1231,7 @@ namespace Dalutex {
                 this.columnIDTRANSPORTADORA = base.Columns["IDTRANSPORTADORA"];
                 this.columnGRUPO_CLIENTE = base.Columns["GRUPO_CLIENTE"];
                 this.columnCOD_CLI_ENTR = base.Columns["COD_CLI_ENTR"];
+                this.columnDESCRICAO_STATUS = base.Columns["DESCRICAO_STATUS"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1354,6 +1367,8 @@ namespace Dalutex {
                 base.Columns.Add(this.columnGRUPO_CLIENTE);
                 this.columnCOD_CLI_ENTR = new global::System.Data.DataColumn("COD_CLI_ENTR", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnCOD_CLI_ENTR);
+                this.columnDESCRICAO_STATUS = new global::System.Data.DataColumn("DESCRICAO_STATUS", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnDESCRICAO_STATUS);
                 this.columnPEDIDO.AllowDBNull = false;
                 this.columnPEDIDO_BLOCO.AllowDBNull = false;
                 this.columnCLIENTE_NOVO.MaxLength = 1;
@@ -1390,6 +1405,7 @@ namespace Dalutex {
                 this.columnDESCRI_ATEND.MaxLength = 100;
                 this.columnTIPO.MaxLength = 4;
                 this.columnRESERVA.MaxLength = 140;
+                this.columnDESCRICAO_STATUS.MaxLength = 50;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -2563,6 +2579,22 @@ namespace Dalutex {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string DESCRICAO_STATUS {
+                get {
+                    try {
+                        return ((string)(this[this.tableVW_IMPRESSAO_WEB.DESCRICAO_STATUSColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'DESCRICAO_STATUS\' in table \'VW_IMPRESSAO_WEB\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableVW_IMPRESSAO_WEB.DESCRICAO_STATUSColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsDATA_EMISSAONull() {
                 return this.IsNull(this.tableVW_IMPRESSAO_WEB.DATA_EMISSAOColumn);
             }
@@ -3316,6 +3348,18 @@ namespace Dalutex {
             public void SetCOD_CLI_ENTRNull() {
                 this[this.tableVW_IMPRESSAO_WEB.COD_CLI_ENTRColumn] = global::System.Convert.DBNull;
             }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsDESCRICAO_STATUSNull() {
+                return this.IsNull(this.tableVW_IMPRESSAO_WEB.DESCRICAO_STATUSColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetDESCRICAO_STATUSNull() {
+                this[this.tableVW_IMPRESSAO_WEB.DESCRICAO_STATUSColumn] = global::System.Convert.DBNull;
+            }
         }
         
         /// <summary>
@@ -3540,6 +3584,7 @@ namespace Dalutex.DataSetTableAdapters {
             tableMapping.ColumnMappings.Add("PEDIDO_CLIENTE", "PEDIDO_CLIENTE");
             tableMapping.ColumnMappings.Add("IDTRANSPORTADORA", "IDTRANSPORTADORA");
             tableMapping.ColumnMappings.Add("GRUPO_CLIENTE", "GRUPO_CLIENTE");
+            tableMapping.ColumnMappings.Add("DESCRICAO_STATUS", "DESCRICAO_STATUS");
             this._adapter.TableMappings.Add(tableMapping);
         }
         
@@ -3556,7 +3601,7 @@ namespace Dalutex.DataSetTableAdapters {
             this._commandCollection = new global::Oracle.ManagedDataAccess.Client.OracleCommand[1];
             this._commandCollection[0] = new global::Oracle.ManagedDataAccess.Client.OracleCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = @"SELECT PEDIDO, PEDIDO_BLOCO, DATA_EMISSAO, STATUS_PEDIDO, CLIENTE_NOVO, ESTADO, QUALIDADE_COM, OBSERVACOES, NOME_CLIENTE, DESCRI_COND, LISO_ESTAMP, MALHA_PLANO, MODA_DECORACAO, ARTIGO, COR, DESENHO, VARIANTE, QUANTIDADE, PRECO_UNIT, VALOR_TOTAL, UM, PE, ITEM, ID_CLIENTE, COD_CLI, NOME_CLIENTE_PJ, CLIENTE_CAD_OU_NOVO, ESTADO_CLI, CNPJ, TIPO_PEDIDO, COD_REP, NOME_REPRES, COLECAO, DT_ENT_DISP_PED, DT_ENT_DIG_PED, DT_ENT_DISP_IT, DT_ENT_DIG_IT, ID_CLI_ENTR, CLIE_ENTR, CNPJ_ENTR, ID_TRANSP, TRANSPORTADORA, USUARIO_INICIO, DATA_INICIO, DATA_FINAL, COMPOSE, IMAGEM, COMISSAO, REDUZIDO_ITEM, VIA_TRANSP, CANAL_VENDAS, FRETE, GERENTE, DESCRI_ATEND, PRECOLISTA, TIPO, TIPO_PED, RESERVA, PEDIDO_CLIENTE FROM TI_DALUTEX.VW_IMPRESSAO_WEB";
+            this._commandCollection[0].CommandText = @"SELECT PEDIDO, PEDIDO_BLOCO, DATA_EMISSAO, STATUS_PEDIDO, CLIENTE_NOVO, ESTADO, QUALIDADE_COM, OBSERVACOES, NOME_CLIENTE, DESCRI_COND, LISO_ESTAMP, MALHA_PLANO, MODA_DECORACAO, ARTIGO, COR, DESENHO, VARIANTE, QUANTIDADE, PRECO_UNIT, VALOR_TOTAL, UM, PE, ITEM, ID_CLIENTE, COD_CLI, NOME_CLIENTE_PJ, CLIENTE_CAD_OU_NOVO, ESTADO_CLI, CNPJ, TIPO_PEDIDO, COD_REP, NOME_REPRES, COLECAO, DT_ENT_DISP_PED, DT_ENT_DIG_PED, DT_ENT_DISP_IT, DT_ENT_DIG_IT, ID_CLI_ENTR, CLIE_ENTR, CNPJ_ENTR, ID_TRANSP, TRANSPORTADORA, USUARIO_INICIO, DATA_INICIO, DATA_FINAL, COMPOSE, IMAGEM, COMISSAO, REDUZIDO_ITEM, VIA_TRANSP, CANAL_VENDAS, FRETE, GERENTE, DESCRI_ATEND, PRECOLISTA, TIPO, TIPO_PED, RESERVA, PEDIDO_CLIENTE, DESCRICAO_STATUS FROM TI_DALUTEX.VW_IMPRESSAO_WEB";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
         }
         

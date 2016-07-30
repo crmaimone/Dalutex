@@ -178,5 +178,8 @@ namespace Dalutex.Models.DataModels
         public string GRUPO_CLIENTE { get; set; }
 
         public int COD_CLI_ENTR { get; set; }
+
+        [StringLength(60)]
+        public string DESCRICAO_STATUS { get; set; }        
     }
 }

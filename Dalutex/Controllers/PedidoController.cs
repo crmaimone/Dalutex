@@ -112,7 +112,7 @@ namespace Dalutex.Controllers
            int pedidoreserva,
            int itempedidoreserva,
            int tipo)
-        {
+        {                        
             ArtigosDisponiveisViewModel model = new ArtigosDisponiveisViewModel();
             model.Desenho = desenho;
             model.Variante = variante;
@@ -191,6 +191,12 @@ namespace Dalutex.Controllers
                         }
                     }
                 }
+            }
+
+            // check if TempData contains some error message and if yes add to the model state.
+            if (TempData["ModelErro"] != null)
+            {
+                ModelState.AddModelError(string.Empty, TempData["CustomError"].ToString());
             }
 
             return View(model);
@@ -306,17 +312,62 @@ namespace Dalutex.Controllers
                     {
                         if (ListaArtigos[0].ART_DISP_PCP == "XX")
                         {
-                            model.TemRestricao = true;
-                            model.Restricao += " (Sem Disp. PCP)";
+                            //oda-- 29/07/2016 -- bloquear entrada com restrição ----------------------
+                            if (Convert.ToBoolean(ConfigurationManager.AppSettings["BLOQUEIA_RESTRICAO"]) == true)
+                            {
+                                ModelState.AddModelError("", "Artigo Sem Disp. PCP.");
+                                
+                                return RedirectToAction("ArtigosDisponiveis", "Pedido",
+                                    new
+                                    {
+                                        desenho = model.Desenho,
+                                        variante = model.Variante,
+                                        idcolecao = model.IDColecao,
+                                        nmcolecao = model.NMColecao,
+                                        pagina = model.Pagina,
+                                        pedidoreserva = model.PedidoReserva,
+                                        idvariante = model.IDVariante,
+                                        itempedidoreserva = model.ItemPedidoReserva,
+                                        tipo = (int)model.Tipo
+                                    });
+                            }
+                            else
+                            {
+                                //deixa entrar com restrição -----------------------------------------
+                                model.TemRestricao = true;
+                                model.Restricao += " (Sem Disp. PCP)";
+                            }                                                                                    
                         }
 
                         foreach (var item in ListaArtigos)
                         {
                             if (strCaracterisNew.Contains(item.CARACT_TECNICA))
                             {
-                                model.TemRestricao = true;
-                                model.Restricao += " (Restrição: " + strCaracterisNew[0] + ")";
-                                break;
+                                //oda-- 29/07/2016 -- bloquear entrada com restrição ----------------------
+                                if (Convert.ToBoolean(ConfigurationManager.AppSettings["BLOQUEIA_RESTRICAO"]) == true)
+                                {                                    
+                                    ModelState.AddModelError("", "Artigo com Restrição: (" + strCaracterisNew[0] + ")");
+                                    TempData["ModelErro"] = "Artigo com Restrição: (" + strCaracterisNew[0] + ")";
+                                    return RedirectToAction("ArtigosDisponiveis", "Pedido",
+                                    new
+                                    {
+                                        desenho = model.Desenho,
+                                        variante = model.Variante,
+                                        idcolecao = model.IDColecao,
+                                        nmcolecao = model.NMColecao,
+                                        pagina = model.Pagina,
+                                        pedidoreserva = model.PedidoReserva,
+                                        idvariante = model.IDVariante,
+                                        itempedidoreserva = model.ItemPedidoReserva,
+                                        tipo = (int)model.Tipo
+                                    });
+                                }
+                                else
+                                {
+                                    model.TemRestricao = true;
+                                    model.Restricao += " (Restrição: " + strCaracterisNew[0] + ")";
+                                    break;
+                                }                                                                
                             }
                         }
                     }
@@ -969,7 +1020,10 @@ namespace Dalutex.Controllers
                     if (objDisponibilidade != null && objDisponibilidade.DISPONIBILIDADE_PCP != null)
                         model.DataEntregaItem = (DateTime)objDisponibilidade.DISPONIBILIDADE_PCP;
                     else
-                        model.DataEntregaItem = DateTime.Today.AddDays(45);
+                        model.DataEntregaItem = DateTime.Today.AddDays(20); 
+                    //ALTERAÇÃO NO NUMERO DE DIAS POR SOLICITAÇÃO DO JUNIOR EM 27/07/2016 15:00 HRS.
+                    //A PEDIDO DO SR. LUDOVIT PARA VERIFICAR O MOTIVO DO PEDIDO DA IONA TER SIDO LIBERADO COM DISPONIBILIDADE DE 45 DIAS - QUE ERA COMO ESTAVA ATE ESTE DIA.
+                    //PEDIDO DA IONA: 223258
 
                     if (base.Session_Carrinho != null && base.Session_Carrinho.DataEntrega < model.DataEntregaItem)
                         base.Session_Carrinho.DataEntrega = model.DataEntregaItem;

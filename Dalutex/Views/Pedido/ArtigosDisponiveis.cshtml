@@ -17,7 +17,11 @@ Dictionary<string,string> dicTecnologias = new Dictionary<string,string>();
     <h3>DESENHO NÃO INFORMADO</h3>
 }
 else
-{ 
+{
+    <div class="well well-sm alert-danger">
+        @Html.ValidationSummary()
+    </div>
+    
     <div class="panel panel-default">
         <h5>DESENHO: <strong>@Model.Desenho </strong>  | VARIANTE: <strong>@Model.Variante</strong> </h5>
         <hr />
@@ -110,37 +114,45 @@ else
                                         }
 
                                         //oda-- 29/07/2016 -- bloquear entrada com restrição ----------------------
-                                        if (Convert.ToBoolean(@System.Configuration.ConfigurationManager.AppSettings["BLOQUEIA_RESTRICAO"]) == false)
+                                        //oda -- 30/07/2016 --  alteração para bloquear restrições. solicitação LUDOVIT ------
+                                        if (!string.IsNullOrWhiteSpace(item.Restricao))
                                         {
-                                            //oda -- 30/07/2016 --  alteração para bloquear restrições. solicitação LUDOVIT ------
-                                            if (!string.IsNullOrWhiteSpace(item.Restricao))
+                                            
+                                            iconClass = "glyphicon glyphicon-remove";
+
+                                            if (Convert.ToBoolean(@System.Configuration.ConfigurationManager.AppSettings["BLOQUEIA_RESTRICAO"]) == false)
                                             {
                                                 linkClass += " warning";
-                                                iconClass = "glyphicon glyphicon-remove";
+                                                
                                                 linkUrl = Url.Content("~/Pedido/InserirNoCarrinho?" +
-                                                                                        "&desenho=" + Model.Desenho +
-                                                                                        "&variante=" + Model.Variante +
-                                                                                        "&artigo=" + item.Artigo +
-                                                                                        "&tecnologia=" + item.Tecnologia +
-                                                                                        "&tecnologiaoriginal=" + Model.TecnologiaAtual +
-                                                                                        "&idcolecao=" + Model.IDColecao +
-                                                                                        "&nmcolecao=" + Model.NMColecao +
-                                                                                        "&pagina=" + Model.Pagina +
-                                                                                        "&codstudio=null" +
-                                                                                        "&coddal=null" +
-                                                                                        "&modo=I" +
-                                                                                        "&reduzido=" + Model.Reduzido +
-                                                                                        "&tipo=" + ((int)Model.Tipo).ToString() +
-                                                                                        "&idstudio=0" +
-                                                                                        "&iditemstudio=0" +
-                                                                                        "&idvariante=" + Model.IDVariante +
-                                                                                        "&pedidoreserva=" + Model.PedidoReserva +
-                                                                                        "&itempedidoreserva=" + Model.ItemPedidoReserva +
-                                                                                        "&iditem=0" +
-                                                                                        "&preexistente=false" +
-                                                                                        "&TemRestricao=true" +
-                                                                                        "&Restricao=" + item.Restricao
-                                                                                        );
+                                                    "&desenho=" + Model.Desenho +
+                                                    "&variante=" + Model.Variante +
+                                                    "&artigo=" + item.Artigo +
+                                                    "&tecnologia=" + item.Tecnologia +
+                                                    "&tecnologiaoriginal=" + Model.TecnologiaAtual +
+                                                    "&idcolecao=" + Model.IDColecao +
+                                                    "&nmcolecao=" + Model.NMColecao +
+                                                    "&pagina=" + Model.Pagina +
+                                                    "&codstudio=null" +
+                                                    "&coddal=null" +
+                                                    "&modo=I" +
+                                                    "&reduzido=" + Model.Reduzido +
+                                                    "&tipo=" + ((int)Model.Tipo).ToString() +
+                                                    "&idstudio=0" +
+                                                    "&iditemstudio=0" +
+                                                    "&idvariante=" + Model.IDVariante +
+                                                    "&pedidoreserva=" + Model.PedidoReserva +
+                                                    "&itempedidoreserva=" + Model.ItemPedidoReserva +
+                                                    "&iditem=0" +
+                                                    "&preexistente=false" +
+                                                    "&TemRestricao=true" +
+                                                    "&Restricao=" + item.Restricao
+                                                    );
+                                            }
+                                            else
+                                            {
+                                                linkClass += " warning deny";
+                                                linkUrl = "#";
                                             }
                                         }
 
@@ -302,15 +314,23 @@ else
                     return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
                 }
 
+                function itemBloqueado_Click()
+                {
+                    $("#alertArtigosDisponiveis .alertMessage").html("Este item possui uma restrição e não pode ser incluído no carrinho.");
+                    $("#alertArtigosDisponiveis").modal();
+                }
+
                 // public API
                 return {
                     cboTecnologias_Click: cboTecnologias_Click,
+                    itemBloqueado_Click: itemBloqueado_Click
                 };
             })();
 
             //Init
             (function Init() {
                 $(document).on('click', '#cboTecnologias li a', scriptWrapper.cboTecnologias_Click);
+                $(document).on('click', 'a.deny', scriptWrapper.itemBloqueado_Click)
             })();
         });
     </script>

@@ -111,7 +111,8 @@ namespace Dalutex.Controllers
            int idvariante,
            int pedidoreserva,
            int itempedidoreserva,
-           int tipo)
+           int tipo,
+           string errMessage)
         {                        
             ArtigosDisponiveisViewModel model = new ArtigosDisponiveisViewModel();
             model.Desenho = desenho;
@@ -193,10 +194,9 @@ namespace Dalutex.Controllers
                 }
             }
 
-            // check if TempData contains some error message and if yes add to the model state.
-            if (TempData["ModelErro"] != null)
+            if(!string.IsNullOrWhiteSpace(errMessage ))
             {
-                ModelState.AddModelError(string.Empty, TempData["CustomError"].ToString());
+                ModelState.AddModelError("", errMessage);
             }
 
             return View(model);
@@ -346,8 +346,6 @@ namespace Dalutex.Controllers
                                 //oda-- 29/07/2016 -- bloquear entrada com restrição ----------------------
                                 if (Convert.ToBoolean(ConfigurationManager.AppSettings["BLOQUEIA_RESTRICAO"]) == true)
                                 {                                    
-                                    ModelState.AddModelError("", "Artigo com Restrição: (" + strCaracterisNew[0] + ")");
-                                    TempData["ModelErro"] = "Artigo com Restrição: (" + strCaracterisNew[0] + ")";
                                     return RedirectToAction("ArtigosDisponiveis", "Pedido",
                                     new
                                     {
@@ -359,7 +357,8 @@ namespace Dalutex.Controllers
                                         pedidoreserva = model.PedidoReserva,
                                         idvariante = model.IDVariante,
                                         itempedidoreserva = model.ItemPedidoReserva,
-                                        tipo = (int)model.Tipo
+                                        tipo = (int)model.Tipo,
+                                        errMessage = "Artigo com Restrição: (" + strCaracterisNew[0] + ")"
                                     });
                                 }
                                 else
@@ -2844,6 +2843,11 @@ namespace Dalutex.Controllers
                 {
                     model.IDColecao = -1;
                     model.NMColecao = "DESENHOS";
+                }
+                else if (idcolecao.ToUpper() == "EXCLUSIVOS")
+                {
+                    model.IDColecao = 23;
+                    model.NMColecao = "EXCLUSIVOS";
                 }
                 else if (idcolecao == null)
                 {

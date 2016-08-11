@@ -2130,9 +2130,9 @@ namespace Dalutex.Controllers
                     if(!estaEditando)
                     {
                         objPrePedido.STATUS_PEDIDO = 1; //embora esteja definido no banco como padrão "1", esta gravando nulo, então, deixar explicito.....  
-                        objPrePedido.DATA_INICIO = DateTime.Now;
-                        objPrePedido.DATA_FINAL = DateTime.Now;
                         objPrePedido.DATA_EMISSAO = DateTime.Now;
+                        objPrePedido.DATA_INICIO = DateTime.Now;
+                        objPrePedido.DATA_FINAL = DateTime.Now;                        
                         objPrePedido.DATA_EMISSAO_DT = DateTime.Today;
                     }
                     if (base.Session_Carrinho.IDTipoPedido == (int)Enums.TiposPedido.RESERVA)

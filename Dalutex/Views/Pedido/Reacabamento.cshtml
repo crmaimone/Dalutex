@@ -1,0 +1,212 @@
+﻿@model Dalutex.Models.ReacabamentoViewModel
+
+@using Dalutex.Models;
+@using Dalutex.Models.DataModels;
+
+@{
+    ViewBag.Title = "Itens Pedido Reacabamento";
+}
+
+<div class="header-title"><h3>@ViewBag.Title</h3></div>
+
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="row-fluid" id="pesqDesenho">
+            @using (Html.BeginForm("Reacabamento", "Pedido", null, FormMethod.Post, new { role = "search" }))
+            {
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                    @Html.LabelFor(x => x.FiltroReduzido, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(x => x.FiltroReduzido, new { @class = "form-control", placeholder = "Igual a..." })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.FiltroCodigo, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(x => x.FiltroCodigo, new { @class = "form-control", placeholder = "Começa com.." })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.FiltroCor, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(x => x.FiltroCor, new { @class = "form-control", placeholder = "Começa com.." })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.FiltroArtigo, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(x => x.FiltroArtigo, new { @class = "form-control", placeholder = "Começa com.." })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.FiltroDesenho, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(x => x.FiltroDesenho, new { @class = "form-control", placeholder = "Começa com.." })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.FiltroVariante, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(x => x.FiltroVariante, new { @class = "form-control", placeholder = "Começa com.." })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="hidden" name="Pagina" value="@Model.Pagina" />
+                    <button type="submit" class="btn btn-default btn-group-sm" style="margin-left:15px;"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Pesquisar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@if (Model != null && Model.ListaItensReacabamento != null)
+{
+    <div class="panel panel-default">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Reduzido</th>
+                        <th>Codigo</th>
+                        <th>Tecnologia</th>
+                        <th>Artigo</th>
+                        <th>Cor</th>
+                        <th>Desenho</th>
+                        <th>Variante</th>                        
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ListaItensReacabamento)
+                    {
+                        <tr>
+                            <td><a href="@Url.Content("DesenhosValidaReserva?&pedidoreserva=" + item.CODIGO_REDUZIDO + "&pagina=1")"></a></td>
+                            <td>@item.CODIGO_REDUZIDO</td>
+                            <td>@item.COD_COMERCIAL</td>
+                            <td>@item.MAQUINA</td>
+                            <td>@item.ARTIGO</td>
+                            <td>@item.COR</td>
+                            <td>@item.DESENHO</td>
+                            <td>@item.VARIANTE</td>                            
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <nav>
+        <ul class="pagination">
+            @if (Model.ListaItensReacabamento != null)
+            {
+                if (Model.Pagina > 1)
+                {
+                    <li>
+                        <a href="@Url.Action("ValidaPedidoReserva", "Pedido",
+                                                new {
+                                                    filtropedidoreserva = Model.FiltroReduzido
+                                                    , filtrocliente = Model.FiltroReduzido
+                                                    , filtrorepresentante = Model.FiltroReduzido
+                                                    , filtrocodstudio = Model.FiltroCodigo
+                                                    , filtrocoddal = Model.FiltroCodigo
+                                                    , filtrodesenho = Model.FiltroDesenho
+                                                    , pagina = Model.Pagina - 1
+                                                    , totalpaginas = Model.TotalPaginas
+                                                })" aria-label="Anterior">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                }
+                else
+                {
+                    <li class="disabled">
+                        <a href="#" aria-label="Anterior">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                }
+                int iComecar = Model.Pagina <= 5 ? 1 : Model.Pagina - 5;
+                for (int i = iComecar; i <= Model.TotalPaginas; i++)
+                {
+                    if (Model.Pagina == i)
+                    {
+                        <li class="active">
+                            <a href="@Url.Action("ValidaPedidoReserva", "Pedido",
+                                                new {
+                                                    filtropedidoreserva = Model.FiltroCodigo
+                                                    , filtrocliente = Model.FiltroCodigo
+                                                    , filtrorepresentante = Model.FiltroReduzido
+                                                    , filtrocodstudio = Model.FiltroCodigo
+                                                    , filtrocoddal = Model.FiltroCodigo
+                                                    , filtrodesenho = Model.FiltroDesenho
+                                                    , pagina = i
+                                                    , totalpaginas = Model.TotalPaginas
+                                                })">@i</a>
+                                            </li>
+                    }
+                    else
+                    {
+                        <li>
+                            <a href="@Url.Action("ValidaPedidoReserva", "Pedido",
+                                                new {
+                                                    filtropedidoreserva = Model.FiltroCodigo
+                                                    , filtrocliente = Model.FiltroCodigo
+                                                    , filtrorepresentante = Model.FiltroReduzido
+                                                    , filtrocodstudio = Model.FiltroCodigo
+                                                    , filtrocoddal = Model.FiltroCodigo
+                                                    , filtrodesenho = Model.FiltroDesenho
+                                                    , pagina = i
+                                                    , totalpaginas = Model.TotalPaginas
+                                                })">@i</a>
+                                            </li>
+                    }
+                    if (i == iComecar + 9)
+                    {
+                        break;
+                    }
+                }
+                if (Model.Pagina < Model.TotalPaginas)
+                {
+                    <li>
+                        <a href="@Url.Action("ValidaPedidoReserva", "Pedido",
+                                                new {
+                                                    filtropedidoreserva = Model.FiltroArtigo
+                                                    , filtrocliente = Model.FiltroCodigo
+                                                    , filtrorepresentante = Model.FiltroReduzido
+                                                    , filtrocodstudio = Model.FiltroCodigo
+                                                    , filtrocoddal = Model.FiltroCodigo
+                                                    , filtrodesenho = Model.FiltroDesenho
+                                                    , pagina = Model.Pagina + 1
+                                                    , totalpaginas = Model.TotalPaginas
+                                                })" aria-label="Próxima">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                }
+                else
+                {
+                    <li class="disabled">
+                        <a href="#" aria-label="Próxima">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                }
+            }
+        </ul>
+    </nav>
+}
+@section Scripts {
+    <script>
+        $('tr').click(function () {
+            var target = $(this).find('a').attr('href');
+            if (target != undefined) {
+                window.location = $(this).find('a').attr('href');
+            }
+
+        }).hover(function () {
+            $(this).toggleClass('hover-cursor');
+        });
+    </script>
+}
+

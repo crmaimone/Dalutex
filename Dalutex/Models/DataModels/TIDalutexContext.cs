@@ -74,10 +74,68 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<VW_RASCUNHO_PEDIDOS> VW_RASCUNHO_PEDIDOS { get; set; }
         public virtual DbSet<VW_ARTIGOS_INATIVOS> VW_ARTIGOS_INATIVOS { get; set; }
         public virtual DbSet<LINK_GRUPO_COND_PGTO> LINK_GRUPO_COND_PGTO { get; set; }
+        public virtual DbSet<VW_CUS_CONS_TAB_PRECO> VW_CUS_CONS_TAB_PRECO { get; set; }
+        public virtual DbSet<TIPO_PEDIDO_USUARIO> TIPO_PEDIDO_USUARIO { get; set; }
         
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<VW_CUS_CONS_TAB_PRECO>()
+                .Property(e => e.ID_TABELA_PRECO_ITEM)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_CUS_CONS_TAB_PRECO>()
+                .Property(e => e.NOME_USU)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_CUS_CONS_TAB_PRECO>()
+                .Property(e => e.ID_TABELA_PRECO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_CUS_CONS_TAB_PRECO>()
+                .Property(e => e.ARTIGO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_CUS_CONS_TAB_PRECO>()
+                .Property(e => e.TECNOLOGIA)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_CUS_CONS_TAB_PRECO>()
+                .Property(e => e.CLASSIFICACAO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_CUS_CONS_TAB_PRECO>()
+                .Property(e => e.CONDICAO_PAGAMENTO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_CUS_CONS_TAB_PRECO>()
+                .Property(e => e.QUALIDADE_COMERCIAL)
+                .IsUnicode(false);
+
+            //modelBuilder.Entity<VW_CUS_CONS_TAB_PRECO>()
+            //    .Property(e => e.COMISSAO)
+            //    .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_CUS_CONS_TAB_PRECO>()
+                .Property(e => e.PRECO)
+                .HasPrecision(38, 0);
+
+            //modelBuilder.Entity<VW_CUS_CONS_TAB_PRECO>()
+            //    .Property(e => e.RENDIMENTO)
+            //    .HasPrecision(38, 0);
+
+            //modelBuilder.Entity<VW_CUS_CONS_TAB_PRECO>()
+            //    .Property(e => e.LARGURA)
+            //    .HasPrecision(38, 0);
+
+            //modelBuilder.Entity<VW_CUS_CONS_TAB_PRECO>()
+            //    .Property(e => e.GRAMATURA)
+            //    .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_CUS_CONS_TAB_PRECO>()
+                .Property(e => e.COMPOSICAO)
+                .IsUnicode(false);
+
             modelBuilder.Entity<VW_RASCUNHO_PEDIDOS>()
                 .Property(e => e.PEDIDO)
                 .HasPrecision(38, 0);

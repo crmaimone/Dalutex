@@ -42,6 +42,10 @@ namespace Dalutex
                     "~/Scripts/bootstrap-table.js",
                     "~/Scripts/bootstrap-table-pt-BR.js"));
 
+
+            bundles.Add(new ScriptBundle("~/bundles/datatables").Include(
+                "~/Scripts/DataTables/*.js"));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/bootstrap-select.css",
@@ -50,8 +54,6 @@ namespace Dalutex
             bundles.Add(new StyleBundle("~/Content/bootstrap-table").Include(
                       "~/Content/bootstrap-table.min.css",
                       "~/Content/bootstrap-table.css"));
-
-
 
             bundles.Add(new ScriptBundle("~/bundles/fileinput").Include(
                     "~/Scripts/fileinput.min.js",
@@ -62,6 +64,8 @@ namespace Dalutex
                       "~/Content/fileinput.css",
                       "~/Content/fileinput.min.css"));
 
+            bundles.Add(new StyleBundle("~/Content/datatables").Include(
+                      "~/Content/DataTables/css/*.css"));
 
             bundles.Add(new StyleBundle("~/Content/datepicker").Include("~/Content/bootstrap-datepicker*"));
             // Set EnableOptimizations to false for debugging. For more information,

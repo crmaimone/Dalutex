@@ -820,5 +820,28 @@ namespace Dalutex.Controllers
 
             return View();
         }
+
+        public ActionResult TabelaPrecos()
+        {
+            TabelaPrecosViewModel model = new TabelaPrecosViewModel();
+
+            return View(model);
+        }
+
+        public JsonResult ObterListaPrecos()
+        {
+            List<VW_CUS_CONS_TAB_PRECO> lstResult = null;
+
+
+            using (var ctx = new TIDalutexContext())
+            {
+                decimal idUsuario = base.Session_Usuario.COD_USU;
+                //decimal idUsuario = 456;
+
+                lstResult = ctx.VW_CUS_CONS_TAB_PRECO.Where(x => x.ID_USUARIO == idUsuario).ToList();
+            }
+
+            return Json(lstResult, JsonRequestBehavior.AllowGet);
+        }
     }
 }

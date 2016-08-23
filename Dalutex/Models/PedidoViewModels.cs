@@ -197,6 +197,38 @@ namespace Dalutex.Models
         public List<VW_VALIDAR_RESERVA> ListaValidaReserva { get; set; }
     }
 
+
+
+    public class ReacabamentoViewModel
+    {
+        [Display(Name = "Reduzido")]
+        public string FiltroReduzido { get; set; }
+
+        [Display(Name = "Codigo")]
+        public string FiltroCodigo { get; set; }
+
+        [Display(Name = "Artigo")]
+        public string FiltroArtigo { get; set; }
+
+        [Display(Name = "Cor")]
+        public string FiltroCor { get; set; }
+
+        [Display(Name = "Tecnologia")]
+        public string FiltroTecnologia { get; set; }
+
+        [Display(Name = "Desenho")]
+        public string FiltroDesenho { get; set; }
+
+        [Display(Name = "Variante")]
+        public string FiltroVariante { get; set; }
+
+        public int Pagina { get; set; }
+        public int TotalPaginas { get; set; }
+        public List<VMASCARAPRODUTOACABADO> ListaItensReacabamento { get; set; }
+    }
+
+
+
     public class DesenhosValidaReservaViewModel
     {    
         public int PedidoReserva { get; set; }

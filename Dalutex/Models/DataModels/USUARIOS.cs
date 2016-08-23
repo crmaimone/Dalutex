@@ -40,5 +40,6 @@ namespace Dalutex.Models.DataModels
         public bool PodeEditarPedidoAvancado { get; set; }
         [NotMapped]
         public bool PodeCancelarItens { get; set; }
+
     }
 }

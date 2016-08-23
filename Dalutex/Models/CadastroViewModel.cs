@@ -114,4 +114,8 @@ namespace Dalutex.Models
         public int TotalPaginas { get; set; }
     }
 
+    public class TabelaPrecosViewModel
+    {
+    }
+
 }

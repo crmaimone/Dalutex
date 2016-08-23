@@ -1,0 +1,89 @@
+﻿@using Dalutex.Models.DataModels
+
+@model Dalutex.Models.TabelaPrecosViewModel
+
+@{
+    ViewBag.Title = "Tabela de Preços";
+}
+@*@Styles.Render("~/Content/datatables")*@
+<link href="~/Content/DataTables/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/DataTables/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+<div class="header-title"><h3>@ViewBag.Title</h3></div>
+
+<div class="row">
+    <div class="col-md-8">
+        <section id="ResultadoRepresentantes">
+            <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Artigo</th>
+                        <th>Tec.</th>
+                        <th>Clas.</th>
+                        <th>Condição pgto.</th>
+                        <th>Qual.</th>
+                        <th>Comissão</th>
+                        <th>Preço</th>
+                        <th>Rend.</th>
+                        <th>Largura</th>
+                        <th>Gramatura</th>
+                        <th>Composição</th>
+                    </tr>
+                </thead>
+            </table>
+        </section>
+    </div>
+</div>
+@section Scripts {
+<script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/DataTables/dataTables.bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+        //API
+        scriptWrapper = (function () {
+
+            //API Attributes
+
+            //API Methods
+            obterLista = function (value) {
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("AtualizaComplentoPedido", "Pedido")',
+                        data: 'numPedidoCliente=' + $('#txtPedidoCliente').val() + '&observacoes=' + $('#txtObservacoes').val(),
+                        async: false,
+                    });
+                }
+
+                // public API
+                return {
+                    obterLista: obterLista,
+                };
+            })();
+
+            //Init
+            (function Init() {
+                $('#example').DataTable({
+                    ajax:{ 
+                        url: '/Cadastro/ObterListaPrecos',
+                        dataSrc: ''},
+                    columns: [
+                        { data: 'ARTIGO' },
+                        { data: 'TECNOLOGIA' },
+                        { data: 'CLASSIFICACAO' },
+                        { data: 'CONDICAO_PAGAMENTO' },
+                        { data: 'QUALIDADE_COMERCIAL' },
+                        { data: 'COMISSAO' },
+                        { data: 'PRECO' },
+                        { data: 'RENDIMENTO' },
+                        { data: 'LARGURA' },
+                        { data: 'GRAMATURA' },
+                        { data: 'COMPOSICAO' }
+                    ]
+                });
+                //obterLista();
+            })();
+        });
+</script>
+
+}
+
+

@@ -3096,19 +3096,40 @@ namespace Dalutex.Controllers
 
         private void CarregarTiposPedidos(InserirNoCarrinhoViewModel model)
         {
-            using (DalutexContext ctxDalutex = new DalutexContext())
-            {
-                int[] tiposPedidos = new int[] 
-                { 
-                    (int)Enums.TiposPedido.AMOSTRA,
-                    (int)Enums.TiposPedido.PILOTAGEM,
-                    (int)Enums.TiposPedido.VENDA,
-                    (int)Enums.TiposPedido.MOSTRUARIO,
-                };
+            //using (DalutexContext ctxDalutex = new DalutexContext())
+            //{
+            //    int[] tiposPedidos = new int[] 
+            //    { 
+            //        (int)Enums.TiposPedido.AMOSTRA,
+            //        (int)Enums.TiposPedido.PILOTAGEM,
+            //        (int)Enums.TiposPedido.VENDA,
+            //        //(int)Enums.TiposPedido.MOSTRUARIO,
+            //    };
+               
+            //    //model.TiposPedido = new SelectList(ctxDalutex.COML_TIPOSPEDIDOS.Where(x => tiposPedidos.Any(tipo => x.TIPOPEDIDO.Equals(tipo))).ToList().Select(x => new SelectListItem() { Text = x.DESCRICAO, Value = x.TIPOPEDIDO.ToString() }));
+            //    model.TiposPedido = ctxDalutex.COML_TIPOSPEDIDOS.Where(x => tiposPedidos.Any(tipo => x.TIPOPEDIDO.Equals(tipo))).ToList();
+            //}
 
-                //model.TiposPedido = new SelectList(ctxDalutex.COML_TIPOSPEDIDOS.Where(x => tiposPedidos.Any(tipo => x.TIPOPEDIDO.Equals(tipo))).ToList().Select(x => new SelectListItem() { Text = x.DESCRICAO, Value = x.TIPOPEDIDO.ToString() }));
-                model.TiposPedido = ctxDalutex.COML_TIPOSPEDIDOS.Where(x => tiposPedidos.Any(tipo => x.TIPOPEDIDO.Equals(tipo))).ToList();
+            List<TIPO_PEDIDO_USUARIO> tp = new List<TIPO_PEDIDO_USUARIO>();
+
+            List<int> tiposPedidos = new List<int>();
+
+            int idUsuario = (int)base.Session_Usuario.COD_USU;
+
+            using (TIDalutexContext ctx = new TIDalutexContext())
+            {
+                tp = ctx.TIPO_PEDIDO_USUARIO.Where(a => a.ID_USUARIO == idUsuario).ToList();
+
+                foreach (var item in tp)
+                {
+                    tiposPedidos.Add(item.TIPO_PEDIDO);
+                }
             }
+
+            using(DalutexContext ctxDalutex = new DalutexContext())
+            {
+                model.TiposPedido = ctxDalutex.COML_TIPOSPEDIDOS.Where(x => tiposPedidos.Contains(x.TIPOPEDIDO)).ToList();
+            }            
         }
 
         #endregion
@@ -3413,6 +3434,127 @@ namespace Dalutex.Controllers
         }
 
         #endregion
+
+        public ActionResult Reacabamento(              
+              string FiltroReduzido 
+            , string FiltroCodigo    
+            , string FiltroArtigo    
+            , string FiltroCor    
+            , string FiltroTecnologia   
+            , string FiltroDesenho
+            , string FiltroVariante
+            , string pagina
+            , string totalpaginas
+            )
+        {
+            ReacabamentoViewModel model = new ReacabamentoViewModel();
+            model.FiltroReduzido = FiltroReduzido;
+            model.FiltroCodigo = FiltroCodigo;
+            model.FiltroArtigo = FiltroArtigo;
+            model.FiltroCor = FiltroCor;
+            model.FiltroTecnologia = FiltroTecnologia;
+            model.FiltroDesenho = FiltroDesenho;
+            model.FiltroVariante = FiltroVariante;
+
+            if (!string.IsNullOrWhiteSpace(totalpaginas))
+            {
+                model.TotalPaginas = int.Parse(totalpaginas);
+            }
+
+            if (string.IsNullOrWhiteSpace(pagina))
+            { model.Pagina = 1; }
+            else{ model.Pagina = int.Parse(pagina);}
+
+            if( model.FiltroReduzido == null &&
+                model.FiltroCodigo == null &&
+                model.FiltroArtigo == null &&
+                model.FiltroCor == null &&
+                model.FiltroTecnologia == null &&
+                model.FiltroDesenho == null &&
+                model.FiltroVariante == null)
+            {
+                return View();
+            }
+
+            this.ObterItensReacabamento(model);
+            
+            return View(model);
+        }
+
+        private void ObterItensReacabamento(ReacabamentoViewModel model)
+        {
+            int iItensPorPagina = 6;
+
+            using (var ctx = new DalutexContext())
+            {
+                List<VMASCARAPRODUTOACABADO> result = null;
+
+                if (model.TotalPaginas == 0)
+                {
+                    result = ctx.VMASCARAPRODUTOACABADO
+                                .Where(
+                                        x =>
+                                        (
+                                            model.FiltroReduzido == null || x.CODIGO_REDUZIDO.Equals(model.FiltroReduzido)
+                                            &&
+                                            (model.FiltroCodigo == null || x.COD_COMERCIAL.Contains(model.FiltroCodigo.ToUpper()))
+                                            &&
+                                            (model.FiltroArtigo == null || x.ARTIGO.Contains(model.FiltroArtigo.ToUpper()))
+                                            &&
+                                            (model.FiltroCor == null || x.COR.StartsWith(model.FiltroCor.ToUpper()))
+                                            &&
+                                            (model.FiltroTecnologia == null || x.MAQUINA.StartsWith(model.FiltroTecnologia.ToUpper()))
+                                            &&
+                                            (model.FiltroDesenho == null || x.DESENHO.StartsWith(model.FiltroDesenho.ToUpper()))
+                                            &&
+                                            (model.FiltroVariante == null || x.VARIANTE.StartsWith(model.FiltroVariante.ToUpper()))
+                                        )                                 
+                                ).OrderByDescending(x => x.COD_COMERCIAL)
+                                .ToList();
+
+                    decimal dTotal = result.Count / (decimal)iItensPorPagina;
+                    model.TotalPaginas = (int)Decimal.Ceiling(dTotal);
+                    if (model.TotalPaginas == 0)
+                        model.TotalPaginas = 1;
+
+                    model.ListaItensReacabamento = result.Skip((model.Pagina - 1) * iItensPorPagina).Take(iItensPorPagina).ToList();
+
+                    if  (result.Count() == 0)
+                    {
+                        ModelState.AddModelError("", "Item nao encontrado");
+                    }
+                }
+                else
+                {
+                    model.ListaItensReacabamento = ctx.VMASCARAPRODUTOACABADO
+                                .Where(
+                                    x =>
+                                    (model.FiltroReduzido == null || x.CODIGO_REDUZIDO.Equals(model.FiltroReduzido)
+                                        &&
+                                        (model.FiltroCodigo == null || x.COD_COMERCIAL.Contains(model.FiltroCodigo.ToUpper()))
+                                        &&
+                                        (model.FiltroArtigo == null || x.ARTIGO.Contains(model.FiltroArtigo.ToUpper()))
+                                        &&
+                                        (model.FiltroCor == null || x.COR.StartsWith(model.FiltroCor.ToUpper()))
+                                        &&
+                                        (model.FiltroTecnologia == null || x.MAQUINA.StartsWith(model.FiltroTecnologia.ToUpper()))
+                                        &&
+                                        (model.FiltroDesenho == null || x.DESENHO.StartsWith(model.FiltroDesenho.ToUpper()))
+                                        &&
+                                        (model.FiltroVariante == null || x.VARIANTE.StartsWith(model.FiltroVariante.ToUpper())))
+                                ).OrderByDescending(x => x.COD_COMERCIAL)
+                                .Skip((model.Pagina - 1) * iItensPorPagina)
+                                .Take(iItensPorPagina)
+                                .ToList();
+
+                    if (result.Count() == 0)
+                    {
+                        ModelState.AddModelError("", "Item nao encontrado.");
+                    }
+                }
+            }
+        }
+        
 
         #region Pronta Entrega
 

@@ -48,10 +48,11 @@ namespace Dalutex.Models
             REPOSICÃO = 9,
             BANCADO = 15,
             ESPECIAL = 16,
-            RESERVA = 21,
-            MOSTRUARIO = 22
+            RESERVA = 21
+            //,MOSTRUARIO = 22
         }
 
+        
         public enum QualidadeComercial
         {
             A = 0,

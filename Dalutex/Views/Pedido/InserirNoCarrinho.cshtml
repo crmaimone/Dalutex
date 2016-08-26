@@ -62,11 +62,19 @@
                                             @Html.ValidationMessageFor(m => m.IDTipoPedido, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
+                                <hr />
                                 }
 
-                                <hr />
-
-                                if ((Model.IDTipoPedido != (int)Enums.TiposPedido.PILOTAGEM) && (Model.IDTipoPedido != (int)Enums.TiposPedido.AMOSTRA))
+                                if (Model.EhReacabamento)
+                                {
+                                    <div class="panel panel-default">
+                                        <h5>
+                                            Tipo de Pedido:&nbsp;<strong>Reacabamento (Beneficiamento Próprio):</strong>
+                                        </h5>
+                                    </div>
+                                }
+                                
+                                if ((Model.IDTipoPedido != (int)Enums.TiposPedido.PILOTAGEM) && (Model.IDTipoPedido != (int)Enums.TiposPedido.AMOSTRA) && (Model.IDTipoPedido != (int)Enums.TiposPedido.BNFPROPRIO))
                                 {
                                     <div class="form-group">
                                         @Html.LabelFor(x => x.IDTamanhoPadrao, new { @class = "col-md-4 control-label" })

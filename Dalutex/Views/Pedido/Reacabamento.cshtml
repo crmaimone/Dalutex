@@ -79,10 +79,38 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model.ListaItensReacabamento)
+                    @foreach (var item in Model.ListaItensReacabamento)                        
                     {
+                        string tipo = "1"; if (item.PROCESSO == "L") { tipo = "2"; }
+                        
+                        string linkUrl = @Url.Content("~/Pedido/InserirNoCarrinho?" +
+                                                        "&desenho=" + item.DESENHO +
+                                                        "&variante=" + item.VARIANTE +
+                                                        "&artigo=" + item.ARTIGO +
+                                                        "&tecnologia=" + item.MAQUINA +
+                                                        "&tecnologiaoriginal=" + item.MAQUINA +
+                                                        "&idcolecao=" + "-1" +
+                                                        "&nmcolecao=" + "Reacabamento" +
+                                                        "&pagina=" + Model.Pagina +
+                                                        "&codstudio=null" +
+                                                        "&coddal=null" +
+                                                        "&modo=I" +
+                                                        "&reduzido=" + item.CODIGO_REDUZIDO +
+                                                        "&tipo=" + tipo +
+                                                        "&idstudio=0" +
+                                                        "&iditemstudio=0" +
+                                                        "&idvariante=0" +
+                                                        "&pedidoreserva=0" +
+                                                        "&itempedidoreserva=0" +
+                                                        "&iditem=0" +
+                                                        "&preexistente=false" +
+                                                        "&TemRestricao=false" +
+                                                        "&ehreacabamento=true" +
+                                                        "&um=" + item.UM
+                                                        );                        
                         <tr>
-                            <td><a href="@Url.Content("DesenhosValidaReserva?&pedidoreserva=" + item.CODIGO_REDUZIDO + "&pagina=1")"></a></td>
+                            <td> <a href=@linkUrl> </a> </td>
+
                             <td>@item.CODIGO_REDUZIDO</td>
                             <td>@item.COD_COMERCIAL</td>
                             <td>@item.MAQUINA</td>
@@ -103,14 +131,15 @@
                 if (Model.Pagina > 1)
                 {
                     <li>
-                        <a href="@Url.Action("ValidaPedidoReserva", "Pedido",
+                        <a href="@Url.Action("Reacabamento", "Pedido",
                                                 new {
-                                                    filtropedidoreserva = Model.FiltroReduzido
-                                                    , filtrocliente = Model.FiltroReduzido
-                                                    , filtrorepresentante = Model.FiltroReduzido
-                                                    , filtrocodstudio = Model.FiltroCodigo
-                                                    , filtrocoddal = Model.FiltroCodigo
-                                                    , filtrodesenho = Model.FiltroDesenho
+                                                      FiltroReduzido = Model.FiltroReduzido
+                                                    , FiltroCodigo = Model.FiltroCodigo
+                                                    , FiltroArtigo = Model.FiltroArtigo                                                    
+                                                    , FiltroCor = Model.FiltroCor
+                                                    , FiltroTecnologia = Model.FiltroTecnologia                                                    
+                                                    , FiltroDesenho = Model.FiltroDesenho
+                                                    , FiltroVariante = Model.FiltroVariante                                                    
                                                     , pagina = Model.Pagina - 1
                                                     , totalpaginas = Model.TotalPaginas
                                                 })" aria-label="Anterior">
@@ -132,14 +161,14 @@
                     if (Model.Pagina == i)
                     {
                         <li class="active">
-                            <a href="@Url.Action("ValidaPedidoReserva", "Pedido",
-                                                new {
-                                                    filtropedidoreserva = Model.FiltroCodigo
-                                                    , filtrocliente = Model.FiltroCodigo
-                                                    , filtrorepresentante = Model.FiltroReduzido
-                                                    , filtrocodstudio = Model.FiltroCodigo
-                                                    , filtrocoddal = Model.FiltroCodigo
-                                                    , filtrodesenho = Model.FiltroDesenho
+                            <a href="@Url.Action("Reacabamento", "Pedido",
+                                                new {FiltroReduzido = Model.FiltroReduzido
+                                                    , FiltroCodigo = Model.FiltroCodigo
+                                                    , FiltroArtigo = Model.FiltroArtigo                                                    
+                                                    , FiltroCor = Model.FiltroCor
+                                                    , FiltroTecnologia = Model.FiltroTecnologia                                                    
+                                                    , FiltroDesenho = Model.FiltroDesenho
+                                                    , FiltroVariante = Model.FiltroVariante                                                    
                                                     , pagina = i
                                                     , totalpaginas = Model.TotalPaginas
                                                 })">@i</a>
@@ -148,14 +177,14 @@
                     else
                     {
                         <li>
-                            <a href="@Url.Action("ValidaPedidoReserva", "Pedido",
-                                                new {
-                                                    filtropedidoreserva = Model.FiltroCodigo
-                                                    , filtrocliente = Model.FiltroCodigo
-                                                    , filtrorepresentante = Model.FiltroReduzido
-                                                    , filtrocodstudio = Model.FiltroCodigo
-                                                    , filtrocoddal = Model.FiltroCodigo
-                                                    , filtrodesenho = Model.FiltroDesenho
+                            <a href="@Url.Action("Reacabamento", "Pedido",
+                                                new {FiltroReduzido = Model.FiltroReduzido
+                                                    , FiltroCodigo = Model.FiltroCodigo
+                                                    , FiltroArtigo = Model.FiltroArtigo
+                                                    , FiltroCor = Model.FiltroCor
+                                                    , FiltroTecnologia = Model.FiltroTecnologia
+                                                    , FiltroDesenho = Model.FiltroDesenho
+                                                    , FiltroVariante = Model.FiltroVariante
                                                     , pagina = i
                                                     , totalpaginas = Model.TotalPaginas
                                                 })">@i</a>
@@ -169,15 +198,16 @@
                 if (Model.Pagina < Model.TotalPaginas)
                 {
                     <li>
-                        <a href="@Url.Action("ValidaPedidoReserva", "Pedido",
+                        <a href="@Url.Action("Reacabamento", "Pedido",
                                                 new {
-                                                    filtropedidoreserva = Model.FiltroArtigo
-                                                    , filtrocliente = Model.FiltroCodigo
-                                                    , filtrorepresentante = Model.FiltroReduzido
-                                                    , filtrocodstudio = Model.FiltroCodigo
-                                                    , filtrocoddal = Model.FiltroCodigo
-                                                    , filtrodesenho = Model.FiltroDesenho
-                                                    , pagina = Model.Pagina + 1
+                                                    FiltroReduzido = Model.FiltroReduzido
+                                                    , FiltroCodigo = Model.FiltroCodigo
+                                                    , FiltroArtigo = Model.FiltroArtigo                                                    
+                                                    , FiltroCor = Model.FiltroCor
+                                                    , FiltroTecnologia = Model.FiltroTecnologia                                                    
+                                                    , FiltroDesenho = Model.FiltroDesenho
+                                                    , FiltroVariante = Model.FiltroVariante                                                    
+                                                    , pagina = Model.Pagina +1
                                                     , totalpaginas = Model.TotalPaginas
                                                 })" aria-label="Próxima">
                             <span aria-hidden="true">&raquo;</span>

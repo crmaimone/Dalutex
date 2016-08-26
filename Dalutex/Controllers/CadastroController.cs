@@ -120,8 +120,26 @@ namespace Dalutex.Controllers
                 if (base.Session_Carrinho.ClienteEntrega == null || base.Session_Carrinho.ClienteEntrega.ID_CLIENTE <= 0)
                 {
                     return RedirectToAction("ClientesEntrega");
+                }                                                              
+                else if  ( (base.Session_Carrinho.ClienteFatura != null) && (base.Session_Carrinho.ClienteEntrega != null) )
+                {
+                    string sClienteEntrega = base.Session_Carrinho.ClienteFatura.ID_CLIENTE.ToString();
+
+                    using (var ctx = new TIDalutexContext())
+                    {
+                        bool? EhOpTriangular = ctx.VW_CLIE_OPER_TRINGULAR.Where(x => x.COD_CLIENTE.Trim() == sClienteEntrega).First().OPERACAO_TRIANGULAR;
+
+                        if (EhOpTriangular == true)
+                        {
+                            if (base.Session_Carrinho.ClienteEntrega.ID_CLIENTE == base.Session_Carrinho.ClienteFatura.ID_CLIENTE)
+                            {                                                               
+                                return RedirectToAction("ClientesEntrega");
+                            }
+                        }
+                    }
                 }
-                else if (base.Session_Carrinho.Transportadora == null || base.Session_Carrinho.Transportadora.IDTRANSPORTADORA <= 0)
+
+                if (base.Session_Carrinho.Transportadora == null || base.Session_Carrinho.Transportadora.IDTRANSPORTADORA <= 0)
                 {
                     return RedirectToAction("Transportadora");
                 }
@@ -249,44 +267,54 @@ namespace Dalutex.Controllers
         }
 
         public ActionResult ClientesEntrega(string IDClienteEntrega)
-        {
+        {           
             PesquisaClientesEntregaViewModel model = new PesquisaClientesEntregaViewModel();
 
-            if (IDClienteEntrega == null && base.Session_Carrinho.ClienteEntrega != null)
-                IDClienteEntrega = base.Session_Carrinho.ClienteEntrega.ID_CLIENTE.ToString();
+            string sClienteEntrega = base.Session_Carrinho.ClienteFatura.ID_CLIENTE.ToString();
 
-            int iIDClienteEntrega;
-            int.TryParse(IDClienteEntrega, out iIDClienteEntrega);
-
-            if (iIDClienteEntrega == 0)
+            using (var ctx = new TIDalutexContext())
             {
-                if (base.Session_Carrinho.ClienteFatura != null && base.Session_Carrinho.ClienteFatura.ID_CLIENTE > 0)
+                bool? EhOpTriangular = ctx.VW_CLIE_OPER_TRINGULAR.Where(x => x.COD_CLIENTE.Trim() == sClienteEntrega).First().OPERACAO_TRIANGULAR;
+
+                if (EhOpTriangular == true)
+                {                                                                            
+                    ModelState.AddModelError("", "CLIENTE DE FATURA [" + base.Session_Carrinho.ClienteFatura.NOME + "]" + " TEM OPERAÇÃO TRIANGULAR.");
+                    ModelState.AddModelError("", "O CLIENTE DE ENTREGA DEVE SER DIFERENTE DO CLIENTE DA FATURA.");
+                 
+                    return View(model);                         
+                }
+                else
                 {
-                    iIDClienteEntrega = base.Session_Carrinho.ClienteFatura.ID_CLIENTE;
+                    if (IDClienteEntrega == null && base.Session_Carrinho.ClienteEntrega != null)
+                        IDClienteEntrega = base.Session_Carrinho.ClienteEntrega.ID_CLIENTE.ToString();
+
+                    int iIDClienteEntrega;
+                    int.TryParse(IDClienteEntrega, out iIDClienteEntrega);
+
+                    if (iIDClienteEntrega == 0)
+                    {
+                        if (base.Session_Carrinho.ClienteFatura != null && base.Session_Carrinho.ClienteFatura.ID_CLIENTE > 0)
+                        {
+                            iIDClienteEntrega = base.Session_Carrinho.ClienteFatura.ID_CLIENTE;
+                        }
+                    }
+
+                    if (iIDClienteEntrega > 0)
+                    {                       
+                        VW_CLIENTE_TRANSP _ClienteEntrega = ctx.VW_CLIENTE_TRANSP.Where(x => x.ID_CLIENTE == iIDClienteEntrega).First();
+                        model.ClientesEntrega = new List<VW_CLIENTE_TRANSP>();
+                        model.ClientesEntrega.Add(_ClienteEntrega);
+                        model.Filtro = _ClienteEntrega.NOME;                       
+                    }                   
                 }
             }
-
-            if (iIDClienteEntrega > 0)
-            {
-                using (var ctx = new TIDalutexContext())
-                {
-                    VW_CLIENTE_TRANSP _ClienteEntrega = ctx.VW_CLIENTE_TRANSP.Where(x => x.ID_CLIENTE == iIDClienteEntrega).First();
-
-                    model.ClientesEntrega = new List<VW_CLIENTE_TRANSP>();
-
-                    model.ClientesEntrega.Add(_ClienteEntrega);
-
-                    model.Filtro = _ClienteEntrega.NOME;
-                }
-            }
-
-            return View(model);
+            return View(model);                     
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult ClientesEntrega(PesquisaClientesEntregaViewModel model)
-        {
+        {           
             using (var ctx = new TIDalutexContext())
             {
                 int idRepresentante = base.Session_Carrinho.Representante.IDREPRESENTANTE;

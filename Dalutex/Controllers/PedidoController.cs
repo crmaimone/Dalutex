@@ -263,6 +263,8 @@ namespace Dalutex.Controllers
             , bool preexistente
             , bool TemRestricao = false
             , string Restricao = ""
+            , bool ehreacabamento = false
+            , string um = ""
             )
         {
             InserirNoCarrinhoViewModel model = new InserirNoCarrinhoViewModel();
@@ -287,8 +289,10 @@ namespace Dalutex.Controllers
             model.Reduzido = reduzido;
             model.ID = iditem;
             model.PreExistente = preexistente;
+            model.EhReacabamento = ehreacabamento;
 
-            if (model.TecnologiaPorExtenso != "L")
+            #region Restrições
+            if ((model.TecnologiaPorExtenso != "L") && (!ehreacabamento) )
             {
                 using (var ctxTI = new TIDalutexContext())
                 {
@@ -372,57 +376,48 @@ namespace Dalutex.Controllers
                     }
                 }
             }
+            #endregion
 
             if (base.Session_Carrinho != null)
             {
                 model.IDTipoPedido = base.Session_Carrinho.IDTipoPedido;
                
                 ViewBag.ItensCarrinho = base.Session_Carrinho.Itens;
-
+               
                 if (modo == "I")//Inclusão
                 {
                     if (base.Session_Carrinho.Itens != null)
                     {
                         foreach (var item in base.Session_Carrinho.Itens)
                         {
-                            if (model.TecnologiaPorExtenso != "L")
-                            {
-                                if (item.Artigo == model.Artigo
-                                    && item.Tecnologia == model.Tecnologia
-                                    && item.Desenho == model.Desenho
-                                    && item.Variante == model.Variante)
-                                {
-                                    ModelState.AddModelError("", "Este item já foi incluído no carrinho.");
-
-                                    return RedirectToAction("Desenhos", "Pedido",
-                                    new
-                                    {
-                                        idcolecao = model.NMColecao,
-                                        nmcolecao = model.NMColecao,
-                                        filtro = model.Desenho,
-                                        pagina = "1",
-                                        totalpaginas = "1"
-                                    });
-                                
-                                    //return View(model);
-                                }
-                            }
-                            else
+                            if (model.IDTipoPedido == (int)Enums.TiposPedido.BNFPROPRIO)
                             {
                                 if (item.Reduzido == model.Reduzido)
                                 {
                                     ModelState.AddModelError("", "Este item já foi incluído no carrinho.");
 
-                                    return RedirectToAction("Lisos", "Pedido",
-                                    new
+                                    return RedirectToAction("Reacabamento", "Pedido");//, new { pagina = model.Pagina });//, pagina = 1 
+                                }
+                            }
+                            else
+                            {
+                                if (model.TecnologiaPorExtenso != "L")
+                                {
+                                    if (item.Artigo == model.Artigo && item.Tecnologia == model.Tecnologia && item.Desenho == model.Desenho && item.Variante == model.Variante)
                                     {
-                                        idcolecao = "LISOS",
-                                        //nmcolecao = null, 
-                                        pagina = 1//, 
-                                        //totalpaginas = null
-                                    });
+                                        ModelState.AddModelError("", "Este item já foi incluído no carrinho.");
 
-                                   // return View(model);
+                                        return RedirectToAction("Desenhos", "Pedido", new { idcolecao = model.NMColecao, nmcolecao = model.NMColecao, filtro = model.Desenho, pagina = "1", totalpaginas = "1" });
+                                    }
+                                }
+                                else
+                                {
+                                    if (item.Reduzido == model.Reduzido)
+                                    {
+                                        ModelState.AddModelError("", "Este item já foi incluído no carrinho.");
+
+                                        return RedirectToAction("Lisos", "Pedido", new { idcolecao = "LISOS", pagina = 1 });
+                                    }
                                 }
                             }
                         }
@@ -440,7 +435,7 @@ namespace Dalutex.Controllers
 
             model.Modo = modo;
 
-            if (model.Tipo != Enums.ItemType.Reserva) //se for pedido diferente de reserva
+            if ( (model.Tipo != Enums.ItemType.Reserva) && (!ehreacabamento) )//se for pedido diferente de reserva e não for reacabamento
             {
                 using (var ctxTI = new TIDalutexContext())
                 {
@@ -490,7 +485,17 @@ namespace Dalutex.Controllers
             }
             else
             {
+                model.ObterTipoPedido = "N";                
+            }
+
+            if (ehreacabamento)
+            {
+                this.CarregarTiposPedidos(model);
+                model.IDTipoPedido = (int)Enums.TiposPedido.BNFPROPRIO;
+                this.ObterPrevisaoEntrega(model);
+                model.DtItemSolicitada = model.DataEntregaItem.AddDays(int.Parse(ConfigurationManager.AppSettings["DIAS_DATA_SOLICITACAO"]));
                 model.ObterTipoPedido = "N";
+                model.UnidadeMedida = um;
             }
 
             ViewBag.POGReduzido = model.Reduzido;
@@ -509,6 +514,7 @@ namespace Dalutex.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    #region Validação de Qtdes Maximas e Minimas
                     if (model.Tipo != Enums.ItemType.Reserva)
                     {
                         decimal QtdeMaxima = 0;
@@ -516,7 +522,7 @@ namespace Dalutex.Controllers
                         decimal QtdeConvertida = 0;
                         decimal Rendimento = 0;
 
-                        if ((model.IDTipoPedido != (int)Enums.TiposPedido.AMOSTRA) && (model.IDTipoPedido != (int)Enums.TiposPedido.PILOTAGEM))
+                        if ((model.IDTipoPedido != (int)Enums.TiposPedido.AMOSTRA) && (model.IDTipoPedido != (int)Enums.TiposPedido.PILOTAGEM) && (model.IDTipoPedido != (int)Enums.TiposPedido.BNFPROPRIO))
                         {
                             model.Quantidade = model.IDTamanhoPadrao.GetValueOrDefault() * model.Pecas;
                             model.QuantidadeConvertida = model.Quantidade;
@@ -535,7 +541,7 @@ namespace Dalutex.Controllers
                         
                         #region Validação dos campos qtde
 
-                        if ((model.IDTipoPedido != (int)Enums.TiposPedido.AMOSTRA) && (model.IDTipoPedido != (int)Enums.TiposPedido.PILOTAGEM))
+                        if ((model.IDTipoPedido != (int)Enums.TiposPedido.AMOSTRA) && (model.IDTipoPedido != (int)Enums.TiposPedido.PILOTAGEM) && (model.IDTipoPedido != (int)Enums.TiposPedido.BNFPROPRIO))
                         {
                             if (model.IDTamanhoPadrao <= 0)
                             {
@@ -560,144 +566,148 @@ namespace Dalutex.Controllers
                         }
                         #endregion
 
-                        using (var ctx = new TIDalutexContext())
-                        {                            
-                            REGRAS_QTD_PEDIDO objMinMax=null;
-                            REGRAS_QTD_PEDIDOX objMinMaxX = null;
-                            int IDColecao = int.Parse(model.IDColecao);
-
-                            VW_GRUPO_COL_RED objGrupoCol = null;
-
-                            if (IDColecao > 0)
+                        if (model.IDTipoPedido != (int)Enums.TiposPedido.BNFPROPRIO)
+                        {
+                            using (var ctx = new TIDalutexContext())
                             {
-                                objGrupoCol = ctx.VW_GRUPO_COL_RED.Where(m => m.ID_COL == IDColecao).FirstOrDefault();
-                            }
-                            else if(model.Reduzido > 0)
-                            {
-                                objGrupoCol = ctx.VW_GRUPO_COL_RED.Where(m => m.REDUZIDO == model.Reduzido).FirstOrDefault();
-                            }
-                            else
-                            {
-                                model.IDGrupoColecao = (int)Enums.GrupoColecoes.Colecao;
-                            }
+                                REGRAS_QTD_PEDIDO objMinMax = null;
+                                REGRAS_QTD_PEDIDOX objMinMaxX = null;
+                                int IDColecao = int.Parse(model.IDColecao);
 
+                                VW_GRUPO_COL_RED objGrupoCol = null;
 
-                            if (model.IDGrupoColecao == 0)
-                            {
-                                if (model.IDColecao == ((int)Enums.TipoColecaoEspecial.Exclusivos).ToString())
-                                    model.IDGrupoColecao = (int)Enums.GrupoColecoes.Exclusivos;
-                                else
-                                    model.IDGrupoColecao = objGrupoCol.ID_GRUPO_COL;
-                            }
-
-                            #region Nova Regra de Validação Qtde 
-                            decimal? objDesenhoPronto = 0;
-                            bool desenhoPronto = false;
-
-                            if (model.Tecnologia != "L")
-                            {
-                                try{objDesenhoPronto = ctx.VW_DESENHOS_POR_COLECAO.Where(x => x.DESENHO == model.Desenho).FirstOrDefault().DESENHO_PRONTO;}
-                                catch{objDesenhoPronto = null;}
-                                    
-                                if (objDesenhoPronto != null)
-                                {desenhoPronto = (objDesenhoPronto == 1);}
-                            }
-
-                            //oda -- 17/05/2016 -- nova regra validação ------------
-                            var qryQtdeMinMaxX =
-                                        from Qtde in ctx.REGRAS_QTD_PEDIDOX
-                                        where
-                                                Qtde.TECNOLOGIA_DESTINO == model.Tecnologia
-                                            && Qtde.GRUPO_COLECAO == model.IDGrupoColecao
-                                            && Qtde.DESENHO_PRONTO == desenhoPronto             
-                                            && Qtde.TIPO_PEDIDO == model.IDTipoPedido
-                                            && Qtde.UM == model.UnidadeMedida
-                                            && Qtde.EXCLUIDO == false
-                                        select
-                                            Qtde;
-
-                            objMinMaxX = qryQtdeMinMaxX.FirstOrDefault();
-
-                            if (objMinMaxX != null)
-                            {
-                                QtdeMaxima = objMinMaxX.QTD_MAX_VAR;
-                                QtdeMinima = objMinMaxX.QTD_MIN_VAR;
-
-                                if (model.Quantidade < QtdeMinima)
+                                if (IDColecao > 0)
                                 {
-                                    ModelState.AddModelError("", "A QUANTIDADE MÍNIMA POR VARIANTE NÃO PODE SER MENOR QUE: " + QtdeMinima.ToString());
-                                    hasErrors = true;
+                                    objGrupoCol = ctx.VW_GRUPO_COL_RED.Where(m => m.ID_COL == IDColecao).FirstOrDefault();
                                 }
-                                else if (model.Quantidade > QtdeMaxima)
-                                        {
+                                else if (model.Reduzido > 0)
+                                {
+                                    objGrupoCol = ctx.VW_GRUPO_COL_RED.Where(m => m.REDUZIDO == model.Reduzido).FirstOrDefault();
+                                }
+                                else
+                                {
+                                    model.IDGrupoColecao = (int)Enums.GrupoColecoes.Colecao;
+                                }
+
+
+                                if (model.IDGrupoColecao == 0)
+                                {
+                                    if (model.IDColecao == ((int)Enums.TipoColecaoEspecial.Exclusivos).ToString())
+                                        model.IDGrupoColecao = (int)Enums.GrupoColecoes.Exclusivos;
+                                    else
+                                        model.IDGrupoColecao = objGrupoCol.ID_GRUPO_COL;
+                                }
+
+                                #region Nova Regra de Validação Qtde
+                                decimal? objDesenhoPronto = 0;
+                                bool desenhoPronto = false;
+
+                                if (model.Tecnologia != "L")
+                                {
+                                    try { objDesenhoPronto = ctx.VW_DESENHOS_POR_COLECAO.Where(x => x.DESENHO == model.Desenho).FirstOrDefault().DESENHO_PRONTO; }
+                                    catch { objDesenhoPronto = null; }
+
+                                    if (objDesenhoPronto != null)
+                                    { desenhoPronto = (objDesenhoPronto == 1); }
+                                }
+
+                                //oda -- 17/05/2016 -- nova regra validação ------------
+                                var qryQtdeMinMaxX =
+                                            from Qtde in ctx.REGRAS_QTD_PEDIDOX
+                                            where
+                                                    Qtde.TECNOLOGIA_DESTINO == model.Tecnologia
+                                                && Qtde.GRUPO_COLECAO == model.IDGrupoColecao
+                                                && Qtde.DESENHO_PRONTO == desenhoPronto
+                                                && Qtde.TIPO_PEDIDO == model.IDTipoPedido
+                                                && Qtde.UM == model.UnidadeMedida
+                                                && Qtde.EXCLUIDO == false
+                                            select
+                                                Qtde;
+
+                                objMinMaxX = qryQtdeMinMaxX.FirstOrDefault();
+
+                                if (objMinMaxX != null)
+                                {
+                                    QtdeMaxima = objMinMaxX.QTD_MAX_VAR;
+                                    QtdeMinima = objMinMaxX.QTD_MIN_VAR;
+
+                                    if (model.Quantidade < QtdeMinima)
+                                    {
+                                        ModelState.AddModelError("", "A QUANTIDADE MÍNIMA POR VARIANTE NÃO PODE SER MENOR QUE: " + QtdeMinima.ToString());
+                                        hasErrors = true;
+                                    }
+                                    else if (model.Quantidade > QtdeMaxima)
+                                    {
                                         ModelState.AddModelError("", "A QUANTIDADE MÁXIMA POR VARIANTE NÃO PODE SER MAIOR QUE: " + QtdeMaxima.ToString());
                                         hasErrors = true;
-                                        }
-                            }
-                            else                          
-                            {   //se não achou a qtde na regra, verifica se a UM é KG pra tentar achar em MT, se não..... num deu!
-                                if (model.UnidadeMedida == "KG")
-                                {
-                                    var qryQtdeMinMaxMT =
-                                        from Qtde in ctx.REGRAS_QTD_PEDIDOX
-                                        where
-                                                Qtde.TECNOLOGIA_DESTINO == model.Tecnologia
-                                            && Qtde.GRUPO_COLECAO == model.IDGrupoColecao
-                                            && Qtde.DESENHO_PRONTO == desenhoPronto
-                                            && Qtde.TIPO_PEDIDO == model.IDTipoPedido
-                                            && Qtde.UM == "MT"
-                                            && Qtde.EXCLUIDO == false
-                                        select
-                                            Qtde;
-
-                                    objMinMaxX = qryQtdeMinMaxMT.FirstOrDefault();                                 
-
-                                    if (objMinMaxX != null)
+                                    }
+                                }
+                                else
+                                {   //se não achou a qtde na regra, verifica se a UM é KG pra tentar achar em MT, se não..... num deu!
+                                    if (model.UnidadeMedida == "KG")
                                     {
-                                        QtdeMaxima = objMinMaxX.QTD_MAX_VAR;
-                                        QtdeMinima = objMinMaxX.QTD_MIN_VAR;
+                                        var qryQtdeMinMaxMT =
+                                            from Qtde in ctx.REGRAS_QTD_PEDIDOX
+                                            where
+                                                    Qtde.TECNOLOGIA_DESTINO == model.Tecnologia
+                                                && Qtde.GRUPO_COLECAO == model.IDGrupoColecao
+                                                && Qtde.DESENHO_PRONTO == desenhoPronto
+                                                && Qtde.TIPO_PEDIDO == model.IDTipoPedido
+                                                && Qtde.UM == "MT"
+                                                && Qtde.EXCLUIDO == false
+                                            select
+                                                Qtde;
 
-                                        if (model.QuantidadeConvertida < QtdeMinima)
+                                        objMinMaxX = qryQtdeMinMaxMT.FirstOrDefault();
+
+                                        if (objMinMaxX != null)
                                         {
-                                            ModelState.AddModelError("", "A QUANTIDADE MÍNIMA POR VARIANTE NÃO PODE SER MENOR QUE: " + QtdeMinima.ToString()
-                                                + " | MTs. ARTIGO: " + model.Artigo +
-                                                    " | RENDIMENTO: " + Rendimento.ToString() +
-                                                    " | TOTAL CONVERTIDO: " + QtdeConvertida.ToString() +
-                                                    " MTs");
+                                            QtdeMaxima = objMinMaxX.QTD_MAX_VAR;
+                                            QtdeMinima = objMinMaxX.QTD_MIN_VAR;
+
+                                            if (model.QuantidadeConvertida < QtdeMinima)
+                                            {
+                                                ModelState.AddModelError("", "A QUANTIDADE MÍNIMA POR VARIANTE NÃO PODE SER MENOR QUE: " + QtdeMinima.ToString()
+                                                    + " | MTs. ARTIGO: " + model.Artigo +
+                                                        " | RENDIMENTO: " + Rendimento.ToString() +
+                                                        " | TOTAL CONVERTIDO: " + QtdeConvertida.ToString() +
+                                                        " MTs");
+                                                hasErrors = true;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            ModelState.AddModelError("", "QUANTIDADES MÍNIMAS E MÁXIMAS POR VARIANTE NÃO CADASTRADO PARA ESTE ITEM. ENTRAR EM CONTATO COM DEPTO. COMERCIAL: " +
+                                                " | Tecnologia: " + model.Tecnologia.ToString() +
+                                                " | IDGrupoColecao: " + model.IDGrupoColecao +
+                                                " | desenhoPronto: " + desenhoPronto.ToString() +
+                                                " | IDTipoPedido: " + model.IDTipoPedido +
+                                                " | UnidadeMedida: " + model.UnidadeMedida +
+                                                " | Excluido: false" +
+                                                " | [Regra para item em convertido em MT]"
+                                                );
                                             hasErrors = true;
                                         }
                                     }
                                     else
                                     {
-                                        ModelState.AddModelError("", "QUANTIDADES MÍNIMAS E MÁXIMAS POR VARIANTE NÃO CADASTRADO PARA ESTE ITEM. ENTRAR EM CONTATO COM DEPTO. COMERCIAL: "+
-                                            " | Tecnologia: " + model.Tecnologia.ToString() +
-                                            " | IDGrupoColecao: " + model.IDGrupoColecao +
-                                            " | desenhoPronto: " + desenhoPronto.ToString() +
-                                            " | IDTipoPedido: " + model.IDTipoPedido +
-                                            " | UnidadeMedida: " + model.UnidadeMedida +
-                                            " | Excluido: false" +
-                                            " | [Regra para item em convertido em MT]"
-                                            );
+                                        ModelState.AddModelError("", "QUANTIDADES MÍNIMAS E MÁXIMAS POR VARIANTE NÃO CADASTRADO PARA ESTE ITEM. ENTRAR EM CONTATO COM DEPTO. COMERCIAL: " +
+                                            " Tecnologia: " + model.Tecnologia.ToString() +
+                                                " | IDGrupoColecao: " + model.IDGrupoColecao +
+                                                " | desenhoPronto: " + desenhoPronto.ToString() +
+                                                " | IDTipoPedido: " + model.IDTipoPedido +
+                                                " | UnidadeMedida: " + model.UnidadeMedida +
+                                                " | Excluido: false" +
+                                                " |  [Não encontrou na regra]"
+                                                );
                                         hasErrors = true;
                                     }
                                 }
-                                else
-                                {
-                                    ModelState.AddModelError("", "QUANTIDADES MÍNIMAS E MÁXIMAS POR VARIANTE NÃO CADASTRADO PARA ESTE ITEM. ENTRAR EM CONTATO COM DEPTO. COMERCIAL: " +
-                                        " Tecnologia: " + model.Tecnologia.ToString() +
-                                            " | IDGrupoColecao: " + model.IDGrupoColecao +
-                                            " | desenhoPronto: " + desenhoPronto.ToString() +
-                                            " | IDTipoPedido: " + model.IDTipoPedido +
-                                            " | UnidadeMedida: " + model.UnidadeMedida +
-                                            " | Excluido: false" +
-                                            " |  [Não encontrou na regra]"
-                                            );
-                                    hasErrors = true;
-                                }
+                                #endregion
                             }
-                            #endregion                            
                         }
                     }
+                    #endregion
 
                     if (hasErrors)
                     {
@@ -739,7 +749,7 @@ namespace Dalutex.Controllers
                     model.ValorTotalItem = model.Quantidade * model.Preco;
 
 
-                    if (model.Tipo != Enums.ItemType.Reserva)
+                    if ((model.Tipo != Enums.ItemType.Reserva) && (model.Tipo != Enums.ItemType.Reacabamento))
                     {
                         //adicionar valor para "Farol" ------------ oda -- 05/08/2015 -----------
                         using (var ctx = new TIDalutexContext())
@@ -752,7 +762,6 @@ namespace Dalutex.Controllers
                                 model.Farol = 0;
                         }
                     }
-
 
                     ObterPrevisaoEntrega(model);
 
@@ -771,20 +780,6 @@ namespace Dalutex.Controllers
 
                     if (model.Modo == "I")//Inclusão
                     {
-                        //todo: ver com cassiano 08/06/2016 ------------------- se adicionar item pelo "artigos indisponiveis, dá erro aki--------    
-                        //if (base.Session_Carrinho.Itens.Contains(model))
-                        //{
-                        //    ModelState.AddModelError("", "Este item já foi incluído no carrinho.");
-                        //    if (base.Session_Carrinho == null || base.Session_Carrinho.IDTipoPedido < 0)
-                        //    {
-                        //        model.ObterTipoPedido = "S";
-                        //        this.CarregarTiposPedidos(model);                                
-                        //    }
-                        //    this.CarregarTamanhosPadrao(model);
-
-                        //    return View(model);
-                        //}
-
                         if (base.Session_Carrinho.Itens.Count == 0)
                             model.NumeroSequencial = 1;
                         else
@@ -792,6 +787,9 @@ namespace Dalutex.Controllers
 
                         base.Session_Carrinho.Itens.Add(model);
 
+                        if (model.IDTipoPedido == (int)Enums.TiposPedido.BNFPROPRIO)                  //totalpaginas 
+                            return RedirectToAction("Reacabamento", "Pedido");//, new {pagina = model.Pagina});
+                        else
                         if (model.Tipo == Enums.ItemType.Estampado)// || model.Tipo != Enums.ItemType.ValidacaoReserva)
                         {
                             return RedirectToAction("Desenhos", "Pedido",
@@ -806,33 +804,12 @@ namespace Dalutex.Controllers
                         }
                         else if (model.Tipo == Enums.ItemType.ValidacaoReserva)
                         {
-                            return RedirectToAction("DesenhosValidaReserva", "Pedido",
-                                new
-                                {                                                                       
-                                    pedidoreserva = model.PedidoReserva 
-                                    //string pagina, 
-                                    //string totalpaginas                                                       
-                                });                           
+                            return RedirectToAction("DesenhosValidaReserva", "Pedido", new{pedidoreserva = model.PedidoReserva});                           
                         }
-                        // --- oda -- OK ----------------------------------------
-                        //return RedirectToAction("ArtigosDisponiveis", "Pedido",
-                        //    new
-                        //    {
-                        //        desenho = model.Desenho,
-                        //        variante = model.Variante,
-                        //        idcolecao = model.IDColecao,
-                        //        nmcolecao = model.NMColecao,
-                        //        pagina = model.Pagina,
-                        //        pedidoreserva = model.PedidoReserva,
-                        //        idvariante = model.IDVariante,
-                        //        itempedidoreserva = model.ItemPedidoReserva,
-                        //        tipo = (int)model.Tipo
-                        //    });
-
                         else if (model.Tipo == Enums.ItemType.Liso)
                             return RedirectToAction("Lisos", "Pedido", new { idcolecao = model.IDColecao, nmcolecao = model.NMColecao, pagina = model.Pagina });
                         else if (model.Tipo == Enums.ItemType.Reserva)
-                            return RedirectToAction("ItensParaReserva", "Pedido", new { pagina = model.Pagina });
+                            return RedirectToAction("ItensParaReserva", "Pedido", new { pagina = model.Pagina });                                                
                         else
                             return RedirectToAction("Index", "Home");                      
                     }
@@ -990,8 +967,6 @@ namespace Dalutex.Controllers
                     if (model.TamanhoPadrao == null || model.TamanhoPadrao.Count() == 0)
                     {
                         model.TamanhoPadrao = ctxTI.REGRA_PADRAO.Where(x => x.STATUS == true && x.TIPO_PRODUTO == "A" &&
-                            //x.TECNOLOGIA == "X" &&  
-                            //x.ARTIGO == null &&
                                                                             x.UM == model.UnidadeMedida
                                                                        ).OrderByDescending(x => x.PADRAO).ToList();
                     }
@@ -1001,7 +976,7 @@ namespace Dalutex.Controllers
 
         private void ObterPrevisaoEntrega(InserirNoCarrinhoViewModel model)
         {
-            if (model.Tipo != Enums.ItemType.Reserva)
+            if ((model.Tipo != Enums.ItemType.Reserva) && (model.Tipo != Enums.ItemType.Reacabamento))
             {
                 model.NumeroMaximoDiasDataSolicitacao = int.Parse(ConfigurationManager.AppSettings["DIAS_DATA_SOLICITACAO"]);
 
@@ -3128,7 +3103,14 @@ namespace Dalutex.Controllers
 
             using(DalutexContext ctxDalutex = new DalutexContext())
             {
-                model.TiposPedido = ctxDalutex.COML_TIPOSPEDIDOS.Where(x => tiposPedidos.Contains(x.TIPOPEDIDO)).ToList();
+                if (!model.EhReacabamento)
+                {
+                    model.TiposPedido = ctxDalutex.COML_TIPOSPEDIDOS.Where(x => tiposPedidos.Contains(x.TIPOPEDIDO)).ToList();
+                }
+                else
+                {
+                    model.TiposPedido = ctxDalutex.COML_TIPOSPEDIDOS.Where(x => x.TIPOPEDIDO == 2).ToList();
+                }
             }            
         }
 
@@ -3462,22 +3444,24 @@ namespace Dalutex.Controllers
             }
 
             if (string.IsNullOrWhiteSpace(pagina))
-            { model.Pagina = 1; }
-            else{ model.Pagina = int.Parse(pagina);}
-
-            if( model.FiltroReduzido == null &&
-                model.FiltroCodigo == null &&
-                model.FiltroArtigo == null &&
-                model.FiltroCor == null &&
-                model.FiltroTecnologia == null &&
-                model.FiltroDesenho == null &&
-                model.FiltroVariante == null)
-            {
-                return View();
+            { 
+                model.Pagina = 1; 
+            }
+            else
+            { 
+                model.Pagina = int.Parse(pagina);
+                this.ObterItensReacabamento(model);
             }
 
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Reacabamento(ReacabamentoViewModel model)
+        {
+            model.Pagina = 1;
             this.ObterItensReacabamento(model);
-            
+
             return View(model);
         }
 
@@ -3489,13 +3473,21 @@ namespace Dalutex.Controllers
             {
                 List<VMASCARAPRODUTOACABADO> result = null;
 
+                int iReduzido = 0;
+
+                if (!string.IsNullOrWhiteSpace(model.FiltroReduzido)) 
+                {
+                    int.TryParse(model.FiltroReduzido, out iReduzido);
+                }
+       
+
                 if (model.TotalPaginas == 0)
                 {
                     result = ctx.VMASCARAPRODUTOACABADO
                                 .Where(
                                         x =>
                                         (
-                                            model.FiltroReduzido == null || x.CODIGO_REDUZIDO.Equals(model.FiltroReduzido)
+                                            (iReduzido == 0 || x.CODIGO_REDUZIDO.Equals(iReduzido))
                                             &&
                                             (model.FiltroCodigo == null || x.COD_COMERCIAL.Contains(model.FiltroCodigo.ToUpper()))
                                             &&
@@ -3509,7 +3501,7 @@ namespace Dalutex.Controllers
                                             &&
                                             (model.FiltroVariante == null || x.VARIANTE.StartsWith(model.FiltroVariante.ToUpper()))
                                         )                                 
-                                ).OrderByDescending(x => x.COD_COMERCIAL)
+                                ).OrderByDescending(x => x.CODIGO_REDUZIDO)
                                 .ToList();
 
                     decimal dTotal = result.Count / (decimal)iItensPorPagina;
@@ -3529,7 +3521,8 @@ namespace Dalutex.Controllers
                     model.ListaItensReacabamento = ctx.VMASCARAPRODUTOACABADO
                                 .Where(
                                     x =>
-                                    (model.FiltroReduzido == null || x.CODIGO_REDUZIDO.Equals(model.FiltroReduzido)
+                                    (
+                                        (iReduzido == 0 || x.CODIGO_REDUZIDO.Equals(iReduzido))
                                         &&
                                         (model.FiltroCodigo == null || x.COD_COMERCIAL.Contains(model.FiltroCodigo.ToUpper()))
                                         &&
@@ -3542,15 +3535,12 @@ namespace Dalutex.Controllers
                                         (model.FiltroDesenho == null || x.DESENHO.StartsWith(model.FiltroDesenho.ToUpper()))
                                         &&
                                         (model.FiltroVariante == null || x.VARIANTE.StartsWith(model.FiltroVariante.ToUpper())))
-                                ).OrderByDescending(x => x.COD_COMERCIAL)
+                                ).OrderBy(x => x.COD_COMERCIAL)
                                 .Skip((model.Pagina - 1) * iItensPorPagina)
                                 .Take(iItensPorPagina)
                                 .ToList();
 
-                    if (result.Count() == 0)
-                    {
-                        ModelState.AddModelError("", "Item nao encontrado.");
-                    }
+                    //if (result.Count() == 0){ModelState.AddModelError("", "Item nao encontrado.");}
                 }
             }
         }

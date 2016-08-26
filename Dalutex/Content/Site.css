@@ -306,3 +306,8 @@ a.list-group-item.warning{
 .list-group.panel>.list-group-item.indisponiveis{
     background-color:tomato!important;
 }
+
+
+.well {
+   background-color: rgba(245, 245, 245, 0.4);   
+}

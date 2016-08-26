@@ -76,10 +76,20 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<LINK_GRUPO_COND_PGTO> LINK_GRUPO_COND_PGTO { get; set; }
         public virtual DbSet<VW_CUS_CONS_TAB_PRECO> VW_CUS_CONS_TAB_PRECO { get; set; }
         public virtual DbSet<TIPO_PEDIDO_USUARIO> TIPO_PEDIDO_USUARIO { get; set; }
+        public virtual DbSet<VW_CLIE_OPER_TRINGULAR> VW_CLIE_OPER_TRINGULAR { get; set; }
+
         
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<VW_CLIE_OPER_TRINGULAR>()
+                .Property(e => e.ID_)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_CLIE_OPER_TRINGULAR>()
+                .Property(e => e.COD_CLIENTE)
+                .IsUnicode(false);
+
             modelBuilder.Entity<VW_CUS_CONS_TAB_PRECO>()
                 .Property(e => e.ID_TABELA_PRECO_ITEM)
                 .HasPrecision(38, 0);

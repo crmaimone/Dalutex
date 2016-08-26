@@ -175,6 +175,7 @@
     <Compile Include="Models\DataModels\VW_ARTIGOS_DISPONIVEIS_NEW.cs" />
     <Compile Include="Models\DataModels\VW_ARTIGOS_INATIVOS.cs" />
     <Compile Include="Models\DataModels\VW_CARACT_DESENHOS_NEW.cs" />
+    <Compile Include="Models\DataModels\VW_CLIE_OPER_TRINGULAR.cs" />
     <Compile Include="Models\DataModels\VW_CUS_CONS_TAB_PRECO.cs" />
     <Compile Include="Models\DataModels\VW_DESENHOS_POR_COL_DESENV.cs" />
     <Compile Include="Models\DataModels\VW_EMAILS.cs" />

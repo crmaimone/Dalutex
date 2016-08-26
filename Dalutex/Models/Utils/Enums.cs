@@ -30,7 +30,8 @@ namespace Dalutex.Models
             Reserva = 3,
             ValidacaoReserva = 4,
             ProntaEntrega = 5,
-            DesenhosSemImagem = 6
+            DesenhosSemImagem = 6,
+            Reacabamento = 7
         }
 
         public enum CondicoesPagamento

@@ -11,10 +11,11 @@
     {
         <div class="panel panel-default">
             <h5>
-                <strong>Artigo:</strong>&nbsp;@Model.Artigo
+                  <strong>Artigo:</strong>&nbsp;@Model.Artigo
                 | <strong>Tecnologia:</strong>&nbsp;@Model.TecnologiaPorExtenso
                 | <strong>Desenho:</strong>&nbsp;@Model.Desenho
                 | <strong>Variante:</strong>&nbsp;@Model.Variante
+                || <strong>Tipo de Pedido:</strong>&nbsp;@Model.IDTipoPedido |
             </h5>
         </div>
     }
@@ -89,7 +90,7 @@
                                 <div class="form-group">
                                     @Html.LabelFor(x => x.Pecas, new { @class = "col-md-4 control-label" })
                                     <div class="col-md-8">
-                                        @if (Model.IDTipoPedido == 0)
+                                        @if (Model.IDTipoPedido != (int)Enums.TiposPedido.AMOSTRA && Model.IDTipoPedido != (int)Enums.TiposPedido.PILOTAGEM)
                                         {
                                             @Html.TextBoxFor(x => x.Pecas, new { id = "txtPecas", @class = "form-control", @placeholder = "Qtde de Peças" })
                                         }
@@ -279,14 +280,17 @@
                 }
 
                 lstTiposPedido_Change = function () {
-                    if ($("#lstTiposPedido > option:selected").attr("value") != "0") {
+                    //if ($("#lstTiposPedido > option:selected").attr("value") != "0")   //diferente de venda.... esse comportamento deve ser para tipo 6 ou 7,
+                    if (($("#lstTiposPedido > option:selected").attr("value") == "6") || ($("#lstTiposPedido > option:selected").attr("value") == "7"))
+                    {
                         $("#txtPecas").val("0")
                         $("#txtPecas").prop('disabled', true);
                         $("#txtQuantidade").prop('disabled', false);
                         $("label[for=IDTamanhoPadrao]").hide();
                         $("#lstTamanhoPadrao").selectpicker('hide');
                     }
-                    else {
+                    else                    
+                    {
                         $("#txtQuantidade").val("0")
                         $("#txtPecas").prop('disabled', false);
                         $("#txtQuantidade").prop('disabled', true);

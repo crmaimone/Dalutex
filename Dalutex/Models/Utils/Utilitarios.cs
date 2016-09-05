@@ -23,7 +23,6 @@ namespace Dalutex.Models.Utils
                         mail.To.Add(destinatario);
                 }
                     
-
                 if(cc != null)
                 {
                     string[] copiados = cc.Trim().Split(separator);

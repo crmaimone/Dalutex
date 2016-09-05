@@ -127,6 +127,8 @@ namespace Dalutex.Controllers
 
                     using (var ctx = new TIDalutexContext())
                     {
+                        sClienteEntrega = sClienteEntrega.PadLeft(6, '0');
+    
                         bool? EhOpTriangular = ctx.VW_CLIE_OPER_TRINGULAR.Where(x => x.COD_CLIENTE.Trim() == sClienteEntrega).First().OPERACAO_TRIANGULAR;
 
                         if (EhOpTriangular == true)
@@ -225,7 +227,6 @@ namespace Dalutex.Controllers
             return View(model);
         }
 
-
         public ActionResult ClientesFatura(string IDClienteFatura)
         {
             PesquisaClientesFaturaViewModel model = new PesquisaClientesFaturaViewModel();
@@ -271,6 +272,9 @@ namespace Dalutex.Controllers
             PesquisaClientesEntregaViewModel model = new PesquisaClientesEntregaViewModel();
 
             string sClienteEntrega = base.Session_Carrinho.ClienteFatura.ID_CLIENTE.ToString();
+
+            //PadLeft(5, '0');
+            sClienteEntrega = sClienteEntrega.PadLeft(6, '0');
 
             using (var ctx = new TIDalutexContext())
             {
@@ -355,7 +359,6 @@ namespace Dalutex.Controllers
         {
             using (var ctx = new DalutexContext())
             {
-                //int iIDTransportadora = base.Session_Carrinho.Transportadora.IDTRANSPORTADORA;
                 model.Transportadoras = ctx.TRANSPORTADORAS.Where(x => x.NOME.Contains(model.Filtro.ToUpper())).OrderBy(x => x.NOME).ToList();
             }
             return View(model);
@@ -490,8 +493,6 @@ namespace Dalutex.Controllers
             model.Studio = studio;
             model.Desenho = desenho;
 
-            //ViewBag.CodStudio = cod_studio;
-
             return View(model);
         }
 
@@ -623,7 +624,6 @@ namespace Dalutex.Controllers
         {
             return View();
         }
-
 
         public ActionResult RascunhoPedido(string pedido, string cliente, string representante, string pagina, string totalpaginas)
         {

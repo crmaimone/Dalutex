@@ -570,7 +570,7 @@ namespace Dalutex.Controllers
                         {
                             using (var ctx = new TIDalutexContext())
                             {
-                                REGRAS_QTD_PEDIDO objMinMax = null;
+                                //REGRAS_QTD_PEDIDO objMinMax = null;
                                 REGRAS_QTD_PEDIDOX objMinMaxX = null;
                                 int IDColecao = int.Parse(model.IDColecao);
 
@@ -1469,39 +1469,7 @@ namespace Dalutex.Controllers
                                                                                              consolidado.Sum(s => s.QuantidadeConvertida))
                                                                                              ).ToList();
 
-                                //List<KeyValuePair<string, decimal>> lstGrupoDesenho = base.Session_Carrinho.Itens
-                                //    .GroupBy(g => g.Desenho + g.UnidadeMedida + g.Tecnologia.Substring(0, 1) + g.IDGrupoColecao + g.TecnologiaOriginal)
-                                //    .Select(consolidado => new KeyValuePair<string, decimal>(consolidado.First().Desenho + 
-                                //                                                             consolidado.First().UnidadeMedida + 
-                                //                                                             consolidado.First().Tecnologia.Substring(0, 1) + 
-                                //                                                             consolidado.First().IDGrupoColecao + 
-                                //                                                             consolidado.First().TecnologiaOriginal, 
-                                //                                                             consolidado.Sum(s => s.Quantidade))
-                                //                                                             ).ToList();
-
-                                //List<KeyValuePair<string, decimal>> lstGrupoConv = base.Session_Carrinho.Itens
-                                //    .GroupBy(g => g.Desenho + 
-                                //                  g.Tecnologia.Substring(0, 1) + 
-                                //                  g.IDGrupoColecao)
-                                //    .Select(consolidado => new KeyValuePair<string, decimal>(consolidado.First().Desenho +                                                                                             
-                                //                                                             consolidado.First().Tecnologia.Substring(0, 1) +
-                                //                                                             consolidado.First().IDGrupoColecao,
-                                //                                                             consolidado.Sum(s => s.QuantidadeConvertida))
-                                //                                                             ).ToList();
-
-                                //List<KeyValuePair<string, decimal>> lstGrupoDesArtigo = base.Session_Carrinho.Itens
-                                //    .GroupBy(g => g.Desenho +
-                                //                  g.Tecnologia.Substring(0, 1))
-                                //    .Select(consolidado => new KeyValuePair<string, decimal>(consolidado.First().Desenho +
-                                //                                                             consolidado.First().Tecnologia.Substring(0, 1),
-                                //                                                             consolidado.Sum(s => s.QuantidadeConvertida))
-                                //                                                             ).ToList();
-
                                 bool isValidDes = true;
-
-                                //decimal MinValue = 0;
-                                //decimal MaxValue = 999999;
-
                                 decimal QtdeMaxima = 0;
                                 decimal QtdeMinima = 999999;
                    
@@ -1513,22 +1481,18 @@ namespace Dalutex.Controllers
 
                                 decimal idGrCol = 0;
 
-
-                                //oda-- 19/05/2016 --- mudanca na regra de qtde pela tabela nova --------------------------------------------------------------------------
+                                #region nova regra validação em MT 
+                                //oda-- 19/05/2016 --- mudanca na regra de qtde pela tabela nova Validação sempre em MTs ----------------------------------------------------------------
                                 if (ConfigurationManager.AppSettings["NOVA_REGRA_QTDE_ATIVA"] == "1")
-                                {
-                                    //decimal QtdeConvertida = 0;
+                                {                                    
                                     foreach (KeyValuePair<string, decimal> item in lstGrupoDesenho)
                                     {
                                         if (item.Key.Substring(4, 1) != "L")
                                         {
-                                            decimal? objDesenhoPronto = 0;
-                                            //decimal Rendimento = 0;
+                                            decimal? objDesenhoPronto = 0;                                           
                                             bool desenhoPronto = false;
                                             idGrCol = decimal.Parse(item.Key.Substring(5, 1));
-                                            // DESENHO = item.Key.Substring(0, 4) ;
-                                            // TECNOLOGIA = item.Key.Substring(5, 1) ;
-                                            // 
+
                                             try { objDesenhoPronto = ctxTI.VW_DESENHOS_POR_COLECAO.Where(x => x.DESENHO == item.Key.Substring(0, 4)).FirstOrDefault().DESENHO_PRONTO; }
                                             catch { objDesenhoPronto = null; }
 
@@ -1570,206 +1534,15 @@ namespace Dalutex.Controllers
                                                                   " MTs");
                                                     hasErrors = true;
                                                 }
-                                            }
-                                            //else
-                                            //{
-                                            //    //se não achou a qtde na regra, verifica se a UM é KG pra tentar achar em MT, se não..... num deu!
-                                            //    if (item.Key.Substring(4, 2) == "KG")
-                                            //    {
-                                            //        var qryQtdeMinMaxMT =
-                                            //            from Qtde in ctxTI.REGRAS_QTD_PEDIDOX
-                                            //            where
-                                            //                   Qtde.TECNOLOGIA_DESTINO == item.Key.Substring(8, 1)
-                                            //                && Qtde.GRUPO_COLECAO == idGrCol
-                                            //                && Qtde.DESENHO_PRONTO == desenhoPronto
-                                            //                && Qtde.TIPO_PEDIDO == model.IDTipoPedido
-                                            //                && Qtde.UM == "MT"
-                                            //                && Qtde.EXCLUIDO == false
-                                            //            select
-                                            //                Qtde;
-
-                                            //        objMinMaxX = qryQtdeMinMaxMT.FirstOrDefault();
-
-                                            //        string vArtigo = "";
-                                            //        string vTec = "";
-
-                                            //        foreach (var itemDesArt in lstGrupoDesArtigo)
-                                            //        {
-                                            //            if (itemDesArt.Key.Substring(0, 4) == item.Key.Substring(0, 4))//comparar desenho na tecnologia
-                                            //            {
-                                            //                vArtigo = itemDesArt.Key.Substring(5, 4);
-                                            //                vTec = itemDesArt.Key.Substring(4, 1);
-                                            //                break;
-                                            //            }
-                                            //        }
-
-                                            //        QtdeConvertida = item.Value;
-                                            //        Rendimento = ctxTI.Database.SqlQuery<decimal>("select dalutex.Pega_Rendimento_Real(:p0, :p1) from dual", vArtigo, vTec).FirstOrDefault();
-                                            //        QtdeConvertida = item.Value * Rendimento;
-
-                                            //        if (objMinMaxX != null)
-                                            //        {
-                                            //            QtdeMaxima = objMinMaxX.QTD_MAX_DES;
-                                            //            QtdeMinima = objMinMaxX.QTD_MIN_DES;
-
-                                            //            if (QtdeConvertida < QtdeMinima)
-                                            //            {
-                                            //                ModelState.AddModelError("", "A QUANTIDADE MÍNIMA POR DESENHO NÃO PODE SER MENOR QUE: " + QtdeMinima.ToString() +
-                                            //                      " | item: " + item.Key +
-                                            //                      " | MTs. ARTIGO: " + vArtigo +
-                                            //                      " | RENDIMENTO: " + Rendimento.ToString() +
-                                            //                      " | TOTAL CONVERTIDO: " + QtdeConvertida.ToString() +
-                                            //                      " MTs");
-                                            //                hasErrors = true;
-                                            //            }
-                                            //        }
-                                            //        else
-                                            //        {
-                                            //            ModelState.AddModelError("", "QUANTIDADES MÍNIMAS E MÁXIMAS POR DESENHO NÃO CADASTRADO PARA ESTE ITEM. ENTRAR EM CONTATO COM DEPTO. COMERCIAL: " +
-                                            //                " | item: " + item.Key +
-                                            //                " | Tecnologia: " + vTec +
-                                            //                " | IDGrupoColecao: " + idGrCol +
-                                            //                " | desenhoPronto: " + desenhoPronto.ToString() +
-                                            //                " | IDTipoPedido: " + model.IDTipoPedido +
-                                            //                " | UnidadeMedida: UM" +
-                                            //                " | Excluido: false" +
-                                            //                " | [Regra para item em convertido em MT]"
-                                            //                );
-                                            //            hasErrors = true;
-                                            //        }
-                                            //    }
-                                            //    else
-                                            //    {
-                                            //        ModelState.AddModelError("", "QUANTIDADES MÍNIMAS E MÁXIMAS POR DESENHO NÃO CADASTRADO PARA ESTE ITEM. ENTRAR EM CONTATO COM DEPTO. COMERCIAL: " +
-                                            //                " | item: " + item.Key +
-                                            //                " | Tecnologia: " + item.Key.Substring(4, 1) +
-                                            //                " | IDGrupoColecao: " + idGrCol +
-                                            //                " | desenhoPronto: " + desenhoPronto.ToString() +
-                                            //                " | IDTipoPedido: " + model.IDTipoPedido +
-                                            //                " | UnidadeMedida: " + item.Key.Substring(4, 2) +
-                                            //                " | Excluido: false" +
-                                            //                " |  [Não encontrou na regra]"
-                                            //                );
-                                            //        hasErrors = true;
-                                            //    }
-                                            //}
+                                            }                                            
                                         }
                                     }
                                 }
-                                else
-                                {
-                                    hasErrors = true;
-
-                                #region Regra antiga desabilitada CONV
-                                ////oda-- 27/04/2016 --- validar apenas o convencional -----------------------------------------------------------------------------------
-                                //foreach (KeyValuePair<string, decimal> item in lstGrupoConv)
+                                //else
                                 //{
-                                //    if (item.Key.Substring(4, 1) == "C")
-                                //    {
-                                //        if (item.Value < int.Parse(ConfigurationManager.AppSettings["QTDE_MINIMA_DESENHO_CONV"])) //TODO: hardcode!!! colocar em parametros ------------------------------------------------------
-                                //        {
-                                //            ModelState.AddModelError("", "Quantidade mínima para o desenho [" + item.Key.Substring(0, 4) +
-                                //                                         "] na tecnologia [Convencional] é de " + ConfigurationManager.AppSettings["QTDE_MINIMA_DESENHO_CONV"] + " MTs");//TODO: hardcode!!! colocar em parametros
-                                //            hasErrors = true;
-                                //        }
-                                //    }
-
-                                //    if (hasErrors)
-                                //    {
-                                //        this.ConclusaoPedidoCarregarEscolhas(model);
-                                //        return View(model);
-                                //    }
-                                //}
+                                //    hasErrors = true;
+                                //} 
                                 #endregion
-
-                                #region Regra antiga desabilitada de DIGITAL
-                                //foreach (KeyValuePair<string, decimal> item in lstGrupoDesenho)
-                                //{
-                                //    if ((item.Key.Substring(6, 1) != "L") && (item.Key.Substring(6, 1) != "C"))
-                                //    {                                    
-                                //        idGrCol = decimal.Parse(item.Key.Substring(7, 1));
-
-                                //        //procura as qtdes max e min, pela regra 2.1: [TEC_ORIGEM + TEC_DESTI + GRUPO_COL + TIPO_PED + UM]
-                                //        var qryQtdeMinMax =
-                                //            from Qtde in ctxTI.REGRAS_QTD_PEDIDO
-                                //            where
-                                //                   Qtde.TECNOLOGIA_DESTINO == item.Key.Substring(6, 1)
-                                //                && (Qtde.TECNOLOGIA == item.Key.Substring(8, 1) || Qtde.TECNOLOGIA == "X") 
-                                //                && Qtde.GRUPO_COLECAO == idGrCol
-                                //                && Qtde.TIPO_PEDIDO == model.IDTipoPedido
-                                //                && Qtde.UM == item.Key.Substring(4, 2)
-                                //                && Qtde.EXCLUIDO == false
-                                //            select
-                                //                Qtde;
-
-                                //         objMinMax = qryQtdeMinMax.FirstOrDefault();
-                                        
-                                //         if (objMinMax != null)
-                                //         {
-                                //             MaxValue = objMinMax.QTD_MAX_DES;
-                                //             MinValue = objMinMax.QTD_MIN_DES;
-                                //         }
-                                //         else
-                                //         {
-                                //             //procura as qtdes max e min, pela regra 2.2: [TEC_DESTI + TEC_DESTI+ TIPO_PED + UM]
-                                //             var qryQtdeMinMax2 =
-                                //                 from Qtde in ctxTI.REGRAS_QTD_PEDIDO
-                                //                 where
-                                //                        Qtde.TECNOLOGIA_DESTINO == item.Key.Substring(6, 1)
-                                //                     && (Qtde.TECNOLOGIA == item.Key.Substring(8, 1) || Qtde.TECNOLOGIA == "X")   
-                                //                     && Qtde.GRUPO_COLECAO == 0
-                                //                     && Qtde.TIPO_PEDIDO == model.IDTipoPedido
-                                //                     && Qtde.UM == item.Key.Substring(4, 2)
-                                //                     && Qtde.EXCLUIDO == false
-                                //                 select
-                                //                     Qtde;
-
-                                //                objMinMax = qryQtdeMinMax2.FirstOrDefault();
-
-                                //                if (objMinMax != null)
-                                //                {
-                                //                    MaxValue = objMinMax.QTD_MAX_DES;
-                                //                    MinValue = objMinMax.QTD_MIN_DES;
-                                //                }
-                                //                else
-                                //                {
-                                //                        //procura as qtdes max e min, pela regra 2.3: [TEC_DESTI + TIPO_PED + UM]
-                                //                        var qryQtdeMinMax3 =
-                                //                            from Qtde in ctxTI.REGRAS_QTD_PEDIDO
-                                //                            where
-                                //                                Qtde.TECNOLOGIA_DESTINO == item.Key.Substring(6, 1)
-                                //                                && Qtde.TIPO_PEDIDO == model.IDTipoPedido
-                                //                                && Qtde.UM == item.Key.Substring(4, 2)
-                                //                                && Qtde.EXCLUIDO == false
-                                //                            select
-                                //                                Qtde;
-
-                                //                        objMinMax = qryQtdeMinMax3.FirstOrDefault();
-
-                                //                        if (objMinMax != null)
-                                //                        {
-                                //                            MaxValue = objMinMax.QTD_MAX_DES;
-                                //                            MinValue = objMinMax.QTD_MIN_DES;
-                                //                        }
-                                //                }
-                                //        }                                                                      
-
-                                //        //CONCLUSÃO DE VALIDAÇÃO POR DESENHO ----------
-                                //        if (item.Value < MinValue)
-                                //        {
-                                //            ModelState.AddModelError("", "Quantidade mínima em [" + item.Key.Substring(4, 2) + "] para o desenho [ " + item.Key.Substring(0, 4) + "] em tec. [ "  + item.Key.Substring(6, 1) + " ] é " + MinValue.ToString());
-                                //            isValidDes = false;
-                                //        }
-                                //        else if (item.Value > MaxValue)
-                                //             {
-                                //                 ModelState.AddModelError("", "Quantidade Máxima em [" + item.Key.Substring(4, 2) + "] para o desenho [" + item.Key.Substring(0, 4) + "] em tec. [ " + item.Key.Substring(6, 1) + " ] é " + MinValue.ToString());
-                                //                    isValidDes = false;
-                                //             }
-                                //    }
-
-                                //}
-                                #endregion
-                                } 
                                 if (!isValidDes)
                                 {
                                     hasErrors = true;
@@ -1777,7 +1550,6 @@ namespace Dalutex.Controllers
                             }
                         }                                                                       
                     // -- oda -- 05/112015 --- regra de validação de qtde por desenho ------------------------------------------------------------------------------------------------------------------
-
                     }
 
                     if (hasErrors)
@@ -2580,7 +2352,7 @@ namespace Dalutex.Controllers
                              where (p.PEDIDO == dFiltroPedido || dFiltroPedido <= 0)
                                 && (model.FiltroCliente == null || p.CLIENTE.ToUpper().Contains(model.FiltroCliente))
                                 && (model.FiltroRepresentante == null || p.REPRESENTANTE.ToUpper().Contains(model.FiltroRepresentante))
-                                && (model.FiltroData == false || p.DATA_EMISSAO >= model.FiltroDataInicial && p.DATA_EMISSAO <= model.FiltroDataFinal)
+                                && ( (model.FiltroData == false) || (p.DATA_EMISSAO >= model.FiltroDataInicial && p.DATA_EMISSAO <= model.FiltroDataFinal) )
                            orderby p.DATA_EMISSAO descending  
                             select p).ToList();
 

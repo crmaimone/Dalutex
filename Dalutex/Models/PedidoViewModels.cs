@@ -430,6 +430,8 @@ namespace Dalutex.Models
         public string Restricao{ get; set; }
 
         public bool EhReacabamento { get; set; }
+
+        public string DescTipoPedido { get; set; }
     }
 
     public class AmpliacaoViewModel

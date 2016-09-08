@@ -121,7 +121,7 @@ namespace Dalutex.Controllers
                 {
                     return RedirectToAction("ClientesEntrega");
                 }                                                              
-                else if  ( (base.Session_Carrinho.ClienteFatura != null) && (base.Session_Carrinho.ClienteEntrega != null) )
+                else if  ( (base.Session_Carrinho.ClienteFatura != null) && (base.Session_Carrinho.ClienteEntrega != null))
                 {
                     string sClienteEntrega = base.Session_Carrinho.ClienteFatura.ID_CLIENTE.ToString();
 

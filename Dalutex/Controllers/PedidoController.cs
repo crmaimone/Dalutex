@@ -381,6 +381,11 @@ namespace Dalutex.Controllers
             if (base.Session_Carrinho != null)
             {
                 model.IDTipoPedido = base.Session_Carrinho.IDTipoPedido;
+
+                using (var ctx = new DalutexContext())
+                {
+                    model.DescTipoPedido = ctx.COML_TIPOSPEDIDOS.Find(model.IDTipoPedido).DESCRICAO.Trim();
+                }
                
                 ViewBag.ItensCarrinho = base.Session_Carrinho.Itens;
                

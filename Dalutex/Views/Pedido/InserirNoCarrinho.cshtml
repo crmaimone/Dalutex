@@ -15,7 +15,7 @@
                 | <strong>Tecnologia:</strong>&nbsp;@Model.TecnologiaPorExtenso
                 | <strong>Desenho:</strong>&nbsp;@Model.Desenho
                 | <strong>Variante:</strong>&nbsp;@Model.Variante
-                || <strong>Tipo de Pedido:</strong>&nbsp;@Model.IDTipoPedido |
+                || <strong>Tipo de Pedido:</strong>&nbsp;@Model.DescTipoPedido
             </h5>
         </div>
     }
@@ -26,6 +26,7 @@
                 <strong>Artigo:</strong>&nbsp;@Model.Artigo
                 |<strong>Tecnologia:</strong>&nbsp;@Model.TecnologiaPorExtenso
                 |<strong>Cor:</strong>&nbsp;@Model.Cor
+                || <strong>Tipo de Pedido:</strong>&nbsp;@Model.DescTipoPedido                
             </h5>
         </div>
     }
@@ -74,8 +75,8 @@
                                         </h5>
                                     </div>
                                 }
-                                
-                                if ((Model.IDTipoPedido != (int)Enums.TiposPedido.PILOTAGEM) && (Model.IDTipoPedido != (int)Enums.TiposPedido.AMOSTRA) && (Model.IDTipoPedido != (int)Enums.TiposPedido.BNFPROPRIO))
+
+                                if ((Model.IDTipoPedido != (int)Enums.TiposPedido.PILOTAGEM) && (Model.IDTipoPedido != (int)Enums.TiposPedido.AMOSTRA))// && (Model.IDTipoPedido != (int)Enums.TiposPedido.BNFPROPRIO)
                                 {
                                     <div class="form-group">
                                         @Html.LabelFor(x => x.IDTamanhoPadrao, new { @class = "col-md-4 control-label" })
@@ -90,7 +91,7 @@
                                 <div class="form-group">
                                     @Html.LabelFor(x => x.Pecas, new { @class = "col-md-4 control-label" })
                                     <div class="col-md-8">
-                                        @if ( (Model.IDTipoPedido != (int)Enums.TiposPedido.AMOSTRA && Model.IDTipoPedido != (int)Enums.TiposPedido.PILOTAGEM) && (Model.IDTipoPedido != (int)Enums.TiposPedido.BNFPROPRIO) )
+                                        @if ((Model.IDTipoPedido != (int)Enums.TiposPedido.AMOSTRA && Model.IDTipoPedido != (int)Enums.TiposPedido.PILOTAGEM))//&& (Model.IDTipoPedido != (int)Enums.TiposPedido.BNFPROPRIO) 
                                         {
                                             @Html.TextBoxFor(x => x.Pecas, new { id = "txtPecas", @class = "form-control", @placeholder = "Qtde de Peças" })
                                         }
@@ -107,7 +108,8 @@
                                 <div class="form-group">
                                     @Html.LabelFor(x => x.Quantidade, new { @class = "col-md-4 control-label", id = "lblQuantidade" })
                                     <div class="col-md-8">
-                                        @if (Model.IDTipoPedido == 0)
+                                        @*@if (Model.IDTipoPedido == 0)*@
+                                        @if ((Model.IDTipoPedido != (int)Enums.TiposPedido.AMOSTRA && Model.IDTipoPedido != (int)Enums.TiposPedido.PILOTAGEM))
                                         {
                                             @Html.TextBoxFor(x => x.Quantidade, new { id = "txtQuantidade", disabled = "disabled", @class = "form-control" })
                                         }

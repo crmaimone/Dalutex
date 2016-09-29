@@ -91,13 +91,34 @@
                                                 <td><a href="@Url.Action("TipoAtendimento", "Cadastro")" class="btn btn-default btn"><span class="glyphicon glyphicon-pencil"></span> </a></td>
                                                 <td>@Model.TipoAtendimento.DESCRI_ATEND</td>
                                             </tr>
+                                            
+                                            if (Model.IDTipoPedido == (int)Enums.TiposPedido.ESPECIAL)
+                                            {                                                                                            
+                                                <tr>
+                                                    <td>@Html.LabelFor(x => x.NFRefat, new { @class = "control-label" }):&nbsp;</td>
+                                                    <td colspan ="2">
+                                                        @Html.TextBoxFor(x => x.NFRefat, new { @class = "form-control", @id = "txtNFRefat", @value = Model.NFRefat})
+                                                        @Html.ValidationMessageFor(x => x.NFRefat, "", new { @class = "text-danger" })
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>@Html.LabelFor(x => x.PedidoRefat, new { @class = "control-label" }):&nbsp;</td>
+                                                    <td colspan="2">
+                                                        @Html.TextBoxFor(x => x.PedidoRefat, new { @class = "form-control", @id = "txtPedidoRefat", @value = Model.PedidoRefat })
+                                                        @Html.ValidationMessageFor(x => x.PedidoRefat, "", new { @class = "text-danger" })
+                                                    </td>
+                                                </tr>                                            
+                                            }
+
                                             <tr>
                                                 <td>@Html.LabelFor(x => x.PedidoCliente, new { @class = "control-label" }):&nbsp;</td>
-                                                <td colspan ="2">
+                                                <td colspan="2">
                                                     @Html.TextBoxFor(x => x.PedidoCliente, new { @class = "form-control", @id = "txtPedidoCliente", @value = Model.PedidoCliente.GetValueOrDefault().ToString() })
                                                     @Html.ValidationMessageFor(x => x.PedidoCliente, "", new { @class = "text-danger" })
                                                 </td>
                                             </tr>
+
                                             <tr>
                                                 <td>@Html.LabelFor(x => x.Observacoes, new { @class = "control-label" }):&nbsp;</td>
                                                 <td colspan="2">
@@ -236,12 +257,43 @@
                     });
                 }
 
+                obterPedidoRefat = function (value) {
+                    var $txtNFRefat = $('#txtNFRefat');
+                    if ($txtNFRefat.val())
+                    {
+                        $.ajax({
+                            type: 'GET',
+                            url: '@Url.Action("obterPedidoRefat", "Pedido")',
+                            data: 'nf=' + $txtNFRefat.val(),
+                            success: function (result) {
+                                $('#txtPedidoRefat').val(result);
+                            }
+                        });
+                    }
+                }
+
+                obterNFRefat = function (value) {
+                    var $txtPedidoRefat = $('#txtPedidoRefat');
+                    if ($txtPedidoRefat.val()) {
+                        $.ajax({
+                            type: 'GET',
+                            url: '@Url.Action("obterNFRefat", "Pedido")',
+                            data: 'pedido=' + $txtPedidoRefat.val(),
+                            success: function (result) {
+                                $('#txtNFRefat').val(result);
+                            }
+                        });
+                    }
+                }
+
                 // public API
                 return {
                     lstCanais_Change: lstCanais_Change,
                     currencyFormatter: currencyFormatter,
                     dateFormatter: dateFormatter,
-                    salvarComplemento: salvarComplemento
+                    salvarComplemento: salvarComplemento,
+                    obterNFRefat: obterNFRefat,
+                    obterPedidoRefat: obterPedidoRefat
                 };
             })();
 
@@ -269,6 +321,9 @@
 
                 $('#txtPedidoCliente').focusout(scriptWrapper.salvarComplemento);
                 $('#txtObservacoes').focusout(scriptWrapper.salvarComplemento);
+
+                $('#txtPedidoRefat').focusout(scriptWrapper.obterNFRefat);
+                $('#txtNFRefat').focusout(scriptWrapper.obterPedidoRefat);
 
             })();
         });

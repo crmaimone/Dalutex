@@ -77,11 +77,20 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<VW_CUS_CONS_TAB_PRECO> VW_CUS_CONS_TAB_PRECO { get; set; }
         public virtual DbSet<TIPO_PEDIDO_USUARIO> TIPO_PEDIDO_USUARIO { get; set; }
         public virtual DbSet<VW_CLIE_OPER_TRINGULAR> VW_CLIE_OPER_TRINGULAR { get; set; }
+        public virtual DbSet<VW_NF_PEDIDO_CLIENTE> VW_NF_PEDIDO_CLIENTE { get; set; }
 
         
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<VW_NF_PEDIDO_CLIENTE>()
+                .Property(e => e.ID)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_NF_PEDIDO_CLIENTE>()
+                .Property(e => e.ID_CLIENTE)
+                .HasPrecision(38, 0);
+
             modelBuilder.Entity<VW_CLIE_OPER_TRINGULAR>()
                 .Property(e => e.ID_)
                 .HasPrecision(38, 0);
@@ -1503,7 +1512,7 @@ namespace Dalutex.Models.DataModels
             modelBuilder.Entity<PRE_PEDIDO>()
                 .Property(e => e.PEDIDO_CLIENTE)
                 .HasPrecision(38, 0);
-
+                           
             modelBuilder.Entity<USUARIOS>()
                 .Property(e => e.COD_USU)
                 .HasPrecision(38, 0);

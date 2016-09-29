@@ -87,6 +87,41 @@ namespace Dalutex.Controllers
             return Json(true, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        public JsonResult VerificaTecnologiaPilotagem(int IDTipoPedido, string TecOriginal, string TecSelecionada, string Artigo)
+        {
+            if (IDTipoPedido == (int)Enums.TiposPedido.AMOSTRA || IDTipoPedido == (int)Enums.TiposPedido.PILOTAGEM)
+            {
+                if ((TecOriginal != TecSelecionada) && (TecOriginal == "CILINDRO"))
+                {
+                    //oda -- 20/09/2016 ---- validar se tem estrição do artigo na tecnologia original --------
+                    using (var ctx = new TIDalutexContext())
+                    {
+                        //List<VW_ARTIGOS_DISPONIVEIS_NEW> ListaArtigos = ctx.VW_ARTIGOS_DISPONIVEIS_NEW.Where(x => x.TECNOLOGIA == TecOriginal && 
+                        //    x.ARTIGO == Artigo && x.CARACT_TECNICA != "X").ToList();
+
+                        VW_ARTIGOS_DISPONIVEIS_NEW restricao = ctx.VW_ARTIGOS_DISPONIVEIS_NEW.Where(x => x.TECNOLOGIA == TecOriginal &&
+                            x.ARTIGO == Artigo && x.CARACT_TECNICA != "X").FirstOrDefault();
+
+                        if (restricao != null)
+                        {
+                            return Json(restricao.CARACT_TECNICA, JsonRequestBehavior.AllowGet);   
+
+                            //foreach (var item in ListaArtigos)
+                            //{
+                            //    return Json(item.CARACT_TECNICA, JsonRequestBehavior.AllowGet);                         
+                            //}
+                                                       
+                           // return Json(true, JsonRequestBehavior.AllowGet);
+                        }
+                    }                    
+                }
+            }
+            
+            return Json("", JsonRequestBehavior.AllowGet);
+        }
+
+
         [HttpPost]
         public void AtualizaComplentoPedido(string numPedidoCliente, string observacoes)
         {
@@ -273,7 +308,7 @@ namespace Dalutex.Controllers
             model.Variante = variante;
             model.Artigo = artigo;
             model.TecnologiaPorExtenso = tecnologia;
-            model.TecnologiaOriginal = tecnologiaoriginal;
+            model.TecnologiaOriginal = tecnologiaoriginal;           
             model.IDColecao = idcolecao;
             model.NMColecao = nmcolecao;
             model.Cor = cor;
@@ -382,11 +417,14 @@ namespace Dalutex.Controllers
             {
                 model.IDTipoPedido = base.Session_Carrinho.IDTipoPedido;
 
-                using (var ctx = new DalutexContext())
-                {
-                    model.DescTipoPedido = ctx.COML_TIPOSPEDIDOS.Find(model.IDTipoPedido).DESCRICAO.Trim();
+                if (model.IDTipoPedido >= 0)
+                {                
+                    using (var ctx = new DalutexContext())
+                    {
+                        model.DescTipoPedido = ctx.COML_TIPOSPEDIDOS.Find(model.IDTipoPedido).DESCRICAO.Trim();
+                    }
                 }
-               
+
                 ViewBag.ItensCarrinho = base.Session_Carrinho.Itens;
                
                 if (modo == "I")//Inclusão
@@ -520,7 +558,7 @@ namespace Dalutex.Controllers
                 if (ModelState.IsValid)
                 {
                     #region Validação de Qtdes Maximas e Minimas
-                    if (model.Tipo != Enums.ItemType.Reserva)
+                    if ((model.Tipo != Enums.ItemType.Reserva) && (model.IDTipoPedido != (int)Enums.TiposPedido.ESPECIAL))
                     {
                         decimal QtdeMaxima = 0;
                         decimal QtdeMinima = 0;
@@ -572,7 +610,7 @@ namespace Dalutex.Controllers
                         #endregion
 
                         if (model.IDTipoPedido != (int)Enums.TiposPedido.BNFPROPRIO)
-                        {
+                        {                                                         
                             using (var ctx = new TIDalutexContext())
                             {
                                 //REGRAS_QTD_PEDIDO objMinMax = null;
@@ -1110,7 +1148,7 @@ namespace Dalutex.Controllers
             model.CanailVenda = base.Session_Carrinho.CanailVenda;
             model.ViaTransporte = base.Session_Carrinho.ViaTransporte;
             model.Frete = base.Session_Carrinho.Frete;
-            model.TipoAtendimento = base.Session_Carrinho.TipoAtendimento;            
+            model.TipoAtendimento = base.Session_Carrinho.TipoAtendimento;
 
             return model;
         }
@@ -1301,9 +1339,42 @@ namespace Dalutex.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ConclusaoPedido(ConclusaoPedidoViewModel model)
         {
+            using (var ctx = new DalutexContext())
+            {
+                model.DescTipoPedido = ctx.COML_TIPOSPEDIDOS.Find(model.IDTipoPedido).DESCRICAO.Trim();
+            }
+            if (base.Session_Carrinho.DescTipoPedido == null) { base.Session_Carrinho.DescTipoPedido = model.DescTipoPedido; }
             try
             {
                 ConclusaoPedidoCarregarEscolhas(model);
+
+                // oda -- 10/09/2016 -- validação do campo nº NFRefat e PedidoRefat para pedido do tipo Refaturamento (ESPECIAL);
+                if (model.IDTipoPedido == (int)Enums.TiposPedido.ESPECIAL)
+                {
+                    if (((model.NFRefat == null) || (String.IsNullOrEmpty(model.NFRefat))) || ((model.PedidoRefat == null) || (String.IsNullOrEmpty(model.PedidoRefat))))
+                    {
+                        ModelState.AddModelError("", "Para este tipo de pedido os Campos [NF Refat] e [Pedido Refat] devem ser informados.");
+                        return View(model);
+                    }
+                    else
+                    {
+                        int ipedido = int.Parse(model.PedidoRefat);
+                        int inf = int.Parse(model.NFRefat);
+
+                        int cliente = base.Session_Carrinho.ClienteFatura.ID_CLIENTE;
+
+                        using (TIDalutexContext ctx = new TIDalutexContext())
+                        {
+                            VW_NF_PEDIDO_CLIENTE objresult = ctx.VW_NF_PEDIDO_CLIENTE.Where(x => x.ID_CLIENTE == cliente && x.PEDIDO == ipedido && x.NF == inf).OrderBy(x => x.NF).FirstOrDefault();
+
+                            if (objresult == null)
+                            {
+                                ModelState.AddModelError("", "Campos [NF Refat] e [Pedido Refat] informados não são referentes ao cliente selecionado.");
+                                return View(model);
+                            }
+                        }
+                    }
+                }
 
                 if (model.IDTipoPedido == (int)Enums.TiposPedido.RESERVA)
                 {
@@ -1323,8 +1394,7 @@ namespace Dalutex.Controllers
 
                 if (ModelState.IsValid)
                 {
-                    #region Validações
-
+                    #region Validações                    
                     if (Session_Carrinho.Itens == null || Session_Carrinho.Itens.Count == 0)
                     {
                         ModelState.AddModelError("", "Não é permitido concluir o pedido sem itens.");
@@ -1344,7 +1414,7 @@ namespace Dalutex.Controllers
 
                     bool hasErrors = false;
 
-                    if (model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
+                    if ((model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA) && (model.IDTipoPedido == (int)Enums.TiposPedido.ESPECIAL))
                     {                        
                         if (hasErrors)
                         {
@@ -1575,6 +1645,8 @@ namespace Dalutex.Controllers
                     base.Session_Carrinho.TipoAtendimento = model.TipoAtendimento;
                     base.Session_Carrinho.Observacoes = model.Observacoes;
                     base.Session_Carrinho.PedidoCliente = model.PedidoCliente;
+                    base.Session_Carrinho.NFRefat = model.NFRefat;
+                    base.Session_Carrinho.PedidoRefat = model.PedidoRefat;
 
                     #endregion
 
@@ -1763,6 +1835,7 @@ namespace Dalutex.Controllers
             model.UrlReservas = ConfigurationManager.AppSettings["PASTA_RESERVAS"];
             model.Observacoes = Session_Carrinho.Observacoes;
             model.QualidadeCom = Session_Carrinho.QualidadeComercial.Key;
+            model.DescrTipoPedido = base.Session_Carrinho.DescTipoPedido;
             
             if (base.Session_Carrinho.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
             {            
@@ -1854,30 +1927,23 @@ namespace Dalutex.Controllers
                     objPrePedido.QUALIDADE_COM = base.Session_Carrinho.QualidadeComercial.Key;
                     objPrePedido.COD_COND_PGTO = base.Session_Carrinho.CondicaoPagto.ID_COND;
                     objPrePedido.OBSERVACOES = base.Session_Carrinho.Observacoes;
-                    objPrePedido.DATA_ENTREGA = base.Session_Carrinho.DataEntrega;
-
-                    //if (base.Session_Carrinho.IDTipoPedido == (int)Enums.TiposPedido.RESERVA)
-
+                    objPrePedido.DATA_ENTREGA = base.Session_Carrinho.DataEntrega;                   
                     objPrePedido.ID_CLIENTE_ENTREGA = (base.Session_Carrinho.IDTipoPedido != (int)Enums.TiposPedido.RESERVA ? base.Session_Carrinho.ClienteEntrega.ID_CLIENTE : base.Session_Carrinho.ClienteFatura.ID_CLIENTE);
                     objPrePedido.ID_TRANSPORTADORA = (base.Session_Carrinho.IDTipoPedido != (int)Enums.TiposPedido.RESERVA ? base.Session_Carrinho.Transportadora.IDTRANSPORTADORA : -1);
-
                     objPrePedido.USUARIO_INICIO = base.Session_Usuario.NOME_USU;
-
-                    objPrePedido.ID_LOCAL = (base.Session_Carrinho.IDLocaisVenda == null ? 5 : base.Session_Carrinho.IDLocaisVenda);//todo: verificar com marcio se precisa de uma view para este tipo
-                    
+                    objPrePedido.ID_LOCAL = (base.Session_Carrinho.IDLocaisVenda == null ? 5 : base.Session_Carrinho.IDLocaisVenda);//todo: verificar com marcio se precisa de uma view para este tipo                    
                     objPrePedido.COD_MOEDA = base.Session_Carrinho.Moeda.CODIGOMOEDA;
                     objPrePedido.CANAL_VENDAS = base.Session_Carrinho.CanailVenda.CANAL_VENDA;
-
-                    objPrePedido.ATENDIMENTO = (base.Session_Carrinho.IDTipoPedido != (int)Enums.TiposPedido.RESERVA ? base.Session_Carrinho.TipoAtendimento.COD_ATEND : 0);
-                    
+                    objPrePedido.ATENDIMENTO = (base.Session_Carrinho.IDTipoPedido != (int)Enums.TiposPedido.RESERVA ? base.Session_Carrinho.TipoAtendimento.COD_ATEND : 0);                    
                     objPrePedido.TIPOFRETE = base.Session_Carrinho.Frete.TIPOFRETE;
-
-                    //GERENTE = model.IDGerentesVenda,// não é necessario gravar neste campo para pedidos <> de PE
-                    
+                    //GERENTE = model.IDGerentesVenda,// não é necessario gravar neste campo para pedidos <> de PE                    
                     objPrePedido.VIATRANSPORTE = base.Session_Carrinho.ViaTransporte.VIATRANSPORTE;
                     objPrePedido.COMISSAO = Session_Carrinho.PorcentagemComissao;
                     objPrePedido.ORIGEM = "PW"; // APENAS PRA INFORMAR QUE ESTE PEDIDO VEIO DO PEDIDO WEB NOVO. 
-                    objPrePedido.PEDIDO_CLIENTE = base.Session_Carrinho.PedidoCliente;                                                                                                                                                                                                                                                                                        
+                    objPrePedido.PEDIDO_CLIENTE = base.Session_Carrinho.PedidoCliente;
+
+                    objPrePedido.NF_REFAT = (base.Session_Carrinho.NFRefat);
+                    objPrePedido.PEDIDO_REFAT = base.Session_Carrinho.PedidoRefat;
 
                     if(!estaEditando)
                     {
@@ -3322,6 +3388,50 @@ namespace Dalutex.Controllers
             }
         }
         
+
+        public JsonResult ObterPedidoRefat(string nf)
+        {
+            string strResult = "";
+            
+            int inf = int.Parse(nf);
+
+            int cliente = base.Session_Carrinho.ClienteFatura.ID_CLIENTE;
+ 
+            using (TIDalutexContext ctx = new TIDalutexContext())
+            {
+                VW_NF_PEDIDO_CLIENTE objresult = ctx.VW_NF_PEDIDO_CLIENTE.Where(
+                    x => x.ID_CLIENTE == cliente && x.NF == inf).OrderBy(x => x.PEDIDO).FirstOrDefault();
+
+                if(objresult != null)
+                {
+                    strResult = objresult.PEDIDO.ToString();
+                }
+            }
+
+            return Json(strResult, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult ObterNFRefat(string pedido)
+        {
+            string strResult = "";
+
+            int ipedido = int.Parse(pedido);
+
+            int cliente = base.Session_Carrinho.ClienteFatura.ID_CLIENTE;
+
+            using (TIDalutexContext ctx = new TIDalutexContext())
+            {
+                VW_NF_PEDIDO_CLIENTE objresult = ctx.VW_NF_PEDIDO_CLIENTE.Where(
+                    x => x.ID_CLIENTE == cliente && x.PEDIDO == ipedido).OrderBy(x => x.NF).FirstOrDefault();
+
+                if (objresult != null)
+                {
+                    strResult = objresult.NF.ToString();
+                }
+            }
+
+            return Json(strResult, JsonRequestBehavior.AllowGet);
+        }
 
         #region Pronta Entrega
 

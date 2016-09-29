@@ -40,11 +40,11 @@ namespace Dalutex.Models
         [Display(Name = "Qualidade Comercial:")]
         public string QualidadeCom { get; set; }
 
-
-
         public ConclusaoPedidoViewModel Carrinho { get; set; }
         public string UrlDesenhos { get; set; }
         public string UrlReservas { get; set; }
+
+        public string DescrTipoPedido { get; set; }
     }
 
     public class DesenhoVariante
@@ -315,6 +315,7 @@ namespace Dalutex.Models
         public string Artigo { get; set; }
         public string TecnologiaOriginal { get; set; }
         public string TecnologiaPorExtenso { get; set; }
+        public string TecnologiaTroca { get; set; }
         public string Tecnologia { get { return this.TecnologiaPorExtenso != null ? this.TecnologiaPorExtenso.Substring(0, 1) : null; } }
         public string UnidadeMedida { get; set; }
         public decimal ValorPadrao { get; set; }
@@ -432,6 +433,8 @@ namespace Dalutex.Models
         public bool EhReacabamento { get; set; }
 
         public string DescTipoPedido { get; set; }
+
+        public string RestricaoOriginal { get; set; }
     }
 
     public class AmpliacaoViewModel
@@ -544,6 +547,12 @@ namespace Dalutex.Models
 
         [Display(Name = "Tipo de Pedido")]
         public string DescTipoPedido { get; set; }
+
+        [Display(Name = "NF Refat.")]
+        public string NFRefat { get; set; }
+
+        [Display(Name = "Pedido Refat.")]
+        public string PedidoRefat { get; set; }
 
         #endregion
 

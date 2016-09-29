@@ -232,6 +232,7 @@
     <Compile Include="Models\DataModels\VW_ITENS_VALIDAR_RESERVA.cs" />
     <Compile Include="Models\DataModels\VW_LISOS_POR_COLECAO.cs" />
     <Compile Include="Models\DataModels\VW_LISTA_PECAS_PE.cs" />
+    <Compile Include="Models\DataModels\VW_NF_PEDIDO_CLIENTE.cs" />
     <Compile Include="Models\DataModels\VW_ORDEM_ANTERIOR_BLOQ.cs" />
     <Compile Include="Models\DataModels\VW_ORDEM_ANTERIOR_BLOQ_NEW.cs" />
     <Compile Include="Models\DataModels\VW_PEDIDO_ROM_FAT.cs" />

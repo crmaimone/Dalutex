@@ -1314,6 +1314,13 @@ namespace Dalutex.Controllers
                                 Compose = (int)item.COD_COMPOSE,
                                 DtItemSolicitada = item.DATA_ENTREGA_DIGI.GetValueOrDefault(),
                                 ValorTotalItem = item.QUANTIDADE.GetValueOrDefault() * item.PRECO_UNIT.GetValueOrDefault(),
+                                
+                                //if (item.Tipo == Enums.ItemType.ValidacaoReserva)
+                                //{
+                                //        ItemPedidoReserva = item.ite
+                                //        //PedidoReserva = item.
+                                //}
+                                                                
                                 Tipo = (
                                     objPrePedidoSalvo.CANAL_VENDAS == (int)Enums.CanaisVenda.TELEVENDAS
                                         && item.PE == "S") ? Enums.ItemType.ProntaEntrega : (
@@ -2053,13 +2060,15 @@ namespace Dalutex.Controllers
                                     }
                                     else
                                     {
-                                        objPedReservaVenda = ctx.PED_RESERVA_VENDA.Where(
-                                            r => r.PEDIDO_VENDA == iNUMERO_PEDIDO_BLOCO
-                                            && r.ITEM_PED_VENDA == item.ID
-                                            && r.PEDIDO_RESERVA == item.PedidoReserva
-                                            && r.ITEM_PED_RESERVA == item.ItemPedidoReserva).First();
+                                        try {// oda -- 05/10/2016 -- ver com cassiano: não entendi o pq desta alteração ---------------------------
+                                            objPedReservaVenda = ctx.PED_RESERVA_VENDA.Where(
+                                                r => r.PEDIDO_VENDA == iNUMERO_PEDIDO_BLOCO
+                                                && r.ITEM_PED_VENDA == item.ID
+                                                && r.PEDIDO_RESERVA == item.PedidoReserva
+                                                && r.ITEM_PED_RESERVA == item.ItemPedidoReserva).First();
 
-                                        objPedReservaVenda.ID_VAR_PED_RESERVA = item.IDVariante;
+                                            objPedReservaVenda.ID_VAR_PED_RESERVA = item.IDVariante;
+                                        } catch{ }
                                     }
                                    
                                     ctx.SaveChanges();

@@ -48,5 +48,8 @@
         [StringLength(3)]
         public string COLUNA_EXCEL { get; set; }
 
+        [StringLength(10)]
+        public string COR { get; set; }
+
     }
 }

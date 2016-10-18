@@ -1421,7 +1421,7 @@ namespace Dalutex.Controllers
 
                     bool hasErrors = false;
 
-                    if ((model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA) && (model.IDTipoPedido == (int)Enums.TiposPedido.ESPECIAL))
+                    if ((model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA) && (model.IDTipoPedido != (int)Enums.TiposPedido.ESPECIAL))
                     {                        
                         if (hasErrors)
                         {
@@ -1555,9 +1555,6 @@ namespace Dalutex.Controllers
                                 decimal QtdeMaxima = 0;
                                 decimal QtdeMinima = 999999;
                    
-                                REGRAS_QTD_PEDIDO objMinMax = new REGRAS_QTD_PEDIDO();
-                                objMinMax = null;
-
                                 REGRAS_QTD_PEDIDOX objMinMaxX = new REGRAS_QTD_PEDIDOX();
                                 objMinMaxX = null;
 
@@ -1610,28 +1607,86 @@ namespace Dalutex.Controllers
                                                 }
                                                 else if (item.Value > QtdeMaxima)
                                                 {  
-                                                    ModelState.AddModelError("", "A QUANTIDADE MÁXIMA POR DESENHO NÃO PODE SER MAIOR QUE: " + QtdeMinima.ToString() +
+                                                    ModelState.AddModelError("", "A QUANTIDADE MÁXIMA POR DESENHO NÃO PODE SER MAIOR QUE: " + QtdeMaxima.ToString() +
                                                                   " | item: " + item.Key +
                                                                   " | TOTAL (KG CONVERTIDO + MT): " + item.Value.ToString() +
                                                                   " MTs");
                                                     hasErrors = true;
                                                 }
                                             }                                            
-                                        }
+                                        }                                        
                                     }
                                 }
-                                //else
-                                //{
-                                //    hasErrors = true;
-                                //} 
                                 #endregion
                                 if (!isValidDes)
                                 {
                                     hasErrors = true;
                                 }  
                             }
+                            // -- oda -- 05/112015 --- regra de validação de qtde por desenho ------------------------------------------------------------------------------------------------------------------
+                           
+                            
+                            //<<< oda -- 17/10/2016 --- se for LISO; nova regra de qtdes ----------------------------------------------------------------------                            
+                            List<KeyValuePair<string, decimal>> lstGrupoCor = base.Session_Carrinho.Itens
+                                    .GroupBy(g => g.Cor + g.Tecnologia.Substring(0, 1) + g.IDGrupoColecao + g.UnidadeMedida)
+                                    .Select(consolidado => new KeyValuePair<string, decimal>(consolidado.First().Cor +
+                                                                                             consolidado.First().Tecnologia.Substring(0, 1) +
+                                                                                             consolidado.First().IDGrupoColecao +
+                                                                                             consolidado.First().UnidadeMedida,
+                                                                                             consolidado.Sum(s => s.Quantidade))
+                                                                                             ).ToList();
+                            foreach (KeyValuePair<string, decimal> item in lstGrupoCor)
+                            {
+                                decimal idGrCol = 0;                                
+                                decimal QtdeMaxima = 0;
+                                decimal QtdeMinima = 999999;
+                                REGRAS_QTD_PEDIDOX objMinMaxX = new REGRAS_QTD_PEDIDOX();
+                                objMinMaxX = null;
+
+                                if (item.Key.Substring(7, 1) == "L")
+                                {                                      
+                                    idGrCol = decimal.Parse(item.Key.Substring(8, 1));
+
+                                    var qryQtdeMinMaxX =
+                                        from Qtde in ctxTI.REGRAS_QTD_PEDIDOX
+                                        where Qtde.EXCLUIDO == false
+                                           && Qtde.TECNOLOGIA_DESTINO == "L"
+                                           && (Qtde.GRUPO_COLECAO == idGrCol || Qtde.GRUPO_COLECAO == 0)                    
+                                           && Qtde.TIPO_PEDIDO == model.IDTipoPedido
+                                           && Qtde.UM == item.Key.Substring(9, 2)
+                                           && Qtde.COR == item.Key.Substring(0, 7)                                             
+                                        select
+                                            Qtde;
+
+                                    objMinMaxX = qryQtdeMinMaxX.FirstOrDefault();
+
+                                    if (objMinMaxX != null)
+                                    {
+                                        QtdeMaxima = objMinMaxX.QTD_MAX_DES;
+                                        QtdeMinima = objMinMaxX.QTD_MIN_DES;
+
+                                        if (item.Value < QtdeMinima)
+                                        {
+                                            ModelState.AddModelError("", "A QUANTIDADE MÍNIMA POR COR NÃO PODE SER MENOR QUE: " + QtdeMinima.ToString() +
+                                                          " | item: " + item.Key +
+                                                          " | TOTAL: " + item.Value.ToString() +
+                                                          item.Key.Substring(9, 2));
+                                            hasErrors = true;
+                                        }
+                                        else if (item.Value > QtdeMaxima)
+                                        {
+                                            ModelState.AddModelError("", "A QUANTIDADE MÁXIMA POR COR NÃO PODE SER MAIOR QUE: " + QtdeMaxima.ToString() +
+                                                          " | item: " + item.Key +
+                                                          " | TOTAL (KG CONVERTIDO + MT): " + item.Value.ToString() +
+                                                          item.Key.Substring(9, 2));
+                                            hasErrors = true;
+                                        }
+                                    }
+                                }
+                            }
+                            //>>>> oda -- 17/10/2016 --- se for LISO; nova regra de qtdes ----------------------------------------------------------------------
                         }                                                                       
-                    // -- oda -- 05/112015 --- regra de validação de qtde por desenho ------------------------------------------------------------------------------------------------------------------
+                    
                     }
 
                     if (hasErrors)

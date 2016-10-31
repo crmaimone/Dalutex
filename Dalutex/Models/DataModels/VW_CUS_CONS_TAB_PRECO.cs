@@ -47,5 +47,9 @@ namespace Dalutex.Models.DataModels
 
         [StringLength(1410)]
         public string COMPOSICAO { get; set; }
+
+        public double? PRECO_M2 { get; set; }
+        public double? PRECO_M { get; set; }
+
     }
 }

@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace Dalutex.Controllers
 {
@@ -26,6 +27,13 @@ namespace Dalutex.Controllers
             string IDTipo
         )
         {
+            foreach (var item in Session_Carrinho.Itens)
+            {
+                if(item.Compose == -1)
+                {
+                    return RedirectToAction("Carrinho", "Pedido",new { errorMsg ="Falta definir campo compose para os itens. Por favor verificar" });
+                }
+            }
 
             if (IDRepresentante != null)
             {

@@ -90,6 +90,7 @@
                                 <div><strong>Coleção:</strong>&nbsp;@Model.NMColecao</div>
 
                                 <div><strong>Quantidade:</strong>&nbsp;@Model.Quantidade&nbsp;@Model.UnidadeMedida &nbsp;| Qtde Conv. (MTs): @Model.QuantidadeConvertida</div>
+                                
                                 <div><strong>Total:</strong>&nbsp;@Model.ValorTotalItem.ToString("c")</div>
                             }                                                                                   
                             
@@ -97,9 +98,8 @@
                             {
                                 <div class="form-group">
                                     @Html.LabelFor(x => x.Compose)
-                                    
-                                        @Html.DropDownListFor(m => m.Compose, new SelectList(Model.ComposeOpcoes), "Selecione", new { @class = "lstCompose", data_numero_sequencial = Model.NumeroSequencial })
-                                    
+                                                                      
+                                    @Html.DropDownListFor(m => m.Compose, new SelectList(Model.ComposeOpcoes), "Selecione", new { @class = "lstCompose", data_numero_sequencial = Model.NumeroSequencial })                                    
                                 </div>
                             }
                             else

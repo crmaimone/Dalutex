@@ -612,11 +612,12 @@ namespace Dalutex.Controllers
                         if (model.IDTipoPedido != (int)Enums.TiposPedido.BNFPROPRIO)
                         {                                                         
                             using (var ctx = new TIDalutexContext())
-                            {
-                                //REGRAS_QTD_PEDIDO objMinMax = null;
+                            {                               
                                 REGRAS_QTD_PEDIDOX objMinMaxX = null;
-                                int IDColecao = int.Parse(model.IDColecao);
-
+                                //int IDColecao = int.Parse(model.IDColecao);
+                                int IDColecao = 0;
+                                try { IDColecao = int.Parse(model.IDColecao); } catch { IDColecao = 0; }
+                                
                                 VW_GRUPO_COL_RED objGrupoCol = null;
 
                                 if (IDColecao > 0)
@@ -824,7 +825,7 @@ namespace Dalutex.Controllers
                     if (model.Modo == "I")//Inclusão
                     {
                         if (base.Session_Carrinho.Itens.Count == 0)
-                            model.NumeroSequencial = 1;
+                            model.NumeroSequencial = 0;
                         else
                             model.NumeroSequencial = base.Session_Carrinho.Itens.Max(x => x.NumeroSequencial) + 1;
 
@@ -1087,8 +1088,8 @@ namespace Dalutex.Controllers
             }
         }
 
-        public ActionResult Carrinho()
-        {
+        public ActionResult Carrinho(string errorMsg)
+        {            
             if (base.Session_Carrinho == null)
             {
                 return View();
@@ -1098,6 +1099,10 @@ namespace Dalutex.Controllers
             ViewBag.UrlDesenhos = ConfigurationManager.AppSettings["PASTA_DESENHOS"];
             ViewBag.UrlReservas = ConfigurationManager.AppSettings["PASTA_RESERVAS"];
 
+            if (!string.IsNullOrWhiteSpace(errorMsg))
+            {
+                ModelState.AddModelError("", errorMsg);                
+            }
             return View();
         }
 
@@ -1314,12 +1319,7 @@ namespace Dalutex.Controllers
                                 Compose = (int)item.COD_COMPOSE,
                                 DtItemSolicitada = item.DATA_ENTREGA_DIGI.GetValueOrDefault(),
                                 ValorTotalItem = item.QUANTIDADE.GetValueOrDefault() * item.PRECO_UNIT.GetValueOrDefault(),
-                                
-                                //if (item.Tipo == Enums.ItemType.ValidacaoReserva)
-                                //{
-                                //        ItemPedidoReserva = item.ite
-                                //        //PedidoReserva = item.
-                                //}
+                                //IDColecao = item.COLECAO.ToString(),                                
                                                                 
                                 Tipo = (
                                     objPrePedidoSalvo.CANAL_VENDAS == (int)Enums.CanaisVenda.TELEVENDAS

@@ -304,7 +304,7 @@ namespace Dalutex.Models
         public InserirNoCarrinhoViewModel()
         {
             this.ComposeOpcoes = new List<int>() { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };//Valores fixos de zero a dez. verificar necessidade de mais.
-            this.Compose = 0;
+            this.Compose = -1;
             this.IDTamanhoPadrao = 0;
         }
 

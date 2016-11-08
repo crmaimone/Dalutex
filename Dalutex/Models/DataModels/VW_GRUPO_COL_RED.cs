@@ -17,5 +17,7 @@ namespace Dalutex.Models.DataModels
 
         public int ID_COL { get; set;  }
         public int ID_GRUPO_COL { get; set; }
+
+        public string COLECAO { get; set; }
     }
 }

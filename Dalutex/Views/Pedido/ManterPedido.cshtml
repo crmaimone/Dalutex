@@ -2,51 +2,95 @@
 @using Dalutex.Models;
 
 @{
-    ViewBag.Title = "MANTER PEDIDO";
+    ViewBag.Title = "Operações Pedido";
 }
 
 <div class="header-title"><h3>@ViewBag.Title</h3></div>
 <div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            @Html.LabelFor(x => x.Pedido):&nbsp;
-            @Model.Pedido
+    <div class="well">
+        <div class="row">
+            <div class="col-md-12">
+                @Html.LabelFor(x => x.Pedido):&nbsp;<strong>@Model.Pedido</strong>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                @Html.LabelFor(x => x.DataHoraEmissao):&nbsp; @Model.DataHoraEmissao
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                @Html.LabelFor(x => x.Representante):&nbsp; @Model.Representante
+            </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            @Html.LabelFor(x => x.Representante):&nbsp;
-            @Model.Representante
+
+    <div class="well">
+        <div class="row">
+            <div class="col-md-12">
+                @Html.LabelFor(x => x.Cliente):&nbsp; @Model.Cliente
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                @Html.LabelFor(x => x.CNPJFat):&nbsp; @Model.CNPJFat
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                @Html.LabelFor(x => x.EndFat):&nbsp; @Model.EndFat
+            </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            @Html.LabelFor(x => x.Cliente):&nbsp;
-            @Model.Cliente
+
+    <div class="well">
+        <div class="row">
+            <div class="col-md-12">
+                @Html.LabelFor(x => x.ClienteEntrega):&nbsp; @Model.ClienteEntrega
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                @Html.LabelFor(x => x.CNPJEntrega):&nbsp;@Model.CNPJEntrega
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                @Html.LabelFor(x => x.EndEntrega):&nbsp;@Model.EndEntrega
+            </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            @if(Model.Status == 10)
-            {
-                <p class="text-warning">Atenção: Este pedido já migrou para o SGT.</p>
-            }
+
+        <div class="row">
+            <div class="col-md-12">
+                @if (Model.Status == 10)
+                {
+                    <hr />
+                    <p class="text-warning"><strong>Atenção: Este pedido já migrou para o SGT a edição não será permitida.</strong></p>
+                    <hr />
+                }
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <a class="btn btn-default right" href="@Url.Action("EspelhoPedido", new { numeropedido = @Model.Pedido })"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> IMPRIMIR</a>
+                <a class="btn btn-default right" href="@Url.Action("EnviarEmail", new { numeropedido = @Model.Pedido })"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> E-MAIL</a>
+                <a class="btn btn-info right" href="@Url.Action("DuplicarPedido", new { numeropedido = @Model.Pedido })"><span class="glyphicon glyphicon-retweet" aria-hidden="true"></span> DUPLICAR</a>
+                <a class="btn btn-info right" href="@Url.Action("DuplicarCabecalho", new { numeropedido = @Model.Pedido })"><span class="glyphicon glyphicon-retweet" aria-hidden="true"></span> DUPLICAR CABEÇALHO</a>
+                @if (Model.PodeEditarPedido)
+                {
+                    <a class="btn btn-warning right" href="@Url.Action("EditarPedido", new { numeropedido = @Model.Pedido })"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> EDITAR</a>
+                }
+                @if (Model.PodeCancelarItens)
+                {
+                    <a class="btn btn-warning right" href="#"><span class="glyphicon glyphicon-adjust" aria-hidden="true"></span> CANCELAR ITENS</a>
+                }
+            </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            <a class="btn btn-default right" href="@Url.Action("EspelhoPedido", new { numeropedido = @Model.Pedido })"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> IMPRIMIR</a>
-            <a class="btn btn-default right" href="@Url.Action("EnviarEmail", new { numeropedido = @Model.Pedido })"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> E-MAIL</a>
-            <a class="btn btn-info right" href="@Url.Action("DuplicarPedido", new { numeropedido = @Model.Pedido })"><span class="glyphicon glyphicon-retweet" aria-hidden="true"></span> DUPLICAR</a>
-            <a class="btn btn-info right" href="@Url.Action("DuplicarCabecalho", new { numeropedido = @Model.Pedido })"><span class="glyphicon glyphicon-retweet" aria-hidden="true"></span> DUPLICAR CABEÇALHO</a>
-            @if (Model.PodeEditarPedido)
-            {
-                <a class="btn btn-warning right" href="@Url.Action("EditarPedido", new { numeropedido = @Model.Pedido })"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> EDITAR</a>
-            }
-            @if (Model.PodeCancelarItens)
-            {
-                <a class="btn btn-warning right" href="#"><span class="glyphicon glyphicon-adjust" aria-hidden="true"></span> CANCELAR ITENS</a>
-            }
-       </div>
-    </div>
-</div>

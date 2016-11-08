@@ -435,6 +435,8 @@ namespace Dalutex.Models
         public string DescTipoPedido { get; set; }
 
         public string RestricaoOriginal { get; set; }
+
+        public string Colecao { get; set; }
     }
 
     public class AmpliacaoViewModel
@@ -477,13 +479,35 @@ namespace Dalutex.Models
     {
         [Display(Name = "Pedido")]
         public decimal Pedido { get; set; }
+
         [Display(Name = "Cliente")]
         public string Cliente { get; set; }
+
         [Display(Name = "Representante")]
         public string Representante { get; set; }
+
         public bool PodeEditarPedido { get; set; }        
         public bool PodeCancelarItens { get; set; }
         public decimal Status { get; set; }
+
+
+        [Display(Name = "Data Hora Emissão")]
+        public DateTime DataHoraEmissao { get; set; }
+
+        [Display(Name = "CNPJ Fatura")]
+        public string CNPJFat { get; set; }
+
+        [Display(Name = "Endereço Fatura")]
+        public string EndFat { get; set; }
+
+        [Display(Name = "Cliente Entrega")]
+        public string ClienteEntrega { get; set; }
+
+        [Display(Name = "CNPJ Entrega")]
+        public string CNPJEntrega { get; set; }
+
+        [Display(Name = "Endereço Entrega")]
+        public string EndEntrega { get; set; } 
     }
 
     public class ConclusaoPedidoViewModel

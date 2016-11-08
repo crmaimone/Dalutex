@@ -300,6 +300,7 @@ namespace Dalutex.Controllers
             , string Restricao = ""
             , bool ehreacabamento = false
             , string um = ""
+            , int codcompose = -1           
             )
         {
             InserirNoCarrinhoViewModel model = new InserirNoCarrinhoViewModel();
@@ -325,6 +326,8 @@ namespace Dalutex.Controllers
             model.ID = iditem;
             model.PreExistente = preexistente;
             model.EhReacabamento = ehreacabamento;
+            model.Compose = codcompose;
+            model.NumeroSequencial = iditem;
 
             #region Restrições
             if ((model.TecnologiaPorExtenso != "L") && (!ehreacabamento) )
@@ -1098,7 +1101,16 @@ namespace Dalutex.Controllers
             ViewBag.Carrinho = base.Session_Carrinho;
             ViewBag.UrlDesenhos = ConfigurationManager.AppSettings["PASTA_DESENHOS"];
             ViewBag.UrlReservas = ConfigurationManager.AppSettings["PASTA_RESERVAS"];
-
+        
+            foreach (var item in base.Session_Carrinho.Itens) //oda -- 08/11/2016 - ver com cassiano ----
+            {
+                if (item.Tipo == Enums.ItemType.ProntaEntrega)
+                {
+                    ViewBag.TipoPedido = "PE";
+                    break;
+                }
+            }
+            
             if (!string.IsNullOrWhiteSpace(errorMsg))
             {
                 ModelState.AddModelError("", errorMsg);                
@@ -1301,6 +1313,8 @@ namespace Dalutex.Controllers
 
                         foreach (var item in lstItens)
                         {
+                            string vColecao = ctxTI.VW_GRUPO_COL_RED.Where(x => x.REDUZIDO == item.REDUZIDO_ITEM).FirstOrDefault().COLECAO;
+
                             base.Session_Carrinho.Itens.Add(new InserirNoCarrinhoViewModel()
                             {
                                 ID = item.ITEM,
@@ -1319,7 +1333,11 @@ namespace Dalutex.Controllers
                                 Compose = (int)item.COD_COMPOSE,
                                 DtItemSolicitada = item.DATA_ENTREGA_DIGI.GetValueOrDefault(),
                                 ValorTotalItem = item.QUANTIDADE.GetValueOrDefault() * item.PRECO_UNIT.GetValueOrDefault(),
-                                //IDColecao = item.COLECAO.ToString(),                                
+                                
+                                NumeroSequencial = item.ITEM,//oda-- 03/11/2016 -- erro na edição do item ao setar compose ...
+                                Cor = item.COR,
+
+                                Colecao = vColecao,                                 
                                                                 
                                 Tipo = (
                                     objPrePedidoSalvo.CANAL_VENDAS == (int)Enums.CanaisVenda.TELEVENDAS
@@ -1350,6 +1368,7 @@ namespace Dalutex.Controllers
             {
                 model.DescTipoPedido = ctx.COML_TIPOSPEDIDOS.Find(model.IDTipoPedido).DESCRICAO.Trim();
             }
+
             if (base.Session_Carrinho.DescTipoPedido == null) { base.Session_Carrinho.DescTipoPedido = model.DescTipoPedido; }
             try
             {
@@ -1412,7 +1431,7 @@ namespace Dalutex.Controllers
                     {
                         model.TotalPedido += item.ValorTotalItem;
                     }
-
+                    
                     if (model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA && Session_Carrinho.Itens.Exists(x => x.Reduzido == 0))
                     {
                         ModelState.AddModelError("", "Este carrinho possuem itens com o código reduzido zerado. Favor entrar em contato com o TI.");
@@ -1529,64 +1548,137 @@ namespace Dalutex.Controllers
                             }
 
                         }
-
-                        // -- oda -- 05/11/2015 --- regra de validação de qtde por desenho ------------------------------------------------------------------------------------------------------------------
-                        using (var ctxTI = new TIDalutexContext())
+                        //-- oda -- 08/11/2016 --- se o tipo de pedido - no caso CANAL DE VENDAS, for diferente de televendas -- pedidos feitos na loja PE -------------
+                        if (!model.CanailVenda.CANAL_VENDA.Equals((int)Enums.CanaisVenda.TELEVENDAS)) //televendas PE ----
                         {
-                            if (model.IDTipoPedido == (int)Enums.TiposPedido.VENDA)
+                            // -- oda -- 05/11/2015 --- regra de validação de qtde por desenho ------------------------------------------------------------------------------------------------------------------
+                            using (var ctxTI = new TIDalutexContext())
                             {
-                                foreach (InserirNoCarrinhoViewModel item in base.Session_Carrinho.Itens)
+                                if (model.IDTipoPedido == (int)Enums.TiposPedido.VENDA)
                                 {
-                                    if(item.Desenho == null)
+                                    foreach (InserirNoCarrinhoViewModel item in base.Session_Carrinho.Itens)
                                     {
-                                        item.Desenho = "0000";
+                                        if (item.Desenho == null)
+                                        {
+                                            item.Desenho = "0000";
+                                        }
+                                    }
+
+                                    List<KeyValuePair<string, decimal>> lstGrupoDesenho = base.Session_Carrinho.Itens
+                                        .GroupBy(g => g.Desenho + g.Tecnologia.Substring(0, 1) + g.IDGrupoColecao)
+                                        .Select(consolidado => new KeyValuePair<string, decimal>(consolidado.First().Desenho +
+                                                                                                 consolidado.First().Tecnologia.Substring(0, 1) +
+                                                                                                 consolidado.First().IDGrupoColecao,
+                                                                                                 consolidado.Sum(s => s.QuantidadeConvertida))
+                                                                                                 ).ToList();
+
+                                    bool isValidDes = true;
+                                    decimal QtdeMaxima = 0;
+                                    decimal QtdeMinima = 999999;
+
+                                    REGRAS_QTD_PEDIDOX objMinMaxX = new REGRAS_QTD_PEDIDOX();
+                                    objMinMaxX = null;
+
+                                    decimal idGrCol = 0;
+
+                                    #region nova regra validação em MT
+                                    //oda-- 19/05/2016 --- mudanca na regra de qtde pela tabela nova Validação sempre em MTs ----------------------------------------------------------------
+                                    if (ConfigurationManager.AppSettings["NOVA_REGRA_QTDE_ATIVA"] == "1")
+                                    {
+                                        foreach (KeyValuePair<string, decimal> item in lstGrupoDesenho)
+                                        {
+                                            if (item.Key.Substring(4, 1) != "L")
+                                            {
+                                                decimal? objDesenhoPronto = 0;
+                                                bool desenhoPronto = false;
+                                                idGrCol = decimal.Parse(item.Key.Substring(5, 1));
+
+                                                try { objDesenhoPronto = ctxTI.VW_DESENHOS_POR_COLECAO.Where(x => x.DESENHO == item.Key.Substring(0, 4)).FirstOrDefault().DESENHO_PRONTO; }
+                                                catch { objDesenhoPronto = null; }
+
+                                                if (objDesenhoPronto != null)
+                                                { desenhoPronto = (objDesenhoPronto == 1); }
+
+                                                var qryQtdeMinMaxX =
+                                                    from Qtde in ctxTI.REGRAS_QTD_PEDIDOX
+                                                    where
+                                                           Qtde.TECNOLOGIA_DESTINO == item.Key.Substring(4, 1)//tecnologia
+                                                        && Qtde.GRUPO_COLECAO == idGrCol
+                                                        && Qtde.DESENHO_PRONTO == desenhoPronto
+                                                        && Qtde.TIPO_PEDIDO == model.IDTipoPedido
+                                                        && Qtde.UM == "MT"
+                                                        && Qtde.EXCLUIDO == false
+                                                    select
+                                                        Qtde;
+
+                                                objMinMaxX = qryQtdeMinMaxX.FirstOrDefault();
+
+                                                if (objMinMaxX != null)
+                                                {
+                                                    QtdeMaxima = objMinMaxX.QTD_MAX_DES;
+                                                    QtdeMinima = objMinMaxX.QTD_MIN_DES;
+
+                                                    if (item.Value < QtdeMinima)
+                                                    {
+                                                        ModelState.AddModelError("", "A QUANTIDADE MÍNIMA POR DESENHO NÃO PODE SER MENOR QUE: " + QtdeMinima.ToString() +
+                                                                      " | item: " + item.Key +
+                                                                      " | TOTAL (KG CONVERTIDO + MT): " + item.Value.ToString() +
+                                                                      " MTs");
+                                                        hasErrors = true;
+                                                    }
+                                                    else if (item.Value > QtdeMaxima)
+                                                    {
+                                                        ModelState.AddModelError("", "A QUANTIDADE MÁXIMA POR DESENHO NÃO PODE SER MAIOR QUE: " + QtdeMaxima.ToString() +
+                                                                      " | item: " + item.Key +
+                                                                      " | TOTAL (KG CONVERTIDO + MT): " + item.Value.ToString() +
+                                                                      " MTs");
+                                                        hasErrors = true;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    #endregion
+                                    if (!isValidDes)
+                                    {
+                                        hasErrors = true;
                                     }
                                 }
+                                // -- oda -- 05/112015 --- regra de validação de qtde por desenho ------------------------------------------------------------------------------------------------------------------
 
-                                List<KeyValuePair<string, decimal>> lstGrupoDesenho = base.Session_Carrinho.Itens
-                                    .GroupBy(g => g.Desenho + g.Tecnologia.Substring(0, 1) + g.IDGrupoColecao)
-                                    .Select(consolidado => new KeyValuePair<string, decimal>(consolidado.First().Desenho +                                                                                             
-                                                                                             consolidado.First().Tecnologia.Substring(0, 1) +
-                                                                                             consolidado.First().IDGrupoColecao,                                                                                             
-                                                                                             consolidado.Sum(s => s.QuantidadeConvertida))
-                                                                                             ).ToList();
+                                #region Validação Lisos
+                                //<<< oda -- 17/10/2016 --- se for LISO; nova regra de qtdes ----------------------------------------------------------------------                            
+                                List<KeyValuePair<string, decimal>> lstGrupoCor = base.Session_Carrinho.Itens
+                                        .GroupBy(g => g.Cor + g.Tecnologia.Substring(0, 1) + g.IDGrupoColecao + g.UnidadeMedida)
+                                        .Select(consolidado => new KeyValuePair<string, decimal>(consolidado.First().Cor +
+                                                                                                 consolidado.First().Tecnologia.Substring(0, 1) +
+                                                                                                 consolidado.First().IDGrupoColecao +
+                                                                                                 consolidado.First().UnidadeMedida,
+                                                                                                 consolidado.Sum(s => s.Quantidade))
+                                                                                                 ).ToList();
+                                foreach (KeyValuePair<string, decimal> item in lstGrupoCor)
+                                {
+                                    decimal idGrCol = 0;
+                                    decimal QtdeMaxima = 0;
+                                    decimal QtdeMinima = 999999;
+                                    REGRAS_QTD_PEDIDOX objMinMaxX = new REGRAS_QTD_PEDIDOX();
+                                    objMinMaxX = null;
 
-                                bool isValidDes = true;
-                                decimal QtdeMaxima = 0;
-                                decimal QtdeMinima = 999999;
-                   
-                                REGRAS_QTD_PEDIDOX objMinMaxX = new REGRAS_QTD_PEDIDOX();
-                                objMinMaxX = null;
-
-                                decimal idGrCol = 0;
-
-                                #region nova regra validação em MT 
-                                //oda-- 19/05/2016 --- mudanca na regra de qtde pela tabela nova Validação sempre em MTs ----------------------------------------------------------------
-                                if (ConfigurationManager.AppSettings["NOVA_REGRA_QTDE_ATIVA"] == "1")
-                                {                                    
-                                    foreach (KeyValuePair<string, decimal> item in lstGrupoDesenho)
+                                    //C2MT
+                                    if (item.Key.Length > 7)
                                     {
-                                        if (item.Key.Substring(4, 1) != "L")
+                                        if (item.Key.Substring(7, 1) == "L")
                                         {
-                                            decimal? objDesenhoPronto = 0;                                           
-                                            bool desenhoPronto = false;
-                                            idGrCol = decimal.Parse(item.Key.Substring(5, 1));
-
-                                            try { objDesenhoPronto = ctxTI.VW_DESENHOS_POR_COLECAO.Where(x => x.DESENHO == item.Key.Substring(0, 4)).FirstOrDefault().DESENHO_PRONTO; }
-                                            catch { objDesenhoPronto = null; }
-
-                                            if (objDesenhoPronto != null)
-                                            { desenhoPronto = (objDesenhoPronto == 1); }                                            
+                                            idGrCol = decimal.Parse(item.Key.Substring(8, 1));
 
                                             var qryQtdeMinMaxX =
                                                 from Qtde in ctxTI.REGRAS_QTD_PEDIDOX
-                                                where
-                                                       Qtde.TECNOLOGIA_DESTINO == item.Key.Substring(4, 1)//tecnologia
-                                                    && Qtde.GRUPO_COLECAO == idGrCol
-                                                    && Qtde.DESENHO_PRONTO == desenhoPronto
-                                                    && Qtde.TIPO_PEDIDO == model.IDTipoPedido
-                                                    && Qtde.UM == "MT"
-                                                    && Qtde.EXCLUIDO == false
+                                                where Qtde.EXCLUIDO == false
+                                                   && Qtde.TECNOLOGIA_DESTINO == "L"
+                                                   && (Qtde.GRUPO_COLECAO == idGrCol || Qtde.GRUPO_COLECAO == 0)
+                                                   && Qtde.TIPO_PEDIDO == model.IDTipoPedido
+                                                   && Qtde.UM == item.Key.Substring(9, 2)
+                                                   && Qtde.COR == item.Key.Substring(0, 7)
                                                 select
                                                     Qtde;
 
@@ -1598,98 +1690,28 @@ namespace Dalutex.Controllers
                                                 QtdeMinima = objMinMaxX.QTD_MIN_DES;
 
                                                 if (item.Value < QtdeMinima)
-                                                {                                                    
-                                                    ModelState.AddModelError("", "A QUANTIDADE MÍNIMA POR DESENHO NÃO PODE SER MENOR QUE: " + QtdeMinima.ToString() +
+                                                {
+                                                    ModelState.AddModelError("", "A QUANTIDADE MÍNIMA POR COR NÃO PODE SER MENOR QUE: " + QtdeMinima.ToString() +
                                                                   " | item: " + item.Key +
-                                                                  " | TOTAL (KG CONVERTIDO + MT): " + item.Value.ToString() +
-                                                                  " MTs");
+                                                                  " | TOTAL: " + item.Value.ToString() +
+                                                                  item.Key.Substring(9, 2));
                                                     hasErrors = true;
                                                 }
                                                 else if (item.Value > QtdeMaxima)
-                                                {  
-                                                    ModelState.AddModelError("", "A QUANTIDADE MÁXIMA POR DESENHO NÃO PODE SER MAIOR QUE: " + QtdeMaxima.ToString() +
+                                                {
+                                                    ModelState.AddModelError("", "A QUANTIDADE MÁXIMA POR COR NÃO PODE SER MAIOR QUE: " + QtdeMaxima.ToString() +
                                                                   " | item: " + item.Key +
                                                                   " | TOTAL (KG CONVERTIDO + MT): " + item.Value.ToString() +
-                                                                  " MTs");
+                                                                  item.Key.Substring(9, 2));
                                                     hasErrors = true;
                                                 }
-                                            }                                            
-                                        }                                        
-                                    }
-                                }
-                                #endregion
-                                if (!isValidDes)
-                                {
-                                    hasErrors = true;
-                                }  
-                            }
-                            // -- oda -- 05/112015 --- regra de validação de qtde por desenho ------------------------------------------------------------------------------------------------------------------
-
-                            #region Validação Lisos 
-                            //<<< oda -- 17/10/2016 --- se for LISO; nova regra de qtdes ----------------------------------------------------------------------                            
-                            List<KeyValuePair<string, decimal>> lstGrupoCor = base.Session_Carrinho.Itens
-                                    .GroupBy(g => g.Cor + g.Tecnologia.Substring(0, 1) + g.IDGrupoColecao + g.UnidadeMedida)
-                                    .Select(consolidado => new KeyValuePair<string, decimal>(consolidado.First().Cor +
-                                                                                             consolidado.First().Tecnologia.Substring(0, 1) +
-                                                                                             consolidado.First().IDGrupoColecao +
-                                                                                             consolidado.First().UnidadeMedida,
-                                                                                             consolidado.Sum(s => s.Quantidade))
-                                                                                             ).ToList();
-                            foreach (KeyValuePair<string, decimal> item in lstGrupoCor)
-                            {
-                                decimal idGrCol = 0;                                
-                                decimal QtdeMaxima = 0;
-                                decimal QtdeMinima = 999999;
-                                REGRAS_QTD_PEDIDOX objMinMaxX = new REGRAS_QTD_PEDIDOX();
-                                objMinMaxX = null;
-
-                                //C2MT
-                                if (item.Key.Length > 7)
-                                {                                
-                                    if (item.Key.Substring(7, 1) == "L")
-                                    {                                      
-                                        idGrCol = decimal.Parse(item.Key.Substring(8, 1));
-
-                                        var qryQtdeMinMaxX =
-                                            from Qtde in ctxTI.REGRAS_QTD_PEDIDOX
-                                            where Qtde.EXCLUIDO == false
-                                               && Qtde.TECNOLOGIA_DESTINO == "L"
-                                               && (Qtde.GRUPO_COLECAO == idGrCol || Qtde.GRUPO_COLECAO == 0)                    
-                                               && Qtde.TIPO_PEDIDO == model.IDTipoPedido
-                                               && Qtde.UM == item.Key.Substring(9, 2)
-                                               && Qtde.COR == item.Key.Substring(0, 7)                                             
-                                            select
-                                                Qtde;
-
-                                        objMinMaxX = qryQtdeMinMaxX.FirstOrDefault();
-
-                                        if (objMinMaxX != null)
-                                        {
-                                            QtdeMaxima = objMinMaxX.QTD_MAX_DES;
-                                            QtdeMinima = objMinMaxX.QTD_MIN_DES;
-
-                                            if (item.Value < QtdeMinima)
-                                            {
-                                                ModelState.AddModelError("", "A QUANTIDADE MÍNIMA POR COR NÃO PODE SER MENOR QUE: " + QtdeMinima.ToString() +
-                                                              " | item: " + item.Key +
-                                                              " | TOTAL: " + item.Value.ToString() +
-                                                              item.Key.Substring(9, 2));
-                                                hasErrors = true;
-                                            }
-                                            else if (item.Value > QtdeMaxima)
-                                            {
-                                                ModelState.AddModelError("", "A QUANTIDADE MÁXIMA POR COR NÃO PODE SER MAIOR QUE: " + QtdeMaxima.ToString() +
-                                                              " | item: " + item.Key +
-                                                              " | TOTAL (KG CONVERTIDO + MT): " + item.Value.ToString() +
-                                                              item.Key.Substring(9, 2));
-                                                hasErrors = true;
                                             }
                                         }
                                     }
-                                }
-                            }//>>>> oda -- 17/10/2016 --- se for LISO; nova regra de qtdes ---------------------------------------------------------------------- 
-                            #endregion
-                        }                                                                                           
+                                }//>>>> oda -- 17/10/2016 --- se for LISO; nova regra de qtdes ---------------------------------------------------------------------- 
+                                #endregion
+                            }
+                        }                                                              
                     }
 
                     if (hasErrors)
@@ -1715,7 +1737,8 @@ namespace Dalutex.Controllers
 
                     #endregion
 
-                    if (model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
+                    //-- oda -- 08/11/2016 -- pegar preços apenas se o pedido não for edição de PE ------------
+                    if ( (model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA) && (!model.CanailVenda.CANAL_VENDA.Equals((int)Enums.CanaisVenda.TELEVENDAS)) )
                     {                    
                         #region Obter Preço
                         //int? iColecaoAtual = 0;
@@ -2026,341 +2049,345 @@ namespace Dalutex.Controllers
 
                     #endregion
 
-
-                    using (var transaction = ctx.Database.BeginTransaction())
+                    if(!objPrePedido.CANAL_VENDAS.Equals((int)Enums.CanaisVenda.TELEVENDAS))//!model.CanailVenda.CANAL_VENDA.Equals((int)Enums.CanaisVenda.TELEVENDAS)
                     {
-                        try
+                        #region Edição de Itens do Pedido
+                        using (var transaction = ctx.Database.BeginTransaction())
                         {
-                            List<PRE_PEDIDO_ITENS> lstItens = null;
-                            if (!estaEditando)
+                            try
                             {
-                                lstItens = new List<PRE_PEDIDO_ITENS>();
-                            }
-                            else
-                            {
-                                lstItens = ctx.PRE_PEDIDO_ITENS.Where(i => i.NUMERO_PEDIDO_BLOCO == iNUMERO_PEDIDO_BLOCO).ToList();
-                            }
-
-                            int iNumeroItem = 0;
-                            if (estaEditando)
-                            {
-                                iNumeroItem = lstItens.Max(i => i.ITEM);
-                            }
-
-                            foreach (InserirNoCarrinhoViewModel item in base.Session_Carrinho.Itens)
-                            {
-                                if (item.Excluir)
-                                    continue;
-
-                                if (base.Session_Carrinho.IDTipoPedido == (int)Enums.TiposPedido.RESERVA)
+                                List<PRE_PEDIDO_ITENS> lstItens = null;
+                                if (!estaEditando)
                                 {
-                                    item.Artigo = "0000";
-                                    item.Quantidade = 100;
-                                    item.Pecas = 1;
-                                    item.TecnologiaPorExtenso = null;
-                                    item.DataEntregaItem = DateTime.Now;
-                                    item.DtItemSolicitada = DateTime.Now;
-
-                                    #region Reserva - Item sem reduzido (id_controle)
-
-                                    if (item.Reduzido <= default(int) && item.ID == 0)
-                                    {
-                                        item.Reduzido = ctx.Database.SqlQuery<int>("SELECT SEQ_ID_CONTROLE_DESENV.NEXTVAL FROM DUAL", 1).FirstOrDefault();
-
-                                        CONTROLE_DESENV objInsert = new CONTROLE_DESENV()
-                                        {
-                                            ID_CONTROLE_DESENV = item.Reduzido,
-                                            DT_ENT_ATEND = DateTime.Now,
-                                            ID_USUARIO = base.Session_Usuario.COD_USU,
-                                            ID_CLIENTE = base.Session_Carrinho.ClienteFatura.ID_CLIENTE.ToString("000000"),
-                                            ID_REP = base.Session_Carrinho.Representante.IDREPRESENTANTE,
-                                            ID_STUDIO = item.IDStudio,
-                                            ID_ITEM_STUDIO = item.IDItemStudio,
-                                            STATUS_GERAL = 1
-                                        };
-
-                                        ctx.CONTROLE_DESENV.Add(objInsert);
-                                    }
-
-                                    CONTROLE_DESENV_ITEM_STUDIO objUpdate = ctx.CONTROLE_DESENV_ITEM_STUDIO.Find(item.IDItemStudio);
-                                    objUpdate.STATUS = 1; //INDISPONÍVEL
-
-                                    #endregion
+                                    lstItens = new List<PRE_PEDIDO_ITENS>();
+                                }
+                                else
+                                {
+                                    lstItens = ctx.PRE_PEDIDO_ITENS.Where(i => i.NUMERO_PEDIDO_BLOCO == iNUMERO_PEDIDO_BLOCO).ToList();
                                 }
 
-                                if(!item.PreExistente)
-                                    iNumeroItem++;
-
-                                string origem = "";
-
-                                #region Inserir a reserva do item se necessário
-
-                                if (item.Tipo == Enums.ItemType.ValidacaoReserva)
+                                int iNumeroItem = 0;
+                                if (estaEditando)
                                 {
-                                    origem = "E";
+                                    iNumeroItem = lstItens.Max(i => i.ITEM);
+                                }
 
-                                    PED_RESERVA_VENDA objPedReservaVenda = null;
-                                    if(!item.PreExistente)//Se é um item novo
+                                foreach (InserirNoCarrinhoViewModel item in base.Session_Carrinho.Itens)
+                                {
+                                    if (item.Excluir)
+                                        continue;
+
+                                    if (base.Session_Carrinho.IDTipoPedido == (int)Enums.TiposPedido.RESERVA)
                                     {
-                                        int _id = ctx.Database.SqlQuery<int>("SELECT SEQ_ID_PED_RES_VENDA.NEXTVAL FROM DUAL", 1).FirstOrDefault();
+                                        item.Artigo = "0000";
+                                        item.Quantidade = 100;
+                                        item.Pecas = 1;
+                                        item.TecnologiaPorExtenso = null;
+                                        item.DataEntregaItem = DateTime.Now;
+                                        item.DtItemSolicitada = DateTime.Now;
 
-                                        objPedReservaVenda = new PED_RESERVA_VENDA()
+                                        #region Reserva - Item sem reduzido (id_controle)
+
+                                        if (item.Reduzido <= default(int) && item.ID == 0)
                                         {
-                                            PEDIDO_RESERVA = item.PedidoReserva,
-                                            ITEM_PED_RESERVA = item.ItemPedidoReserva,
-                                            ID_VAR_PED_RESERVA = item.IDVariante,
-                                            PEDIDO_VENDA = iNUMERO_PEDIDO_BLOCO,
-                                            ITEM_PED_VENDA = iNumeroItem,
-                                            ID_PED_RESERVA_VENDA = _id
-                                        };
+                                            item.Reduzido = ctx.Database.SqlQuery<int>("SELECT SEQ_ID_CONTROLE_DESENV.NEXTVAL FROM DUAL", 1).FirstOrDefault();
 
-                                        ctx.PED_RESERVA_VENDA.Add(objPedReservaVenda);
+                                            CONTROLE_DESENV objInsert = new CONTROLE_DESENV()
+                                            {
+                                                ID_CONTROLE_DESENV = item.Reduzido,
+                                                DT_ENT_ATEND = DateTime.Now,
+                                                ID_USUARIO = base.Session_Usuario.COD_USU,
+                                                ID_CLIENTE = base.Session_Carrinho.ClienteFatura.ID_CLIENTE.ToString("000000"),
+                                                ID_REP = base.Session_Carrinho.Representante.IDREPRESENTANTE,
+                                                ID_STUDIO = item.IDStudio,
+                                                ID_ITEM_STUDIO = item.IDItemStudio,
+                                                STATUS_GERAL = 1
+                                            };
+
+                                            ctx.CONTROLE_DESENV.Add(objInsert);
+                                        }
+
+                                        CONTROLE_DESENV_ITEM_STUDIO objUpdate = ctx.CONTROLE_DESENV_ITEM_STUDIO.Find(item.IDItemStudio);
+                                        objUpdate.STATUS = 1; //INDISPONÍVEL
+
+                                        #endregion
+                                    }
+
+                                    if(!item.PreExistente)
+                                        iNumeroItem++;
+
+                                    string origem = "";
+
+                                    #region Inserir a reserva do item se necessário
+
+                                    if (item.Tipo == Enums.ItemType.ValidacaoReserva)
+                                    {
+                                        origem = "E";
+
+                                        PED_RESERVA_VENDA objPedReservaVenda = null;
+                                        if(!item.PreExistente)//Se é um item novo
+                                        {
+                                            int _id = ctx.Database.SqlQuery<int>("SELECT SEQ_ID_PED_RES_VENDA.NEXTVAL FROM DUAL", 1).FirstOrDefault();
+
+                                            objPedReservaVenda = new PED_RESERVA_VENDA()
+                                            {
+                                                PEDIDO_RESERVA = item.PedidoReserva,
+                                                ITEM_PED_RESERVA = item.ItemPedidoReserva,
+                                                ID_VAR_PED_RESERVA = item.IDVariante,
+                                                PEDIDO_VENDA = iNUMERO_PEDIDO_BLOCO,
+                                                ITEM_PED_VENDA = iNumeroItem,
+                                                ID_PED_RESERVA_VENDA = _id
+                                            };
+
+                                            ctx.PED_RESERVA_VENDA.Add(objPedReservaVenda);
+                                        }
+                                        else
+                                        {
+                                            try {// oda -- 05/10/2016 -- ver com cassiano: não entendi o pq desta alteração ---------------------------
+                                                objPedReservaVenda = ctx.PED_RESERVA_VENDA.Where(
+                                                    r => r.PEDIDO_VENDA == iNUMERO_PEDIDO_BLOCO
+                                                    && r.ITEM_PED_VENDA == item.ID
+                                                    && r.PEDIDO_RESERVA == item.PedidoReserva
+                                                    && r.ITEM_PED_RESERVA == item.ItemPedidoReserva).First();
+
+                                                objPedReservaVenda.ID_VAR_PED_RESERVA = item.IDVariante;
+                                            } catch{ }
+                                        }
+                                   
+                                        ctx.SaveChanges();
+                                    }
+
+                                    #endregion
+
+                                    string _cor ;
+                                    if (item.Tipo == Enums.ItemType.ValidacaoReserva)
+                                    {
+                                        _cor = "E000000";
+                                    }
+                                    else if (item.Cor == null) 
+                                    {
+                                         _cor = "0000000";
                                     }
                                     else
                                     {
-                                        try {// oda -- 05/10/2016 -- ver com cassiano: não entendi o pq desta alteração ---------------------------
-                                            objPedReservaVenda = ctx.PED_RESERVA_VENDA.Where(
-                                                r => r.PEDIDO_VENDA == iNUMERO_PEDIDO_BLOCO
-                                                && r.ITEM_PED_VENDA == item.ID
-                                                && r.PEDIDO_RESERVA == item.PedidoReserva
-                                                && r.ITEM_PED_RESERVA == item.ItemPedidoReserva).First();
-
-                                            objPedReservaVenda.ID_VAR_PED_RESERVA = item.IDVariante;
-                                        } catch{ }
+                                        _cor = item.Cor;
                                     }
-                                   
-                                    ctx.SaveChanges();
-                                }
 
-                                #endregion
+                                    PRE_PEDIDO_ITENS objItemSalvar = null;
 
-                                string _cor ;
-                                if (item.Tipo == Enums.ItemType.ValidacaoReserva)
-                                {
-                                    _cor = "E000000";
-                                }
-                                else if (item.Cor == null) 
-                                {
-                                     _cor = "0000000";
-                                }
-                                else
-                                {
-                                    _cor = item.Cor;
-                                }
-
-                                PRE_PEDIDO_ITENS objItemSalvar = null;
-
-                                if(!item.PreExistente)
-                                {
-                                    objItemSalvar = new PRE_PEDIDO_ITENS();
-                                    objItemSalvar.ITEM = iNumeroItem;
-                                    objItemSalvar.NUMERO_PEDIDO_BLOCO = iNUMERO_PEDIDO_BLOCO;
-                                    objItemSalvar.Novo = true;
-                                }
-                                else
-                                {
-                                    objItemSalvar = lstItens.Where(i => i.ITEM == item.ID).First();
-                                }
-
-                                objItemSalvar.ARTIGO = item.Artigo;
-                                objItemSalvar.COR = _cor;                     
-                                objItemSalvar.DATA_ENTREGA = item.DataEntregaItem;
-                                objItemSalvar.DESENHO = item.Desenho;
-                                objItemSalvar.LISO_ESTAMP = item.Tecnologia;
-                                objItemSalvar.PE = "N";
-                                objItemSalvar.PRECO_UNIT = item.Preco;
-                                objItemSalvar.PRECOLISTA = (item.PrecoTabela == null ? 0 : item.PrecoTabela);
-                                objItemSalvar.QTDEPC = item.Pecas;
-                                objItemSalvar.QUANTIDADE = item.Quantidade;
-                                objItemSalvar.REDUZIDO_ITEM = item.Reduzido;
-                                objItemSalvar.UM = item.UnidadeMedida;
-                                objItemSalvar.VALOR_TOTAL = item.Preco * item.Quantidade;
-                                objItemSalvar.VARIANTE = item.Variante;
-                                objItemSalvar.COD_COMPOSE = item.Compose;
-                                objItemSalvar.ORIGEM = origem;
-                                objItemSalvar.MALHA_PLANO = item.UnidadeMedida == "MT"? "P": "M";
-                                objItemSalvar.MODA_DECORACAO = "M";
-                                objItemSalvar.DATA_ENTREGA_DIGI = item.DtItemSolicitada;
-                                objItemSalvar.ID_TAB_PRECO = -1;     //todo: se nulop, -1
-                                objItemSalvar.STATUS_ITEM = 15;
-                                objItemSalvar.PRECODIGITADOMOEDA = 0;//todo: apontar este campo para preco correto em caso de este existir                                    
-                                objItemSalvar.TEM_RESTRICAO = (item.TemRestricao == true ? 1 : 0);
-                                objItemSalvar.RESTRICAO = item.Restricao;
-
-                                if ((item.Tipo == Enums.ItemType.ValidacaoReserva || item.Tipo == Enums.ItemType.Estampado) && !item.PreExistente)
-                                {
-                                    if (item.TecnologiaOriginal != item.TecnologiaPorExtenso)
+                                    if(!item.PreExistente)
                                     {
-                                        objItemSalvar.TROCA_TECNOLOGIA = "Troca de " + item.TecnologiaOriginal + " para " + item.TecnologiaPorExtenso;
+                                        objItemSalvar = new PRE_PEDIDO_ITENS();
+                                        objItemSalvar.ITEM = iNumeroItem;
+                                        objItemSalvar.NUMERO_PEDIDO_BLOCO = iNUMERO_PEDIDO_BLOCO;
+                                        objItemSalvar.Novo = true;
+                                    }
+                                    else
+                                    {
+                                        objItemSalvar = lstItens.Where(i => i.ITEM == item.ID).First();
+                                    }
+
+                                    objItemSalvar.ARTIGO = item.Artigo;
+                                    objItemSalvar.COR = _cor;                     
+                                    objItemSalvar.DATA_ENTREGA = item.DataEntregaItem;
+                                    objItemSalvar.DESENHO = item.Desenho;
+                                    objItemSalvar.LISO_ESTAMP = item.Tecnologia;
+                                    objItemSalvar.PE = "N";
+                                    objItemSalvar.PRECO_UNIT = item.Preco;
+                                    objItemSalvar.PRECOLISTA = (item.PrecoTabela == null ? 0 : item.PrecoTabela);
+                                    objItemSalvar.QTDEPC = item.Pecas;
+                                    objItemSalvar.QUANTIDADE = item.Quantidade;
+                                    objItemSalvar.REDUZIDO_ITEM = item.Reduzido;
+                                    objItemSalvar.UM = item.UnidadeMedida;
+                                    objItemSalvar.VALOR_TOTAL = item.Preco * item.Quantidade;
+                                    objItemSalvar.VARIANTE = item.Variante;
+                                    objItemSalvar.COD_COMPOSE = item.Compose;
+                                    objItemSalvar.ORIGEM = origem;
+                                    objItemSalvar.MALHA_PLANO = item.UnidadeMedida == "MT"? "P": "M";
+                                    objItemSalvar.MODA_DECORACAO = "M";
+                                    objItemSalvar.DATA_ENTREGA_DIGI = item.DtItemSolicitada;
+                                    objItemSalvar.ID_TAB_PRECO = -1;     //todo: se nulop, -1
+                                    objItemSalvar.STATUS_ITEM = 15;
+                                    objItemSalvar.PRECODIGITADOMOEDA = 0;//todo: apontar este campo para preco correto em caso de este existir                                    
+                                    objItemSalvar.TEM_RESTRICAO = (item.TemRestricao == true ? 1 : 0);
+                                    objItemSalvar.RESTRICAO = item.Restricao;
+
+                                    if ((item.Tipo == Enums.ItemType.ValidacaoReserva || item.Tipo == Enums.ItemType.Estampado) && !item.PreExistente)
+                                    {
+                                        if (item.TecnologiaOriginal != item.TecnologiaPorExtenso)
+                                        {
+                                            objItemSalvar.TROCA_TECNOLOGIA = "Troca de " + item.TecnologiaOriginal + " para " + item.TecnologiaPorExtenso;
+                                        }
+                                    }
+
+                                    if (objItemSalvar.Novo)
+                                    {
+                                        lstItens.Add(objItemSalvar);
                                     }
                                 }
-
-                                if (objItemSalvar.Novo)
-                                {
-                                    lstItens.Add(objItemSalvar);
-                                }
-                            }
-
-                            if(!estaEditando)
-                            {
-                                ctx.PRE_PEDIDO.Add(objPrePedido);
-                            }
-
-                            if (base.Session_Carrinho.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
-                            {
-                                #region Criticas
-
-                                #region Liberação financeira
 
                                 if(!estaEditando)
                                 {
-                                    ctx.PRE_PEDIDO_CRITICA.Add(new PRE_PEDIDO_CRITICA()
-                                    {
-                                        NUMERO_PRE_PEDIDO = objPrePedido.NUMERO_PEDIDO_BLOCO,
-                                        COD_CRITICA = (decimal)Enums.TiposCritica.LiberacaoFinanceira,
-                                        FLG_STATUS = "C"
-                                    });
+                                    ctx.PRE_PEDIDO.Add(objPrePedido);
                                 }
 
-                                #endregion
-
-                                #region Item sem reduzido
-
-                                bool hasItemSemReduzido = false;
-
-                                foreach (PRE_PEDIDO_ITENS item in lstItens)
+                                if (base.Session_Carrinho.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
                                 {
-                                    if (!hasItemSemReduzido && item.REDUZIDO_ITEM.GetValueOrDefault() == -2)
-                                    {
-                                        hasItemSemReduzido = true;
-                                    }
-                                }
+                                    #region Criticas
 
-                                if (hasItemSemReduzido)
-                                {
-                                    PRE_PEDIDO_CRITICA objCriticaAnterior = null;
+                                    #region Liberação financeira
 
-                                    if(estaEditando)
-                                    {
-                                        ctx.PRE_PEDIDO_CRITICA
-                                        .Where(p => 
-                                            p.NUMERO_PRE_PEDIDO == objPrePedido.NUMERO_PEDIDO_BLOCO
-                                            && p.COD_CRITICA == (decimal)Enums.TiposCritica.SemReduzido
-                                        ).FirstOrDefault();
-                                    }
-
-                                    if(objCriticaAnterior == null)
+                                    if(!estaEditando)
                                     {
                                         ctx.PRE_PEDIDO_CRITICA.Add(new PRE_PEDIDO_CRITICA()
                                         {
                                             NUMERO_PRE_PEDIDO = objPrePedido.NUMERO_PEDIDO_BLOCO,
-                                            COD_CRITICA = (decimal)Enums.TiposCritica.SemReduzido,
+                                            COD_CRITICA = (decimal)Enums.TiposCritica.LiberacaoFinanceira,
                                             FLG_STATUS = "C"
                                         });
                                     }
-                                }
 
-                                #endregion
+                                    #endregion
 
-                                #region Preço divergente
-                             
-                                foreach (PRE_PEDIDO_ITENS item in lstItens)
-                                {
-                                    //if (item.REDUZIDO_ITEM > 0)
-                                    //{
-                                        //Se não tem preço, critica. Se tem preço e ele é diferente do informado pelo representante, critica.
-                                        if (item.PRECOLISTA == null || item.PRECOLISTA.GetValueOrDefault() != item.PRECO_UNIT.GetValueOrDefault())
+                                    #region Item sem reduzido
+
+                                    bool hasItemSemReduzido = false;
+
+                                    foreach (PRE_PEDIDO_ITENS item in lstItens)
+                                    {
+                                        if (!hasItemSemReduzido && item.REDUZIDO_ITEM.GetValueOrDefault() == -2)
                                         {
-                                            PRE_PEDIDO_CRITICA objCriticaAnterior = null;
-
-                                            if(estaEditando)
-                                            {
-                                                ctx.PRE_PEDIDO_CRITICA
-                                                .Where(p => 
-                                                    p.NUMERO_PRE_PEDIDO == objPrePedido.NUMERO_PEDIDO_BLOCO
-                                                    && p.COD_CRITICA == (decimal)Enums.TiposCritica.PrecoDiferente
-                                                    && p.ITEM_PEDIDO == item.ITEM
-                                                ).FirstOrDefault();
-                                            }
-
-                                            if(objCriticaAnterior == null)
-                                            {
-                                                ctx.PRE_PEDIDO_CRITICA.Add(new PRE_PEDIDO_CRITICA()
-                                                {
-                                                    NUMERO_PRE_PEDIDO = objPrePedido.NUMERO_PEDIDO_BLOCO,
-                                                    COD_CRITICA = (decimal)Enums.TiposCritica.PrecoDiferente,
-                                                    FLG_STATUS = "C",
-                                                    ITEM_PEDIDO = item.ITEM,
-                                                    VALOR_TAB = item.PRECOLISTA,
-                                                    VALOR_ITEM = item.PRECO_UNIT
-                                                });
-                                            }
+                                            hasItemSemReduzido = true;
                                         }
-                                    //}
-                                }
+                                    }
 
-                                #endregion
-
-                                #region Item com Restrição
-                                foreach (PRE_PEDIDO_ITENS item in lstItens)
-                                {
-                                    if (item.TEM_RESTRICAO == 1)
+                                    if (hasItemSemReduzido)
                                     {
                                         PRE_PEDIDO_CRITICA objCriticaAnterior = null;
 
-                                        if (estaEditando)
+                                        if(estaEditando)
                                         {
                                             ctx.PRE_PEDIDO_CRITICA
-                                            .Where(p =>
+                                            .Where(p => 
                                                 p.NUMERO_PRE_PEDIDO == objPrePedido.NUMERO_PEDIDO_BLOCO
-                                                && p.COD_CRITICA == (decimal)Enums.TiposCritica.Restricao
-                                                && p.ITEM_PEDIDO == item.ITEM
+                                                && p.COD_CRITICA == (decimal)Enums.TiposCritica.SemReduzido
                                             ).FirstOrDefault();
                                         }
 
-                                        if (objCriticaAnterior == null)
+                                        if(objCriticaAnterior == null)
                                         {
                                             ctx.PRE_PEDIDO_CRITICA.Add(new PRE_PEDIDO_CRITICA()
                                             {
                                                 NUMERO_PRE_PEDIDO = objPrePedido.NUMERO_PEDIDO_BLOCO,
-                                                COD_CRITICA = (decimal)Enums.TiposCritica.Restricao,
-                                                FLG_STATUS = "C",
-                                                ITEM_PEDIDO = item.ITEM
+                                                COD_CRITICA = (decimal)Enums.TiposCritica.SemReduzido,
+                                                FLG_STATUS = "C"
                                             });
                                         }
-                                    }                                    
+                                    }
+
+                                    #endregion
+
+                                    #region Preço divergente
+                             
+                                    foreach (PRE_PEDIDO_ITENS item in lstItens)
+                                    {
+                                        //if (item.REDUZIDO_ITEM > 0)
+                                        //{
+                                            //Se não tem preço, critica. Se tem preço e ele é diferente do informado pelo representante, critica.
+                                            if (item.PRECOLISTA == null || item.PRECOLISTA.GetValueOrDefault() != item.PRECO_UNIT.GetValueOrDefault())
+                                            {
+                                                PRE_PEDIDO_CRITICA objCriticaAnterior = null;
+
+                                                if(estaEditando)
+                                                {
+                                                    ctx.PRE_PEDIDO_CRITICA
+                                                    .Where(p => 
+                                                        p.NUMERO_PRE_PEDIDO == objPrePedido.NUMERO_PEDIDO_BLOCO
+                                                        && p.COD_CRITICA == (decimal)Enums.TiposCritica.PrecoDiferente
+                                                        && p.ITEM_PEDIDO == item.ITEM
+                                                    ).FirstOrDefault();
+                                                }
+
+                                                if(objCriticaAnterior == null)
+                                                {
+                                                    ctx.PRE_PEDIDO_CRITICA.Add(new PRE_PEDIDO_CRITICA()
+                                                    {
+                                                        NUMERO_PRE_PEDIDO = objPrePedido.NUMERO_PEDIDO_BLOCO,
+                                                        COD_CRITICA = (decimal)Enums.TiposCritica.PrecoDiferente,
+                                                        FLG_STATUS = "C",
+                                                        ITEM_PEDIDO = item.ITEM,
+                                                        VALOR_TAB = item.PRECOLISTA,
+                                                        VALOR_ITEM = item.PRECO_UNIT
+                                                    });
+                                                }
+                                            }
+                                        //}
+                                    }
+
+                                    #endregion
+
+                                    #region Item com Restrição
+                                    foreach (PRE_PEDIDO_ITENS item in lstItens)
+                                    {
+                                        if (item.TEM_RESTRICAO == 1)
+                                        {
+                                            PRE_PEDIDO_CRITICA objCriticaAnterior = null;
+
+                                            if (estaEditando)
+                                            {
+                                                ctx.PRE_PEDIDO_CRITICA
+                                                .Where(p =>
+                                                    p.NUMERO_PRE_PEDIDO == objPrePedido.NUMERO_PEDIDO_BLOCO
+                                                    && p.COD_CRITICA == (decimal)Enums.TiposCritica.Restricao
+                                                    && p.ITEM_PEDIDO == item.ITEM
+                                                ).FirstOrDefault();
+                                            }
+
+                                            if (objCriticaAnterior == null)
+                                            {
+                                                ctx.PRE_PEDIDO_CRITICA.Add(new PRE_PEDIDO_CRITICA()
+                                                {
+                                                    NUMERO_PRE_PEDIDO = objPrePedido.NUMERO_PEDIDO_BLOCO,
+                                                    COD_CRITICA = (decimal)Enums.TiposCritica.Restricao,
+                                                    FLG_STATUS = "C",
+                                                    ITEM_PEDIDO = item.ITEM
+                                                });
+                                            }
+                                        }                                    
+                                    }
+                                    #endregion
+
+                                    #endregion
                                 }
-                                #endregion
 
-                                #endregion
-                            }
-
-                            foreach (PRE_PEDIDO_ITENS item in lstItens)
-                            {
-                                if (item.Novo)
+                                foreach (PRE_PEDIDO_ITENS item in lstItens)
                                 {
-                                    ctx.PRE_PEDIDO_ITENS.Add(item);
+                                    if (item.Novo)
+                                    {
+                                        ctx.PRE_PEDIDO_ITENS.Add(item);
+                                    }
                                 }
-                            }
 
-                            foreach (InserirNoCarrinhoViewModel item in base.Session_Carrinho.Itens)
-                            {
-                                if(item.Excluir)
+                                foreach (InserirNoCarrinhoViewModel item in base.Session_Carrinho.Itens)
                                 {
-                                    PRE_PEDIDO_ITENS objExcluir = ctx.PRE_PEDIDO_ITENS.First(i => i.ITEM == item.ID && i.NUMERO_PEDIDO_BLOCO == iNUMERO_PEDIDO_BLOCO);
-                                    ctx.PRE_PEDIDO_ITENS.Remove(objExcluir);
+                                    if(item.Excluir)
+                                    {
+                                        PRE_PEDIDO_ITENS objExcluir = ctx.PRE_PEDIDO_ITENS.First(i => i.ITEM == item.ID && i.NUMERO_PEDIDO_BLOCO == iNUMERO_PEDIDO_BLOCO);
+                                        ctx.PRE_PEDIDO_ITENS.Remove(objExcluir);
+                                    }
                                 }
+
+                                ctx.SaveChanges();
+
+                                transaction.Commit();
                             }
-
-                            ctx.SaveChanges();
-
-                            transaction.Commit();
+                            catch (Exception ex)
+                            {
+                                transaction.Rollback();
+                                throw ex;
+                            }
                         }
-                        catch (Exception ex)
-                        {
-                            transaction.Rollback();
-                            throw ex;
-                        }
+                        #endregion
                     }
                 }
                  
@@ -2525,10 +2552,20 @@ namespace Dalutex.Controllers
                     VW_PESQUISA_PEDIDO objPedido = ctxTI.VW_PESQUISA_PEDIDO.Find(iIDPedido);
 
                     model.Pedido = objPedido.PEDIDO;
-                    model.Cliente = objPedido.CLIENTE;
-                    model.Representante = objPedido.REPRESENTANTE;
+                    model.DataHoraEmissao = objPedido.DATA_H_EMIS;
+
                     model.Status = objPedido.STATUS_PEDIDO;
 
+                    model.Representante = objPedido.REPRESENTANTE;
+
+                    model.Cliente = objPedido.CLIENTE;//cliente fatura
+                    model.CNPJFat = objPedido.CNPJ_FAT;
+                    model.EndFat = objPedido.END_FAT;
+                    
+                    model.ClienteEntrega = objPedido.CLIENTE_ENTREGA;
+                    model.EndEntrega = objPedido.END_ENTREGA;
+                    model.CNPJEntrega = objPedido.CNPJ_ENT;
+                    
                     if(objPedido.STATUS_PEDIDO == 10)/*Migrou para o SGT*/
                     {
                         model.PodeEditarPedido = false; /*VER COM O ODAIR base.Session_Usuario.PodeEditarPedidoAvancado;*/

@@ -12,10 +12,21 @@ namespace Dalutex.Models.DataModels
     {
         [Key]
         public decimal PEDIDO { get; set; }
+
         public string REPRESENTANTE { get; set; }
         public string CLIENTE { get; set; }
         public DateTime DATA_EMISSAO { get; set; }
         public decimal STATUS_PEDIDO { get; set; }
         public string TIPO_PEDIDO { get; set; }
+
+        public DateTime DATA_H_EMIS { get; set; }
+
+        public string CNPJ_FAT { get; set; }
+        public string END_FAT { get; set; }        
+        
+        public decimal ID_CLIENTE_ENTREGA { get; set; }
+        public string CLIENTE_ENTREGA { get; set; }
+        public string CNPJ_ENT { get; set; }
+        public string END_ENTREGA { get; set; }        
     }
 }

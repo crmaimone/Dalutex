@@ -27,14 +27,16 @@ namespace Dalutex.Controllers
             string IDTipo
         )
         {
-            foreach (var item in Session_Carrinho.Itens)
-            {
-                if(item.Compose == -1)
+            if (base.Session_Carrinho.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
+            {            
+                foreach (var item in Session_Carrinho.Itens)
                 {
-                    return RedirectToAction("Carrinho", "Pedido",new { errorMsg ="Falta definir campo compose para os itens. Por favor verificar" });
+                    if(item.Compose == -1)
+                    {
+                        return RedirectToAction("Carrinho", "Pedido",new { errorMsg ="Falta definir campo compose para os itens. Por favor verificar" });
+                    }
                 }
             }
-
             if (IDRepresentante != null)
             {
                 using (var ctx = new DalutexContext())

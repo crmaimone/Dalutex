@@ -508,6 +508,7 @@ namespace Dalutex.Controllers
                             if (objReduzido != null && objReduzido.CODIGO_REDUZIDO > default(int))
                             {
                                 model.Reduzido = objReduzido.CODIGO_REDUZIDO;
+                                model.Colecao = ctxTI.VW_GRUPO_COL_RED.Where(x => x.REDUZIDO == objReduzido.CODIGO_REDUZIDO).FirstOrDefault().COLECAO;
                             }
                             else
                                 model.Reduzido = -2; //reduzido criado por JOB posteriormente

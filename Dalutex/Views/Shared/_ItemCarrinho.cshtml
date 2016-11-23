@@ -90,15 +90,23 @@
                                 {
                                     <div><strong>Data Solicitada:</strong>&nbsp;@Model.DataEntregaItem.ToString("d")</div>
                                 }
-                                                                                                                             
-                                <div><strong>Coleção:</strong>&nbsp;@Model.NMColecao</div>
+
+                                if (!string.IsNullOrWhiteSpace(Model.Colecao))
+                                {
+                                    <div><strong>Coleção:</strong>&nbsp;@Model.Colecao</div>
+                                }
+                                else
+                                {
+                                    <div><strong>Coleção:</strong>&nbsp;@Model.NMColecao</div>
+                                }
+
                                 <div><strong>Quantidade:</strong>&nbsp;@Model.Quantidade&nbsp;@Model.UnidadeMedida &nbsp;| Qtde Conv. (MTs): @Model.QuantidadeConvertida</div>                                
                                 <div><strong>Total:</strong>&nbsp;@Model.ValorTotalItem.ToString("c")</div>
                             }                                                                                   
                             
                             @if (((bool?)ViewData["ALTERARITEM"]) == true && Model.Tipo != Enums.ItemType.ProntaEntrega)
                             {
-                                <div><strong>Coleção:</strong>&nbsp;@Model.Colecao</div>
+                                @*<div><strong>Coleção:</strong>&nbsp;@Model.Colecao</div>*@
                                 
                                 <div class="form-group">
                                     @Html.LabelFor(x => x.Compose)

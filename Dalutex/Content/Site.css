@@ -12,6 +12,10 @@
     background-color:rgba(211, 211, 211, 0.36);
 }
 
+input:read-only + span.input-group-addon{
+    visibility:hidden;
+}
+ 
 .header-title h3
 {
     font-family:'lucida handwriting';

@@ -508,7 +508,27 @@ namespace Dalutex.Controllers
                             if (objReduzido != null && objReduzido.CODIGO_REDUZIDO > default(int))
                             {
                                 model.Reduzido = objReduzido.CODIGO_REDUZIDO;
-                                model.Colecao = ctxTI.VW_GRUPO_COL_RED.Where(x => x.REDUZIDO == objReduzido.CODIGO_REDUZIDO).FirstOrDefault().COLECAO;
+                                try
+                                {
+                                    model.Colecao = ctxTI.VW_GRUPO_COL_RED.Where(x => x.REDUZIDO == objReduzido.CODIGO_REDUZIDO).FirstOrDefault().COLECAO;
+                                }
+                                catch 
+                                { 
+                                    return RedirectToAction("ArtigosDisponiveis", "Pedido",
+                                    new
+                                    {
+                                        desenho = model.Desenho,
+                                        variante = model.Variante,
+                                        idcolecao = model.IDColecao,
+                                        nmcolecao = model.NMColecao,
+                                        pagina = model.Pagina,
+                                        pedidoreserva = model.PedidoReserva,
+                                        idvariante = model.IDVariante,
+                                        itempedidoreserva = model.ItemPedidoReserva,
+                                        tipo = (int)model.Tipo,
+                                        errMessage = "GRUPO COLEÇÃO NÃO INFORMADO PARA ESTA COLEÇÃO. VERIFICAR COM COMERCIAL."
+                                    });
+                                }                                                                    
                             }
                             else
                                 model.Reduzido = -2; //reduzido criado por JOB posteriormente
@@ -813,17 +833,20 @@ namespace Dalutex.Controllers
 
                     ObterPrevisaoEntrega(model);
 
-                    if (model.DtItemSolicitada < model.DataEntregaItem || model.DataEntregaItem.AddDays(int.Parse(ConfigurationManager.AppSettings["DIAS_DATA_SOLICITACAO"])) < model.DtItemSolicitada)
+                    if (model.IDTipoPedido != (int)Enums.TiposPedido.PILOTAGEM && model.IDTipoPedido != (int)Enums.TiposPedido.AMOSTRA)
                     {
-                        ModelState.AddModelError("", "Data de entrega solicitada inválida.");
-                        if (base.Session_Carrinho == null || base.Session_Carrinho.IDTipoPedido < 0)
+                        if (model.DtItemSolicitada < model.DataEntregaItem || model.DataEntregaItem.AddDays(int.Parse(ConfigurationManager.AppSettings["DIAS_DATA_SOLICITACAO"])) < model.DtItemSolicitada)
                         {
-                            model.ObterTipoPedido = "S";
-                            this.CarregarTiposPedidos(model);
-                        }
-                        this.CarregarTamanhosPadrao(model);
+                            ModelState.AddModelError("", "Data de entrega solicitada inválida.");
+                            if (base.Session_Carrinho == null || base.Session_Carrinho.IDTipoPedido < 0)
+                            {
+                                model.ObterTipoPedido = "S";
+                                this.CarregarTiposPedidos(model);
+                            }
+                            this.CarregarTamanhosPadrao(model);
 
-                        return View(model);
+                            return View(model);
+                        }
                     }
 
                     if (model.Modo == "I")//Inclusão
@@ -1028,6 +1051,12 @@ namespace Dalutex.Controllers
             {
                 model.NumeroMaximoDiasDataSolicitacao = int.Parse(ConfigurationManager.AppSettings["DIAS_DATA_SOLICITACAO"]);
 
+                if (base.Session_Carrinho != null && (base.Session_Carrinho.IDTipoPedido == 6 || base.Session_Carrinho.IDTipoPedido == 7))
+                {
+                    base.Session_Carrinho.DataEntrega = DateTime.Today.AddDays(10);
+                    return;
+                }
+
                 using (var ctx = new TIDalutexContext())
                 {
                     int iID_DISP = ctx.DISPONIBILIDADE_MALHA
@@ -1127,6 +1156,16 @@ namespace Dalutex.Controllers
             InserirNoCarrinhoViewModel objAtualizar = base.Session_Carrinho.Itens.Where(x => x.NumeroSequencial == iSequencial).First();
             objAtualizar.Compose = int.Parse(compose);
         }
+      
+        public ActionResult AcertaCompose()
+        {
+            foreach (var item in base.Session_Carrinho.Itens)
+            {
+                item.Compose = 0; 
+            }
+            return RedirectToAction("Carrinho", "Pedido");
+        }
+
 
         public ActionResult EsvaziarCarrinho()
         {

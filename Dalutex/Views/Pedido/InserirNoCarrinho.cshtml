@@ -148,14 +148,14 @@
                                 <div class="form-group">
                                     @Html.LabelFor(x => x.DataEntregaItem, new { @class = "col-md-4 control-label" })
                                     <div class='col-md-8'>
-                                        @Html.Label(Model.DataEntregaItem.ToString("dd/MM/yyyy"), new { @class = "control-label" })
+                                        @Html.Label(Model.DataEntregaItem.ToString("dd/MM/yyyy"), new { @class = "control-label", @id="lblDtEntregaItem" })
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     @Html.LabelFor(x => x.DtItemSolicitada, new { @class = "col-md-4 control-label" })
                                     <div class='input-group date col-md-8' style="width:258px">
-                                        <input type='text' class="form-control" name="DtItemSolicitada" />
+                                        <input id="txtDtItemSolicitada" type='text' class="form-control" name="DtItemSolicitada" />
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-calendar"></span>
                                         </span>
@@ -201,6 +201,8 @@
                             <input type="hidden" name="NumeroSequencial" value="@Model.NumeroSequencial" />
                             <input type="hidden" name="Compose" value="@Model.Compose" />
                             <input type="hidden" name="Colecao" value="@Model.Colecao" />
+                            <input type="hidden" id="hidDtSolicitada" value="@DateTime.Today.AddDays(10).ToString("dd/MM/yyyy")" />
+                            <input type="hidden" id="hidDtEntrega" value="@Model.DataEntregaItem.ToString("dd/MM/yyyy")" />
 
                             <div class="form-group">
                                 <div class="col-xs-12">
@@ -289,138 +291,162 @@
     @Scripts.Render("~/bundles/datepicker")
     @Scripts.Render("~/bundles/jquerymaskmoney")
     <script>
-        $(document).ready(function () {
-            //API
-            scriptWrapper = (function () {
+    $(document).ready(function () {
+        //API
+        scriptWrapper = (function () {
 
-                //API Attributes
-                txtPecas_Blur = function () {
-                    calcularTotal();
+            //API Attributes
+            txtPecas_Blur = function () {
+                calcularTotal();
+            }
+
+            calcularTotal = function () {
+                var $txtPecas = $("#txtPecas");
+                var $txtQuantidade = $("#txtQuantidade");
+
+                if (!isNaN($txtPecas.val())) {
+                    $txtQuantidade.val($txtPecas.val() * $("#lstTamanhoPadrao > option:selected").attr("value"));
+                    return;
+                }
+            }
+
+            lstTiposPedido_Change = function () {
+
+                var $txtDtItemSolicitada = $("#txtDtItemSolicitada");
+
+                //se amostra ou pilotagem ... (tipo 6 ou 7)---------------
+                if (($("#lstTiposPedido > option:selected").attr("value") == "6") || ($("#lstTiposPedido > option:selected").attr("value") == "7")) {
+                    $("#txtPecas").val("0")
+                    $("#txtPecas").prop('disabled', true);
+                    $("#txtQuantidade").prop('disabled', false);
+                    $("label[for=IDTamanhoPadrao]").hide();
+                    $("#lstTamanhoPadrao").selectpicker('hide');
+
+                    var $hidDtSolicitada = $("#hidDtSolicitada");
+                    $txtDtItemSolicitada.prop('readonly', true);
+                    $txtDtItemSolicitada.text($hidDtSolicitada.val());
+                    $txtDtItemSolicitada.datepicker('update', $hidDtSolicitada.val());
+                    $("#lblDtEntregaItem").text($hidDtSolicitada.val());
+
+                }
+                else {
+                    $("#txtQuantidade").val("0")
+                    $("#txtPecas").prop('disabled', false);
+                    $("#txtQuantidade").prop('disabled', true);
+                    $("label[for=IDTamanhoPadrao]").show();
+                    $("#lstTamanhoPadrao").selectpicker('show');
+
+                    $("#txtDtItemSolicitada").prop('readonly', false);
+                    $("#lblDtEntregaItem").text($("#hidDtEntrega").val());
+                    $txtDtItemSolicitada.text($hidDtSolicitada.val());
+                    $txtDtItemSolicitada.datepicker('update', $txtDtItemSolicitada.val());
+                }
+                //Buscar novos minimos e máximos
+            }
+
+            lstTamanhoPadrao_Change = function () {
+                calcularTotal();
+            }
+
+            txtPecas_Input = function (e) {
+                $(this).val($(this).val().replace(",", "").replace(".", ""));
+            }
+
+            form_Submit = function (e) {
+                $('#frmInserir').submit();
+            }
+
+            btnSalvar_Click = function (e) {
+                var IDTipoPedido;
+                var TecOriginal;
+                var TecSelecionada;
+                var Artigo;
+
+                if ($('#hidObterTipoPedido').val() == 'S') {
+                    IDTipoPedido = $("#lstTiposPedido > option:selected").attr("value");
+                }
+                else {
+                    IDTipoPedido = $('#hidIDTipoPedido').val();
                 }
 
-                calcularTotal = function () {
-                    var $txtPecas = $("#txtPecas");
-                    var $txtQuantidade = $("#txtQuantidade");
+                TecOriginal = $('#hidTecnologiaOriginal').val();
+                TecSelecionada = $('#hidTecnologiaPorExtenso').val();
+                Artigo = $('#hidArtigo').val();
 
-                    if (!isNaN($txtPecas.val())) {
-                        $txtQuantidade.val($txtPecas.val() * $("#lstTamanhoPadrao > option:selected").attr("value"));
-                        return;
-                    }
-                }
-
-                lstTiposPedido_Change = function () {
-                    //if ($("#lstTiposPedido > option:selected").attr("value") != "0")   //diferente de venda.... esse comportamento deve ser para tipo 6 ou 7,
-                    if (($("#lstTiposPedido > option:selected").attr("value") == "6") || ($("#lstTiposPedido > option:selected").attr("value") == "7"))
-                    {
-                        $("#txtPecas").val("0")
-                        $("#txtPecas").prop('disabled', true);
-                        $("#txtQuantidade").prop('disabled', false);
-                        $("label[for=IDTamanhoPadrao]").hide();
-                        $("#lstTamanhoPadrao").selectpicker('hide');
-                    }
-                    else                    
-                    {
-                        $("#txtQuantidade").val("0")
-                        $("#txtPecas").prop('disabled', false);
-                        $("#txtQuantidade").prop('disabled', true);
-                        $("label[for=IDTamanhoPadrao]").show();
-                        $("#lstTamanhoPadrao").selectpicker('show');
-                    }
-                    //Buscar novos minimos e máximos
-                }
-
-                lstTamanhoPadrao_Change = function () {
-                    calcularTotal();
-                }
-
-                txtPecas_Input = function (e) {
-                    $(this).val($(this).val().replace(",", "").replace(".", ""));
-                }
-
-                form_Submit = function(e){
-                    $('#frmInserir').submit();
-                }
-
-                btnSalvar_Click = function (e) {
-                    var IDTipoPedido;
-                    var TecOriginal;
-                    var TecSelecionada;
-                    var Artigo;
-
-                    if ($('#hidObterTipoPedido').val() == 'S')
-                    {
-                        IDTipoPedido = $("#lstTiposPedido > option:selected").attr("value");
-                    }
-                    else
-                    {
-                        IDTipoPedido = $('#hidIDTipoPedido').val();
-                    }
-
-                    TecOriginal = $('#hidTecnologiaOriginal').val();
-                    TecSelecionada = $('#hidTecnologiaPorExtenso').val();
-                    Artigo = $('#hidArtigo').val();
-
-                    $.getJSON("VerificaTecnologiaPilotagem?IDTipoPedido=" + IDTipoPedido 
-                        + '&TecOriginal=' + TecOriginal 
-                        + '&TecSelecionada=' + TecSelecionada
-                        + '&Artigo=' + Artigo,
-                        function (result) {
-                            if (result) {
-                                $("#spanRestricao").html(result);
-                                $("#alertTecnologiaPilotagem").modal();
-                            }
-                            else {
-                                form_Submit();
-                            }
+                $.getJSON("VerificaTecnologiaPilotagem?IDTipoPedido=" + IDTipoPedido
+                    + '&TecOriginal=' + TecOriginal
+                    + '&TecSelecionada=' + TecSelecionada
+                    + '&Artigo=' + Artigo,
+                    function (result) {
+                        if (result) {
+                            $("#spanRestricao").html(result);
+                            $("#alertTecnologiaPilotagem").modal();
+                        }
+                        else {
+                            form_Submit();
+                        }
                     });
-                }
+            }
 
-                
-                //API Methods
 
-                // public API
-                return {
-                    txtPecas_Blur: txtPecas_Blur,
-                    lstTiposPedido_Change: lstTiposPedido_Change,
-                    lstTamanhoPadrao_Change: lstTamanhoPadrao_Change,
-                    txtPecas_Input: txtPecas_Input,
-                    btnSalvar_Click: btnSalvar_Click,
-                    form_Submit: form_Submit
-                };
-            })();
+            //API Methods
 
-            //Init
-            (function Init() {
-                $('.input-group.date').datepicker({
-                    startDate: "@Model.DataEntregaItem.ToString("dd/MM/yyyy")",
-                    endDate: "@Model.DtItemSolicitada.ToString("dd/MM/yyyy")",
-                    format: "dd/mm/yyyy",
-                    todayBtn: true,
-                    clearBtn: true,
-                    language: "pt-BR"
-                });
+            // public API
+            return {
+                txtPecas_Blur: txtPecas_Blur,
+                lstTiposPedido_Change: lstTiposPedido_Change,
+                lstTamanhoPadrao_Change: lstTamanhoPadrao_Change,
+                txtPecas_Input: txtPecas_Input,
+                btnSalvar_Click: btnSalvar_Click,
+                form_Submit: form_Submit
+            };
+        })();
 
-                $('.input-group.date').datepicker('update', '@Model.DataEntregaItem.ToString("dd/MM/yyyy")');
+        //Init
+        (function Init() {
+            $('.input-group.date').datepicker({
+                startDate: "@Model.DataEntregaItem.ToString("dd/MM/yyyy")",
+                endDate: "@Model.DtItemSolicitada.ToString("dd/MM/yyyy")",
+                format: "dd/mm/yyyy",
+                todayBtn: true,
+                clearBtn: true,
+                language: "pt-BR"
+            });
 
-                $('#lstTiposPedido').selectpicker();
-                $("#lblQuantidade").text($("#hidUM").val());
-                $("#txtPecas").blur(this.txtPecas_Blur);
-                $('#lstTamanhoPadrao').selectpicker();
-                $('#txtPecas').on("input", scriptWrapper.txtPecas_Input)
+            $('.input-group.date').datepicker('update', '@Model.DataEntregaItem.ToString("dd/MM/yyyy")');
+            $('.input-group.date').datepicker("option", "enableOnReadonly", false);
+            $("#txtDtItemSolicitada").datepicker("option", "readonly", true);
 
-                $("#txtPecas").focus(function () {
-                    this.select();
-                });
-                $("#txtPreco").focus(function () {
-                    this.select();
-                });
-                $('#lstTiposPedido').on('change', scriptWrapper.lstTiposPedido_Change);
-                $('#lstTamanhoPadrao').on('change', scriptWrapper.lstTamanhoPadrao_Change);
-                $('#btnSalvar').on('click', scriptWrapper.btnSalvar_Click)
-                $('#btnOkTecnologiaDifOriginal').on('click', scriptWrapper.form_Submit);
-                $("#txtPreco").maskMoney({ allowNegative: false, thousands: '.', decimal: ',' });
+            $('#lstTiposPedido').selectpicker();
+            $("#lblQuantidade").text($("#hidUM").val());
+            $("#txtPecas").blur(this.txtPecas_Blur);
+            $('#lstTamanhoPadrao').selectpicker();
+            $('#txtPecas').on("input", scriptWrapper.txtPecas_Input)
 
-            })();
-        });
-    </script>
+            $("#txtPecas").focus(function () {
+                this.select();
+            });
+            $("#txtPreco").focus(function () {
+                this.select();
+            });
+            $('#lstTiposPedido').on('change', scriptWrapper.lstTiposPedido_Change);
+            $('#lstTamanhoPadrao').on('change', scriptWrapper.lstTamanhoPadrao_Change);
+            $('#btnSalvar').on('click', scriptWrapper.btnSalvar_Click)
+            $('#btnOkTecnologiaDifOriginal').on('click', scriptWrapper.form_Submit);
+            $("#txtPreco").maskMoney({ allowNegative: false, thousands: '.', decimal: ',' });
+
+            var idTipoPedido = $("#hidIDTipoPedido").val();
+
+            if (idTipoPedido === "6" || idTipoPedido === "7") {
+                var $txtDtItemSolicitada = $("#txtDtItemSolicitada"); 
+                $txtDtItemSolicitada.val($("#hidDtSolicitada").val());
+                $txtDtItemSolicitada.prop('readonly', true);
+                $txtDtItemSolicitada.datepicker("option", "readonly", true);
+                $txtDtItemSolicitada.datepicker('update', $("#hidDtSolicitada").val());
+                $("#lblDtEntregaItem").text($("#hidDtSolicitada").val());
+            }
+
+        })();
+    });
+</script>
 }

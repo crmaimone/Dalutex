@@ -188,6 +188,7 @@ namespace Dalutex.Controllers
             return RedirectToAction("ConclusaoPedido", "Pedido");
         }
 
+       
         public ActionResult Representantes()
         {
             PesquisaRepresentantesViewModel model = new PesquisaRepresentantesViewModel();
@@ -224,6 +225,21 @@ namespace Dalutex.Controllers
 
             return View(model);
         }
+
+        public ActionResult EnviarPDFTabelaPreco(string IDUsuario)
+        {
+            using (var ctx = new TIDalutexContext())
+            {
+                ctx.EMAIL_TABELA_PRECO.Add(new EMAIL_TABELA_PRECO()
+                {       
+                    ID_UAUARIO = System.Convert.ToDecimal(IDUsuario),
+                    STATUS_ENVIO = 0
+                });
+                ctx.SaveChanges();
+            }
+            return View();
+        }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -880,6 +896,6 @@ namespace Dalutex.Controllers
             }
 
             return Json(lstResult, JsonRequestBehavior.AllowGet);
-        }
+        }        
     }
 }

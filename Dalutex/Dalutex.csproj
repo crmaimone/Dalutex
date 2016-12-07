@@ -163,6 +163,7 @@
     <Compile Include="Models\CadastroViewModel.cs" />
     <Compile Include="fonts\ARTIGO_PESO_PADRAO.cs" />
     <Compile Include="Models\DataModels\ACOES.cs" />
+    <Compile Include="Models\DataModels\EMAIL_TABELA_PRECO.cs" />
     <Compile Include="Models\DataModels\LINK_GRUPO_COND_PGTO.cs" />
     <Compile Include="Models\DataModels\LOG_PEDIDO_WEB.cs" />
     <Compile Include="Models\DataModels\RASCUNHO_PEDIDO.cs" />
@@ -720,6 +721,7 @@
     <Content Include="Views\Cadastro\RascunhoPedidoSucesso.cshtml" />
     <Content Include="Views\Cadastro\TabelaPrecos.cshtml" />
     <Content Include="Views\Pedido\Reacabamento.cshtml" />
+    <Content Include="Views\Cadastro\EnviarPDFTabelaPreco.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

@@ -191,8 +191,7 @@
                             <input type="hidden" name="IDVariante" value="@Model.IDVariante" />
                             <input type="hidden" name="PedidoReserva" value="@Model.PedidoReserva" />
                             <input type="hidden" name="ItemPedidoReserva" value="@Model.ItemPedidoReserva" />
-                            <input type="hidden" name="ObterTipoPedido" value="@Model.ObterTipoPedido" />
-                            <input type="hidden" name="DataEntregaItem" value="@Model.DataEntregaItem" />
+                            <input type="hidden" name="ObterTipoPedido" value="@Model.ObterTipoPedido" />                                                                                    
                             <input type="hidden" name="NumeroMaximoDiasDataSolicitacao" value="@Model.NumeroMaximoDiasDataSolicitacao" />
                             <input type="hidden" name="ID" value="@Model.ID" />
                             <input type="hidden" name="PreExistente" value="@Model.PreExistente.ToString()" />
@@ -201,8 +200,11 @@
                             <input type="hidden" name="NumeroSequencial" value="@Model.NumeroSequencial" />
                             <input type="hidden" name="Compose" value="@Model.Compose" />
                             <input type="hidden" name="Colecao" value="@Model.Colecao" />
-                            <input type="hidden" id="hidDtSolicitada" value="@DateTime.Today.AddDays(10).ToString("dd/MM/yyyy")" />
+                            <input type="hidden" name="DataEntregaItem" value="@Model.DataEntregaItem" />
+                            
                             <input type="hidden" id="hidDtEntrega" value="@Model.DataEntregaItem.ToString("dd/MM/yyyy")" />
+                            <input type="hidden" id="hidDtSolicitada" value="@DateTime.Today.AddDays(10).ToString("dd/MM/yyyy")" />
+                            
 
                             <div class="form-group">
                                 <div class="col-xs-12">

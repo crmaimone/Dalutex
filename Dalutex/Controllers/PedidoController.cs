@@ -835,6 +835,10 @@ namespace Dalutex.Controllers
 
                     if (model.IDTipoPedido != (int)Enums.TiposPedido.PILOTAGEM && model.IDTipoPedido != (int)Enums.TiposPedido.AMOSTRA)
                     {
+                        if (model.DtItemSolicitada < model.DataEntregaItem)
+                        {
+                            model.DtItemSolicitada = model.DataEntregaItem;
+                        }
                         if (model.DtItemSolicitada < model.DataEntregaItem || model.DataEntregaItem.AddDays(int.Parse(ConfigurationManager.AppSettings["DIAS_DATA_SOLICITACAO"])) < model.DtItemSolicitada)
                         {
                             ModelState.AddModelError("", "Data de entrega solicitada inválida.");
@@ -1054,6 +1058,9 @@ namespace Dalutex.Controllers
                 if (base.Session_Carrinho != null && (base.Session_Carrinho.IDTipoPedido == 6 || base.Session_Carrinho.IDTipoPedido == 7))
                 {
                     base.Session_Carrinho.DataEntrega = DateTime.Today.AddDays(10);
+
+                    model.DtItemSolicitada = DateTime.Today.AddDays(10);
+                    model.DataEntregaItem = model.DtItemSolicitada;
                     return;
                 }
 

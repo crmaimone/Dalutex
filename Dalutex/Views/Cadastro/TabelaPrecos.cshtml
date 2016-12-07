@@ -8,7 +8,18 @@
 @*@Styles.Render("~/Content/datatables")*@
 <link href="~/Content/DataTables/css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="~/Content/DataTables/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+
 <div class="header-title"><h3>@ViewBag.Titulo</h3></div>
+
+<div class="header-title">
+    <div class="row">
+        <div class="col-xs-12">
+            <a href="@Url.Action("EnviarPDFTabelaPreco", "Cadastro")" class="btn btn-primary pull-left" style="margin-left:5px;">
+                <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>&nbsp;&nbsp;Enviar PDF
+            </a>
+        </div>
+    </div>
+</div>
 
 <div class="row">
     <div class="col-md-8">

@@ -79,11 +79,20 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<VW_CLIE_OPER_TRINGULAR> VW_CLIE_OPER_TRINGULAR { get; set; }
         public virtual DbSet<VW_NF_PEDIDO_CLIENTE> VW_NF_PEDIDO_CLIENTE { get; set; }
         public virtual DbSet<EMAIL_TABELA_PRECO> EMAIL_TABELA_PRECO { get; set; }
+        public virtual DbSet<VW_EMAIL_USUARIO> VW_EMAIL_USUARIO { get; set; }
 
         
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<VW_EMAIL_USUARIO>()
+                .Property(e => e.ID_USUARIO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_EMAIL_USUARIO>()
+                .Property(e => e.EMAIL)
+                .IsUnicode(false);
+
             modelBuilder.Entity<EMAIL_TABELA_PRECO>()
                 .Property(e => e.ID_EMAIL_TABELA_PRECO)
                 .HasPrecision(38, 0);

@@ -180,6 +180,7 @@
     <Compile Include="Models\DataModels\VW_CUS_CONS_TAB_PRECO.cs" />
     <Compile Include="Models\DataModels\VW_DESENHOS_POR_COL_DESENV.cs" />
     <Compile Include="Models\DataModels\VW_EMAILS.cs" />
+    <Compile Include="Models\DataModels\VW_EMAIL_USUARIO.cs" />
     <Compile Include="Models\DataModels\VW_FAROL.cs" />
     <Compile Include="Models\DataModels\COML_CONTATOS.cs" />
     <Compile Include="Models\DataModels\COML_TIPOSPEDIDOS.cs" />

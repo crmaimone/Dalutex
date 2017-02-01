@@ -3,17 +3,12 @@
 }
 <div class="header-title"><h3>@ViewBag.Title</h3></div>
 <hr />
-<h5>Envidado com sucesso!</h5>
-@*<hr />
-<h2><strong>Pedido número: @ViewBag.NumeroPedido </strong></h2>
-<hr />
-<br />
 
-<div class="row">
-    <div class="col-md-12">
-        <a class="btn btn-default right" href="@Url.Action("Index","Home")"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>&nbsp;VOLTAR AO INÍCIO</a>
-        <a class="btn btn-default right" href="@Url.Action("EspelhoPedido", new { numeropedido = @ViewBag.NumeroPedido })"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>&nbsp;IMPRIMIR</a>
-        <a class="btn btn-default right" href="@Url.Action("EnviarEmail", new { numeropedido = @ViewBag.NumeroPedido })"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>&nbsp;E-MAIL</a>
-    </div>
-</div>*@
-
+@if (ViewBag.SemEmail != "")
+{
+    <div id="ErrorMSG"> @ViewBag.SemEmail</div>
+}
+else
+{
+    <div id="SucessoMSG">Em instantes você receberá um cópia da tabela em seu e-mail.</div>   
+}

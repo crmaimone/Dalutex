@@ -230,12 +230,25 @@ namespace Dalutex.Controllers
         {
             using (var ctx = new TIDalutexContext())
             {
-                ctx.EMAIL_TABELA_PRECO.Add(new EMAIL_TABELA_PRECO()
-                {       
-                    ID_UAUARIO = System.Convert.ToDecimal(IDUsuario),
-                    STATUS_ENVIO = 0
-                });
-                ctx.SaveChanges();
+                decimal id = Convert.ToDecimal(IDUsuario);
+
+                VW_EMAIL_USUARIO email = ctx.VW_EMAIL_USUARIO.Where(x => x.ID_USUARIO == Session_Usuario.COD_USU && x.EMAIL.Trim() != "X").FirstOrDefault();
+                
+                if (email != null) 
+                {                
+                    ctx.EMAIL_TABELA_PRECO.Add(new EMAIL_TABELA_PRECO()
+                    {       
+                        ID_UAUARIO = Session_Usuario.COD_USU,// System.Convert.ToDecimal(IDUsuario),
+                        STATUS_ENVIO = 0
+                    });
+                    ctx.SaveChanges();
+
+                    ViewBag.SemEmail = "";
+                }
+                else
+                {                    
+                    ViewBag.SemEmail = "Sem E-mail Cadastrado Para o Usuário Logado. Por favor verifique com setor Comercial.";
+                }
             }
             return View();
         }
@@ -878,7 +891,7 @@ namespace Dalutex.Controllers
         public ActionResult TabelaPrecos()
         {
             TabelaPrecosViewModel model = new TabelaPrecosViewModel();
-
+          
             return View(model);
         }
 

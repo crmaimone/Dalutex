@@ -330,7 +330,9 @@ namespace Dalutex.Controllers
             model.NumeroSequencial = iditem;
 
             #region Restrições
-            if ((model.TecnologiaPorExtenso != "L") && (!ehreacabamento) )
+            if (//(model.TecnologiaPorExtenso != "L") && 
+                (!ehreacabamento) 
+               )
             {
                 using (var ctxTI = new TIDalutexContext())
                 {

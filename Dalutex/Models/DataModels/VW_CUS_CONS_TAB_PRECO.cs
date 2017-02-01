@@ -51,5 +51,6 @@ namespace Dalutex.Models.DataModels
         public double? PRECO_M2 { get; set; }
         public double? PRECO_M { get; set; }
 
+        public string COLECAO { get; set; }
     }
 }

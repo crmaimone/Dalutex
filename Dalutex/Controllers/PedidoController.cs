@@ -330,9 +330,8 @@ namespace Dalutex.Controllers
             model.NumeroSequencial = iditem;
 
             #region Restrições
-            if (//(model.TecnologiaPorExtenso != "L") && 
-                (!ehreacabamento) 
-               )
+            //if ((model.TecnologiaPorExtenso != "L") && (!ehreacabamento))
+            if ((!ehreacabamento) && (model.IDTipoPedido == (int)Enums.TiposPedido.RESERVA))
             {
                 using (var ctxTI = new TIDalutexContext())
                 {
@@ -342,8 +341,32 @@ namespace Dalutex.Controllers
 
                     if (ListaArtigosInativo.Count == 0)
                     {
-                        model.TemRestricao = true;
-                        model.Restricao = "Artigo Inativo";
+                        //oda-- 15/02/2017 -- bloquear entrada de artigo inativo - solicitação Ludovit ----------------------
+                        if (Convert.ToBoolean(ConfigurationManager.AppSettings["BLOQUEIA_ARTIGO_INATIVO"]) == true)                                                            
+                        {
+                            if (model.TecnologiaPorExtenso != "L") //se for LISO, o link não funciona pra selecionar o item, ou seja, não chega aki.... ou chega aki apenas o que não for LISO
+                            {
+                                return RedirectToAction("ArtigosDisponiveis", "Pedido",
+                                    new
+                                    {
+                                        desenho = model.Desenho,
+                                        variante = model.Variante,
+                                        idcolecao = model.IDColecao,
+                                        nmcolecao = model.NMColecao,
+                                        pagina = model.Pagina,
+                                        pedidoreserva = model.PedidoReserva,
+                                        idvariante = model.IDVariante,
+                                        itempedidoreserva = model.ItemPedidoReserva,
+                                        tipo = (int)model.Tipo,
+                                        errMessage = "Artigo com Restrição: (ARTIGO INATIVO)"
+                                    });
+                            }                           
+                        }
+                        else
+                        {                        
+                            model.TemRestricao = true;
+                            model.Restricao = "Artigo Inativo";
+                        }
                     }
 
                     List<string> strCaracterisNew = ctxTI.VW_CARACT_DESENHOS_NEW.Where(x => x.DESENHO == desenho).Select(x => x.CARACT_TECNICA).ToList();
@@ -3019,7 +3042,8 @@ namespace Dalutex.Controllers
                         Reduzido = dc.CODIGO_REDUZIDO,
                         Artigo = dc.ARTIGO,
                         Cor = dc.COR,
-                        RGB = dc.CAMINHO
+                        RGB = dc.CAMINHO,
+                        ArtigoAtivo = dc.ARTIGO_ATIVO
                     };
 
 
@@ -3046,6 +3070,7 @@ namespace Dalutex.Controllers
                 model.Galeria.ForEach(delegate(Liso item)
                 {
                     item.RGB = utils.RGBConverter(ColorTranslator.FromWin32(int.Parse(item.RGB)));
+                    item.ArtigoAtivo = item.ArtigoAtivo;
                 });
 
                 if(base.Session_Carrinho != null)
@@ -3058,8 +3083,8 @@ namespace Dalutex.Controllers
                                 return incluido.Reduzido == item.Reduzido;
                             }))
                         {
-                            item.TemNoCarrinho = true;
-                        }
+                            item.TemNoCarrinho = true;                            
+                        }                
                     });
                 }
             }

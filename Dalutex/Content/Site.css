@@ -314,6 +314,36 @@ a.actlinkimg
 
 }
 
+.thumbnail.ArtigoIndisp > a::after{
+    content:"Artigo Indisponivel";
+    position:absolute;
+    top: 0px;
+    left:0px;
+    margin-left:11px;
+    margin-top:43px;
+    color:#660000;
+    opacity:0.7;
+    font-size:1.3em;
+    font-weight:bold;
+
+    /* Safari */
+    -webkit-transform: rotate(-30deg);
+
+    /* Firefox */
+    -moz-transform: rotate(-45deg);
+
+    /* IE */
+    -ms-transform: rotate(-45deg);
+
+    /* Opera */
+    -o-transform: rotate(-45deg);
+
+    /* Internet Explorer */
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+
+}
+
+
 .thumbnail.warning{
     background-color:tomato;
 }
@@ -321,6 +351,11 @@ a.actlinkimg
 a.list-group-item.warning{
     background-color:tomato;
 }
+
+.thumbnail.ArtigoIndisp{
+    background-color:tomato;
+}
+
 .list-group.panel>.list-group-item.indisponiveis{
     background-color:tomato!important;
 }

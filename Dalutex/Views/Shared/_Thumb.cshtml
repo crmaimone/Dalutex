@@ -31,6 +31,13 @@
             thumbClass += " warning";
             linkUrl = "#";
         }
+
+        if (Model.ArtigoAtivo == "X")
+        {
+            thumbClass += " ArtigoIndisp";
+            linkUrl = "#";
+        }
+        
         
         <div class="@thumbClass">
             @if (Model.Tipo == Enums.ItemType.Liso)
@@ -69,6 +76,14 @@
             }
             else if (Model.Tipo == Enums.ItemType.ValidacaoReserva)
             {
+                <div class="clickable-thumb">
+                    <img src="@Url.Content(Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg")" class="img-thumbnail equal-height">
+                    <input type="hidden" class="desenho" value="@Model.Desenho" />
+                    <div class="caption">
+                        <h5 style="text-decoration:none">@Model.Desenho&nbsp;@Model.Variante</h5>
+                    </div>
+                </div>
+                
                 <a href="@Url.Content(@"ArtigosDisponiveis?" +
                                                     "&imagem=" + Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg" +
                                                     "&desenho=" + @Model.Desenho +
@@ -81,10 +96,10 @@
                                                     "&itempedidoreserva="+ @Model.ItemPedidoReserva+
                                                     "&tipo="+ (int)@Model.Tipo
                                                 )">
-                    <img src="@Url.Content(Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg")" class="img-thumbnail equal-height">
+                    @*<img src="@Url.Content(Model.UrlImagens + @Model.Desenho + "_" + @Model.Variante + ".jpg")" class="img-thumbnail equal-height">
                     <div class="caption">
                         <h5 style="text-decoration:none">@Model.Desenho&nbsp;@Model.Variante</h5>
-                    </div>
+                    </div>*@
                 </a>
             }
             else if (Model.Tipo == Enums.ItemType.Reserva)

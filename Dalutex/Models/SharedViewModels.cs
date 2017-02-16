@@ -30,6 +30,7 @@ namespace Dalutex.Models
         public int IDVariante { get; set; }
         public string Studio { get; set; }
         public bool TemNoCarrinho { get; set; }
+        public string ArtigoAtivo { get; set; }
 
         //Rotina PE..
         public string Tecnologia { get; set; }

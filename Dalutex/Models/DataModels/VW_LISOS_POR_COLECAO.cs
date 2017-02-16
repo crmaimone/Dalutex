@@ -22,5 +22,7 @@ namespace Dalutex.Models.DataModels
 
         [StringLength(254)]
         public string CAMINHO { get; set; }
+
+        public string ARTIGO_ATIVO { get; set; }
     }
 }

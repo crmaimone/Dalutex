@@ -90,6 +90,7 @@ namespace Dalutex.Models
         public string RGB { get; set; }
         public int Reduzido { get; set; }
         public bool TemNoCarrinho { get; set; }
+        public string ArtigoAtivo { get; set; }
     }
 
     public class DesenhosViewModel

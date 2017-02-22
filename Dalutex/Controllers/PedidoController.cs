@@ -331,7 +331,7 @@ namespace Dalutex.Controllers
 
             #region Restrições
             //if ((model.TecnologiaPorExtenso != "L") && (!ehreacabamento))
-            if ((!ehreacabamento) && (model.IDTipoPedido == (int)Enums.TiposPedido.RESERVA))
+            if ((!ehreacabamento) && (model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA))
             {
                 using (var ctxTI = new TIDalutexContext())
                 {

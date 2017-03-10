@@ -331,7 +331,7 @@ namespace Dalutex.Controllers
 
             #region Restrições
             //if ((model.TecnologiaPorExtenso != "L") && (!ehreacabamento))
-            if ((!ehreacabamento) && (model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA))
+            if ((!ehreacabamento) && (model.Tipo != Enums.ItemType.Reserva))
             {
                 using (var ctxTI = new TIDalutexContext())
                 {
@@ -606,20 +606,19 @@ namespace Dalutex.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    #region Validação de Qtdes Maximas e Minimas
-                    if ((model.Tipo != Enums.ItemType.Reserva) && (model.IDTipoPedido != (int)Enums.TiposPedido.ESPECIAL))
-                    {
-                        decimal QtdeMaxima = 0;
-                        decimal QtdeMinima = 0;
-                        decimal QtdeConvertida = 0;
-                        decimal Rendimento = 0;
+                    decimal QtdeMaxima = 0;
+                    decimal QtdeMinima = 0;
+                    decimal QtdeConvertida = 0;
+                    decimal Rendimento = 0;
 
+                    if (model.Tipo != Enums.ItemType.Reserva)
+                    {
                         if ((model.IDTipoPedido != (int)Enums.TiposPedido.AMOSTRA) && (model.IDTipoPedido != (int)Enums.TiposPedido.PILOTAGEM) && (model.IDTipoPedido != (int)Enums.TiposPedido.BNFPROPRIO))
                         {
                             model.Quantidade = model.IDTamanhoPadrao.GetValueOrDefault() * model.Pecas;
                             model.QuantidadeConvertida = model.Quantidade;
 
-                            if(model.UnidadeMedida == "KG")
+                            if (model.UnidadeMedida == "KG")
                             {
                                 using (var ctx = new TIDalutexContext())
                                 {
@@ -630,7 +629,12 @@ namespace Dalutex.Controllers
                                 }
                             }
                         }
-                        
+                    }
+
+
+                    #region Validação de Qtdes Maximas e Minimas
+                    if ((model.Tipo != Enums.ItemType.Reserva) && (model.IDTipoPedido != (int)Enums.TiposPedido.ESPECIAL))
+                    {                                                                        
                         #region Validação dos campos qtde
 
                         if ((model.IDTipoPedido != (int)Enums.TiposPedido.AMOSTRA) && (model.IDTipoPedido != (int)Enums.TiposPedido.PILOTAGEM) && (model.IDTipoPedido != (int)Enums.TiposPedido.BNFPROPRIO))

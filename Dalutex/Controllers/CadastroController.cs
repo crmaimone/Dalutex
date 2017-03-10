@@ -904,6 +904,10 @@ namespace Dalutex.Controllers
             {
                 decimal idUsuario = base.Session_Usuario.COD_USU;
                 //decimal idUsuario = 456;
+                if (idUsuario == 10)
+                {
+                    idUsuario = 2;
+                }
 
                 lstResult = ctx.VW_CUS_CONS_TAB_PRECO.Where(x => x.ID_USUARIO == idUsuario).ToList();
             }

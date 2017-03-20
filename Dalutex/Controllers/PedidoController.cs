@@ -1389,7 +1389,16 @@ namespace Dalutex.Controllers
 
                         foreach (var item in lstItens)
                         {
-                            string vColecao = ctxTI.VW_GRUPO_COL_RED.Where(x => x.REDUZIDO == item.REDUZIDO_ITEM).FirstOrDefault().COLECAO;
+                            string vColecao = "";
+
+                            if (item.REDUZIDO_ITEM == -1)
+                            {
+                                vColecao = "0";
+                            }
+                            else
+                            {                            
+                                vColecao = ctxTI.VW_GRUPO_COL_RED.Where(x => x.REDUZIDO == item.REDUZIDO_ITEM).FirstOrDefault().COLECAO;
+                            }
 
                             base.Session_Carrinho.Itens.Add(new InserirNoCarrinhoViewModel()
                             {
@@ -1439,7 +1448,7 @@ namespace Dalutex.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult ConclusaoPedido(ConclusaoPedidoViewModel model)
-        {
+        {                      
             using (var ctx = new DalutexContext())
             {
                 model.DescTipoPedido = ctx.COML_TIPOSPEDIDOS.Find(model.IDTipoPedido).DESCRICAO.Trim();
@@ -1450,12 +1459,20 @@ namespace Dalutex.Controllers
             {
                 ConclusaoPedidoCarregarEscolhas(model);
 
+                if ((base.Session_Carrinho.Observacoes != null ) && (base.Session_Carrinho.Observacoes.Count() > 250))
+                {
+                    ModelState.AddModelError("", "O CAMPO OBSERVAÇÕES NÃO PODE TER MAIS DO QUE 250 CARACTERES.");
+                    ViewBag.CarrinhoVazio = false;
+                    return View(model);
+                }
+
                 // oda -- 10/09/2016 -- validação do campo nº NFRefat e PedidoRefat para pedido do tipo Refaturamento (ESPECIAL);
                 if (model.IDTipoPedido == (int)Enums.TiposPedido.ESPECIAL)
                 {
                     if (((model.NFRefat == null) || (String.IsNullOrEmpty(model.NFRefat))) || ((model.PedidoRefat == null) || (String.IsNullOrEmpty(model.PedidoRefat))))
                     {
                         ModelState.AddModelError("", "Para este tipo de pedido os Campos [NF Refat] e [Pedido Refat] devem ser informados.");
+                        ViewBag.CarrinhoVazio = false;
                         return View(model);
                     }
                     else
@@ -1472,6 +1489,7 @@ namespace Dalutex.Controllers
                             if (objresult == null)
                             {
                                 ModelState.AddModelError("", "Campos [NF Refat] e [Pedido Refat] informados não são referentes ao cliente selecionado.");
+                                ViewBag.CarrinhoVazio = false;
                                 return View(model);
                             }
                         }
@@ -1833,6 +1851,13 @@ namespace Dalutex.Controllers
                         {
                             using (var ctxTI = new TIDalutexContext())
                             {
+
+
+                                //ODA --- TODO: DPD073.0 - NEGOCIAÇÃO DE VENDA COM CLIENTE (NÃO GERAR CRÍTICAS DE PREÇO)
+                                // CHAMDA PARA A ROTINA QUE VALIDA ACORDOS COM O CLIENTE E ALTERA O PREÇO DE TABELA E PREÇO DO ITEM.
+
+
+
                                 VW_TABELA_PRECO_NOVA objPrecoNovo = null;                                                                         
                                 if (item.Reduzido > 0)
                                 {
@@ -1873,9 +1898,14 @@ namespace Dalutex.Controllers
                                 {
                                     if (model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
                                     {
+                                        int iIDColecao = 2;
 
-                                        int iIDColecao = int.Parse(item.IDColecao);
-
+                                        int i;
+                                        if (int.TryParse(item.IDColecao, out i))
+                                        {
+                                            iIDColecao = int.Parse(item.IDColecao); 
+                                        }
+                                        
                                         VW_GRUPO_COL_RED grCol = ctxTI.VW_GRUPO_COL_RED.Where(x => x.ID_COL == iIDColecao).FirstOrDefault();
 
                                         int iTipoCol = grCol == null ? 1 : Convert.ToInt32(grCol.TIPO_COL);
@@ -2068,6 +2098,8 @@ namespace Dalutex.Controllers
                     iNUMERO_PEDIDO_BLOCO = base.Session_Carrinho.ID;
                 }
                 
+
+
                 using (var ctx = new TIDalutexContext())
                 {
                     #region Grava Pedido

@@ -631,6 +631,34 @@ namespace Dalutex.Controllers
                         }
                     }
 
+                    #region Projeto Variante Exclusiva
+                    //oda --- 23/03/2017 -- validação de variante exclusiva------   
+                    using (var ctx = new TIDalutexContext())
+                    {
+                        // verificar se o item está na coleção (artigo, desenho, variante e tecnoligia) ----
+                        CONTROLE_DESENV_COLECAO objItemEstaNaCol = ctx.CONTROLE_DESENV_COLECAO.Where(x =>
+                            x.ARTIGO == model.Artigo &&
+                            x.DESENHO == model.Desenho &&
+                            x.VARIANTE == model.Variante &&
+                            x.TECNOLOGIA == model.Tecnologia
+                            ).FirstOrDefault();
+
+                        if (objItemEstaNaCol == null)//se não está na coleção --------
+                        {
+                            //então verifica se o desenho, artigo e tec estão ----
+                            CONTROLE_DESENV_COLECAO objDesEstaNaCol = ctx.CONTROLE_DESENV_COLECAO.Where(x =>
+                            x.ARTIGO == model.Artigo &&
+                            x.DESENHO == model.Desenho &&
+                            x.TECNOLOGIA == model.Tecnologia
+                            ).FirstOrDefault();
+
+                            if (objDesEstaNaCol != null) //se retornou, desenho está na coleção e é variante exclusiva --------                            
+                                model.VarExclusiva = model.Variante;
+                            else
+                                model.VarExclusiva = "";
+                        }
+                    }
+                    #endregion
 
                     #region Validação de Qtdes Maximas e Minimas
                     if ((model.Tipo != Enums.ItemType.Reserva) && (model.IDTipoPedido != (int)Enums.TiposPedido.ESPECIAL))
@@ -707,17 +735,21 @@ namespace Dalutex.Controllers
                                     if (objDesenhoPronto != null)
                                     { desenhoPronto = (objDesenhoPronto == 1); }
                                 }
-
+                                
+                                bool EhVarianteExclusiva = (model.VarExclusiva != null && model.VarExclusiva != "");
+                                string _VarExcl = (EhVarianteExclusiva ? " Desenho "+ model.Desenho +" Variante Exclusiva (" + model.VarExclusiva + ")" : "");
+                               
                                 //oda -- 17/05/2016 -- nova regra validação ------------
                                 var qryQtdeMinMaxX =
                                             from Qtde in ctx.REGRAS_QTD_PEDIDOX
                                             where
-                                                    Qtde.TECNOLOGIA_DESTINO == model.Tecnologia
+                                                   Qtde.TECNOLOGIA_DESTINO == model.Tecnologia
                                                 && Qtde.GRUPO_COLECAO == model.IDGrupoColecao
                                                 && Qtde.DESENHO_PRONTO == desenhoPronto
                                                 && Qtde.TIPO_PEDIDO == model.IDTipoPedido
                                                 && Qtde.UM == model.UnidadeMedida
                                                 && Qtde.EXCLUIDO == false
+                                                && Qtde.VAR_EXCLUSIVA == EhVarianteExclusiva
                                             select
                                                 Qtde;
 
@@ -730,12 +762,12 @@ namespace Dalutex.Controllers
 
                                     if (model.Quantidade < QtdeMinima)
                                     {
-                                        ModelState.AddModelError("", "A QUANTIDADE MÍNIMA POR VARIANTE NÃO PODE SER MENOR QUE: " + QtdeMinima.ToString());
+                                        ModelState.AddModelError("", "A QUANTIDADE MÍNIMA POR VARIANTE NÃO PODE SER MENOR QUE: " + QtdeMinima.ToString() + _VarExcl);
                                         hasErrors = true;
                                     }
                                     else if (model.Quantidade > QtdeMaxima)
                                     {
-                                        ModelState.AddModelError("", "A QUANTIDADE MÁXIMA POR VARIANTE NÃO PODE SER MAIOR QUE: " + QtdeMaxima.ToString());
+                                        ModelState.AddModelError("", "A QUANTIDADE MÁXIMA POR VARIANTE NÃO PODE SER MAIOR QUE: " + QtdeMaxima.ToString() + _VarExcl);
                                         hasErrors = true;
                                     }
                                 }
@@ -752,6 +784,7 @@ namespace Dalutex.Controllers
                                                 && Qtde.TIPO_PEDIDO == model.IDTipoPedido
                                                 && Qtde.UM == "MT"
                                                 && Qtde.EXCLUIDO == false
+                                                && Qtde.VAR_EXCLUSIVA == EhVarianteExclusiva
                                             select
                                                 Qtde;
 
@@ -768,7 +801,8 @@ namespace Dalutex.Controllers
                                                     + " | MTs. ARTIGO: " + model.Artigo +
                                                         " | RENDIMENTO: " + Rendimento.ToString() +
                                                         " | TOTAL CONVERTIDO: " + QtdeConvertida.ToString() +
-                                                        " MTs");
+                                                        " MTs" + _VarExcl
+                                                        );
                                                 hasErrors = true;
                                             }
                                         }
@@ -776,12 +810,11 @@ namespace Dalutex.Controllers
                                         {
                                             ModelState.AddModelError("", "QUANTIDADES MÍNIMAS E MÁXIMAS POR VARIANTE NÃO CADASTRADO PARA ESTE ITEM. ENTRAR EM CONTATO COM DEPTO. COMERCIAL: " +
                                                 " | Tecnologia: " + model.Tecnologia.ToString() +
-                                                " | IDGrupoColecao: " + model.IDGrupoColecao +
+                                                " | IDGrupoColecao: " + model.IDGrupoColecao + 
                                                 " | desenhoPronto: " + desenhoPronto.ToString() +
                                                 " | IDTipoPedido: " + model.IDTipoPedido +
-                                                " | UnidadeMedida: " + model.UnidadeMedida +
-                                                " | Excluido: false" +
-                                                " | [Regra para item em convertido em MT]"
+                                                " | UnidadeMedida: " + model.UnidadeMedida +                                                
+                                                " | [Regra para item em KG convertido em MT]" + _VarExcl
                                                 );
                                             hasErrors = true;
                                         }
@@ -793,9 +826,8 @@ namespace Dalutex.Controllers
                                                 " | IDGrupoColecao: " + model.IDGrupoColecao +
                                                 " | desenhoPronto: " + desenhoPronto.ToString() +
                                                 " | IDTipoPedido: " + model.IDTipoPedido +
-                                                " | UnidadeMedida: " + model.UnidadeMedida +
-                                                " | Excluido: false" +
-                                                " |  [Não encontrou na regra]"
+                                                " | UnidadeMedida: " + model.UnidadeMedida +                                                
+                                                " |  [Não encontrou na regra]" + _VarExcl
                                                 );
                                         hasErrors = true;
                                     }
@@ -836,6 +868,36 @@ namespace Dalutex.Controllers
                             base.Session_Carrinho.Itens = new List<InserirNoCarrinhoViewModel>();
                         }
                     }
+
+
+                    ////oda --- 23/03/2017 -- validação de variante exclusiva------   
+                    //using (var ctx = new TIDalutexContext())
+                    //{   
+                    //    // verificar se o item está na coleção (artigo, desenho, variante e tecnoligia) ----
+                    //    CONTROLE_DESENV_COLECAO objItemEstaNaCol = ctx.CONTROLE_DESENV_COLECAO.Where(x => 
+                    //        x.ARTIGO == model.Artigo && 
+                    //        x.DESENHO == model.Desenho && 
+                    //        x.VARIANTE == model.Variante &&
+                    //        x.TECNOLOGIA == model.Tecnologia
+                    //        ).FirstOrDefault();
+
+                    //    if (objItemEstaNaCol == null)//se não está na coleção --------
+                    //    {
+                    //        //então verifica se o desenho, artigo e tec estão ----
+                    //        CONTROLE_DESENV_COLECAO objDesEstaNaCol = ctx.CONTROLE_DESENV_COLECAO.Where(x => 
+                    //        x.ARTIGO == model.Artigo && 
+                    //        x.DESENHO == model.Desenho &&        
+                    //        x.TECNOLOGIA == model.Tecnologia
+                    //        ).FirstOrDefault();
+
+                    //        if (objDesEstaNaCol != null) //se retornou, desenho está na coleção e é variante exclusiva --------                            
+                    //            model.VarExclusiva = model.Variante;                            
+                    //        else
+                    //            model.VarExclusiva = "";
+                    //    }                            
+                    //}
+
+                    
 
                     if (model.IDTipoPedido >= default(int))
                         base.Session_Carrinho.IDTipoPedido = model.IDTipoPedido;
@@ -1471,7 +1533,7 @@ namespace Dalutex.Controllers
                 {
                     if (((model.NFRefat == null) || (String.IsNullOrEmpty(model.NFRefat))) || ((model.PedidoRefat == null) || (String.IsNullOrEmpty(model.PedidoRefat))))
                     {
-                        ModelState.AddModelError("", "Para este tipo de pedido os Campos [NF Refat] e [Pedido Refat] devem ser informados.");
+                        ModelState.AddModelError("", "Para este tipo de pedido os Campos [NF Refat] e [Pedido Refat] devem ser informados. O [Cliente Selecionado] deve ser o mesmo do Pedido de Refaturamento");
                         ViewBag.CarrinhoVazio = false;
                         return View(model);
                     }
@@ -1521,10 +1583,33 @@ namespace Dalutex.Controllers
                         return View(model);
                     }
 
+                    decimal IDCliente = base.Session_Carrinho.ClienteFatura.ID_CLIENTE;
+
                     foreach (InserirNoCarrinhoViewModel item in Session_Carrinho.Itens)
                     {
                         model.TotalPedido += item.ValorTotalItem;
-                    }
+
+                        //oda -- 27/03/2017 --- validar itens de variante exclusiva - DPD057.0 - EXCLUSIVIDADE DE VARIANTE--------------
+                        //1: verificar se o desenho é var exclusiva, senão, deixa passar pra inserir a exclusividade ----------------------  
+                        if (item.VarExclusiva != null && item.VarExclusiva != "")
+                        {
+                            using (var ctx = new TIDalutexContext())
+                            {                                
+                                VW_VERIFICA_SE_VAR_EXCL idGrupoCli = ctx.VW_VERIFICA_SE_VAR_EXCL.Where( x => x.DESENHO == item.Desenho && x.VARIANTE == item.VarExclusiva).FirstOrDefault();
+
+                                if (idGrupoCli != null) //2: se é var excluviva, verifica se o cliente é do mesmo grupo ------
+                                {                                    
+                                    GRUPO_CLIENTE_SGT GrupoCliSGT = ctx.GRUPO_CLIENTE_SGT.Where(x => x.ID_GRUPO == idGrupoCli.ID_GRUPO && x.ID_CLIENTE_SGT == IDCliente).FirstOrDefault();
+                                    if (GrupoCliSGT == null)
+                                    {
+                                        ModelState.AddModelError("", "Variante [" + item.VarExclusiva + "] do Desenho ["+ item.Desenho +"] é EXCLUSIVA de outro Cliente. "+
+                                            "Verifique com o COMERCIAL se o Cliente pertence ao grupo: " + idGrupoCli.GRUPO);
+                                        return View(model);
+                                    }
+                                }
+                            }
+                        }                                                                            
+                   }
                     
                     if (model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA && Session_Carrinho.Itens.Exists(x => x.Reduzido == 0))
                     {
@@ -1659,7 +1744,9 @@ namespace Dalutex.Controllers
                                     }
 
                                     List<KeyValuePair<string, decimal>> lstGrupoDesenho = base.Session_Carrinho.Itens
-                                        .GroupBy(g => g.Desenho + g.Tecnologia.Substring(0, 1) + g.IDGrupoColecao)
+                                        .GroupBy(g => g.Desenho + 
+                                                      g.Tecnologia.Substring(0, 1) + 
+                                                      g.IDGrupoColecao)
                                         .Select(consolidado => new KeyValuePair<string, decimal>(consolidado.First().Desenho +
                                                                                                  consolidado.First().Tecnologia.Substring(0, 1) +
                                                                                                  consolidado.First().IDGrupoColecao,
@@ -2319,6 +2406,7 @@ namespace Dalutex.Controllers
                                     objItemSalvar.PRECODIGITADOMOEDA = 0;//todo: apontar este campo para preco correto em caso de este existir                                    
                                     objItemSalvar.TEM_RESTRICAO = (item.TemRestricao == true ? 1 : 0);
                                     objItemSalvar.RESTRICAO = item.Restricao;
+                                    objItemSalvar.VAR_EXCLUSIVA = item.VarExclusiva;
 
                                     if ((item.Tipo == Enums.ItemType.ValidacaoReserva || item.Tipo == Enums.ItemType.Estampado) && !item.PreExistente)
                                     {

@@ -51,5 +51,6 @@
         [StringLength(10)]
         public string COR { get; set; }
 
+        public bool VAR_EXCLUSIVA { get; set; }
     }
 }

@@ -388,6 +388,8 @@ namespace Dalutex.Models
 
         public int IDGrupoColecao { get; set; }
 
+        public string VarExclusiva { get; set; }
+
         public override bool Equals(object obj)
         {
             if(obj is InserirNoCarrinhoViewModel)

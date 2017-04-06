@@ -80,11 +80,100 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<VW_NF_PEDIDO_CLIENTE> VW_NF_PEDIDO_CLIENTE { get; set; }
         public virtual DbSet<EMAIL_TABELA_PRECO> EMAIL_TABELA_PRECO { get; set; }
         public virtual DbSet<VW_EMAIL_USUARIO> VW_EMAIL_USUARIO { get; set; }
-
+        public virtual DbSet<CONTROLE_DESENV_COLECAO> CONTROLE_DESENV_COLECAO { get; set; }
+        public virtual DbSet<VW_VERIFICA_SE_VAR_EXCL> VW_VERIFICA_SE_VAR_EXCL { get; set; }
+        public virtual DbSet<GRUPO_CLIENTE_SGT> GRUPO_CLIENTE_SGT { get; set; }
         
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<GRUPO_CLIENTE_SGT>()
+                .Property(e => e.ID_GRUPO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<GRUPO_CLIENTE_SGT>()
+                .Property(e => e.ID_CLIENTE_SGT)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<GRUPO_CLIENTE_SGT>()
+                .Property(e => e.PK_GRUPO_CLIENTE_SGT)
+                .HasPrecision(38, 0);
+
+
+            modelBuilder.Entity<VW_VERIFICA_SE_VAR_EXCL>()
+                .Property(e => e.ID_VAR_EXC)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_VERIFICA_SE_VAR_EXCL>()
+                .Property(e => e.DESENHO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_VERIFICA_SE_VAR_EXCL>()
+                .Property(e => e.VARIANTE)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_VERIFICA_SE_VAR_EXCL>()
+                .Property(e => e.ID_GRUPO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_VERIFICA_SE_VAR_EXCL>()
+                .Property(e => e.ID_CLIENTE_SGT)
+                .HasPrecision(38, 0);
+
+
+            modelBuilder.Entity<CONTROLE_DESENV_COLECAO>()
+                .Property(e => e.REDUZIDO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<CONTROLE_DESENV_COLECAO>()
+                .Property(e => e.COLECAO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<CONTROLE_DESENV_COLECAO>()
+                .Property(e => e.USUARIO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<CONTROLE_DESENV_COLECAO>()
+                .Property(e => e.PEDIDO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<CONTROLE_DESENV_COLECAO>()
+                .Property(e => e.OCORRENCIA)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<CONTROLE_DESENV_COLECAO>()
+                .Property(e => e.ARTIGO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<CONTROLE_DESENV_COLECAO>()
+                .Property(e => e.DESENHO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<CONTROLE_DESENV_COLECAO>()
+                .Property(e => e.VARIANTE)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<CONTROLE_DESENV_COLECAO>()
+                .Property(e => e.TECNOLOGIA)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<CONTROLE_DESENV_COLECAO>()
+                .Property(e => e.COR)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<CONTROLE_DESENV_COLECAO>()
+                .Property(e => e.ID_CONTROLE_DESENV_COLECAO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<CONTROLE_DESENV_COLECAO>()
+                .Property(e => e.ID_USUARIO_OCORR)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<CONTROLE_DESENV_COLECAO>()
+                .Property(e => e.ARTIGO_OCORRENCIA)
+                .IsUnicode(false);
+
+
             modelBuilder.Entity<VW_EMAIL_USUARIO>()
                 .Property(e => e.ID_USUARIO)
                 .HasPrecision(38, 0);

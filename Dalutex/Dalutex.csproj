@@ -163,7 +163,9 @@
     <Compile Include="Models\CadastroViewModel.cs" />
     <Compile Include="fonts\ARTIGO_PESO_PADRAO.cs" />
     <Compile Include="Models\DataModels\ACOES.cs" />
+    <Compile Include="Models\DataModels\CONTROLE_DESENV_COLECAO.cs" />
     <Compile Include="Models\DataModels\EMAIL_TABELA_PRECO.cs" />
+    <Compile Include="Models\DataModels\GRUPO_CLIENTE_SGT.cs" />
     <Compile Include="Models\DataModels\LINK_GRUPO_COND_PGTO.cs" />
     <Compile Include="Models\DataModels\LOG_PEDIDO_WEB.cs" />
     <Compile Include="Models\DataModels\RASCUNHO_PEDIDO.cs" />
@@ -245,6 +247,7 @@
     <Compile Include="Models\DataModels\VW_TABELA_PRECO_NOVA.cs" />
     <Compile Include="Models\DataModels\VW_TROCA_TEC.cs" />
     <Compile Include="Models\DataModels\VW_VALIDAR_RESERVA.cs" />
+    <Compile Include="Models\DataModels\VW_VERIFICA_SE_VAR_EXCL.cs" />
     <Compile Include="Models\Relatorios.cs" />
     <Compile Include="Models\Utils\ModelBinders.cs" />
     <Compile Include="Models\Utils\PdfResult.cs" />

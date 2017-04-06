@@ -88,6 +88,8 @@ namespace Dalutex.Models.DataModels
 
         public string RESTRICAO { get; set; }
 
+        public string VAR_EXCLUSIVA { get; set; }
+
         [NotMapped]
         public bool Novo { get; set; }
     }

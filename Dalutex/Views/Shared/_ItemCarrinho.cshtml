@@ -32,7 +32,20 @@
                             @if (Model.Tipo == Enums.ItemType.Estampado || Model.Tipo == Enums.ItemType.ValidacaoReserva || Model.Tipo == Enums.ItemType.ProntaEntrega)
                             {
                                 <div> <strong>Desenho:</strong> @Model.Desenho </div>
-                                <div> <strong>Variante:</strong> @Model.Variante </div>
+                                //<div> <strong>Variante:</strong> @Model.Variante </div>
+
+                                // oda -- 23/03/2017 -- Variante Exclusiva ---------------------------------------------------------
+                                if ((Model.VarExclusiva != null) && Model.VarExclusiva != "")
+                                {                                                                  
+                                    <div> <font color="red"><strong>Variante: @Model.Variante </strong>(Variante Exclusiva):&nbsp;</font></div>
+                                }
+                                else
+                                {
+                                    <div> <strong>Variante:</strong> @Model.Variante </div>
+                                }
+
+
+
                                 <div> <strong>Tecnologia:</strong> @Model.TecnologiaPorExtenso </div>
 
                                 if (Model.Reduzido != -2)
@@ -51,6 +64,15 @@
                                 {
                                     <div> <font color="red"> <strong>Farol:</strong>&nbsp;@Model.Farol.ToString("#.##") </font></div>
                                 }
+
+                                
+                                @*// oda -- 23/03/2017 -- Variante Exclusiva ---------------------------------------------------------
+                                if ((Model.VarExclusiva != null) && Model.VarExclusiva != "")
+                                {
+                                    <div> <font color="red"> Variante Exclusiva:&nbsp;<strong> @Model.VarExclusiva </strong></font></div>
+                                }*@
+                                
+                                
                             }
                             else if (Model.Tipo == Enums.ItemType.Liso)
                             {

@@ -2695,6 +2695,7 @@ namespace Dalutex.Controllers
             return View(model);
         }
 
+
         public void ObterPedidos(PesquisaPedidoViewModel model)
         {
             int iItensPorPagina = 10;

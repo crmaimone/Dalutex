@@ -344,7 +344,7 @@ namespace Dalutex.Controllers
                         //oda-- 15/02/2017 -- bloquear entrada de artigo inativo - solicitação Ludovit ----------------------
                         if (Convert.ToBoolean(ConfigurationManager.AppSettings["BLOQUEIA_ARTIGO_INATIVO"]) == true)                                                            
                         {
-                            if (model.TecnologiaPorExtenso != "L") //se for LISO, o link não funciona pra selecionar o item, ou seja, não chega aki.... ou chega aki apenas o que não for LISO
+                            if ((model.TecnologiaPorExtenso != "L") &&  (model.TecnologiaPorExtenso != "0"))//se for LISO, o link não funciona pra selecionar o item, ou seja, não chega aki.... ou chega aki apenas o que não for LISO
                             {
                                 return RedirectToAction("ArtigosDisponiveis", "Pedido",
                                     new

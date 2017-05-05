@@ -83,10 +83,39 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<CONTROLE_DESENV_COLECAO> CONTROLE_DESENV_COLECAO { get; set; }
         public virtual DbSet<VW_VERIFICA_SE_VAR_EXCL> VW_VERIFICA_SE_VAR_EXCL { get; set; }
         public virtual DbSet<GRUPO_CLIENTE_SGT> GRUPO_CLIENTE_SGT { get; set; }
-        
+        public virtual DbSet<VW_ACORDO_DISPO_CLIENTE> VW_ACORDO_DISPO_CLIENTE { get; set; }
+
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<VW_ACORDO_DISPO_CLIENTE>()
+                .Property(e => e.ID_ITEM_ACORDO_COM)
+                .HasPrecision(38, 0);
+
+            //modelBuilder.Entity<VW_ACORDO_DISPO_CLIENTE>()
+            //    .Property(e => e.CLIENTE)
+            //    .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_ACORDO_DISPO_CLIENTE>()
+                .Property(e => e.ARTIGO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_ACORDO_DISPO_CLIENTE>()
+                .Property(e => e.TECNOLOGIA)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_ACORDO_DISPO_CLIENTE>()
+                .Property(e => e.QTDE_DISPONIVEL)
+                .HasPrecision(38, 0);
+            
+            modelBuilder.Entity<VW_ACORDO_DISPO_CLIENTE>()
+                .Property(e => e.QTDE_DISPONIVEL_TMP)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_ACORDO_DISPO_CLIENTE>()
+                .Property(e => e.PRECO_UNITARIO)
+                .HasPrecision(38, 0);
+
             modelBuilder.Entity<GRUPO_CLIENTE_SGT>()
                 .Property(e => e.ID_GRUPO)
                 .HasPrecision(38, 0);

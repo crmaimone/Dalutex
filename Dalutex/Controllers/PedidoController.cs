@@ -1932,17 +1932,53 @@ namespace Dalutex.Controllers
                             try{iCodCondPgto = ti_ctx.LINK_GRUPO_COND_PGTO.Where(x => x.COD_COND == model.CondicaoPagto.ID_COND).FirstOrDefault().ID_GRUPO_COND;} catch { iCodCondPgto = 1; }// 1: AVISTA
                         }
                         #endregion
-
+                        
+                        int iCount = 0;
 
                         foreach (InserirNoCarrinhoViewModel item in base.Session_Carrinho.Itens)
                         {
+                            iCount = iCount++;
+
                             using (var ctxTI = new TIDalutexContext())
                             {
-
-
                                 //ODA --- TODO: DPD073.0 - NEGOCIAÇÃO DE VENDA COM CLIENTE (NÃO GERAR CRÍTICAS DE PREÇO)
                                 // CHAMDA PARA A ROTINA QUE VALIDA ACORDOS COM O CLIENTE E ALTERA O PREÇO DE TABELA E PREÇO DO ITEM.
 
+                                if (iCount == 1)//se for a primeira vez que estiver validando uma acordo, então zera o temporario;
+                                {
+
+                                }
+
+                                VW_ACORDO_DISPO_CLIENTE objAcordo = ctxTI.VW_ACORDO_DISPO_CLIENTE.Where(x => x.CLIENTE == model.ClienteFatura.ID_CLIENTE
+                                                                                                          && x.ARTIGO == item.Artigo 
+                                                                                                          && x.TECNOLOGIA == item.Tecnologia
+                                                                                                        ).FirstOrDefault();
+                                if ((objAcordo != null) && (objAcordo.QTDE_DISPONIVEL > item.Quantidade))
+                                {
+                                    VW_ACORDO_DISPO_CLIENTE objUpdateQtdeTemp = null;
+
+                                    //verifica se já foi consumido alguma qtde do total disponivel;
+                                    if (objAcordo.QTDE_DISPONIVEL_TMP == objAcordo.QTDE_DISPONIVEL)
+                                    {                                  
+                                        item.PrecoTabela = decimal.Round(objAcordo.PRECO_UNITARIO.GetValueOrDefault(), 2, MidpointRounding.ToEven);
+                                                                                                                                                               
+                                        try//update no campo qtde_disp_temp.----------------------------- 
+                                        {
+                                            objUpdateQtdeTemp = ctxTI.VW_ACORDO_DISPO_CLIENTE.Where(r => r.ID_ITEM_ACORDO_COM == objAcordo.ID_ITEM_ACORDO_COM).First();
+                                            objUpdateQtdeTemp.QTDE_DISPONIVEL_TMP = (objUpdateQtdeTemp.QTDE_DISPONIVEL - item.Quantidade);                                            
+                                        } catch { }
+                                    }
+                                    else
+                                    {                                                                                                                                                               
+                                        try//update no campo qtde_disp_temp.----------------------------- 
+                                        {
+                                            objUpdateQtdeTemp = ctxTI.VW_ACORDO_DISPO_CLIENTE.Where(r => r.ID_ITEM_ACORDO_COM == objAcordo.ID_ITEM_ACORDO_COM).First();
+                                            objUpdateQtdeTemp.QTDE_DISPONIVEL_TMP = (objUpdateQtdeTemp.QTDE_DISPONIVEL_TMP - item.Quantidade);
+                                        } catch { }
+                                    }
+                                    ctxTI.SaveChanges();                                  
+                                }
+                                
 
 
                                 VW_TABELA_PRECO_NOVA objPrecoNovo = null;                                                                         
@@ -2486,38 +2522,35 @@ namespace Dalutex.Controllers
                                     #region Preço divergente
                              
                                     foreach (PRE_PEDIDO_ITENS item in lstItens)
-                                    {
-                                        //if (item.REDUZIDO_ITEM > 0)
-                                        //{
-                                            //Se não tem preço, critica. Se tem preço e ele é diferente do informado pelo representante, critica.
-                                            if (item.PRECOLISTA == null || item.PRECOLISTA.GetValueOrDefault() != item.PRECO_UNIT.GetValueOrDefault())
+                                    {                                        
+                                        //Se não tem preço, critica. Se tem preço e ele é diferente do informado pelo representante, critica.
+                                        if (item.PRECOLISTA == null || item.PRECOLISTA.GetValueOrDefault() != item.PRECO_UNIT.GetValueOrDefault())
+                                        {
+                                            PRE_PEDIDO_CRITICA objCriticaAnterior = null;
+
+                                            if(estaEditando)
                                             {
-                                                PRE_PEDIDO_CRITICA objCriticaAnterior = null;
-
-                                                if(estaEditando)
-                                                {
-                                                    ctx.PRE_PEDIDO_CRITICA
-                                                    .Where(p => 
-                                                        p.NUMERO_PRE_PEDIDO == objPrePedido.NUMERO_PEDIDO_BLOCO
-                                                        && p.COD_CRITICA == (decimal)Enums.TiposCritica.PrecoDiferente
-                                                        && p.ITEM_PEDIDO == item.ITEM
-                                                    ).FirstOrDefault();
-                                                }
-
-                                                if(objCriticaAnterior == null)
-                                                {
-                                                    ctx.PRE_PEDIDO_CRITICA.Add(new PRE_PEDIDO_CRITICA()
-                                                    {
-                                                        NUMERO_PRE_PEDIDO = objPrePedido.NUMERO_PEDIDO_BLOCO,
-                                                        COD_CRITICA = (decimal)Enums.TiposCritica.PrecoDiferente,
-                                                        FLG_STATUS = "C",
-                                                        ITEM_PEDIDO = item.ITEM,
-                                                        VALOR_TAB = item.PRECOLISTA,
-                                                        VALOR_ITEM = item.PRECO_UNIT
-                                                    });
-                                                }
+                                                ctx.PRE_PEDIDO_CRITICA
+                                                .Where(p => 
+                                                    p.NUMERO_PRE_PEDIDO == objPrePedido.NUMERO_PEDIDO_BLOCO
+                                                    && p.COD_CRITICA == (decimal)Enums.TiposCritica.PrecoDiferente
+                                                    && p.ITEM_PEDIDO == item.ITEM
+                                                ).FirstOrDefault();
                                             }
-                                        //}
+
+                                            if(objCriticaAnterior == null)
+                                            {
+                                                ctx.PRE_PEDIDO_CRITICA.Add(new PRE_PEDIDO_CRITICA()
+                                                {
+                                                    NUMERO_PRE_PEDIDO = objPrePedido.NUMERO_PEDIDO_BLOCO,
+                                                    COD_CRITICA = (decimal)Enums.TiposCritica.PrecoDiferente,
+                                                    FLG_STATUS = "C",
+                                                    ITEM_PEDIDO = item.ITEM,
+                                                    VALOR_TAB = item.PRECOLISTA,
+                                                    VALOR_ITEM = item.PRECO_UNIT
+                                                });
+                                            }
+                                        }                                     
                                     }
 
                                     #endregion

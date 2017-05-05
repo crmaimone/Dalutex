@@ -175,6 +175,7 @@
     <Compile Include="Models\DataModels\REGRA_PADRAO.cs" />
     <Compile Include="Models\DataModels\TIPO_PEDIDO_USUARIO.cs" />
     <Compile Include="Models\DataModels\USUARIOS_ACOES.cs" />
+    <Compile Include="Models\DataModels\VW_ACORDO_DISPO_CLIENTE.cs" />
     <Compile Include="Models\DataModels\VW_ARTIGOS_DISPONIVEIS_NEW.cs" />
     <Compile Include="Models\DataModels\VW_ARTIGOS_INATIVOS.cs" />
     <Compile Include="Models\DataModels\VW_CARACT_DESENHOS_NEW.cs" />

@@ -440,6 +440,8 @@ namespace Dalutex.Models
         public string RestricaoOriginal { get; set; }
 
         public string Colecao { get; set; }
+
+        public int? IDItemAcordo { get; set; }
     }
 
     public class AmpliacaoViewModel

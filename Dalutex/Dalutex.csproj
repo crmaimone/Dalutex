@@ -163,6 +163,7 @@
     <Compile Include="Models\CadastroViewModel.cs" />
     <Compile Include="fonts\ARTIGO_PESO_PADRAO.cs" />
     <Compile Include="Models\DataModels\ACOES.cs" />
+    <Compile Include="Models\DataModels\ACORDO_COMERCIAL_PEDIDOS.cs" />
     <Compile Include="Models\DataModels\CONTROLE_DESENV_COLECAO.cs" />
     <Compile Include="Models\DataModels\EMAIL_TABELA_PRECO.cs" />
     <Compile Include="Models\DataModels\GRUPO_CLIENTE_SGT.cs" />

@@ -1933,125 +1933,128 @@ namespace Dalutex.Controllers
                         }
                         #endregion
                         
-                        int iCount = 0;
+                        //int iCount = 0;
+                        bool Prim = true;
 
                         foreach (InserirNoCarrinhoViewModel item in base.Session_Carrinho.Itens)
-                        {
-                            iCount = iCount++;
-
+                        {                                                        
                             using (var ctxTI = new TIDalutexContext())
                             {
                                 //ODA --- TODO: DPD073.0 - NEGOCIAÇÃO DE VENDA COM CLIENTE (NÃO GERAR CRÍTICAS DE PREÇO)
-                                // CHAMDA PARA A ROTINA QUE VALIDA ACORDOS COM O CLIENTE E ALTERA O PREÇO DE TABELA E PREÇO DO ITEM.
-
-                                if (iCount == 1)//se for a primeira vez que estiver validando uma acordo, então zera o temporario;
-                                {
-
-                                }
-
+                                // CHAMDA PARA A ROTINA QUE VALIDA ACORDOS COM O CLIENTE E ALTERA O PREÇO DE TABELA E PREÇO DO ITEM.                                
                                 VW_ACORDO_DISPO_CLIENTE objAcordo = ctxTI.VW_ACORDO_DISPO_CLIENTE.Where(x => x.CLIENTE == model.ClienteFatura.ID_CLIENTE
                                                                                                           && x.ARTIGO == item.Artigo 
                                                                                                           && x.TECNOLOGIA == item.Tecnologia
                                                                                                         ).FirstOrDefault();
-                                if ((objAcordo != null) && (objAcordo.QTDE_DISPONIVEL > item.Quantidade))
+
+                                //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<{[+]}>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                if (objAcordo != null) //&& (1 == 2))// <<<<<<<<<<<<<<<<<<<**************************************
+                                //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<{[+]}>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                                 {
                                     VW_ACORDO_DISPO_CLIENTE objUpdateQtdeTemp = null;
 
-                                    //verifica se já foi consumido alguma qtde do total disponivel;
-                                    if (objAcordo.QTDE_DISPONIVEL_TMP == objAcordo.QTDE_DISPONIVEL)
-                                    {                                  
-                                        item.PrecoTabela = decimal.Round(objAcordo.PRECO_UNITARIO.GetValueOrDefault(), 2, MidpointRounding.ToEven);
-                                                                                                                                                               
+                                    if (Prim)//se for a primeira vez que estiver validando uma acordo, então zera o temporario;
+                                    {
                                         try//update no campo qtde_disp_temp.----------------------------- 
                                         {
                                             objUpdateQtdeTemp = ctxTI.VW_ACORDO_DISPO_CLIENTE.Where(r => r.ID_ITEM_ACORDO_COM == objAcordo.ID_ITEM_ACORDO_COM).First();
-                                            objUpdateQtdeTemp.QTDE_DISPONIVEL_TMP = (objUpdateQtdeTemp.QTDE_DISPONIVEL - item.Quantidade);                                            
-                                        } catch { }
+                                            objUpdateQtdeTemp.QTDE_DISPONIVEL_TMP = objUpdateQtdeTemp.QTDE_DISPONIVEL;
+                                            ctxTI.SaveChanges();
+                                        }
+                                        catch { }
+                                        Prim = false;
                                     }
-                                    else
-                                    {                                                                                                                                                               
+
+                                    if (objAcordo.QTDE_DISPONIVEL_TMP >= item.Quantidade)
+                                    {
                                         try//update no campo qtde_disp_temp.----------------------------- 
                                         {
                                             objUpdateQtdeTemp = ctxTI.VW_ACORDO_DISPO_CLIENTE.Where(r => r.ID_ITEM_ACORDO_COM == objAcordo.ID_ITEM_ACORDO_COM).First();
                                             objUpdateQtdeTemp.QTDE_DISPONIVEL_TMP = (objUpdateQtdeTemp.QTDE_DISPONIVEL_TMP - item.Quantidade);
-                                        } catch { }
-                                    }
-                                    ctxTI.SaveChanges();                                  
+                                            ctxTI.SaveChanges();
+                                        }
+                                        catch { }
+
+                                        item.PrecoTabela = decimal.Round(objAcordo.PRECO_UNITARIO.GetValueOrDefault(), 2, MidpointRounding.ToEven);
+                                        item.IDItemAcordo = (int)objUpdateQtdeTemp.ID_ITEM_ACORDO_COM;
+                                    }                                    
                                 }
-                                
-
-
-                                VW_TABELA_PRECO_NOVA objPrecoNovo = null;                                                                         
-                                if (item.Reduzido > 0)
+                                else
                                 {
-                                    using (var ctxDlx = new DalutexContext())
+                                    # region PEGA PREÇO DE TABELA
+                                    VW_TABELA_PRECO_NOVA objPrecoNovo = null;
+                                    if (item.Reduzido > 0)
                                     {
-                                        decimal dReduzido = item.Reduzido;                           
-
-                                        VW_GRUPO_COL_RED grCol = ctxTI.VW_GRUPO_COL_RED.Where(x => x.REDUZIDO == item.Reduzido).FirstOrDefault();
-
-                                        int iTipoCol = grCol == null ? 1 : Convert.ToInt32(grCol.TIPO_COL);
-
-                                        VMASCARAPRODUTOACABADO vm = ctxDlx.VMASCARAPRODUTOACABADO.Where(x => x.CODIGO_REDUZIDO == item.Reduzido).FirstOrDefault();
-                                        string vClassif = null;
-                                        if (vm != null)
+                                        using (var ctxDlx = new DalutexContext())
                                         {
-                                            vClassif = vm.CLASSIF_COR;
+                                            decimal dReduzido = item.Reduzido;
+
+                                            VW_GRUPO_COL_RED grCol = ctxTI.VW_GRUPO_COL_RED.Where(x => x.REDUZIDO == item.Reduzido).FirstOrDefault();
+
+                                            int iTipoCol = grCol == null ? 1 : Convert.ToInt32(grCol.TIPO_COL);
+
+                                            VMASCARAPRODUTOACABADO vm = ctxDlx.VMASCARAPRODUTOACABADO.Where(x => x.CODIGO_REDUZIDO == item.Reduzido).FirstOrDefault();
+                                            string vClassif = null;
+                                            if (vm != null)
+                                            {
+                                                vClassif = vm.CLASSIF_COR;
+                                            }
+
+                                            objPrecoNovo = ctxTI.VW_TABELA_PRECO_NOVA.Where(x =>
+                                                                 x.TIPO == iTipoCol// 1: coleção/exclusivo; 2: flash/pocket
+                                                                 &&
+                                                                 (
+                                                                  (x.TECNOLOGIA == item.Tecnologia && x.TECNOLOGIA != "L")
+                                                                 ||
+                                                                  (x.TECNOLOGIA == item.Tecnologia && item.Tecnologia == "L" && x.CLASSIFICACAO == vClassif)
+                                                                 )
+                                                                 && x.CONDICAO_PAGAMENTO == iCodCondPgto
+                                                                 && x.ARTIGO == item.Artigo
+                                                                 && x.QUALIDADE == 1
+                                                                 && x.QUALIDADE_COMERCIAL == Session_Carrinho.QualidadeComercial.Key
+                                                                 && x.TAMANHO_PECA == "G"
+                                                                 && x.COMISSAO == (iTipoCol == 2 ? 3 : 4)
+
+                                                ).FirstOrDefault();
+                                        }
+                                    }
+                                    else//se não tem reduzido ----
+                                    {
+                                        if (model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
+                                        {
+                                            int iIDColecao = 2;
+
+                                            int i;
+                                            if (int.TryParse(item.IDColecao, out i))
+                                            {
+                                                iIDColecao = int.Parse(item.IDColecao);
+                                            }
+
+                                            VW_GRUPO_COL_RED grCol = ctxTI.VW_GRUPO_COL_RED.Where(x => x.ID_COL == iIDColecao).FirstOrDefault();
+
+                                            int iTipoCol = grCol == null ? 1 : Convert.ToInt32(grCol.TIPO_COL);
+
+                                            objPrecoNovo = ctxTI.VW_TABELA_PRECO_NOVA.Where(x =>
+                                                                 x.TIPO == iTipoCol// 1: coleção/exclusivo; 2: flash/pocket
+                                                                 && x.TECNOLOGIA == item.Tecnologia
+                                                                 && x.CONDICAO_PAGAMENTO == iCodCondPgto
+                                                                 && x.ARTIGO == item.Artigo
+                                                                 && x.QUALIDADE == 1
+                                                                 && x.QUALIDADE_COMERCIAL == Session_Carrinho.QualidadeComercial.Key
+                                                                 && x.TAMANHO_PECA == "G"
+                                                                 && x.COMISSAO == (iTipoCol == 2 ? 3 : 4)
+
+                                                ).FirstOrDefault();
                                         }
 
-                                        objPrecoNovo = ctxTI.VW_TABELA_PRECO_NOVA.Where(x =>
-                                                             x.TIPO == iTipoCol// 1: coleção/exclusivo; 2: flash/pocket
-                                                             && 
-                                                             ( 
-                                                              (x.TECNOLOGIA == item.Tecnologia && x.TECNOLOGIA != "L")
-                                                             ||
-                                                              (x.TECNOLOGIA == item.Tecnologia && item.Tecnologia == "L" && x.CLASSIFICACAO == vClassif) 
-                                                             )
-                                                             && x.CONDICAO_PAGAMENTO == iCodCondPgto
-                                                             && x.ARTIGO == item.Artigo
-                                                             && x.QUALIDADE == 1
-                                                             && x.QUALIDADE_COMERCIAL ==  Session_Carrinho.QualidadeComercial.Key
-                                                             && x.TAMANHO_PECA == "G"
-                                                             && x.COMISSAO == (iTipoCol == 2 ? 3 : 4)
-
-                                            ).FirstOrDefault();                                                                          
                                     }
-                                }
-                                else//se não tem reduzido ----
-                                {
-                                    if (model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
+
+                                    if (objPrecoNovo != null)
                                     {
-                                        int iIDColecao = 2;
-
-                                        int i;
-                                        if (int.TryParse(item.IDColecao, out i))
-                                        {
-                                            iIDColecao = int.Parse(item.IDColecao); 
-                                        }
-                                        
-                                        VW_GRUPO_COL_RED grCol = ctxTI.VW_GRUPO_COL_RED.Where(x => x.ID_COL == iIDColecao).FirstOrDefault();
-
-                                        int iTipoCol = grCol == null ? 1 : Convert.ToInt32(grCol.TIPO_COL);
-
-                                        objPrecoNovo = ctxTI.VW_TABELA_PRECO_NOVA.Where(x =>
-                                                             x.TIPO == iTipoCol// 1: coleção/exclusivo; 2: flash/pocket
-                                                             && x.TECNOLOGIA == item.Tecnologia                                                                                                                               
-                                                             && x.CONDICAO_PAGAMENTO == iCodCondPgto
-                                                             && x.ARTIGO == item.Artigo
-                                                             && x.QUALIDADE == 1
-                                                             && x.QUALIDADE_COMERCIAL == Session_Carrinho.QualidadeComercial.Key
-                                                             && x.TAMANHO_PECA == "G"
-                                                             && x.COMISSAO == (iTipoCol == 2 ? 3 : 4)
-
-                                            ).FirstOrDefault();                                       
+                                        item.PrecoTabela = decimal.Round(objPrecoNovo.PRECO.GetValueOrDefault(), 2, MidpointRounding.ToEven);                                        
                                     }
-
+                                    #endregion
                                 }
-
-                                if (objPrecoNovo != null)
-                                {
-                                    item.PrecoTabela = decimal.Round(objPrecoNovo.PRECO.GetValueOrDefault(), 2, MidpointRounding.ToEven);
-                                }                   
                             }                       
                         }
                         #endregion
@@ -2194,7 +2197,8 @@ namespace Dalutex.Controllers
         public ActionResult Preview(PreviewViewModel model)
         {
             try
-            {
+            {   
+                #region getnumero pedido
                 bool estaEditando = base.Session_Carrinho.Editando;
 
                 int iNUMERO_PEDIDO_BLOCO = default(int);
@@ -2220,8 +2224,7 @@ namespace Dalutex.Controllers
                 {
                     iNUMERO_PEDIDO_BLOCO = base.Session_Carrinho.ID;
                 }
-                
-
+                #endregion
 
                 using (var ctx = new TIDalutexContext())
                 {
@@ -2455,7 +2458,7 @@ namespace Dalutex.Controllers
                                     if (objItemSalvar.Novo)
                                     {
                                         lstItens.Add(objItemSalvar);
-                                    }
+                                    }                                    
                                 }
 
                                 if(!estaEditando)
@@ -2597,12 +2600,47 @@ namespace Dalutex.Controllers
                                     }
                                 }
 
+                                int iItem = 1;
                                 foreach (InserirNoCarrinhoViewModel item in base.Session_Carrinho.Itens)
-                                {
+                                {                                    
                                     if(item.Excluir)
                                     {
                                         PRE_PEDIDO_ITENS objExcluir = ctx.PRE_PEDIDO_ITENS.First(i => i.ITEM == item.ID && i.NUMERO_PEDIDO_BLOCO == iNUMERO_PEDIDO_BLOCO);
                                         ctx.PRE_PEDIDO_ITENS.Remove(objExcluir);
+                                    }
+
+                                    //ODA --- TODO: DPD073.0 - NEGOCIAÇÃO DE VENDA COM CLIENTE (NÃO GERAR CRÍTICAS DE PREÇO)
+                                    // CHAMDA PARA A ROTINA QUE VALIDA ACORDOS COM O CLIENTE E ALTERA O PREÇO DE TABELA E PREÇO DO ITEM. 
+                                    int _id_cliente = base.Session_Carrinho.ClienteFatura.ID_CLIENTE;
+
+                                    //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<{[+]}>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                    if (item.IDItemAcordo != null)//&& (1 == 2))// <<<<<<<<<<<<<<<<<<<**************************************
+                                    //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<{[+]}>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                    {
+                                        //VW_ACORDO_DISPO_CLIENTE objAcordo = ctx.VW_ACORDO_DISPO_CLIENTE.Where(x => x.ID_ITEM_ACORDO_COM == item.IDItemAcordo).FirstOrDefault();
+                                        VW_ACORDO_DISPO_CLIENTE objUpdateQtdeTemp = ctx.VW_ACORDO_DISPO_CLIENTE.Where(x => x.ID_ITEM_ACORDO_COM == item.IDItemAcordo).FirstOrDefault();
+
+                                        if (objUpdateQtdeTemp.QTDE_DISPONIVEL_TMP < objUpdateQtdeTemp.QTDE_DISPONIVEL)
+                                        {
+                                            try//atualizar a qtde do acordo ----------------------------- 
+                                            {
+                                                objUpdateQtdeTemp.QTDE_DISPONIVEL = (decimal)objUpdateQtdeTemp.QTDE_DISPONIVEL_TMP;
+                                            }
+                                            catch { }
+                                        }
+
+                                        //SALVAR QUAL PEDIDO E ITEM BAIXOU A QTDE DO ITEM DO ACORDO ---
+                                        ACORDO_COMERCIAL_PEDIDOS insAcordoPedido = new ACORDO_COMERCIAL_PEDIDOS()
+                                        {
+                                            ID_ACORDO_COM_PED = 1,
+                                            PEDIDO = iNUMERO_PEDIDO_BLOCO,
+                                            ITEM = iItem,
+                                            ID_ACORDO = (int)item.IDItemAcordo,
+                                            QUANTIDADE = (decimal)item.Quantidade
+                                        };
+                                        ctx.ACORDO_COMERCIAL_PEDIDOS.Add(insAcordoPedido);
+
+                                        iItem++;
                                     }
                                 }
 

@@ -36,7 +36,10 @@ namespace Dalutex.Controllers
 
                     using (var ctx = new TIDalutexContext())
                     {
-                        objUsuario = ctx.USUARIOS.Where(x => x.LOGIN_USU.ToUpper() == model.Login.ToUpper() && x.SENHA_USU.ToUpper() == model.Password.ToUpper()).FirstOrDefault();
+                        objUsuario = ctx.USUARIOS.Where(x => x.LOGIN_USU.ToUpper() == model.Login.ToUpper() && 
+                                                             x.SENHA_USU.ToUpper() == model.Password.ToUpper() &&
+                                                             x.ATIVO == true                                                       
+                                                        ).FirstOrDefault();
 
                         if (objUsuario != null)
                         {

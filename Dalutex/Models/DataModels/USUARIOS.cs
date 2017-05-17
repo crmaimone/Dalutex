@@ -41,5 +41,7 @@ namespace Dalutex.Models.DataModels
         [NotMapped]
         public bool PodeCancelarItens { get; set; }
 
+        public bool ATIVO { get; set; }
+
     }
 }

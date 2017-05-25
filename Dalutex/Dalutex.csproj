@@ -176,6 +176,7 @@
     <Compile Include="Models\DataModels\REGRA_PADRAO.cs" />
     <Compile Include="Models\DataModels\TIPO_PEDIDO_USUARIO.cs" />
     <Compile Include="Models\DataModels\USUARIOS_ACOES.cs" />
+    <Compile Include="Models\DataModels\VW_ACORDOS_VIGENTES.cs" />
     <Compile Include="Models\DataModels\VW_ACORDO_DISPO_CLIENTE.cs" />
     <Compile Include="Models\DataModels\VW_ARTIGOS_DISPONIVEIS_NEW.cs" />
     <Compile Include="Models\DataModels\VW_ARTIGOS_INATIVOS.cs" />
@@ -728,6 +729,7 @@
     <Content Include="Views\Cadastro\TabelaPrecos.cshtml" />
     <Content Include="Views\Pedido\Reacabamento.cshtml" />
     <Content Include="Views\Cadastro\EnviarPDFTabelaPreco.cshtml" />
+    <Content Include="Views\Cadastro\AcordosVigentes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

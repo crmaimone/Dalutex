@@ -1948,7 +1948,7 @@ namespace Dalutex.Controllers
                                                                                                         ).FirstOrDefault();
 
                                 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<{[+]}>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                                if (objAcordo != null) //&& (1 == 2))// <<<<<<<<<<<<<<<<<<<**************************************
+                                if (objAcordo != null) //&& (1 == 2) )// <<<<<<<<<<<<<<<<<<< LIBERAR A IMPLEMENTAÇÃO **************************************
                                 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<{[+]}>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                                 {
                                     VW_ACORDO_DISPO_CLIENTE objUpdateQtdeTemp = null;
@@ -2352,6 +2352,11 @@ namespace Dalutex.Controllers
 
                                     string origem = "";
 
+                                    if (!string.IsNullOrWhiteSpace(item.VarExclusiva)) 
+                                    {
+                                        origem = "E";
+                                    }
+
                                     #region Inserir a reserva do item se necessário
 
                                     if (item.Tipo == Enums.ItemType.ValidacaoReserva)
@@ -2614,7 +2619,7 @@ namespace Dalutex.Controllers
                                     int _id_cliente = base.Session_Carrinho.ClienteFatura.ID_CLIENTE;
 
                                     //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<{[+]}>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                                    if (item.IDItemAcordo != null)//&& (1 == 2))// <<<<<<<<<<<<<<<<<<<**************************************
+                                    if (item.IDItemAcordo != null) //&& (1 == 2))// <<<<<<<<<<<<<<<<<<< LIBERAR A IMPLEMNETAÇÃO **************************************
                                     //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<{[+]}>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                                     {
                                         //VW_ACORDO_DISPO_CLIENTE objAcordo = ctx.VW_ACORDO_DISPO_CLIENTE.Where(x => x.ID_ITEM_ACORDO_COM == item.IDItemAcordo).FirstOrDefault();
@@ -2632,7 +2637,7 @@ namespace Dalutex.Controllers
                                         //SALVAR QUAL PEDIDO E ITEM BAIXOU A QTDE DO ITEM DO ACORDO ---
                                         ACORDO_COMERCIAL_PEDIDOS insAcordoPedido = new ACORDO_COMERCIAL_PEDIDOS()
                                         {
-                                            ID_ACORDO_COM_PED = 1,
+                                            ID_ACORDO_COM_PED = iItem,
                                             PEDIDO = iNUMERO_PEDIDO_BLOCO,
                                             ITEM = iItem,
                                             ID_ACORDO = (int)item.IDItemAcordo,

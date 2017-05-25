@@ -913,6 +913,82 @@ namespace Dalutex.Controllers
             }
 
             return Json(lstResult, JsonRequestBehavior.AllowGet);
-        }        
+        }
+
+
+        public ActionResult AcordosVigentes(string filtrorepresentante, string filtrocliente, string pagina, string totalpaginas)
+        {
+            ListaAcordosVigentesViewModel model = new ListaAcordosVigentesViewModel();
+           
+            model.FiltroRepresentante = filtrorepresentante;
+            model.FiltroCliente = filtrocliente;
+
+            if (!string.IsNullOrWhiteSpace(totalpaginas))
+            {
+                model.TotalPaginas = int.Parse(totalpaginas);
+            }
+
+            if (string.IsNullOrWhiteSpace(pagina))
+            {
+                model.Pagina = 1;
+
+                if (base.Session_Usuario.ID_REPRES > default(int))
+                {
+                    int IDRepresentante = base.Session_Usuario.ID_REPRES.GetValueOrDefault();
+                    using (var ctx = new DalutexContext())
+                    {
+                        model.FiltroRepresentante = ctx.REPRESENTANTES.Find(IDRepresentante).NOME.Trim();
+                    }
+
+                    this.ObterItensAcordoVigente(model);
+                }
+            }
+            else
+            {
+                model.Pagina = int.Parse(pagina);
+
+                this.ObterItensAcordoVigente(model);
+            }
+            return View(model);
+        }
+
+        private void ObterItensAcordoVigente(ListaAcordosVigentesViewModel model)
+        {
+            int iItensPorPagina = 6;
+
+            using (var ctx = new TIDalutexContext())
+            {
+                List<VW_ACORDOS_VIGENTES> result = null;
+
+                if (model.TotalPaginas == 0)
+                {
+                    result = ctx.VW_ACORDOS_VIGENTES.Where(x =>
+                        (model.FiltroRepresentante == null || x.REPRESENTANTE.StartsWith(model.FiltroRepresentante.ToUpper()))
+                        &&
+                        (model.FiltroCliente == null || x.NOME_CLIENTE.Contains(model.FiltroCliente.ToUpper()))
+                        ).OrderByDescending(x => x.NOME_CLIENTE).ToList();
+
+                    decimal dTotal = result.Count / (decimal)iItensPorPagina;
+                    model.TotalPaginas = (int)Decimal.Ceiling(dTotal);
+                    if (model.TotalPaginas == 0)
+                        model.TotalPaginas = 1;
+
+                    model.ListaAcordosVigentes = result.Skip((model.Pagina - 1) * iItensPorPagina).Take(iItensPorPagina).ToList();                    
+                }
+                else
+                {
+                    model.ListaAcordosVigentes = ctx.VW_ACORDOS_VIGENTES
+                                .Where(x => (model.FiltroRepresentante == null || x.REPRESENTANTE.StartsWith(model.FiltroRepresentante.ToUpper()))
+                                            &&
+                                            (model.FiltroCliente == null || x.NOME_CLIENTE.Contains(model.FiltroCliente.ToUpper()))
+                                      ).OrderByDescending(x => x.REPRESENTANTE).Skip((model.Pagina - 1) * iItensPorPagina).Take(iItensPorPagina).ToList();
+
+                    if (result.Count() == 0)
+                    {
+                        ModelState.AddModelError("", "Nenhum acordo vigente foi encontrado");
+                    }
+                }
+            }
+        }
     }
 }

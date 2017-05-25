@@ -85,10 +85,103 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<GRUPO_CLIENTE_SGT> GRUPO_CLIENTE_SGT { get; set; }
         public virtual DbSet<VW_ACORDO_DISPO_CLIENTE> VW_ACORDO_DISPO_CLIENTE { get; set; }
         public virtual DbSet<ACORDO_COMERCIAL_PEDIDOS> ACORDO_COMERCIAL_PEDIDOS { get; set; }
+        public virtual DbSet<VW_ACORDOS_VIGENTES> VW_ACORDOS_VIGENTES { get; set; }
 
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<VW_ACORDOS_VIGENTES>()
+               .Property(e => e.ID_REG)
+               .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_ACORDOS_VIGENTES>()
+                .Property(e => e.ID_ACORDO_COMERCIAL)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_ACORDOS_VIGENTES>()
+                .Property(e => e.CLIENTE)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_ACORDOS_VIGENTES>()
+                .Property(e => e.NOME_CLIENTE)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_ACORDOS_VIGENTES>()
+                .Property(e => e.GRUPO_CLIENTE)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_ACORDOS_VIGENTES>()
+                .Property(e => e.ID_REP)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_ACORDOS_VIGENTES>()
+                .Property(e => e.REPRESENTANTE)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_ACORDOS_VIGENTES>()
+                .Property(e => e.USUARIO_DIGITADOR)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_ACORDOS_VIGENTES>()
+                .Property(e => e.USUARIO_APROVACAO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_ACORDOS_VIGENTES>()
+                .Property(e => e.OBSERVACAO_APROVACAO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_ACORDOS_VIGENTES>()
+                .Property(e => e.OBSERVACAO_DIGITACAO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_ACORDOS_VIGENTES>()
+                .Property(e => e.ID_ITEM_ACORDO_COM)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_ACORDOS_VIGENTES>()
+                .Property(e => e.ID_ACORDO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_ACORDOS_VIGENTES>()
+                .Property(e => e.ARTIGO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_ACORDOS_VIGENTES>()
+                .Property(e => e.DESENHO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_ACORDOS_VIGENTES>()
+                .Property(e => e.VARIANTE)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_ACORDOS_VIGENTES>()
+                .Property(e => e.COR)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_ACORDOS_VIGENTES>()
+                .Property(e => e.QUANTIDADES)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_ACORDOS_VIGENTES>()
+                .Property(e => e.QTDE_DISPONIVEL)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_ACORDOS_VIGENTES>()
+                .Property(e => e.UM)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_ACORDOS_VIGENTES>()
+                .Property(e => e.PRECO_UNITARIO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_ACORDOS_VIGENTES>()
+                .Property(e => e.USUARIO_DIG)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<VW_ACORDOS_VIGENTES>()
+                .Property(e => e.USUARIO_APROV)
+                .IsUnicode(false);
+
             modelBuilder.Entity<ACORDO_COMERCIAL_PEDIDOS>()
                 .Property(e => e.ID_ACORDO_COM_PED)
                 .HasPrecision(38, 0);

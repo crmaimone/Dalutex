@@ -608,5 +608,20 @@ namespace Dalutex.Models
         public List<InserirNoCarrinhoViewModel> Itens { get; set; }
 
         #endregion        
-    }    
+    }
+
+    public class ListaAcordosVigentesViewModel 
+    {        
+        [Display(Name = "Representante:")]
+        public string FiltroRepresentante { get; set; }
+
+        [Display(Name = "Cliente:")]
+        public string FiltroCliente { get; set; }
+        
+        public int Pagina { get; set; }
+        
+        public int TotalPaginas { get; set; }
+        
+        public List<VW_ACORDOS_VIGENTES> ListaAcordosVigentes { get; set; }
+    }
 }

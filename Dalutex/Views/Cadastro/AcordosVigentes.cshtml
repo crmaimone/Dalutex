@@ -1,0 +1,173 @@
+﻿@model Dalutex.Models.ListaAcordosVigentesViewModel
+
+@using Dalutex.Models;
+@using Dalutex.Models.DataModels;
+
+@{
+    ViewBag.Title = "Acordos vigentes";
+}
+
+<div class="header-title"><h3>@ViewBag.Title</h3></div>
+
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="row-fluid" id="pesqDesenho">
+            @using (Html.BeginForm("AcordosVigentes", "Cadastro", null, FormMethod.Post, new { role = "search" }))
+            {
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                    @Html.LabelFor(x => x.FiltroRepresentante, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(x => x.FiltroRepresentante, new { @class = "form-control", placeholder = "Começa com.." })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(x => x.FiltroCliente, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(x => x.FiltroCliente, new { @class = "form-control", placeholder = "Começa com.." })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <input type="hidden" name="Pagina" value="@Model.Pagina" />
+                    <button type="submit" class="btn btn-default btn-group-sm" style="margin-left:15px;"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Pesquisar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@if (Model != null && Model.ListaAcordosVigentes != null)
+{
+    <div class="panel panel-default">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Representante</th>
+                        <th>Cliente</th>
+                        <th>Ini. Vigencia</th>
+                        <th>Fin. Vigencia</th>
+                        <th>Artigo</th>
+                        <th>U.M.</th>
+                        <th>Qtde.</th>
+                        <th>Qtde. Disponivel</th>
+                        <th>Preço Acordo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ListaAcordosVigentes)
+                    {
+                        <tr>
+                            <td><a href="#"></a></td>
+                            <td>@item.REPRESENTANTE</td>
+                            <td>@item.NOME_CLIENTE</td>
+                            <td>@item.DATA_INI_VIGENCIA.ToString("dd/MM/yyyy")</td>
+                            <td>@item.DATA_FIN_VIGENCIA.ToString("dd/MM/yyyy")</td>
+                            <td>@item.ARTIGO</td>
+                            <td>@item.UM</td>
+                            <td>@item.QUANTIDADES.ToString("#,##0")</td>
+                            <td>@item.QTDE_DISPONIVEL.ToString("#,##0")</td>
+                            <td>@item.PRECO_UNITARIO.ToString("c")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <nav>
+        <ul class="pagination">
+            @if (Model.ListaAcordosVigentes != null)
+            {
+                if (Model.Pagina > 1)
+                {
+                    <li>
+                        <a href="@Url.Action("AcordosVigentes", "Cadastro",
+                                                new {                                                                                                                                                                                       
+                                                      filtrorepresentante = Model.FiltroRepresentante
+                                                    , pagina = Model.Pagina - 1
+                                                    , totalpaginas = Model.TotalPaginas
+                                                })" aria-label="Anterior">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                }
+                else
+                {
+                    <li class="disabled">
+                        <a href="#" aria-label="Anterior">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                }
+                int iComecar = Model.Pagina <= 5 ? 1 : Model.Pagina - 5;
+                for (int i = iComecar; i <= Model.TotalPaginas; i++)
+                {
+                    if (Model.Pagina == i)
+                    {
+                        <li class="active">
+                            <a href="@Url.Action("AcordosVigentes", "Cadastro",
+                                                new {
+                                                    filtrorepresentante = Model.FiltroRepresentante
+                                                    , pagina = i
+                                                    , totalpaginas = Model.TotalPaginas
+                                                })">@i</a>
+                                            </li>
+                    }
+                    else
+                    {
+                        <li>
+                            <a href="@Url.Action("AcordosVigentes", "Cadastro",
+                                                new {
+                                                    filtrorepresentante = Model.FiltroRepresentante
+                                                    , pagina = i
+                                                    , totalpaginas = Model.TotalPaginas
+                                                })">@i</a>
+                                            </li>
+                    }
+                    if (i == iComecar + 9)
+                    {
+                        break;
+                    }
+                }
+                if (Model.Pagina < Model.TotalPaginas)
+                {
+                    <li>
+                        <a href="@Url.Action("AcordosVigentes", "Cadastro",
+                                                new {
+                                                    filtrorepresentante = Model.FiltroRepresentante
+                                                    , pagina = Model.Pagina + 1
+                                                    , totalpaginas = Model.TotalPaginas
+                                                })" aria-label="Próxima">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                }
+                else
+                {
+                    <li class="disabled">
+                        <a href="#" aria-label="Próxima">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                }
+            }
+        </ul>
+    </nav>
+}
+@section Scripts {
+    <script>
+        $('tr').click(function () {
+            var target = $(this).find('a').attr('href');
+            if (target != undefined) {
+                window.location = $(this).find('a').attr('href');
+            }
+
+        }).hover(function () {
+            $(this).toggleClass('hover-cursor');
+        });
+    </script>
+}

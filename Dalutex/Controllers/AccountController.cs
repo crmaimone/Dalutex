@@ -9,7 +9,6 @@ using System;
 
 namespace Dalutex.Controllers
 {
-    [Authorize]
     public class AccountController : BaseController
     {
         //
@@ -43,7 +42,7 @@ namespace Dalutex.Controllers
 
                         if (objUsuario != null)
                         {
-                            var lstAcoes = ctx.USUARIOS_ACOES.Where(a => a.ID_USUARIO == objUsuario.COD_USU && (a.ID_ACAO == 141 || a.ID_ACAO == 142 || a.ID_ACAO == 143)).ToList();
+                            var lstAcoes = ctx.USUARIOS_ACOES.Where(a => a.ID_USUARIO == objUsuario.COD_USU && (a.ID_ACAO == 141 || a.ID_ACAO == 142 || a.ID_ACAO == 143 || a.ID_ACAO == 144)).ToList();
 
                             if (lstAcoes.Exists(a => a.ID_ACAO == 141))
                                 objUsuario.PodeCancelarItens = true;
@@ -53,6 +52,9 @@ namespace Dalutex.Controllers
 
                             if (lstAcoes.Exists(a => a.ID_ACAO == 143))
                                 objUsuario.PodeEditarPedidoAvancado = true;
+
+                            if (lstAcoes.Exists(a => a.ID_ACAO == 144))
+                                objUsuario.PodeAcessarMenuAcordos = true;
 
                             FormsAuthentication.SetAuthCookie(objUsuario.NOME_USU, model.RememberMe);
                             objUsuario.SENHA_USU = null;
@@ -95,6 +97,12 @@ namespace Dalutex.Controllers
             //FormsAuthentication.SignOut();
             Session.Clear();
             return RedirectToAction("Index", "Home");
+        }
+
+        [AllowAnonymous]
+        public ActionResult AccessDenied()
+        {
+            return View();
         }
     }
 }

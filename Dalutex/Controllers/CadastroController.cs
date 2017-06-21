@@ -915,9 +915,13 @@ namespace Dalutex.Controllers
             return Json(lstResult, JsonRequestBehavior.AllowGet);
         }
 
-
         public ActionResult AcordosVigentes(string filtrorepresentante, string filtrocliente, string pagina, string totalpaginas)
         {
+            if(!Session_Usuario.PodeAcessarMenuAcordos)
+            {
+                return RedirectToAction("AccessDenied", "Account");
+            }
+
             ListaAcordosVigentesViewModel model = new ListaAcordosVigentesViewModel();
            
             model.FiltroRepresentante = filtrorepresentante;
@@ -927,7 +931,7 @@ namespace Dalutex.Controllers
             {
                 model.TotalPaginas = int.Parse(totalpaginas);
             }
-
+            
             if (string.IsNullOrWhiteSpace(pagina))
             {
                 model.Pagina = 1;

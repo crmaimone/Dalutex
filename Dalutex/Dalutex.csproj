@@ -184,6 +184,7 @@
     <Compile Include="Models\DataModels\VW_CLIE_OPER_TRINGULAR.cs" />
     <Compile Include="Models\DataModels\VW_CUS_CONS_TAB_PRECO.cs" />
     <Compile Include="Models\DataModels\VW_DESENHOS_POR_COL_DESENV.cs" />
+    <Compile Include="Models\DataModels\VW_DES_TEM_ATEND_ABERTO.cs" />
     <Compile Include="Models\DataModels\VW_EMAILS.cs" />
     <Compile Include="Models\DataModels\VW_EMAIL_USUARIO.cs" />
     <Compile Include="Models\DataModels\VW_FAROL.cs" />
@@ -730,6 +731,7 @@
     <Content Include="Views\Pedido\Reacabamento.cshtml" />
     <Content Include="Views\Cadastro\EnviarPDFTabelaPreco.cshtml" />
     <Content Include="Views\Cadastro\AcordosVigentes.cshtml" />
+    <Content Include="Views\Account\AccessDenied.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

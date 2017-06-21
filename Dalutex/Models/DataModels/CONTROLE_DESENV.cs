@@ -110,5 +110,7 @@ namespace Dalutex.Models.DataModels
 
         [StringLength(200)]
         public string MOTIVO_APROV_CANCEL { get; set; }
+
+        public decimal GERA_PED_RESERVA { get; set; }
     }
 }

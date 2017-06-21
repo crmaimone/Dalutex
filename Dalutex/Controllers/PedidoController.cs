@@ -635,28 +635,65 @@ namespace Dalutex.Controllers
                     //oda --- 23/03/2017 -- validação de variante exclusiva------   
                     using (var ctx = new TIDalutexContext())
                     {
-                        // verificar se o item está na coleção (artigo, desenho, variante e tecnoligia) ----
-                        CONTROLE_DESENV_COLECAO objItemEstaNaCol = ctx.CONTROLE_DESENV_COLECAO.Where(x =>
-                            x.ARTIGO == model.Artigo &&
-                            x.DESENHO == model.Desenho &&
-                            x.VARIANTE == model.Variante &&
-                            x.TECNOLOGIA == model.Tecnologia
-                            ).FirstOrDefault();
-
-                        if (objItemEstaNaCol == null)//se não está na coleção --------
+                        // nova regra vigente apartir de 14/06/2017 ----------------------------------
+                        // verificar se o desenho está na coleção 
+                        CONTROLE_DESENV_COLECAO objDesenhoEstaNaColecao = ctx.CONTROLE_DESENV_COLECAO.Where(x => x.DESENHO == model.Desenho).FirstOrDefault();
+                        if (objDesenhoEstaNaColecao != null)//se desenho está na coleção --------
                         {
-                            //então verifica se o desenho, artigo e tec estão ----
-                            CONTROLE_DESENV_COLECAO objDesEstaNaCol = ctx.CONTROLE_DESENV_COLECAO.Where(x =>
-                            x.ARTIGO == model.Artigo &&
-                            x.DESENHO == model.Desenho &&
-                            x.TECNOLOGIA == model.Tecnologia
-                            ).FirstOrDefault();
-
-                            if (objDesEstaNaCol != null) //se retornou, desenho está na coleção e é variante exclusiva --------                            
-                                model.VarExclusiva = model.Variante;
-                            else
-                                model.VarExclusiva = "";
+                            // verificar se o desenho e variante estão na coleção 
+                            CONTROLE_DESENV_COLECAO objDesVarEstaNaColecao = ctx.CONTROLE_DESENV_COLECAO.Where(x => x.DESENHO == model.Desenho && x.VARIANTE == model.Variante).FirstOrDefault();
+                            if (objDesVarEstaNaColecao == null) //se desenho/var NÃO estão na coleção --------
+                            {
+                                model.VarExclusiva = model.Variante;                                
+                            }
+                            //else//se desenho/var estão na coleção --------
+                            //{
+                            //    // verificar se o desenho e variante estão na coleção 
+                            //    CONTROLE_DESENV_COLECAO objArtigoEstaNaColecao = ctx.CONTROLE_DESENV_COLECAO.Where(x => x.ARTIGO == model.Artigo).FirstOrDefault();
+                            //    if (objArtigoEstaNaColecao != null)//se artigo esta na coleção --------
+                            //    {
+                            //        VW_COLECAO objColecaoVigente = ctx.VW_COLECAO.Where(x => x.ID_COLECAO == (Int)model.IDColecao && x.VIGENCIA >= DateTime.Now).FirstOrDefault();
+                            //        if (objColecaoVigente != null)//se artigo esta na coleção vigente --------
+                            //        {
+                            //            //coleção vigente.
+                            //        }
+                            //    }
+                            //}
                         }
+                        else//se desenho NÃO está na coleção
+                        {                            
+                            VW_DES_TEM_ATEND_ABERTO objTemAtendimento = ctx.VW_DES_TEM_ATEND_ABERTO.Where(x => x.DESENHO == model.Desenho).FirstOrDefault();
+                            if (objTemAtendimento == null)//se NÃO tem atendimento para o desenho, então é var exclusiva
+                            {
+                                model.VarExclusiva = model.Variante;
+                            }
+                        }
+
+                        // regra antiga de var exclusiva -- antes de 14/06/2017 ----------------------------------------------------------------
+                        // verificar se o item está na coleção (artigo, desenho, variante e tecnoligia) ----
+                        //CONTROLE_DESENV_COLECAO objItemEstaNaCol = ctx.CONTROLE_DESENV_COLECAO.Where(x =>
+                        //    x.ARTIGO == model.Artigo &&
+                        //    x.DESENHO == model.Desenho &&
+                        //    x.VARIANTE == model.Variante &&
+                        //    x.TECNOLOGIA == model.Tecnologia
+                        //    ).FirstOrDefault();
+
+                        //if (objItemEstaNaCol == null)//se não está na coleção --------
+                        //{
+                        //    //então verifica se o desenho, artigo e tec estão ----
+                        //    CONTROLE_DESENV_COLECAO objDesEstaNaCol = ctx.CONTROLE_DESENV_COLECAO.Where(x =>
+                        //    x.ARTIGO == model.Artigo &&
+                        //    x.DESENHO == model.Desenho &&
+                        //    x.TECNOLOGIA == model.Tecnologia
+                        //    ).FirstOrDefault();
+
+                        //    if (objDesEstaNaCol != null) //se retornou, desenho está na coleção e é variante exclusiva --------                            
+                        //        model.VarExclusiva = model.Variante;
+                        //    else
+                        //        model.VarExclusiva = "";
+                        //}
+                        // regra antiga de var exclusiva -- antes de 14/06/2017 ----------------------------------------------------------------
+
                     }
                     #endregion
 
@@ -1479,22 +1516,20 @@ namespace Dalutex.Controllers
                                 Variante = item.VARIANTE,
                                 Compose = (int)item.COD_COMPOSE,
                                 DtItemSolicitada = item.DATA_ENTREGA_DIGI.GetValueOrDefault(),
-                                ValorTotalItem = item.QUANTIDADE.GetValueOrDefault() * item.PRECO_UNIT.GetValueOrDefault(),
-                                
+                                ValorTotalItem = item.QUANTIDADE.GetValueOrDefault() * item.PRECO_UNIT.GetValueOrDefault(),                                
                                 NumeroSequencial = item.ITEM,//oda-- 03/11/2016 -- erro na edição do item ao setar compose ...
                                 Cor = item.COR,
-
                                 Colecao = vColecao,                                 
                                                                 
-                                Tipo = (
-                                    objPrePedidoSalvo.CANAL_VENDAS == (int)Enums.CanaisVenda.TELEVENDAS
-                                        && item.PE == "S") ? Enums.ItemType.ProntaEntrega : (
-                                            ctxTI.PED_RESERVA_VENDA.Where(r => r.PEDIDO_VENDA == NumeroPedidoBloco).FirstOrDefault() != null ? Enums.ItemType.ValidacaoReserva : (
-                                                objPrePedidoSalvo.TIPO_PEDIDO == (int)Enums.TiposPedido.RESERVA ? Enums.ItemType.Reserva : (
-                                                    item.LISO_ESTAMP == "L" ? Enums.ItemType.Liso : Enums.ItemType.Estampado
-                                            )
+                                Tipo = ( objPrePedidoSalvo.CANAL_VENDAS == (int)Enums.CanaisVenda.TELEVENDAS && item.PE == "S") ? 
+                                        Enums.ItemType.ProntaEntrega : 
+                                        (
+                                        (ctxTI.PED_RESERVA_VENDA.Where(r => r.PEDIDO_VENDA == NumeroPedidoBloco).FirstOrDefault() != null 
+                                         && item.DESENHO != "0000" 
+                                         && item.VARIANTE != "00" 
+                                         && item.LISO_ESTAMP != "L") ? Enums.ItemType.ValidacaoReserva : 
+                                          (objPrePedidoSalvo.TIPO_PEDIDO == (int)Enums.TiposPedido.RESERVA ? Enums.ItemType.Reserva : (item.LISO_ESTAMP == "L" ? Enums.ItemType.Liso : Enums.ItemType.Estampado))
                                         )
-                                )
                             });
                         }
                     }
@@ -1948,7 +1983,7 @@ namespace Dalutex.Controllers
                                                                                                         ).FirstOrDefault();
 
                                 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<{[+]}>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                                if (objAcordo != null) //&& (1 == 2) )// <<<<<<<<<<<<<<<<<<< LIBERAR A IMPLEMENTAÇÃO **************************************
+                                if ((objAcordo != null))// && (1 == 2) )// <<<<<<<<<<<<<<<<<<< LIBERAR A IMPLEMENTAÇÃO **************************************
                                 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<{[+]}>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                                 {
                                     VW_ACORDO_DISPO_CLIENTE objUpdateQtdeTemp = null;
@@ -2335,7 +2370,8 @@ namespace Dalutex.Controllers
                                                 ID_REP = base.Session_Carrinho.Representante.IDREPRESENTANTE,
                                                 ID_STUDIO = item.IDStudio,
                                                 ID_ITEM_STUDIO = item.IDItemStudio,
-                                                STATUS_GERAL = 1
+                                                STATUS_GERAL = 1,
+                                                GERA_PED_RESERVA = 0
                                             };
 
                                             ctx.CONTROLE_DESENV.Add(objInsert);
@@ -2619,7 +2655,7 @@ namespace Dalutex.Controllers
                                     int _id_cliente = base.Session_Carrinho.ClienteFatura.ID_CLIENTE;
 
                                     //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<{[+]}>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                                    if (item.IDItemAcordo != null) //&& (1 == 2))// <<<<<<<<<<<<<<<<<<< LIBERAR A IMPLEMNETAÇÃO **************************************
+                                    if ((item.IDItemAcordo != null))// && (1 == 2))// <<<<<<<<<<<<<<<<<<< LIBERAR A IMPLEMNETAÇÃO **************************************
                                     //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<{[+]}>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                                     {
                                         //VW_ACORDO_DISPO_CLIENTE objAcordo = ctx.VW_ACORDO_DISPO_CLIENTE.Where(x => x.ID_ITEM_ACORDO_COM == item.IDItemAcordo).FirstOrDefault();

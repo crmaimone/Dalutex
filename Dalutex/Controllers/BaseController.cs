@@ -12,6 +12,13 @@ namespace Dalutex.Controllers
     [Authorize]
     public class BaseController : Controller
     {
+        protected override IAsyncResult BeginExecuteCore(AsyncCallback callback, object state)
+        {
+            ViewBag.PodeAcessarMenuAcordos = (Session_Usuario != null && Session_Usuario.PodeAcessarMenuAcordos);
+
+            return base.BeginExecuteCore(callback, state);
+        }
+
         [Authorize]
         protected ActionResult RedirectToLocal(string returnUrl)
         {
@@ -76,14 +83,14 @@ namespace Dalutex.Controllers
             {
                 if (Session["SESSION_USUARIO"] == null)
                 {
-                    if (User.Identity.IsAuthenticated)
+                    if (User.Identity != null && User.Identity.IsAuthenticated)
                     {
                         using (var ctx = new TIDalutexContext())
                         {
                             var objUsuario = ctx.USUARIOS.Where(x => x.NOME_USU.ToUpper() == User.Identity.Name.ToUpper()).FirstOrDefault();
                             if (objUsuario != null)
                             {
-                                var lstAcoes = ctx.USUARIOS_ACOES.Where(a => a.ID_USUARIO == objUsuario.COD_USU && (a.ID_ACAO == 141 || a.ID_ACAO == 142 || a.ID_ACAO == 143)).ToList();
+                                var lstAcoes = ctx.USUARIOS_ACOES.Where(a => a.ID_USUARIO == objUsuario.COD_USU && (a.ID_ACAO == 141 || a.ID_ACAO == 142 || a.ID_ACAO == 143) || a.ID_ACAO == 144).ToList();
 
                                 if (lstAcoes.Exists(a => a.ID_ACAO == 141))
                                     objUsuario.PodeCancelarItens = true;
@@ -93,7 +100,10 @@ namespace Dalutex.Controllers
 
                                 if (lstAcoes.Exists(a => a.ID_ACAO == 143))
                                     objUsuario.PodeEditarPedidoAvancado = true;
-
+                                
+                                if (lstAcoes.Exists(a => a.ID_ACAO == 144))
+                                    objUsuario.PodeAcessarMenuAcordos = true;
+                                
                                 objUsuario.SENHA_USU = null;
                                 this.Session_Usuario = objUsuario;
                             }
@@ -131,6 +141,7 @@ namespace Dalutex.Controllers
                 Session["SESSION_CARRINHO"] = value;
             }
         }
+
         #endregion
     }
 }

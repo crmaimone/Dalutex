@@ -25,7 +25,7 @@
                     <li>@Html.ActionLink("SOBRE", "About", "Home")</li>
                     <li>@Html.ActionLink("CONTATO", "Contact", "Home")</li>
                     @if (User.Identity.IsAuthenticated)
-                    {
+                    {        
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">NEGÓCIOS<span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">                                
@@ -40,9 +40,12 @@
                                 <li class="divider"></li>
                                 <li>@Html.ActionLink("TABELA DE PREÇOS", "TabelaPrecos", "Cadastro")</li>
 
-                                <li class="divider"></li>
-                                <li>@Html.ActionLink("ACORDOS VIGENTES", "AcordosVigentes", "Cadastro")</li>
-
+                                @if (ViewBag.PodeAcessarMenuAcordos == true)
+                                { 
+                                    <li class="divider"></li>
+                                    <li>@Html.ActionLink("ACORDOS VIGENTES", "AcordosVigentes", "Cadastro")</li>
+                                }
+                                
                                 @*<li>@Html.ActionLink("RASCUNHOS DE PEDIDO", "RascunhoPedido", "Cadastro")</li>
                                 <li>@Html.ActionLink("SALVAR RASCUNHOS PEDIDO", "SalvarRascunhoPedido", "Cadastro")</li>*@                                
                                 @*<li>@Html.ActionLink("CADASTRAR IMAGENS", "DesenhosSemImagem", "Cadastro")</li>*@ 

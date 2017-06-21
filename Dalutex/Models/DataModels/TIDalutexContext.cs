@@ -86,10 +86,18 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<VW_ACORDO_DISPO_CLIENTE> VW_ACORDO_DISPO_CLIENTE { get; set; }
         public virtual DbSet<ACORDO_COMERCIAL_PEDIDOS> ACORDO_COMERCIAL_PEDIDOS { get; set; }
         public virtual DbSet<VW_ACORDOS_VIGENTES> VW_ACORDOS_VIGENTES { get; set; }
-
+        public virtual DbSet<VW_DES_TEM_ATEND_ABERTO> VW_DES_TEM_ATEND_ABERTO { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<VW_DES_TEM_ATEND_ABERTO>()
+                .Property(e => e.ID_CONTROLE_DESENV)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_DES_TEM_ATEND_ABERTO>()
+                .Property(e => e.DESENHO)
+                .IsUnicode(false);
+
             modelBuilder.Entity<VW_ACORDOS_VIGENTES>()
                .Property(e => e.ID_REG)
                .HasPrecision(38, 0);
@@ -1545,6 +1553,10 @@ namespace Dalutex.Models.DataModels
             modelBuilder.Entity<CONTROLE_DESENV>()
                 .Property(e => e.MOTIVO_APROV_CANCEL)
                 .IsUnicode(false);
+
+            modelBuilder.Entity<CONTROLE_DESENV>()
+                .Property(e => e.GERA_PED_RESERVA)
+                .HasPrecision(38, 0);
 
             modelBuilder.Entity<CONTROLE_DESENV_CARAC_TEC>()
                 .Property(e => e.ID_CARAC_TEC)

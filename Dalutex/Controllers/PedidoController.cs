@@ -1980,6 +1980,10 @@ namespace Dalutex.Controllers
                                 VW_ACORDO_DISPO_CLIENTE objAcordo = ctxTI.VW_ACORDO_DISPO_CLIENTE.Where(x => x.CLIENTE == model.ClienteFatura.ID_CLIENTE
                                                                                                           && x.ARTIGO == item.Artigo 
                                                                                                           && x.TECNOLOGIA == item.Tecnologia
+                                                                                                          
+                                                                                                          && x.COMISSAO == model.PorcentagemComissao
+                                                                                                          && x.QUALIDADE_COM == model.QualidadeComercial.Key
+                                                                                                          && x.ID_GRUPO_COND_PGTO == iCodCondPgto
                                                                                                         ).FirstOrDefault();
 
                                 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<{[+]}>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>

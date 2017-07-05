@@ -239,6 +239,18 @@ namespace Dalutex.Models.DataModels
                 .Property(e => e.PRECO_UNITARIO)
                 .HasPrecision(38, 0);
 
+            modelBuilder.Entity<VW_ACORDO_DISPO_CLIENTE>()
+                .Property(e => e.CONDICAO_PGTO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_ACORDO_DISPO_CLIENTE>()
+                .Property(e => e.COMISSAO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_ACORDO_DISPO_CLIENTE>()
+                .Property(e => e.ID_GRUPO_COND_PGTO)
+                .HasPrecision(38, 0);
+
             modelBuilder.Entity<GRUPO_CLIENTE_SGT>()
                 .Property(e => e.ID_GRUPO)
                 .HasPrecision(38, 0);

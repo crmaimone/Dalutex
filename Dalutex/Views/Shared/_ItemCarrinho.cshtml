@@ -31,6 +31,12 @@
 
                             @if (Model.Tipo == Enums.ItemType.Estampado || Model.Tipo == Enums.ItemType.ValidacaoReserva || Model.Tipo == Enums.ItemType.ProntaEntrega)
                             {
+                                if (Model.Cor != null)
+                                {
+                                    <div> <font color="red"><strong>Cor: @Model.Cor </strong></font></div>
+                                }
+                                
+                                
                                 <div> <strong>Desenho:</strong> @Model.Desenho </div>
                                 //<div> <strong>Variante:</strong> @Model.Variante </div>
 
@@ -43,8 +49,6 @@
                                 {
                                     <div> <strong>Variante:</strong> @Model.Variante </div>
                                 }
-
-
 
                                 <div> <strong>Tecnologia:</strong> @Model.TecnologiaPorExtenso </div>
 

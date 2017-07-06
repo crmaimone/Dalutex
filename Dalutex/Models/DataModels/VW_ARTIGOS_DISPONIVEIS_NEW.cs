@@ -29,5 +29,7 @@ namespace Dalutex.Models.DataModels
         public string ART_DISP_PCP { get; set; }
 
         public decimal REST_DES { get; set; }
+
+        public string COR { get; set; }
     }
 }

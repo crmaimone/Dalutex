@@ -307,7 +307,9 @@ namespace Dalutex.Controllers
 
             model.Desenho = desenho;
             model.Variante = variante;
-            model.Artigo = artigo;
+            
+            model.Artigo = artigo.Substring(0, 4);
+            
             model.TecnologiaPorExtenso = tecnologia;
             model.TecnologiaOriginal = tecnologiaoriginal;           
             model.IDColecao = idcolecao;
@@ -328,6 +330,10 @@ namespace Dalutex.Controllers
             model.EhReacabamento = ehreacabamento;
             model.Compose = codcompose;
             model.NumeroSequencial = iditem;
+
+            if (artigo.Length > 4){
+                model.Cor = artigo.Substring(11);
+            }
 
             #region Restrições
             //if ((model.TecnologiaPorExtenso != "L") && (!ehreacabamento))

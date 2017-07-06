@@ -12,6 +12,11 @@
         <div class="panel panel-default">
             <h5>
                   <strong>Artigo:</strong>&nbsp;@Model.Artigo
+
+                @if (Model.Cor != null)
+                {
+                    <strong>| Cor:</strong> @Model.Cor
+                }
                 | <strong>Tecnologia:</strong>&nbsp;@Model.TecnologiaPorExtenso
                 | <strong>Desenho:</strong>&nbsp;@Model.Desenho
                 | <strong>Variante:</strong>&nbsp;@Model.Variante

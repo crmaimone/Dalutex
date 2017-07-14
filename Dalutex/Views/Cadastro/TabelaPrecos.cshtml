@@ -62,7 +62,7 @@
                 $.ajax({
                     type: 'POST',
                     url: '@Url.Action("AtualizaComplentoPedido", "Pedido")',
-                        data: 'numPedidoCliente=' + $('#txtPedidoCliente').val() + '&observacoes=' + $('#txtObservacoes').val(),
+                    data: 'numPedidoCliente=' + $('#txtPedidoCliente').val() + '&observacoes=' + $('#txtObservacoes').val() + 'numPedidoClienteSt=' + $('#txtPedidoClienteSt').val(),
                         async: false,
                     });
                 }

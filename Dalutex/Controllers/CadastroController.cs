@@ -776,6 +776,7 @@ namespace Dalutex.Controllers
                         objPrePedido.COMISSAO = Session_Carrinho.PorcentagemComissao;
                         objPrePedido.ORIGEM = "PW"; // APENAS PRA INFORMAR QUE ESTE PEDIDO VEIO DO PEDIDO WEB NOVO. 
                         objPrePedido.PEDIDO_CLIENTE = base.Session_Carrinho.PedidoCliente;
+                        objPrePedido.PEDIDO_CLIENTE_ST = base.Session_Carrinho.PedidoClienteSt;
                         objPrePedido.STATUS_PEDIDO = 1; //embora esteja definido no banco como padrão "1", esta gravando nulo, então, deixar explicito.....  
                         objPrePedido.DATA_INICIO = DateTime.Now;
                         objPrePedido.DATA_FINAL = DateTime.Now;

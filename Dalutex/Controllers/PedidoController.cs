@@ -123,16 +123,17 @@ namespace Dalutex.Controllers
 
 
         [HttpPost]
-        public void AtualizaComplentoPedido(string numPedidoCliente, string observacoes)
+        public void AtualizaComplentoPedido(string numPedidoCliente, string observacoes, string numPedidoClienteSt)
         {
-            if (!string.IsNullOrWhiteSpace(numPedidoCliente))
-            {
-                base.Session_Carrinho.PedidoCliente = int.Parse(numPedidoCliente);
-            }
-            else
-            {
-                base.Session_Carrinho.PedidoCliente = 0;
-            }
+            //if (!string.IsNullOrWhiteSpace(numPedidoCliente))
+            //{
+            //    base.Session_Carrinho.PedidoCliente = int.Parse(numPedidoCliente);
+            //    base.Session_Carrinho.PedidoClienteSt = numPedidoClienteSt;
+            //}
+            //else
+            //{
+            //    base.Session_Carrinho.PedidoCliente = 0;
+            //}
 
             base.Session_Carrinho.Observacoes = observacoes;
         }
@@ -307,8 +308,11 @@ namespace Dalutex.Controllers
 
             model.Desenho = desenho;
             model.Variante = variante;
-            
-            model.Artigo = artigo.Substring(0, 4);
+
+            if (artigo != null)
+            {
+                model.Artigo = artigo.Substring(0, 4);
+            }            
             
             model.TecnologiaPorExtenso = tecnologia;
             model.TecnologiaOriginal = tecnologiaoriginal;           
@@ -331,7 +335,8 @@ namespace Dalutex.Controllers
             model.Compose = codcompose;
             model.NumeroSequencial = iditem;
 
-            if (artigo.Length > 4){
+            if ((artigo != null) && (artigo.Length > 4))
+            {
                 model.Cor = artigo.Substring(11);
             }
 
@@ -1360,6 +1365,8 @@ namespace Dalutex.Controllers
                 model.IDTipoPedido = base.Session_Carrinho.IDTipoPedido;
                 model.Observacoes = base.Session_Carrinho.Observacoes;
                 model.PedidoCliente = base.Session_Carrinho.PedidoCliente;
+                model.PedidoClienteSt = base.Session_Carrinho.PedidoClienteSt;
+
                 if (base.Session_Carrinho.Itens != null)
                 {
                     decimal totalPedido = 0;
@@ -1483,6 +1490,7 @@ namespace Dalutex.Controllers
                         ViaTransporte = ctx.COML_VIASTRANSPORTE.Find((int)objPrePedidoSalvo.VIATRANSPORTE),
                         PorcentagemComissao = objPrePedidoSalvo.COMISSAO.GetValueOrDefault(),
                         PedidoCliente = (int)objPrePedidoSalvo.PEDIDO_CLIENTE.GetValueOrDefault(),
+                        PedidoClienteSt = objPrePedidoSalvo.PEDIDO_CLIENTE_ST,
                         StatusPedido = (int)objPrePedidoSalvo.STATUS_PEDIDO.GetValueOrDefault()
                     };
 
@@ -1954,6 +1962,8 @@ namespace Dalutex.Controllers
                     base.Session_Carrinho.TipoAtendimento = model.TipoAtendimento;
                     base.Session_Carrinho.Observacoes = model.Observacoes;
                     base.Session_Carrinho.PedidoCliente = model.PedidoCliente;
+                    base.Session_Carrinho.PedidoClienteSt = model.PedidoClienteSt;
+
                     base.Session_Carrinho.NFRefat = model.NFRefat;
                     base.Session_Carrinho.PedidoRefat = model.PedidoRefat;
 
@@ -2201,6 +2211,8 @@ namespace Dalutex.Controllers
             model.Observacoes = Session_Carrinho.Observacoes;
             model.QualidadeCom = Session_Carrinho.QualidadeComercial.Key;
             model.DescrTipoPedido = base.Session_Carrinho.DescTipoPedido;
+
+            model.PedidoDoClienteSt = base.Session_Carrinho.PedidoClienteSt;
             
             if (base.Session_Carrinho.IDTipoPedido != (int)Enums.TiposPedido.RESERVA)
             {            
@@ -2308,6 +2320,8 @@ namespace Dalutex.Controllers
                     objPrePedido.COMISSAO = Session_Carrinho.PorcentagemComissao;
                     objPrePedido.ORIGEM = "PW"; // APENAS PRA INFORMAR QUE ESTE PEDIDO VEIO DO PEDIDO WEB NOVO. 
                     objPrePedido.PEDIDO_CLIENTE = base.Session_Carrinho.PedidoCliente;
+                    
+                    objPrePedido.PEDIDO_CLIENTE_ST = base.Session_Carrinho.PedidoClienteSt;
 
                     objPrePedido.NF_REFAT = (base.Session_Carrinho.NFRefat);
                     objPrePedido.PEDIDO_REFAT = base.Session_Carrinho.PedidoRefat;

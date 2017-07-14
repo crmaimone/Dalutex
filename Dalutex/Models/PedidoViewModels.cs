@@ -29,8 +29,13 @@ namespace Dalutex.Models
 
         [Display(Name = "Observações:")]
         public string Observacoes { get; set; }
+
         [Display(Name = "Pedido do Cliente:")]
         public string PedidoDoCliente { get; set; }
+
+        [Display(Name = "Pedido do Cliente St:")]
+        public string PedidoDoClienteSt { get; set; }
+        
         [Display(Name = "Tipo de Pedido:")]
         public string TipoPedido { get; set; }
         [Display(Name = "Frete:")]
@@ -573,6 +578,11 @@ namespace Dalutex.Models
 
         [Display(Name = "Pedido do Cliente")]
         public int? PedidoCliente { get; set; }
+        
+
+        [Display(Name = "Pedido do Cliente")]
+        public string PedidoClienteSt { get; set; }
+
 
         [Display(Name = "Tipo de Pedido")]
         public string DescTipoPedido { get; set; }

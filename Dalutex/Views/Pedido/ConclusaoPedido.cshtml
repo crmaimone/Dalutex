@@ -111,13 +111,24 @@
                                                 </tr>                                            
                                             }
 
-                                            <tr>
+                                            @*<tr>
                                                 <td>@Html.LabelFor(x => x.PedidoCliente, new { @class = "control-label" }):&nbsp;</td>
                                                 <td colspan="2">
                                                     @Html.TextBoxFor(x => x.PedidoCliente, new { @class = "form-control", @id = "txtPedidoCliente", @value = Model.PedidoCliente.GetValueOrDefault().ToString() })
                                                     @Html.ValidationMessageFor(x => x.PedidoCliente, "", new { @class = "text-danger" })
                                                 </td>
+                                            </tr>*@
+
+
+                                            <tr>
+                                                <td>@Html.LabelFor(x => x.PedidoClienteSt, new { @class = "control-label" }):&nbsp;</td>
+                                                <td colspan="2">
+                                                    @Html.TextBoxFor(x => x.PedidoClienteSt, new { @class = "form-control", @id = "txtPedidoClienteSt", @value = Model.PedidoClienteSt})
+                                                    @Html.ValidationMessageFor(x => x.PedidoClienteSt, "", new { @class = "text-danger" })
+                                                </td>
                                             </tr>
+
+
 
                                             <tr>
                                                 <td>@Html.LabelFor(x => x.Observacoes, new { @class = "control-label" }):&nbsp;</td>
@@ -252,7 +263,7 @@
                     $.ajax({
                         type: 'POST',
                         url: '@Url.Action("AtualizaComplentoPedido", "Pedido")',
-                        data: 'numPedidoCliente=' + $('#txtPedidoCliente').val() + '&observacoes=' + $('#txtObservacoes').val(),
+                        data: 'numPedidoCliente=' + $('#txtPedidoCliente').val() + '&observacoes=' + $('#txtObservacoes').val() + 'numPedidoClienteSt=' + $('#txtPedidoClienteSt').val(),
                         async: false,
                     });
                 }
@@ -320,6 +331,7 @@
                 });
 
                 $('#txtPedidoCliente').focusout(scriptWrapper.salvarComplemento);
+                $('#txtPedidoClienteSt').focusout(scriptWrapper.salvarComplemento);
                 $('#txtObservacoes').focusout(scriptWrapper.salvarComplemento);
 
                 $('#txtPedidoRefat').focusout(scriptWrapper.obterNFRefat);

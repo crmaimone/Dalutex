@@ -1647,7 +1647,14 @@ namespace Dalutex.Controllers
                                 VW_VERIFICA_SE_VAR_EXCL idGrupoCli = ctx.VW_VERIFICA_SE_VAR_EXCL.Where( x => x.DESENHO == item.Desenho && x.VARIANTE == item.VarExclusiva).FirstOrDefault();
 
                                 if (idGrupoCli != null) //2: se é var excluviva, verifica se o cliente é do mesmo grupo ------
-                                {                                    
+                                {
+                                    if (idGrupoCli.ID_GRUPO == null)
+                                    {
+                                        ModelState.AddModelError("", "Variante [" + item.VarExclusiva + "] do Desenho [" + item.Desenho + "] é EXCLUSIVA. " +
+                                            "O cliente informado DEVE estar ligado a um [Grupo Cliente]. "+"\n" +
+                                            "Solicite ao COMERCIAL para revisar o cadastro do mesmo e definir o [GRUPO CLIENTE]: " + idGrupoCli.GRUPO);
+                                        return View(model);
+                                    }
                                     GRUPO_CLIENTE_SGT GrupoCliSGT = ctx.GRUPO_CLIENTE_SGT.Where(x => x.ID_GRUPO == idGrupoCli.ID_GRUPO && x.ID_CLIENTE_SGT == IDCliente).FirstOrDefault();
                                     if (GrupoCliSGT == null)
                                     {

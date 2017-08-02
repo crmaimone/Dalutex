@@ -16,5 +16,4 @@ namespace Dalutex.Models
         [Display(Name = "MANTENHA-ME CONECTADO")]
         public bool RememberMe { get; set; }
     }
-
 }

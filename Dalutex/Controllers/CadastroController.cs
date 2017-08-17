@@ -913,7 +913,11 @@ namespace Dalutex.Controllers
                 lstResult = ctx.VW_CUS_CONS_TAB_PRECO.Where(x => x.ID_USUARIO == idUsuario).ToList();
             }
 
-            return Json(lstResult, JsonRequestBehavior.AllowGet);
+            JsonResult jsonResult = Json(lstResult, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
+
+            //return Json(lstResult, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult AcordosVigentes(string filtrorepresentante, string filtrocliente, string pagina, string totalpaginas)

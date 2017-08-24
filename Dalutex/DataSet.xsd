@@ -12,7 +12,11 @@
               <DbSource ConnectionRef="TIDalutexContext (Web.config)" DbObjectName="TI_DALUTEX.VW_IMPRESSAO_WEB" DbObjectType="View" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="Fill">
                 <SelectCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="true">
-                    <CommandText>SELECT PEDIDO, PEDIDO_BLOCO, DATA_EMISSAO, STATUS_PEDIDO, CLIENTE_NOVO, ESTADO, QUALIDADE_COM, OBSERVACOES, NOME_CLIENTE, DESCRI_COND, LISO_ESTAMP, MALHA_PLANO, MODA_DECORACAO, ARTIGO, COR, DESENHO, VARIANTE, QUANTIDADE, PRECO_UNIT, VALOR_TOTAL, UM, PE, ITEM, ID_CLIENTE, COD_CLI, NOME_CLIENTE_PJ, CLIENTE_CAD_OU_NOVO, ESTADO_CLI, CNPJ, TIPO_PEDIDO, COD_REP, NOME_REPRES, COLECAO, DT_ENT_DISP_PED, DT_ENT_DIG_PED, DT_ENT_DISP_IT, DT_ENT_DIG_IT, ID_CLI_ENTR, CLIE_ENTR, CNPJ_ENTR, ID_TRANSP, TRANSPORTADORA, USUARIO_INICIO, DATA_INICIO, DATA_FINAL, COMPOSE, IMAGEM, COMISSAO, REDUZIDO_ITEM, VIA_TRANSP, CANAL_VENDAS, FRETE, GERENTE, DESCRI_ATEND, PRECOLISTA, TIPO, TIPO_PED, RESERVA, PEDIDO_CLIENTE, DESCRICAO_STATUS FROM TI_DALUTEX.VW_IMPRESSAO_WEB</CommandText>
+                    <CommandText>SELECT        PEDIDO, PEDIDO_BLOCO, DATA_EMISSAO, STATUS_PEDIDO, CLIENTE_NOVO, ESTADO, QUALIDADE_COM, OBSERVACOES, NOME_CLIENTE, DESCRI_COND, LISO_ESTAMP, MALHA_PLANO, MODA_DECORACAO, ARTIGO, COR,
+                          DESENHO, VARIANTE, QUANTIDADE, PRECO_UNIT, VALOR_TOTAL, UM, PE, ITEM, ID_CLIENTE, COD_CLI, NOME_CLIENTE_PJ, CLIENTE_CAD_OU_NOVO, ESTADO_CLI, CNPJ, TIPO_PEDIDO, COD_REP, NOME_REPRES, 
+                         COLECAO, DT_ENT_DISP_PED, DT_ENT_DIG_PED, DT_ENT_DISP_IT, DT_ENT_DIG_IT, ID_CLI_ENTR, CLIE_ENTR, CNPJ_ENTR, ID_TRANSP, TRANSPORTADORA, USUARIO_INICIO, DATA_INICIO, DATA_FINAL, COMPOSE, 
+                         IMAGEM, COMISSAO, REDUZIDO_ITEM, VIA_TRANSP, CANAL_VENDAS, FRETE, GERENTE, DESCRI_ATEND, PRECOLISTA, TIPO, TIPO_PED, RESERVA, PEDIDO_CLIENTE, DESCRICAO_STATUS, PEDIDO_CLIENTE_ST
+FROM            TI_DALUTEX.VW_IMPRESSAO_WEB</CommandText>
                     <Parameters />
                   </DbCommand>
                 </SelectCommand>
@@ -83,6 +87,7 @@
               <Mapping SourceColumn="IDTRANSPORTADORA" DataSetColumn="IDTRANSPORTADORA" />
               <Mapping SourceColumn="GRUPO_CLIENTE" DataSetColumn="GRUPO_CLIENTE" />
               <Mapping SourceColumn="DESCRICAO_STATUS" DataSetColumn="DESCRICAO_STATUS" />
+              <Mapping SourceColumn="PEDIDO_CLIENTE_ST" DataSetColumn="PEDIDO_CLIENTE_ST" />
             </Mappings>
             <Sources />
           </TableAdapter>
@@ -94,7 +99,7 @@
   <xs:element name="DataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="True" msprop:Generator_DataSetName="DataSet" msprop:Generator_UserDSName="DataSet">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="VW_IMPRESSAO_WEB" msprop:Generator_TableClassName="VW_IMPRESSAO_WEBDataTable" msprop:Generator_TableVarName="tableVW_IMPRESSAO_WEB" msprop:Generator_TablePropName="VW_IMPRESSAO_WEB" msprop:Generator_RowDeletingName="VW_IMPRESSAO_WEBRowDeleting" msprop:Generator_RowChangingName="VW_IMPRESSAO_WEBRowChanging" msprop:Generator_RowEvHandlerName="VW_IMPRESSAO_WEBRowChangeEventHandler" msprop:Generator_RowDeletedName="VW_IMPRESSAO_WEBRowDeleted" msprop:Generator_UserTableName="VW_IMPRESSAO_WEB" msprop:Generator_RowChangedName="VW_IMPRESSAO_WEBRowChanged" msprop:Generator_RowEvArgName="VW_IMPRESSAO_WEBRowChangeEvent" msprop:Generator_RowClassName="VW_IMPRESSAO_WEBRow">
+        <xs:element name="VW_IMPRESSAO_WEB" msprop:Generator_TableClassName="VW_IMPRESSAO_WEBDataTable" msprop:Generator_TableVarName="tableVW_IMPRESSAO_WEB" msprop:Generator_RowChangedName="VW_IMPRESSAO_WEBRowChanged" msprop:Generator_TablePropName="VW_IMPRESSAO_WEB" msprop:Generator_RowDeletingName="VW_IMPRESSAO_WEBRowDeleting" msprop:Generator_RowChangingName="VW_IMPRESSAO_WEBRowChanging" msprop:Generator_RowEvHandlerName="VW_IMPRESSAO_WEBRowChangeEventHandler" msprop:Generator_RowDeletedName="VW_IMPRESSAO_WEBRowDeleted" msprop:Generator_RowClassName="VW_IMPRESSAO_WEBRow" msprop:Generator_UserTableName="VW_IMPRESSAO_WEB" msprop:Generator_RowEvArgName="VW_IMPRESSAO_WEBRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="PEDIDO" msprop:Generator_ColumnVarNameInTable="columnPEDIDO" msprop:Generator_ColumnPropNameInRow="PEDIDO" msprop:Generator_ColumnPropNameInTable="PEDIDOColumn" msprop:Generator_UserColumnName="PEDIDO" type="xs:decimal" />
@@ -298,7 +303,7 @@
               </xs:element>
               <xs:element name="DATA_INICIO" msprop:Generator_ColumnVarNameInTable="columnDATA_INICIO" msprop:Generator_ColumnPropNameInRow="DATA_INICIO" msprop:Generator_ColumnPropNameInTable="DATA_INICIOColumn" msprop:Generator_UserColumnName="DATA_INICIO" type="xs:dateTime" minOccurs="0" />
               <xs:element name="DATA_FINAL" msprop:Generator_ColumnVarNameInTable="columnDATA_FINAL" msprop:Generator_ColumnPropNameInRow="DATA_FINAL" msprop:Generator_ColumnPropNameInTable="DATA_FINALColumn" msprop:Generator_UserColumnName="DATA_FINAL" type="xs:dateTime" minOccurs="0" />
-              <xs:element name="COMPOSE" msprop:Generator_ColumnVarNameInTable="columnCOMPOSE" msprop:Generator_ColumnPropNameInRow="COMPOSE" msprop:Generator_ColumnPropNameInTable="COMPOSEColumn" msprop:Generator_UserColumnName="COMPOSE" type="xs:decimal" minOccurs="0" />
+              <xs:element name="COMPOSE" msprop:Generator_ColumnVarNameInTable="columnCOMPOSE" msprop:Generator_ColumnPropNameInRow="COMPOSE" msprop:Generator_ColumnPropNameInTable="COMPOSEColumn" msprop:Generator_UserColumnName="COMPOSE" type="xs:decimal" />
               <xs:element name="IMAGEM" msprop:Generator_ColumnVarNameInTable="columnIMAGEM" msprop:Generator_ColumnPropNameInRow="IMAGEM" msprop:Generator_ColumnPropNameInTable="IMAGEMColumn" msprop:Generator_UserColumnName="IMAGEM" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
@@ -367,6 +372,13 @@
               <xs:element name="GRUPO_CLIENTE" msprop:Generator_ColumnVarNameInTable="columnGRUPO_CLIENTE" msprop:Generator_ColumnPropNameInRow="GRUPO_CLIENTE" msprop:Generator_ColumnPropNameInTable="GRUPO_CLIENTEColumn" msprop:Generator_UserColumnName="GRUPO_CLIENTE" type="xs:string" minOccurs="0" />
               <xs:element name="COD_CLI_ENTR" msprop:Generator_ColumnVarNameInTable="columnCOD_CLI_ENTR" msprop:Generator_ColumnPropNameInRow="COD_CLI_ENTR" msprop:Generator_ColumnPropNameInTable="COD_CLI_ENTRColumn" msprop:Generator_UserColumnName="COD_CLI_ENTR" type="xs:int" minOccurs="0" />
               <xs:element name="DESCRICAO_STATUS" msprop:Generator_ColumnVarNameInTable="columnDESCRICAO_STATUS" msprop:Generator_ColumnPropNameInRow="DESCRICAO_STATUS" msprop:Generator_ColumnPropNameInTable="DESCRICAO_STATUSColumn" msprop:Generator_UserColumnName="DESCRICAO_STATUS" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="PEDIDO_CLIENTE_ST" msprop:Generator_ColumnVarNameInTable="columnPEDIDO_CLIENTE_ST" msprop:Generator_ColumnPropNameInRow="PEDIDO_CLIENTE_ST" msprop:Generator_ColumnPropNameInTable="PEDIDO_CLIENTE_STColumn" msprop:Generator_UserColumnName="PEDIDO_CLIENTE_ST" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="50" />

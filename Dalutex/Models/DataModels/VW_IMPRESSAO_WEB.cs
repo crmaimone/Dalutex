@@ -180,6 +180,9 @@ namespace Dalutex.Models.DataModels
         public int COD_CLI_ENTR { get; set; }
 
         [StringLength(60)]
-        public string DESCRICAO_STATUS { get; set; }        
+        public string DESCRICAO_STATUS { get; set; }
+
+        [StringLength(50)]
+        public string PEDIDO_CLIENTE_ST { get; set; } 
     }
 }

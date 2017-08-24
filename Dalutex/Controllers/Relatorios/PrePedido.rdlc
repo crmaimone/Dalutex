@@ -2087,7 +2087,7 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Textbox220">
+                    <Textbox Name="Textbox16">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
@@ -2108,7 +2108,7 @@
                           </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>Textbox220</rd:DefaultName>
+                      <rd:DefaultName>Textbox16</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>None</Style>
@@ -2550,10 +2550,11 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value />
+                              <Value>Ordem Clie:</Value>
                               <Style>
                                 <FontFamily>Verdana</FontFamily>
                                 <FontSize>7pt</FontSize>
+                                <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -2583,28 +2584,26 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Textbox74">
+                    <Textbox Name="PEDIDO_CLIENTE_ST">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value />
+                              <Value>=Fields!PEDIDO_CLIENTE_ST.Value</Value>
                               <Style>
                                 <FontFamily>Verdana</FontFamily>
-                                <FontSize>8pt</FontSize>
-                                <FontWeight>Bold</FontWeight>
-                                <Color>DimGray</Color>
+                                <FontSize>7pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
                           <Style>
-                            <TextAlign>Right</TextAlign>
+                            <TextAlign>Left</TextAlign>
                           </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>Textbox74</rd:DefaultName>
+                      <rd:DefaultName>PEDIDO_CLIENTE_ST</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>Solid</Style>
@@ -2633,6 +2632,7 @@
                       </Style>
                     </Textbox>
                     <ColSpan>2</ColSpan>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell />
@@ -5364,8 +5364,8 @@
         <DataSetName>dsPrePedido</DataSetName>
         <Top>0.83984cm</Top>
         <Left>0.12cm</Left>
-        <Height>7.0637cm</Height>
-        <Width>27.85354cm</Width>
+        <Height>7.06371cm</Height>
+        <Width>27.85358cm</Width>
         <Style>
           <Border>
             <Style>Solid</Style>
@@ -5651,7 +5651,6 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox185</rd:DefaultName>
-          <Top>0cm</Top>
           <Left>0.16882cm</Left>
           <Height>0.44125cm</Height>
           <Width>27.78387cm</Width>
@@ -6101,10 +6100,14 @@
           <DataField>DESCRICAO_STATUS</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="PEDIDO_CLIENTE_ST">
+          <DataField>PEDIDO_CLIENTE_ST</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
       </Fields>
       <rd:DataSetInfo>
         <rd:DataSetName>DataSet</rd:DataSetName>
-        <rd:SchemaPath>C:\Users\Cassiano\Desktop\Projeto Pedido WEB\Dalutex\Dalutex\DataSet.xsd</rd:SchemaPath>
+        <rd:SchemaPath>D:\Projetos Dalutex\Projeto Pedido WEB\Dalutex\Dalutex\DataSet.xsd</rd:SchemaPath>
         <rd:TableName>VW_IMPRESSAO_WEB</rd:TableName>
         <rd:TableAdapterFillMethod>Fill</rd:TableAdapterFillMethod>
         <rd:TableAdapterGetDataMethod>GetData</rd:TableAdapterGetDataMethod>

@@ -643,69 +643,33 @@ namespace Dalutex.Controllers
                     }
 
                     #region Projeto Variante Exclusiva
-                    //oda --- 23/03/2017 -- validação de variante exclusiva------   
-                    using (var ctx = new TIDalutexContext())
-                    {
-                        // nova regra vigente apartir de 14/06/2017 ----------------------------------
-                        // verificar se o desenho está na coleção 
-                        CONTROLE_DESENV_COLECAO objDesenhoEstaNaColecao = ctx.CONTROLE_DESENV_COLECAO.Where(x => x.DESENHO == model.Desenho).FirstOrDefault();
-                        if (objDesenhoEstaNaColecao != null)//se desenho está na coleção --------
-                        {
-                            // verificar se o desenho e variante estão na coleção 
-                            CONTROLE_DESENV_COLECAO objDesVarEstaNaColecao = ctx.CONTROLE_DESENV_COLECAO.Where(x => x.DESENHO == model.Desenho && x.VARIANTE == model.Variante).FirstOrDefault();
-                            if (objDesVarEstaNaColecao == null) //se desenho/var NÃO estão na coleção --------
-                            {
-                                model.VarExclusiva = model.Variante;                                
-                            }
-                            //else//se desenho/var estão na coleção --------
-                            //{
-                            //    // verificar se o desenho e variante estão na coleção 
-                            //    CONTROLE_DESENV_COLECAO objArtigoEstaNaColecao = ctx.CONTROLE_DESENV_COLECAO.Where(x => x.ARTIGO == model.Artigo).FirstOrDefault();
-                            //    if (objArtigoEstaNaColecao != null)//se artigo esta na coleção --------
-                            //    {
-                            //        VW_COLECAO objColecaoVigente = ctx.VW_COLECAO.Where(x => x.ID_COLECAO == (Int)model.IDColecao && x.VIGENCIA >= DateTime.Now).FirstOrDefault();
-                            //        if (objColecaoVigente != null)//se artigo esta na coleção vigente --------
-                            //        {
-                            //            //coleção vigente.
-                            //        }
-                            //    }
-                            //}
-                        }
-                        else//se desenho NÃO está na coleção
-                        {                            
-                            VW_DES_TEM_ATEND_ABERTO objTemAtendimento = ctx.VW_DES_TEM_ATEND_ABERTO.Where(x => x.DESENHO == model.Desenho).FirstOrDefault();
-                            if (objTemAtendimento == null)//se NÃO tem atendimento para o desenho, então é var exclusiva
-                            {
-                                model.VarExclusiva = model.Variante;
-                            }
-                        }
+                    //oda --- 23/03/2017 -- validação de variante exclusiva------ 
+  
+                    //oda -- 28/08/2017 - cancelamento da regra de variante exclusiva, solicitação ronit ao marcio --------------------------------
 
-                        // regra antiga de var exclusiva -- antes de 14/06/2017 ----------------------------------------------------------------
-                        // verificar se o item está na coleção (artigo, desenho, variante e tecnoligia) ----
-                        //CONTROLE_DESENV_COLECAO objItemEstaNaCol = ctx.CONTROLE_DESENV_COLECAO.Where(x =>
-                        //    x.ARTIGO == model.Artigo &&
-                        //    x.DESENHO == model.Desenho &&
-                        //    x.VARIANTE == model.Variante &&
-                        //    x.TECNOLOGIA == model.Tecnologia
-                        //    ).FirstOrDefault();
-
-                        //if (objItemEstaNaCol == null)//se não está na coleção --------
-                        //{
-                        //    //então verifica se o desenho, artigo e tec estão ----
-                        //    CONTROLE_DESENV_COLECAO objDesEstaNaCol = ctx.CONTROLE_DESENV_COLECAO.Where(x =>
-                        //    x.ARTIGO == model.Artigo &&
-                        //    x.DESENHO == model.Desenho &&
-                        //    x.TECNOLOGIA == model.Tecnologia
-                        //    ).FirstOrDefault();
-
-                        //    if (objDesEstaNaCol != null) //se retornou, desenho está na coleção e é variante exclusiva --------                            
-                        //        model.VarExclusiva = model.Variante;
-                        //    else
-                        //        model.VarExclusiva = "";
-                        //}
-                        // regra antiga de var exclusiva -- antes de 14/06/2017 ----------------------------------------------------------------
-
-                    }
+                    //using (var ctx = new TIDalutexContext())
+                    //{
+                    //    // nova regra vigente apartir de 14/06/2017 ----------------------------------
+                    //    // verificar se o desenho está na coleção 
+                    //    CONTROLE_DESENV_COLECAO objDesenhoEstaNaColecao = ctx.CONTROLE_DESENV_COLECAO.Where(x => x.DESENHO == model.Desenho).FirstOrDefault();
+                    //    if (objDesenhoEstaNaColecao != null)//se desenho está na coleção --------
+                    //    {
+                    //        // verificar se o desenho e variante estão na coleção 
+                    //        CONTROLE_DESENV_COLECAO objDesVarEstaNaColecao = ctx.CONTROLE_DESENV_COLECAO.Where(x => x.DESENHO == model.Desenho && x.VARIANTE == model.Variante).FirstOrDefault();
+                    //        if (objDesVarEstaNaColecao == null) //se desenho/var NÃO estão na coleção --------
+                    //        {
+                    //            model.VarExclusiva = model.Variante;                                
+                    //        }
+                    //    }
+                    //    else//se desenho NÃO está na coleção
+                    //    {                            
+                    //        VW_DES_TEM_ATEND_ABERTO objTemAtendimento = ctx.VW_DES_TEM_ATEND_ABERTO.Where(x => x.DESENHO == model.Desenho).FirstOrDefault();
+                    //        if (objTemAtendimento == null)//se NÃO tem atendimento para o desenho, então é var exclusiva
+                    //        {
+                    //            model.VarExclusiva = model.Variante;
+                    //        }
+                    //    }
+                    //}
                     #endregion
 
                     #region Validação de Qtdes Maximas e Minimas
@@ -856,27 +820,27 @@ namespace Dalutex.Controllers
                                         }
                                         else
                                         {
-                                            ModelState.AddModelError("", "QUANTIDADES MÍNIMAS E MÁXIMAS POR VARIANTE NÃO CADASTRADO PARA ESTE ITEM. ENTRAR EM CONTATO COM DEPTO. COMERCIAL: " +
-                                                " | Tecnologia: " + model.Tecnologia.ToString() +
-                                                " | IDGrupoColecao: " + model.IDGrupoColecao + 
-                                                " | desenhoPronto: " + desenhoPronto.ToString() +
-                                                " | IDTipoPedido: " + model.IDTipoPedido +
-                                                " | UnidadeMedida: " + model.UnidadeMedida +                                                
-                                                " | [Regra para item em KG convertido em MT]" + _VarExcl
+                                            ModelState.AddModelError("", "REGRA DE QUANTIDADES NÃO CADASTRADO P/ O ITEM. VERIFICAR C/ DEPTO. COMERCIAL: " +
+                                                "  Tecnologia: " + model.TecnologiaPorExtenso +
+                                                " | Grupo Col: " + ((Enums.GrupoColecoes) model.IDGrupoColecao).ToString() +
+                                                " | Desenho Pronto: " + ( (desenhoPronto) ? "Sim" : "Não") +
+                                                " | Tipo Pedido: "  + ((Enums.TiposPedido)model.IDTipoPedido).ToString() +
+                                                " | U.M.: " + model.UnidadeMedida +                                                
+                                                " | [Regra para item em KG convertido em MT] " + _VarExcl
                                                 );
                                             hasErrors = true;
                                         }
                                     }
                                     else
                                     {
-                                        ModelState.AddModelError("", "QUANTIDADES MÍNIMAS E MÁXIMAS POR VARIANTE NÃO CADASTRADO PARA ESTE ITEM. ENTRAR EM CONTATO COM DEPTO. COMERCIAL: " +
-                                            " Tecnologia: " + model.Tecnologia.ToString() +
-                                                " | IDGrupoColecao: " + model.IDGrupoColecao +
-                                                " | desenhoPronto: " + desenhoPronto.ToString() +
-                                                " | IDTipoPedido: " + model.IDTipoPedido +
-                                                " | UnidadeMedida: " + model.UnidadeMedida +                                                
-                                                " |  [Não encontrou na regra]" + _VarExcl
-                                                );
+                                        ModelState.AddModelError("", "REGRA DE QUANTIDADES NÃO CADASTRADO P/ O ITEM. VERIFICAR C/ DEPTO. COMERCIAL: " +
+                                            " Tecnologia: " + model.TecnologiaPorExtenso.ToString() +
+                                            " | Grupo Col: " + ((Enums.GrupoColecoes)model.IDGrupoColecao).ToString() +
+                                            " | Desenho Pronto: " + ((desenhoPronto) ? "Sim" : "Não") +
+                                            " | Tipo Pedido: " + ((Enums.TiposPedido)model.IDTipoPedido).ToString() +
+                                            " | U.M.: " + model.UnidadeMedida +                                                
+                                            " | [Não encontrou na regra] " + _VarExcl
+                                            );
                                         hasErrors = true;
                                     }
                                 }

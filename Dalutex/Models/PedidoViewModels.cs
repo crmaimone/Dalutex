@@ -322,7 +322,10 @@ namespace Dalutex.Models
         public string TecnologiaOriginal { get; set; }
         public string TecnologiaPorExtenso { get; set; }
         public string TecnologiaTroca { get; set; }
-        public string Tecnologia { get { return this.TecnologiaPorExtenso != null ? this.TecnologiaPorExtenso.Substring(0, 1) : null; } }
+
+        //public string Tecnologia { get { return this.TecnologiaPorExtenso != null ? this.TecnologiaPorExtenso.Substring(0, 1) : null; } }
+        public string Tecnologia { get; set; }
+        
         public string UnidadeMedida { get; set; }
         public decimal ValorPadrao { get; set; }
         public decimal ValorTotalItem { get; set; }

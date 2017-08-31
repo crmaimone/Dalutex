@@ -339,13 +339,16 @@ namespace Dalutex.Controllers
             {
                 model.Cor = artigo.Substring(11);
             }
-
+           
             #region Restrições
             //if ((model.TecnologiaPorExtenso != "L") && (!ehreacabamento))
             if ((!ehreacabamento) && (model.Tipo != Enums.ItemType.Reserva))
             {
                 using (var ctxTI = new TIDalutexContext())
                 {
+                    //-- oda -- 31/08/2017 -- acertar a LEtra da tecnologia pois não é mais a Primeira letra da descrição do nome da tecnologia----                  
+                    model.Tecnologia = ctxTI.TECNOLOGIAS.Where(x => x.DESC_TEC == model.TecnologiaPorExtenso).FirstOrDefault().COD_ID.ToString();
+
                     List<VW_ARTIGOS_DISPONIVEIS_NEW> ListaArtigosInativo = ctxTI.VW_ARTIGOS_DISPONIVEIS_NEW
                         .Where(x => x.TECNOLOGIA == tecnologia && x.ARTIGO == artigo)
                         .OrderBy(o => o.ID_DA_VIEW).ToList();

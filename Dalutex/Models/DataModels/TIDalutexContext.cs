@@ -87,9 +87,28 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<ACORDO_COMERCIAL_PEDIDOS> ACORDO_COMERCIAL_PEDIDOS { get; set; }
         public virtual DbSet<VW_ACORDOS_VIGENTES> VW_ACORDOS_VIGENTES { get; set; }
         public virtual DbSet<VW_DES_TEM_ATEND_ABERTO> VW_DES_TEM_ATEND_ABERTO { get; set; }
+        public virtual DbSet<TECNOLOGIAS> TECNOLOGIAS { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+
+            modelBuilder.Entity<TECNOLOGIAS>()
+                .Property(e => e.ID_TEC)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<TECNOLOGIAS>()
+                .Property(e => e.DESC_TEC)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<TECNOLOGIAS>()
+                .Property(e => e.COD_ID)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<TECNOLOGIAS>()
+                .Property(e => e.DESC_OUTRO_IDIOMA)
+                .IsUnicode(false);
+
+
             modelBuilder.Entity<VW_DES_TEM_ATEND_ABERTO>()
                 .Property(e => e.ID_CONTROLE_DESENV)
                 .HasPrecision(38, 0);

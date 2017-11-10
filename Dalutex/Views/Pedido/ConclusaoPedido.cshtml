@@ -128,8 +128,6 @@
                                                 </td>
                                             </tr>
 
-
-
                                             <tr>
                                                 <td>@Html.LabelFor(x => x.Observacoes, new { @class = "control-label" }):&nbsp;</td>
                                                 <td colspan="2">
@@ -197,7 +195,9 @@
                     <th data-field="Pecas" data-sortable="true">Peças</th>
                     <th data-field="UnidadeMedida" data-sortable="true">UM</th>
                     <th data-field="Quantidade" data-sortable="true">Qtde</th>
-                    <th data-field="PrecoTabela" data-sortable="true" data-formatter="scriptWrapper.currencyFormatter">Preço tabela</th>
+                    
+                    @*<th data-field="PrecoTabela" data-sortable="true" data-formatter="scriptWrapper.currencyFormatter">Preço tabela</th>*@
+                    
                     <th data-field="Preco" data-sortable="true" data-formatter="scriptWrapper.currencyFormatter">Unit.</th>
                     <th data-field="ValorTotalItem" data-sortable="true" data-formatter="scriptWrapper.currencyFormatter">Sub total</th>
 
@@ -207,11 +207,11 @@
             </thead>
             <tfoot>
                 <tr>
-                    <th>QUANTIDADE DE ITENS:</th>
+                    <th>Itens:</th>
                     <th id="thQuantidadeItens"></th>
                     <th></th>
                     <th colspan="4"></th>
-                    <th><strong>TOTAL:</strong></th>
+                    <th><strong>Total:</strong></th>
                     <th>@Model.TotalPedido.ToString("c")</th>
                 </tr>
             </tfoot>

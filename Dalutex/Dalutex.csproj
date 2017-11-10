@@ -163,6 +163,7 @@
     <Compile Include="Models\CadastroViewModel.cs" />
     <Compile Include="fonts\ARTIGO_PESO_PADRAO.cs" />
     <Compile Include="Models\DataModels\ACOES.cs" />
+    <Compile Include="Models\DataModels\ACORDO_COMERCIAL_ITENS.cs" />
     <Compile Include="Models\DataModels\ACORDO_COMERCIAL_PEDIDOS.cs" />
     <Compile Include="Models\DataModels\CONTROLE_DESENV_COLECAO.cs" />
     <Compile Include="Models\DataModels\EMAIL_TABELA_PRECO.cs" />
@@ -235,6 +236,7 @@
     <Compile Include="Models\DataModels\LOCALVENDA.cs" />
     <Compile Include="Models\DataModels\CADASTRO_MOEDAS.cs" />
     <Compile Include="Models\DataModels\VW_CONDICAO_PGTO.cs" />
+    <Compile Include="Models\DataModels\VW_GRUPO_CLIENTE_OU_CLIENTE.cs" />
     <Compile Include="Models\DataModels\VW_GRUPO_COL_RED.cs" />
     <Compile Include="Models\DataModels\VW_IMPRESSAO_WEB.cs" />
     <Compile Include="Models\DataModels\VW_ITENS_PE.cs" />

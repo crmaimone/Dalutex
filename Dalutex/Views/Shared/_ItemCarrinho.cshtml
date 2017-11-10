@@ -33,7 +33,7 @@
                             {
                                 if (Model.Cor != null)
                                 {
-                                    <div> <font color="red"><strong>Cor: @Model.Cor </strong></font></div>
+                                    <div> <strong>Cor:</strong> @Model.Cor </div>
                                 }
                                 
                                 
@@ -75,8 +75,10 @@
                                 {
                                     <div> <font color="red"> Variante Exclusiva:&nbsp;<strong> @Model.VarExclusiva </strong></font></div>
                                 }*@
-                                
-                                
+
+                                @*<div> <strong>Preço Tabela:</strong> @Model.PrecoTabela </div>*@                                
+
+
                             }
                             else if (Model.Tipo == Enums.ItemType.Liso)
                             {

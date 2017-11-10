@@ -92,5 +92,7 @@ namespace Dalutex.Models.DataModels
 
         [NotMapped]
         public bool Novo { get; set; }
+
+        public decimal? COMISSAO_IT { get; set; }
     }
 }

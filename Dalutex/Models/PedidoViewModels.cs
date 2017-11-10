@@ -363,7 +363,8 @@ namespace Dalutex.Models
         public int Compose { get; set; }
         public List<int> ComposeOpcoes { get; set; }
         
-        public int Comissao {get; set; } 
+        //public int Comissao {get; set; }
+        public decimal Comissao { get; set; } 
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [Display(Name = "TIPO DE PEDIDO:")]

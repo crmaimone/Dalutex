@@ -88,9 +88,91 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<VW_ACORDOS_VIGENTES> VW_ACORDOS_VIGENTES { get; set; }
         public virtual DbSet<VW_DES_TEM_ATEND_ABERTO> VW_DES_TEM_ATEND_ABERTO { get; set; }
         public virtual DbSet<TECNOLOGIAS> TECNOLOGIAS { get; set; }
+        public virtual DbSet<VW_GRUPO_CLIENTE_OU_CLIENTE> VW_GRUPO_CLIENTE_OU_CLIENTE { get; set; }
+        public virtual DbSet<ACORDO_COMERCIAL_ITENS> ACORDO_COMERCIAL_ITENS { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<ACORDO_COMERCIAL_ITENS>()
+               .Property(e => e.ID_ITEM_ACORDO_COM)
+               .HasPrecision(38, 0);
+
+            modelBuilder.Entity<ACORDO_COMERCIAL_ITENS>()
+                .Property(e => e.ID_ACORDO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<ACORDO_COMERCIAL_ITENS>()
+                .Property(e => e.ARTIGO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<ACORDO_COMERCIAL_ITENS>()
+                .Property(e => e.DESENHO)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<ACORDO_COMERCIAL_ITENS>()
+                .Property(e => e.VARIANTE)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<ACORDO_COMERCIAL_ITENS>()
+                .Property(e => e.COR)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<ACORDO_COMERCIAL_ITENS>()
+                .Property(e => e.QUANTIDADES)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<ACORDO_COMERCIAL_ITENS>()
+                .Property(e => e.UM)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<ACORDO_COMERCIAL_ITENS>()
+                .Property(e => e.PRECO_UNITARIO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<ACORDO_COMERCIAL_ITENS>()
+                .Property(e => e.QTDE_DISPONIVEL)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<ACORDO_COMERCIAL_ITENS>()
+                .Property(e => e.TECNOLOGIA)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<ACORDO_COMERCIAL_ITENS>()
+                .Property(e => e.QTDE_DISPONIVEL_TMP)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<ACORDO_COMERCIAL_ITENS>()
+                .Property(e => e.CONDICAO_PGTO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<ACORDO_COMERCIAL_ITENS>()
+                .Property(e => e.QUALIDADE_COM)
+                .IsFixedLength()
+                .IsUnicode(false);
+
+            modelBuilder.Entity<ACORDO_COMERCIAL_ITENS>()
+                .Property(e => e.COMISSAO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<ACORDO_COMERCIAL_ITENS>()
+                .Property(e => e.ID_GRUPO_COND_PGTO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<ACORDO_COMERCIAL_ITENS>()
+                .Property(e => e.MARGEM)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_GRUPO_CLIENTE_OU_CLIENTE>()
+                .Property(e => e.ID_CLIENTE)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_GRUPO_CLIENTE_OU_CLIENTE>()
+                .Property(e => e.ID_GRUPO)
+                .HasPrecision(38, 0);
+
+            modelBuilder.Entity<VW_GRUPO_CLIENTE_OU_CLIENTE>()
+                .Property(e => e.GRUPO)
+                .IsUnicode(false);
 
             modelBuilder.Entity<TECNOLOGIAS>()
                 .Property(e => e.ID_TEC)

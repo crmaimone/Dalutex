@@ -26,15 +26,18 @@ namespace Dalutex.Models.DataModels
         public decimal? PRECO_UNITARIO { get; set; }
 
         public decimal? QTDE_DISPONIVEL_TMP { get; set; }
-
-
+        
         public decimal? CONDICAO_PGTO { get; set; }
 
         [StringLength(1)]
         public string QUALIDADE_COM { get; set; }
 
-        public decimal? COMISSAO { get; set; }
+        public decimal COMISSAO { get; set; }
 
         public decimal? ID_GRUPO_COND_PGTO { get; set; }
+
+        public decimal ID_GRUPO { get; set; }
+
+        public string GRUPO { get; set; }
     }
 }

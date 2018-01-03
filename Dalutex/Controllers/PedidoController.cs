@@ -1829,11 +1829,31 @@ namespace Dalutex.Controllers
 
                                                     if (item.Value < QtdeMinima)
                                                     {
-                                                        ModelState.AddModelError("", "A QUANTIDADE MÍNIMA POR DESENHO NÃO PODE SER MENOR QUE: " + QtdeMinima.ToString() +
-                                                                      " | item: " + item.Key +
-                                                                      " | TOTAL (KG CONVERTIDO + MT): " + item.Value.ToString() +
-                                                                      " MTs");
-                                                        hasErrors = true;
+                                                        //oda-- 03/01/2018 -- solicitação RK: não bloquear abaixo da qtde se for repetição do desenho ----    
+                                                        string _desenho  = item.Key.Substring(0, 4);
+
+                                                        VW_TOTAL_VEND_DESENHO vv = ctxTI.VW_TOTAL_VEND_DESENHO.Where(x => x.DESENHO == _desenho).FirstOrDefault();
+                                                        
+                                                        if(vv != null)
+                                                        {
+                                                            decimal QtdeDesenho = ctxTI.VW_TOTAL_VEND_DESENHO.Where(x => x.DESENHO == _desenho).FirstOrDefault().QTDE;
+                                                            if (QtdeDesenho < 400) {
+                                                                ModelState.AddModelError("", "A QUANTIDADE MÍNIMA POR DESENHO NÃO PODE SER MENOR QUE: " + QtdeMinima.ToString() +
+                                                                                            " | item: " + _desenho + " | Tecnologia: " + item.Key.Substring(4, 1) +
+                                                                                            " | TOTAL (KG CONVERTIDO + MT): " + item.Value.ToString() +
+                                                                                            " MTs");
+                                                                hasErrors = true;
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            ModelState.AddModelError("", "A QUANTIDADE MÍNIMA POR DESENHO NÃO PODE SER MENOR QUE: " + QtdeMinima.ToString() +
+                                                                                         " | item: " + _desenho + " | Tecnologia: " + item.Key.Substring(4, 1) +
+                                                                                         " | TOTAL (KG CONVERTIDO + MT): " + item.Value.ToString() +
+                                                                                         " MTs");
+                                                            hasErrors = true;
+                                                        }
+                                                            
                                                     }
                                                     else if (item.Value > QtdeMaxima)
                                                     {
@@ -1962,7 +1982,6 @@ namespace Dalutex.Controllers
                     if ( (model.IDTipoPedido != (int)Enums.TiposPedido.RESERVA) && (!model.CanailVenda.CANAL_VENDA.Equals((int)Enums.CanaisVenda.TELEVENDAS)) )
                     {                    
                         #region Obter Preço
-                        //int? iColecaoAtual = 0;
                         int iCodCondPgto = 0;
                         string vUF = "";
                         string vQualidadeTabela = "";
@@ -1977,7 +1996,6 @@ namespace Dalutex.Controllers
                         }
                         #endregion
                         
-                        //int iCount = 0;
                         bool Prim = true;
                         bool PegaPrecotabela = true;
                         List<decimal> lstIDAcordos = new List<decimal>();  
@@ -2000,9 +2018,7 @@ namespace Dalutex.Controllers
                                                                                                           //&& x.COMISSAO == model.PorcentagemComissao
                                                                                                         ).FirstOrDefault();
 
-                                //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<{[+]}>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                                if (objAcordo != null)// && (1 == 2) )// <<<<<<<<<<<<<<<<<<< LIBERAR A IMPLEMENTAÇÃO **************************************
-                                //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<{[+]}>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                if (objAcordo != null)
                                 {
                                     VW_ACORDO_DISPO_CLIENTE objUpdateQtdeTemp = null;
                                                                                                                                                        
@@ -2050,6 +2066,7 @@ namespace Dalutex.Controllers
                                     # region PEGA PREÇO DE TABELA
                                     VW_TABELA_PRECO_NOVA objPrecoNovo = null;
                                     // oda -- 29/09/2017 -- sol. marcio -- alterações para pegar a qualidade correta dependendo das condições do pedido ----
+                                    vQualidadeTabela = Session_Carrinho.QualidadeComercial.Key;
                                     if (vUF == "EX")
                                     {
                                         vQualidadeTabela = "EX";
@@ -2057,7 +2074,7 @@ namespace Dalutex.Controllers
                                     else if ((vUF != "SP") && (vUF != "ES") && (Session_Carrinho.QualidadeComercial.Key == "A") && (Session_Carrinho.CondicaoPagto.ID_COND != 21) )
                                     {
                                         vQualidadeTabela = "ES";
-                                    }                                               
+                                    }                                              
 
                                     if (item.Reduzido > 0)
                                     {
@@ -2074,6 +2091,10 @@ namespace Dalutex.Controllers
                                             if (vm != null) {
                                                 vClassif = vm.CLASSIF_COR;
                                             }
+                                            if (vClassif == "V") 
+                                            { 
+                                                vClassif = "L"; 
+                                            }
 
                                             objPrecoNovo = ctxTI.VW_TABELA_PRECO_NOVA.Where(x =>
                                                                  x.TIPO == iTipoCol// 1: coleção/exclusivo; 2: flash/pocket
@@ -2087,7 +2108,6 @@ namespace Dalutex.Controllers
                                                                  && x.ARTIGO == item.Artigo
                                                                  && x.QUALIDADE == 1                                                                                                                                  
                                                                  
-                                                                 //&& x.QUALIDADE_COMERCIAL == Session_Carrinho.QualidadeComercial.Key
                                                                  && x.QUALIDADE_COMERCIAL == vQualidadeTabela
                                                                  
                                                                  && x.TAMANHO_PECA == "G"
@@ -2118,11 +2138,9 @@ namespace Dalutex.Controllers
                                                                  && x.CONDICAO_PAGAMENTO == iCodCondPgto
                                                                  && x.ARTIGO == item.Artigo
                                                                  && x.QUALIDADE == 1
-                                                                 //&& x.QUALIDADE_COMERCIAL == Session_Carrinho.QualidadeComercial.Key
                                                                  && x.QUALIDADE_COMERCIAL == vQualidadeTabela
                                                                  && x.TAMANHO_PECA == "G"
                                                                  && x.COMISSAO == (iTipoCol == 2 ? 3 : 4)
-
                                                 ).FirstOrDefault();
                                         }
                                     }
@@ -2463,7 +2481,7 @@ namespace Dalutex.Controllers
                                         }
                                         else
                                         {
-                                            try {// oda -- 05/10/2016 -- ver com cassiano: não entendi o pq desta alteração ---------------------------
+                                            try {
                                                 objPedReservaVenda = ctx.PED_RESERVA_VENDA.Where(
                                                     r => r.PEDIDO_VENDA == iNUMERO_PEDIDO_BLOCO
                                                     && r.ITEM_PED_VENDA == item.ID
@@ -2696,7 +2714,7 @@ namespace Dalutex.Controllers
                                         ctx.PRE_PEDIDO_ITENS.Remove(objExcluir);
                                     }
 
-                                    //ODA --- TODO: DPD073.0 - NEGOCIAÇÃO DE VENDA COM CLIENTE (NÃO GERAR CRÍTICAS DE PREÇO)
+                                    //-- ODA 13/11/2017 --- TODO: DPD073.0 - NEGOCIAÇÃO DE VENDA COM CLIENTE (NÃO GERAR CRÍTICAS DE PREÇO)
                                     // CHAMDA PARA A ROTINA QUE VALIDA ACORDOS COM O CLIENTE E ALTERA O PREÇO DE TABELA E PREÇO DO ITEM. 
                                     
                                     //int _id_cliente = base.Session_Carrinho.ClienteFatura.ID_CLIENTE;

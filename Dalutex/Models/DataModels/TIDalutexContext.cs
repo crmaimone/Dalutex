@@ -90,6 +90,8 @@ namespace Dalutex.Models.DataModels
         public virtual DbSet<TECNOLOGIAS> TECNOLOGIAS { get; set; }
         public virtual DbSet<VW_GRUPO_CLIENTE_OU_CLIENTE> VW_GRUPO_CLIENTE_OU_CLIENTE { get; set; }
         public virtual DbSet<ACORDO_COMERCIAL_ITENS> ACORDO_COMERCIAL_ITENS { get; set; }
+        public virtual DbSet<VW_TOTAL_VEND_DESENHO> VW_TOTAL_VEND_DESENHO { get; set; }
+        
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

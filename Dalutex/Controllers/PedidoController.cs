@@ -337,7 +337,7 @@ namespace Dalutex.Controllers
 
             if ((artigo != null) && (artigo.Length > 4))
             {
-                model.Cor = artigo.Substring(11);
+                model.Cor = artigo.Substring(10);
             }
            
             #region Restrições
@@ -534,6 +534,11 @@ namespace Dalutex.Controllers
                             {
                                 _cor = "E000000";
                             }
+                           
+                            if (model.Tecnologia == "V")
+                            {
+                                _cor = model.Cor;
+                            }
 
                             //procura o reduzido pela combinação de itens [Artigo, Tec, Desenho, Var]
                             VMASCARAPRODUTOACABADO objReduzido = ctx.VMASCARAPRODUTOACABADO.Where(
@@ -615,6 +620,7 @@ namespace Dalutex.Controllers
         public ActionResult InserirNoCarrinho(InserirNoCarrinhoViewModel model)
         {
             bool hasErrors = false;
+           
             ViewBag.POGReduzido = model.Reduzido;
             
             try
@@ -2874,8 +2880,19 @@ namespace Dalutex.Controllers
         {
             int iItensPorPagina = 10;
 
+            //-- oda -- 14/02/2018 -- não permitir representante acessar pedidos de outros representantes -- ticket #3809 ----
+            if (base.Session_Usuario.ID_REPRES != null)
+            {         
+                int? _ID = base.Session_Usuario.ID_REPRES;
+      
+                using (var ctx = new DalutexContext())
+                {
+                    model.FiltroRepresentante = ctx.REPRESENTANTES.Where(x => x.IDREPRESENTANTE == _ID).FirstOrDefault().NOME;
+                }                               
+            }
+
             using(var ctxTI = new TIDalutexContext())
-            {
+            {                
                 decimal dFiltroPedido = 0;
                 decimal.TryParse(model.FiltroPedido, out dFiltroPedido);
                 if (model.FiltroCliente != null)
